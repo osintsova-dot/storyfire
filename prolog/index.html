@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Пролог · Костёр историй</title>
+<meta name="description" content="Бесплатный Пролог зимнего квеста «Костёр историй»: кубик, зимний лес, костёр и первая загадка на английском.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0a22'/%3E%3Cpath d='M32 10c4 9 14 14 14 27a14 14 0 0 1-28 0c0-7 4-11 7-15 1 5 3 7 5 8 0-7-1-13 2-20z' fill='%23f5c842'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="../img/06_t1_library.webp">
+<link rel="prefetch" href="../img/07_page.webp">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --night-3:#221849;
+  --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d; --violet:#6c3fc5;
+  --line:rgba(247,238,219,.16);
+  --paper:#f3e8cf; --paper-2:#dfcca6; --paper-ink:#2b2140; --paper-ink-2:#5b4d63;
+  --display:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--night);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow:hidden;height:100svh}
+::selection{background:var(--gold);color:var(--night)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+
+/* backdrop for wide screens: the vertical stage sits on a blurred copy of its scene */
+.backdrop{position:fixed;inset:-40px;background:center/cover no-repeat;filter:blur(38px) brightness(.38) saturate(1.2);transform:scale(1.1);transition:background-image .8s}
+.stage{position:relative;height:100svh;max-width:520px;margin:0 auto;overflow:hidden;background:var(--night);isolation:isolate}
+@media (min-width:560px){.stage{box-shadow:0 30px 120px -20px rgba(0,0,0,.85),0 0 0 1px var(--line)}}
+
+.top{position:absolute;z-index:20;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));font-size:14px;color:var(--ink-2)}
+.top a{color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.top a b{font-family:var(--display);font-size:19px;font-weight:600;color:var(--ink)}
+.dots{display:flex;gap:6px}
+.topr{display:flex;align-items:center;gap:10px}
+.snd{width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--ink-2);display:grid;place-items:center;cursor:pointer;border-radius:50%}
+.snd svg{width:22px;height:22px}
+.snd .i-off,.snd[aria-pressed="false"] .i-on{display:none}
+.snd[aria-pressed="false"] .i-off{display:block}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(247,238,219,.25);transition:background-color .4s,transform .4s var(--ease-out)}
+.dots i.on{background:var(--gold);transform:scale(1.25)}
+
+#snow{position:absolute;inset:0;z-index:5;pointer-events:none;width:100%;height:100%}
+
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;opacity:0;visibility:hidden;transition:opacity .9s var(--ease-out),visibility 0s .9s}
+.scene.on{opacity:1;visibility:visible;transition:opacity .9s var(--ease-out),visibility 0s}
+.scene>.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.scene>.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55) 0%,rgba(14,10,34,0) 20%,rgba(14,10,34,0) 45%,rgba(14,10,34,.85) 70%,var(--night) 100%)}
+.scene.on>.bg{animation:drift 14s var(--ease-out) both}
+@keyframes drift{from{transform:scale(1.08)}to{transform:scale(1)}}
+
+/* the Book's voice */
+.voice{margin-top:auto;position:relative;z-index:10;padding:0 max(18px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px}
+.say{font-family:var(--display);font-weight:600;font-size:clamp(21px,5.6vw,25px);line-height:1.25;color:var(--ink);text-align:center;text-wrap:balance;text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 16px rgba(14,10,34,.95);max-width:30ch;justify-self:center}
+.say .w{opacity:0;display:inline-block;transform:translateY(.25em);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
+.say .w.in{opacity:1;transform:none}
+.ru{font-size:14px;line-height:1.4;color:var(--ink-2);max-width:40ch;text-align:center;justify-self:center;text-shadow:0 1px 12px rgba(14,10,34,.9)}
+.who{font:500 13px/1 var(--body);letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:8px}
+.who svg{width:16px;height:16px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--body);text-decoration:none;cursor:pointer;border:0;transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),background-color .2s,opacity .4s}
+.btn-gold{background:var(--gold);color:#1b1206;box-shadow:0 10px 24px -10px rgba(0,0,0,.7),inset 0 -2px 0 rgba(0,0,0,.12)}
+.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}
+.btn-gold:active{transform:scale(.97)}
+.btn-ghost{background:rgba(14,10,34,.5);color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.4)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.later{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.later.in{opacity:1;transform:none;pointer-events:auto}
+
+/* 1 library */
+.glowbook{position:absolute;left:52%;top:9%;width:30%;aspect-ratio:1;border-radius:50%;border:0;background:radial-gradient(circle,rgba(255,217,104,.45),rgba(255,155,61,0) 65%);cursor:pointer;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.65}}
+
+/* 2 name + track */
+.field{display:grid;gap:8px}
+.field label{font-size:14px;color:var(--ink-2)}
+.field input{height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);color:var(--ink);padding:0 18px;font:500 18px/1 var(--body);caret-color:var(--gold)}
+.field input::placeholder{color:var(--ink-3)}
+.field input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.tracks{display:grid;gap:8px}
+.track{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 14px;text-align:left;padding:12px 16px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22);cursor:pointer;transition:box-shadow .25s,background-color .25s}
+.track b{grid-row:span 2;font-family:var(--display);font-size:28px;font-weight:600;line-height:1;font-variant-numeric:lining-nums;min-width:2.6em}
+.track span{font-weight:600;font-size:15px}
+.track small{font-size:13px;color:var(--ink-3);line-height:1.3}
+.track[aria-pressed="true"]{background:rgba(245,200,66,.14);box-shadow:inset 0 0 0 2px var(--gold)}
+.track[aria-pressed="true"] b{color:var(--gold)}
+
+/* 3 board */
+.forest{position:relative;margin:calc(env(safe-area-inset-top,0px) + 62px) 12px 4px;aspect-ratio:420/500;flex:1 1 auto;min-height:0;max-width:calc(100% - 24px);align-self:center;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px var(--line)}
+.forest>img{width:100%;height:100%;object-fit:cover}
+.cell-mark{position:absolute;width:15%;aspect-ratio:1.5;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--gold),0 6px 12px rgba(0,0,0,.5);background:rgba(245,200,66,.22);opacity:0;transition:opacity .3s}
+.cell-mark.in{opacity:1}
+.token{position:absolute;width:27%;left:0;top:0;transform:translate(-50%,-86%);transition:left .38s var(--ease-out),top .38s var(--ease-out);filter:drop-shadow(0 8px 8px rgba(0,0,0,.55));z-index:2}
+.token.hop img{animation:hop .38s var(--ease-out)}
+@keyframes hop{40%{transform:translateY(-22%)}}
+.dierow{display:flex;align-items:center;gap:16px}
+.die{width:84px;height:84px;padding:0;border:0;background:none;cursor:pointer;flex:none;position:relative}
+.die img{width:100%;height:100%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))}
+.die.roll img{animation:roll .9s cubic-bezier(.3,.7,.2,1)}
+@keyframes roll{0%{transform:rotate(0) scale(1)}30%{transform:rotate(-200deg) scale(1.15) translateY(-14px)}70%{transform:rotate(340deg) scale(.95)}100%{transform:rotate(360deg) scale(1)}}
+.die .n{position:absolute;right:-6px;top:-6px;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1b1206;font:700 18px/34px var(--body);text-align:center;transform:scale(0);transition:transform .4s var(--ease-out)}
+.die .n.in{transform:scale(1)}
+.cell-ico{position:absolute;width:11%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;z-index:1;box-shadow:0 4px 10px rgba(0,0,0,.55)}
+.cell-ico svg{width:62%;height:62%}
+.cell-ico.ico-spark{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 4px 10px rgba(0,0,0,.55)}
+.cell-ico.ico-spark.got{animation:got .9s var(--ease-out) forwards}
+@keyframes got{40%{transform:translate(-50%,-50%) scale(1.6)}to{transform:translate(-50%,-160%) scale(.4);opacity:0}}
+.cell-ico.ico-mouse{background:#1a1338;color:#cbbfe8;box-shadow:0 0 0 2px #cbbfe8,0 4px 10px rgba(0,0,0,.55)}
+.mice{display:flex;justify-content:center;gap:14px}
+.mouse{width:84px;height:60px;border:0;background:rgba(14,10,34,.6);border-radius:16px;box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);cursor:pointer;padding:8px;transition:transform .5s var(--ease-out),opacity .5s}
+.mouse.run{transform:translateX(120px);opacity:0}
+.opts.letters{grid-template-columns:repeat(3,1fr)}
+.opts.letters .opt{font:700 26px/1 var(--body)}
+.count{font-family:var(--display);font-size:22px;color:var(--gold);min-height:1.2em}
+
+/* 4 fire */
+.camp{position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 45% at 50% 52%,rgba(255,155,61,var(--glow,.08)),rgba(14,10,34,0) 70%),linear-gradient(180deg,#120c2c 0%,#1b1342 45%,#2a2150 58%,#7d74ac 63%,#5d5490 76%,#3a3168 100%);transition:--glow 1s}
+.camp::after{content:"";position:absolute;left:0;right:0;top:60%;bottom:0;background:linear-gradient(180deg,rgba(14,10,34,.15),rgba(14,10,34,.75) 75%,var(--night))}
+.trees{position:absolute;left:0;right:0;top:32%;height:29%;z-index:-1;color:#0b0820}
+.fire{position:absolute;left:50%;top:calc(14% + 20px);width:min(86%,46svh);max-width:400px;transform:translateX(-50%);border:0;padding:0;background:none;cursor:pointer;aspect-ratio:1}
+.fire img{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .7s var(--ease-out)}
+.fire img.on{opacity:1}
+.fire::before{content:"";position:absolute;inset:-25%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,70,var(--glow,0)),rgba(255,120,40,0) 60%);transition:background .9s;z-index:-1}
+.pop{position:absolute;left:50%;top:20%;font-family:var(--display);font-weight:700;font-size:44px;color:var(--gold-2);pointer-events:none;animation:popup 1.2s var(--ease-out) forwards;text-shadow:0 4px 20px rgba(0,0,0,.6)}
+@keyframes popup{from{opacity:0;transform:translate(-50%,10px) scale(.7)}25%{opacity:1;transform:translate(-50%,-10px) scale(1)}to{opacity:0;transform:translate(-50%,-60px) scale(1)}}
+.paws{position:absolute;inset:0;pointer-events:none}
+.paw{position:absolute;width:36px;opacity:0;color:#140e30;transition:opacity .5s,transform .5s var(--ease-out)}
+.paw.in{opacity:1}
+
+/* 5 riddle */
+.opts{display:grid;gap:10px}
+.opts.pics{grid-template-columns:repeat(3,1fr)}
+.opt{min-height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);font:600 18px/1.2 var(--body);cursor:pointer;padding:10px 16px;transition:box-shadow .2s,background-color .2s}
+.opt:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.opts.pics .opt{aspect-ratio:1;padding:10px;display:grid;place-items:center}
+.opts.pics .opt img{width:100%;height:100%;object-fit:contain}
+.opt.no{animation:shake .45s;box-shadow:inset 0 0 0 1.5px #c9718a}
+.opt.yes{background:rgba(245,200,66,.2);box-shadow:inset 0 0 0 2px var(--gold)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.gloss{justify-self:center;border:0;background:none;color:var(--gold);font:500 14px/1.3 var(--body);text-decoration:underline dotted;text-underline-offset:.25em;cursor:pointer;padding:6px 0;min-height:44px}
+.gloss[aria-expanded="true"]::after{content:" — " attr(data-tr);color:var(--ink-2);text-decoration:none}
+.fb{min-height:1.4em;font-size:15px;color:var(--ink-2)}
+
+.rfire{flex:none;align-self:center;height:clamp(120px,30svh,280px);width:auto;margin-top:calc(env(safe-area-inset-top,0px) + 58px)}
+.t-experts .ru,.t-explorers .ru{display:none}
+.t-explorers .ru.show{display:block}
+.rubtn{display:none;justify-self:center;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);padding:0 14px;min-height:36px;border-radius:999px;cursor:pointer}
+.t-explorers .rubtn{display:inline-flex;align-items:center}
+.t-explorers .rubtn[hidden]{display:none}
+
+/* book page: a task opens as a full-screen page over the scene */
+.pagecard{justify-self:center;display:grid;justify-items:center;gap:8px;border:0;background:none;padding:4px;cursor:pointer;color:var(--ink-2);font:500 14px/1.2 var(--body)}
+.pagecard i{display:block;width:70px;height:92px;border-radius:3px 8px 8px 3px;background:url(../img/07_page_s.webp) center/100% 100%,linear-gradient(160deg,var(--paper),var(--paper-2));box-shadow:0 10px 24px -8px rgba(0,0,0,.8),inset 0 0 0 1px rgba(91,77,99,.25),inset 6px 0 10px -6px rgba(91,77,99,.5);position:relative;transform:rotate(-5deg);animation:flutter 2.6s ease-in-out infinite}
+.pagecard i::before{content:"";position:absolute;inset:22px 16px auto;height:30px;background:repeating-linear-gradient(180deg,rgba(43,33,64,.3) 0 2px,transparent 2px 8px)}
+.pagecard i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(220,235,255,.75),rgba(220,235,255,0) 45%,rgba(220,235,255,0) 70%,rgba(220,235,255,.6))}
+.pagecard.thaw i{animation:thaw .7s var(--ease-out) forwards}
+@keyframes flutter{50%{transform:rotate(3deg) translateY(-4px)}}
+@keyframes thaw{to{transform:scale(1.25) rotate(0);opacity:0;filter:brightness(1.6)}}
+.sheet{position:absolute;inset:0;z-index:60;transform-origin:0 0;transition:transform .55s var(--ease-out),border-radius .55s var(--ease-out);border-radius:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;color:var(--paper-ink);
+  background:url(../img/07_page.webp) center/100% 100% no-repeat,var(--paper)}
+.sheet.small{border-radius:10px}
+.sheet:focus{outline:none}
+.sheet-in{min-height:100%;display:grid;align-content:center;gap:16px;justify-items:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 70px) max(44px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 60px) max(44px,env(safe-area-inset-left,0px));opacity:0;transition:opacity .3s}
+.sheet.open .sheet-in{opacity:1;transition:opacity .4s .3s}
+.sheet-k{margin:0;font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-ink-2)}
+.sheet .say{color:var(--paper-ink);text-shadow:none;font-size:clamp(25px,7vw,32px);max-width:20ch}
+.sheet .ru{color:var(--paper-ink-2);text-shadow:none;font-size:15px}
+.sheet .opts{width:min(100%,360px)}
+.sheet .opt,.sheet .mouse{background:rgba(255,250,238,.75);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
+.sheet .opt:hover{box-shadow:inset 0 0 0 2px var(--violet)}
+.sheet .opt.yes{background:rgba(245,200,66,.45);box-shadow:inset 0 0 0 2px #b8901c}
+.sheet .opt.no{box-shadow:inset 0 0 0 2px #b0485f}
+.sheet .mice{gap:6px}
+.gtext{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(20px,5.4vw,24px);line-height:1.6;text-align:left;max-width:30ch;color:var(--paper-ink)}
+.gap{display:inline-block;min-width:3.2em;border-bottom:2px dotted rgba(43,33,64,.45);line-height:1.15;text-align:center;transition:border-color .3s,background-color .3s}
+.gap.cur{border-bottom:2px solid var(--violet);background:rgba(108,63,197,.1);border-radius:4px 4px 0 0}
+.gap.ok{min-width:0;border-bottom-color:transparent;font-weight:700;color:#5a3a9c;animation:fillin .45s var(--ease-out)}
+@keyframes fillin{from{opacity:0;transform:translateY(-6px)}}
+.base{font-family:var(--body);font-size:.62em;color:var(--paper-ink-2);margin-left:.15em}
+.gap.ok+.base{display:none}
+.gopts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:54px}
+.gopts .opt{min-height:48px;padding:8px 16px}
+.sheet .mouse{background:none;box-shadow:none;width:min(88px,27vw);height:68px;padding:0}
+.sheet .mouse img{width:100%;height:100%;object-fit:contain;animation:sniff .9s ease-in-out infinite alternate}
+.sheet .mouse:nth-child(2) img{animation-delay:-.3s}.sheet .mouse:nth-child(3) img{animation-delay:-.6s}
+@keyframes sniff{to{transform:translateY(-3px) rotate(-3deg)}}
+.thief{width:min(56%,210px);transition:transform .8s cubic-bezier(.5,0,.75,0),opacity .8s;animation:sniff 1s ease-in-out infinite alternate}
+.thief.run{transform:translateX(170%);opacity:0;animation:none}
+.sheet .fb{color:var(--paper-ink-2)}
+.sheet .gloss{color:var(--violet)}
+.sheet .gloss[aria-expanded="true"]::after{color:var(--paper-ink-2)}
+.sheet .rubtn{background:rgba(43,33,64,.08);box-shadow:inset 0 0 0 1px rgba(43,33,64,.3);color:var(--paper-ink-2)}
+.sheet-x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 34px);right:max(36px,env(safe-area-inset-right,0px));z-index:2;border:0;background:none;color:var(--paper-ink-2);font:500 14px/1 var(--body);min-height:44px;padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+
+/* 0 intro cartoon */
+.ivid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;background:var(--night)}
+.ishade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55),rgba(14,10,34,0) 18%,rgba(14,10,34,0) 58%,rgba(14,10,34,.85) 82%,var(--night));transition:opacity .6s}
+.istart{margin:auto;display:grid;justify-items:center;gap:14px;text-align:center;padding:0 24px;transition:opacity .5s,transform .5s var(--ease-out)}
+.istart.gone{opacity:0;transform:scale(.96);pointer-events:none}
+.ikick{margin:0;font:600 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.ititle{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(32px,9vw,44px);line-height:1.08;text-wrap:balance;text-shadow:0 2px 24px rgba(14,10,34,.9)}
+.iplay{width:88px;height:88px;border-radius:50%;border:0;background:var(--gold);color:#1b1206;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 10px rgba(245,200,66,.18),0 18px 40px -12px rgba(0,0,0,.8);transition:transform .25s var(--ease-out)}
+.iplay svg{width:38px;height:38px;margin-left:5px}
+.iplay:active{transform:scale(.95)}
+@media (prefers-reduced-motion:no-preference){.iplay{animation:breathe 2.6s ease-in-out infinite}}
+@keyframes breathe{50%{box-shadow:0 0 0 18px rgba(245,200,66,.08),0 18px 40px -12px rgba(0,0,0,.8)}}
+.inote{margin:0;font-size:14px;color:var(--ink-2)}
+.icap .say{min-height:2.6em}
+.icap .say.alice{color:var(--gold-2)}
+.icap .ru{display:none}
+.icap.ru-on .ru{display:block}
+.ibar{position:absolute;z-index:11;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 60px);display:flex;justify-content:space-between;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.ibtn{pointer-events:auto;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;border-radius:999px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ibtn[aria-pressed="true"]{color:var(--gold-2);box-shadow:inset 0 0 0 1px var(--gold)}
+
+/* 6 shelf */
+.shelf{margin:calc(env(safe-area-inset-top,0px) + 62px) 16px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px 8px}
+.slot{position:relative;border:0;padding:0 0 6px;background:linear-gradient(180deg,rgba(34,24,73,.0),rgba(34,24,73,.85));border-bottom:3px solid #5a3a22;border-radius:10px 10px 2px 2px;cursor:pointer;display:grid;justify-items:center;gap:4px;opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.slot.in{opacity:1;transform:none}
+.slot img{height:clamp(80px,16svh,150px);width:auto;max-width:100%;object-fit:contain;filter:brightness(0) drop-shadow(0 0 1px rgba(200,190,255,.6));opacity:.85}
+.slot small{font:500 11px/1 var(--body);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.slot.first img{filter:brightness(0) drop-shadow(0 0 6px rgba(245,200,66,.9))}
+.slot.first small{color:var(--gold)}
+.slot[aria-pressed="true"]{background:linear-gradient(180deg,rgba(245,200,66,0),rgba(245,200,66,.18))}
+.hint{min-height:2.6em;text-align:center;font-size:15px;color:var(--ink-2)}
+.hint b{font-family:var(--display);font-size:21px;color:var(--ink);font-weight:600}
+
+/* 8 end */
+.end{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 76px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 28px) max(20px,env(safe-area-inset-left,0px));display:grid;align-content:start;gap:18px;background:radial-gradient(90% 50% at 50% 0%,rgba(108,63,197,.35),rgba(14,10,34,0) 70%),var(--night)}
+.end h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,10vw,48px);line-height:1.02;margin:0;text-wrap:balance}
+.end p{margin:0;color:var(--ink-2)}
+.end ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+.end li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:15px;color:var(--ink-2)}
+.end li svg{width:18px;height:18px;color:var(--gold);margin-top:3px;fill:none}
+#sparkLi svg{fill:currentColor}
+.end .cta{display:grid;gap:10px;margin-top:4px}
+.end .note{font-size:13px;color:var(--ink-3)}
+.end .seal{width:120px;justify-self:center;filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+
+@media (max-height:700px){.say{font-size:20px}.ru{font-size:13px}.voice{gap:8px}.slot img{height:13svh}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="backdrop" id="backdrop" style="background-image:url(../img/06_t1_library.webp)"></div>
+
+<main class="stage" id="stage">
+  <canvas id="snow" aria-hidden="true"></canvas>
+
+  <header class="top">
+    <a href="../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <div class="topr"><div class="dots" id="dots" aria-label="Шаги Пролога"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
+  </header>
+
+  <!-- 0 · intro cartoon -->
+  <section class="scene" data-scene="intro" aria-label="Мультфильм: что случилось с книгами">
+    <video class="ivid" id="ivid" src="video/intro.mp4" poster="video/intro_poster.webp" playsinline preload="metadata"></video>
+    <div class="ishade"></div>
+    <div class="istart" id="istart">
+      <p class="ikick">Пролог · бесплатно</p>
+      <h1 class="ititle">Что случилось с&nbsp;книгами?</h1>
+      <button class="iplay" id="iplay" aria-label="Смотреть мультфильм со звуком"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
+      <p class="inote">45 секунд, со звуком</p>
+    </div>
+    <div class="voice icap" id="icap" hidden>
+      <p class="say" id="icapEn" aria-live="polite"></p>
+      <p class="ru" id="icapRu"></p>
+    </div>
+    <div class="ibar">
+      <button class="ibtn" id="iru" aria-pressed="false">По-русски</button>
+      <button class="ibtn" id="iskip" data-go="library">Пропустить</button>
+    </div>
+  </section>
+
+  <!-- 1 · library -->
+  <section class="scene on" data-scene="library" aria-label="Библиотека">
+    <img class="bg" src="../img/06_t1_library.webp" alt="Девочка в зимней шапке стоит у полок старой библиотеки, на верхней полке светится книга">
+    <div class="shade"></div>
+    <button class="glowbook" data-go="open" aria-label="Подойти к светящейся книге"></button>
+    <div class="voice">
+      <div class="who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg>Голос Книги</div>
+      <p class="say" data-say>Shh… Is somebody there? Come closer.</p>
+      <p class="ru">Тсс… Здесь кто-то есть? Подойди ближе.</p>
+      <button class="btn btn-gold later" data-go="open">Открыть книгу</button>
+    </div>
+  </section>
+
+  <!-- 2 · the book opens: name + track -->
+  <section class="scene" data-scene="open" aria-label="Книга открылась">
+    <img class="bg" src="../img/06_t2_open.webp" alt="Девочка открыла книгу, из страниц летят золотые искры" style="object-position:50% 0">
+    <div class="shade" style="background:linear-gradient(180deg,rgba(14,10,34,.5) 0%,rgba(14,10,34,0) 14%,rgba(14,10,34,.35) 26%,rgba(14,10,34,.9) 42%,var(--night) 60%)"></div>
+    <div class="voice">
+      <p class="say" data-say>Hello! I am The Story Fire. What's your name?</p>
+      <p class="ru">Привет! Я Костёр историй. Как тебя зовут?</p>
+      <div class="field">
+        <label for="name">Имя (можно по-английски)</label>
+        <input id="name" autocomplete="given-name" maxlength="20" placeholder="Masha" enterkeyhint="done">
+      </div>
+      <div class="tracks" role="group" aria-label="Сколько тебе лет">
+        <button class="track" data-track="little" aria-pressed="false"><b>5–7</b><span>Little Explorers</span><small>играем вместе со взрослым</small></button>
+        <button class="track" data-track="explorers" aria-pressed="false"><b>8–10</b><span>Explorers</span><small>короткие тексты и загадки</small></button>
+        <button class="track" data-track="experts" aria-pressed="false"><b>11–14</b><span>Experts</span><small>отрывки из книг и детектив</small></button>
+      </div>
+      <button class="btn btn-gold" id="toBoard" disabled>Дальше</button>
+    </div>
+  </section>
+
+  <!-- 3 · board -->
+  <section class="scene" data-scene="board" aria-label="Зимний лес">
+    <div class="forest" id="forest">
+      <img src="../img/04_board_forest.webp" alt="Начало игрового поля: костёр на снегу, нора с кроликом, тропинка из круглых клеток уходит в лес">
+      <div class="cell-mark" id="mark"></div>
+      <div class="token" id="token"><img src="../img/04_token.webp" alt="Твоя фишка"></div>
+    </div>
+    <div class="voice">
+      <p class="say" data-say id="boardSay">Nice to meet you! This is my winter forest. Roll the dice!</p>
+      <p class="ru" id="boardRu">Приятно познакомиться! Это мой зимний лес. Брось кубик!</p>
+      <div class="dierow">
+        <button class="die" id="die" aria-label="Бросить кубик"><img src="../img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+      <div id="ev" hidden></div>
+      <button class="btn btn-gold later" id="toFire" data-go="fire">К костру</button>
+    </div>
+  </section>
+
+  <!-- 4 · fire -->
+  <section class="scene" data-scene="fire" aria-label="Костёр">
+    <div class="camp" id="camp"></div>
+    <svg class="trees" viewBox="0 0 400 120" preserveAspectRatio="none" fill="currentColor" aria-hidden="true"><path d="M0 120V70l14-30 14 30 10-46 16 46 12-26 12 26 14-52 16 52 10-34 12 34 16-40 14 40 10-24 12 24 16-56 14 56 12-30 12 30 14-44 16 44 10-28 12 28 16-48 14 48 12-22 12 22 14-40 14 40 12-30 10 30v50z"/></svg>
+    <button class="fire" id="fire" aria-label="Подбросить дров">
+      <img src="../img/04_fire_1.webp" alt="" class="on">
+      <img src="../img/04_fire_2.webp" alt="">
+      <img src="../img/04_fire_3.webp" alt="">
+      <img src="../img/04_fire_4.webp" alt="">
+    </button>
+    <div class="paws" id="paws" aria-hidden="true"></div>
+    <div class="voice">
+      <p class="say" data-say id="fireSay">Brr! It's cold. The fire is going out. Tap the fire: one, two, three!</p>
+      <p class="ru" id="fireRu">Бр-р! Холодно. Костёр гаснет. Нажми на огонь три раза и считай вслух: one, two, three!</p>
+      <button class="btn btn-gold later" id="toRiddle" data-go="riddle">Загадка у костра</button>
+    </div>
+  </section>
+
+  <!-- 5 · riddle -->
+  <section class="scene" data-scene="riddle" aria-label="Загадка">
+    <div class="camp" style="--glow:.32"></div>
+    <img class="rfire" src="../img/04_fire_4.webp" alt="">
+    <div class="voice" id="riddleBox"></div>
+  </section>
+
+  <!-- 6 · shelf -->
+  <section class="scene" data-scene="shelf" aria-label="Полка гостей">
+    <img class="bg" src="../img/05_bookshelf.webp" alt="" style="opacity:.28">
+    <div class="shade"></div>
+    <div class="shelf" id="shelf"></div>
+    <div class="voice">
+      <p class="say" data-say>Ten guests are lost in my forest. Who are they? Tap a shadow!</p>
+      <p class="ru">В моём лесу потерялись десять гостей. Кто они? Нажми на силуэт.</p>
+      <p class="hint" id="hint" aria-live="polite"></p>
+      <button class="btn btn-gold later" id="toCliff" data-go="cliff">Что это за шорох?</button>
+    </div>
+  </section>
+
+  <!-- 7 · cliffhanger -->
+  <section class="scene" data-scene="cliff" aria-label="Следы на снегу">
+    <div class="camp" id="camp2" style="--glow:.32"></div>
+    <svg class="trees" viewBox="0 0 400 120" preserveAspectRatio="none" fill="currentColor" aria-hidden="true"><path d="M0 120V70l14-30 14 30 10-46 16 46 12-26 12 26 14-52 16 52 10-34 12 34 16-40 14 40 10-24 12 24 16-56 14 56 12-30 12 30 14-44 16 44 10-28 12 28 16-48 14 48 12-22 12 22 14-40 14 40 12-30 10 30v50z"/></svg>
+    <div class="fire" id="fire2" style="cursor:default">
+      <img src="../img/04_fire_1.webp" alt="">
+      <img src="../img/04_fire_2.webp" alt="">
+      <img src="../img/04_fire_3.webp" alt="">
+      <img src="../img/04_fire_4.webp" alt="" class="on">
+    </div>
+    <div class="paws" id="paws2" aria-hidden="true"></div>
+    <div class="voice">
+      <p class="say" data-say id="cliffSay">Oh no… The fire is going out. Look! Tiny footprints in the snow…</p>
+      <p class="ru" id="cliffRu">Ой… Костёр гаснет. Смотри! На снегу крошечные следы…</p>
+      <button class="btn btn-gold later" id="toEnd" data-go="end">Come back on the 27th</button>
+    </div>
+  </section>
+
+  <!-- 8 · end -->
+  <section class="scene" data-scene="end" aria-label="Пролог пройден">
+    <div class="end">
+      <img class="seal" src="../img/04_frozen_book_2.webp" alt="Книга во льду начинает оттаивать">
+      <h1 id="endTitle">Пролог пройден</h1>
+      <p>Книга будет ждать 27 декабря. В первой истории к костру придёт Алиса, и станет понятно, чьи это следы.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>10 историй с 27.12 по 10.01, по 10–25 минут в вечер</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>В каждой истории новый герой из мировой классики и загадки на английском</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Дошедшим до финала настоящая книга в подарок</li>
+      </ul>
+      <div class="cta">
+        <a class="btn btn-gold" href="../#price">Открыть 10 историй · 3 500 ₽</a>
+        <a class="btn btn-ghost" href="../storyfire.ics">Напомнить 26 декабря</a>
+      </div>
+      <p class="note">Для родителей: Пролог бесплатный и проходится сколько угодно раз. <button class="gloss" id="again" style="text-decoration:underline;color:var(--ink-2)">Пройти ещё раз</button></p>
+    </div>
+  </section>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
+    <button class="sheet-x" id="sheetX">Свернуть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="sheet-in"><p class="sheet-k" id="sheetK"></p><div id="sheetBody" style="display:grid;gap:14px;justify-items:center;width:100%"></div></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(s,r){return (r||document).querySelector(s);}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
+  var ORDER=['library','open','board','fire','riddle','shelf','cliff','end'];
+  var BG={intro:'06_t1_library',library:'06_t1_library',open:'06_t2_open',board:'04_board_forest',fire:'04_fire_4',riddle:'04_fire_4',shelf:'05_bookshelf',cliff:'04_fire_1',end:'05_card_back'};
+  var state={name:'',track:''};
+  try{var s=JSON.parse(localStorage.getItem('sf_prolog')||'{}'); state.name=s.name||''; state.track=s.track||'';}catch(e){}
+  function save(){try{localStorage.setItem('sf_prolog',JSON.stringify(state));}catch(e){}}
+  var wait=function(ms){return new Promise(function(r){setTimeout(r,reduce?Math.min(ms,60):ms);});};
+
+  var dots=$('#dots'); ORDER.forEach(function(){dots.appendChild(document.createElement('i'));});
+
+  /* word-by-word reveal of the Book's line */
+  function speak(el,text,silent){
+    if(text!=null) el.textContent=text;
+    var v=(!silent&&typeof SND!=='undefined')?SND.say(el.textContent):Promise.resolve();
+    var words=el.textContent.split(/\s+/); el.textContent='';
+    words.forEach(function(w,i){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; el.appendChild(sp); el.appendChild(document.createTextNode(' '));
+      setTimeout(function(){sp.classList.add('in');}, reduce?0:120+i*110);});
+    return Promise.all([wait(220+words.length*110),v]);
+  }
+  function later(el,ms){ if(!el) return; setTimeout(function(){el.classList.add('in');}, reduce?0:ms); }
+
+  function ruBtns(root){$$('.voice .ru, #sheetBody .ru',root).forEach(function(ru){ if(ru.previousElementSibling&&ru.previousElementSibling.classList.contains('rubtn')) return;
+    var b=document.createElement('button'); b.className='rubtn'; b.textContent='Не понятно? По-русски'; ru.parentNode.insertBefore(b,ru);
+    b.addEventListener('click',function(){ru.classList.add('show'); b.hidden=true;});});}
+  ruBtns(document);
+
+  /* a task is a frozen book page: tap the small page, it opens over the whole screen */
+  var sheet=$('#sheet'), sheetCard=null, sheetOwner=null;
+  function fromCard(card){var s=$('.stage').getBoundingClientRect(), c=card.getBoundingClientRect();
+    return 'translate('+(c.left-s.left)+'px,'+(c.top-s.top)+'px) scale('+(c.width/s.width)+','+(c.height/s.height)+')';}
+  function openSheet(card){
+    SND.fx('page');
+    sheetCard=card; sheet.hidden=false; sheet.classList.remove('open');
+    if(!reduce){sheet.style.transition='none'; sheet.style.transform=fromCard(card); sheet.classList.add('small'); void sheet.offsetWidth; sheet.style.transition='';}
+    requestAnimationFrame(function(){sheet.style.transform='none'; sheet.classList.remove('small'); sheet.classList.add('open'); sheet.focus({preventScroll:true});});
+  }
+  function closeSheet(){
+    return new Promise(function(res){
+      sheet.classList.remove('open'); SND.fx('page');
+      if(reduce||!sheetCard||!sheetCard.isConnected){sheet.hidden=true; return res();}
+      setTimeout(function(){sheet.classList.add('small'); sheet.style.transform=fromCard(sheetCard.querySelector('i')||sheetCard);},150);
+      setTimeout(function(){sheet.hidden=true; sheet.style.transform=''; res();},720);
+    });
+  }
+  $('#sheetX').addEventListener('click',function(){closeSheet(); if(sheetCard) sheetCard.focus({preventScroll:true});});
+  /* taskPage(holder,kicker,render): render(body,finish) fills the page once; finish() closes it and thaws the card */
+  function taskPage(holder,kicker,label,render){
+    return new Promise(function(done){
+      var card=document.createElement('button'); card.className='pagecard'; card.innerHTML='<i></i><span>'+label+'</span>';
+      holder.appendChild(card); var id=Math.random().toString(36).slice(2);
+      card.addEventListener('click',function(){
+        if(sheetOwner!==id){sheetOwner=id; $('#sheetK').textContent=kicker; var body=$('#sheetBody'); body.innerHTML='';
+          render(body,function(){closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
+          ruBtns(body);}
+        openSheet(card.querySelector('i'));
+      });
+    });
+  }
+
+  /* ---------- sound: voice of the Book, music, effects (all start after the first tap) ---------- */
+  var SND=(function(){
+    var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
+    var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
+    fetch('audio/voice.json').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
+    function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
+    function unlock(){
+      if(ctx) return; var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      ctx=new AC(); master=ctx.createGain(); master.gain.value=on?1:0; master.connect(ctx.destination);
+      musicGain=ctx.createGain(); musicGain.gain.value=.22; musicGain.connect(master);
+      sfxGain=ctx.createGain(); sfxGain.gain.value=.7; sfxGain.connect(master);
+      voiceGain=ctx.createGain(); voiceGain.gain.value=1; voiceGain.connect(master);
+      music=new Audio('audio/music.mp3'); music.loop=true; music.preload='auto';
+      try{ ctx.createMediaElementSource(music).connect(musicGain); }catch(e){}
+      if(musicOn) music.play().catch(function(){}); else musicGain.gain.value=0;
+      /* wind: brown noise through a slowly moving band-pass */
+      var n=ctx.createBufferSource(); n.buffer=noise(4); n.loop=true; var f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=500; f.Q.value=.7;
+      var lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=.09; lg.gain.value=260; lfo.connect(lg); lg.connect(f.frequency); lfo.start();
+      wind=ctx.createGain(); wind.gain.value=.05; n.connect(f); f.connect(wind); wind.connect(master); n.start();
+      /* fire crackle: low rumble + random clicks, volume set per scene */
+      crackle=ctx.createGain(); crackle.gain.value=0; crackle.connect(sfxGain);
+      var r=ctx.createBufferSource(); r.buffer=noise(3); r.loop=true; var rf=ctx.createBiquadFilter(); rf.type='lowpass'; rf.frequency.value=380; var rg=ctx.createGain(); rg.gain.value=.5; r.connect(rf); rf.connect(rg); rg.connect(crackle); r.start();
+      (function pop(){ if(crackle.gain.value>.01) click(.4+Math.random()*.6); setTimeout(pop,60+Math.random()*260); })();
+      if(pending){ var t=pending; pending=null; say(t); }
+      setScene(curScene);
+    }
+    function env(g,t,a,d,v){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);}
+    function click(v){ var t=ctx.currentTime, b=ctx.createBufferSource(); b.buffer=noise(.05); var f=ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=1800+Math.random()*2500; var g=ctx.createGain(); env(g,t,.001,.03+Math.random()*.04,.25*v); b.connect(f); f.connect(g); g.connect(crackle); b.start(t); b.stop(t+.12); }
+    function tone(freq,t,dur,v,type,dest){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type||'sine'; o.frequency.setValueAtTime(freq,t); env(g,t,.008,dur,v); o.connect(g); g.connect(dest||sfxGain); o.start(t); o.stop(t+dur+.05); return o; }
+    function hiss(t,dur,v,from,to,type){ var b=ctx.createBufferSource(); b.buffer=noise(dur+.1); var f=ctx.createBiquadFilter(); f.type=type||'bandpass'; f.Q.value=1.2; f.frequency.setValueAtTime(from,t); f.frequency.exponentialRampToValueAtTime(to,t+dur); var g=ctx.createGain(); env(g,t,dur*.25,dur*.75,v); b.connect(f); f.connect(g); g.connect(sfxGain); b.start(t); b.stop(t+dur+.1); }
+    var FX={
+      page:function(t){ hiss(t,.32,.5,900,3800); hiss(t+.1,.22,.3,2600,1200); },
+      whoosh:function(t){ hiss(t,.7,.35,300,1400,'lowpass'); },
+      dice:function(t){ for(var i=0;i<9;i++){ var k=t+i*.07+Math.random()*.03; tone(700+Math.random()*900,k,.05,.18,'triangle'); hiss(k,.04,.25,3000,2500);} },
+      step:function(t){ tone(220,t,.12,.25,'triangle'); tone(330,t+.01,.08,.12); },
+      spark:function(t){ [1319,1568,2093,2637].forEach(function(f,i){tone(f,t+i*.07,.5,.12);}); },
+      ok:function(t){ tone(784,t,.35,.18); tone(1175,t+.09,.55,.16); },
+      no:function(t){ tone(196,t,.22,.22,'triangle'); tone(185,t+.08,.25,.16,'triangle'); },
+      squeak:function(t){ var o=tone(2400,t,.12,.08,'sine'); o.frequency.exponentialRampToValueAtTime(3600,t+.06); o.frequency.exponentialRampToValueAtTime(2800,t+.12); },
+      fire:function(t){ hiss(t,.9,.6,200,1600,'lowpass'); for(var i=0;i<6;i++) setTimeout(function(){click(1);},i*70); },
+      patter:function(t){ for(var i=0;i<4;i++) tone(900+Math.random()*300,t+i*.09,.04,.06,'triangle'); }
+    };
+    function fx(name){ if(!ctx||!on) return; try{ FX[name](ctx.currentTime+.01); }catch(e){} }
+    function duck(v){ if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(v,ctx.currentTime,.25); }
+    function say(text){
+      var id=VOICE[key(text)]; if(!id||!on) return Promise.resolve();
+      if(!ctx){ pending=text; return Promise.resolve(); }
+      return new Promise(function(fin){
+      var ok=false, done=function(){ if(!ok){ok=true; fin();} }; setTimeout(done,15000);
+      var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
+      var play=function(b){ if(!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ src.start(ctx.currentTime+.06); setTimeout(done,b.duration*1000+900); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
+      if(buf[id]) return play(buf[id]);
+      fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+        .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
+      });
+    }
+    var lastKey='', curScene='library', seq=0;
+    function setScene(id){ curScene=id; if(!crackle) return; var v={fire:.5,riddle:.45,cliff:.35}[id]||0; crackle.gain.setTargetAtTime(v,ctx.currentTime,.6); }
+    function toggle(){ on=!on; try{localStorage.setItem('sf_sound',on?'on':'off');}catch(e){} unlock(); if(master) master.gain.setTargetAtTime(on?1:0,ctx.currentTime,.05); if(on&&music) music.play().catch(function(){}); if(!on&&cur){try{cur.stop();}catch(e){}} paint(); }
+    function paint(){ var b=$('#sndBtn'); if(!b) return; b.setAttribute('aria-pressed',on?'true':'false'); b.setAttribute('aria-label',on?'Выключить звук':'Включить звук'); }
+    ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ unlock(); if(ctx&&ctx.state==='suspended') ctx.resume(); },{passive:true}); });
+    var musicOn=true;
+    function musicSet(v){ musicOn=v; if(!musicGain) return; musicGain.gain.setTargetAtTime(v?.22:0,ctx.currentTime,.4); if(v&&music) music.play().catch(function(){}); }
+    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint};
+  })();
+  $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
+  var cur='library';
+  function go(id){
+    var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
+    from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
+    $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
+    $('#backdrop').style.backgroundImage='url(../img/'+BG[id]+'.webp)';
+    $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
+    var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
+    (ENTER[id]||function(){})(p);
+  }
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-go]'); if(b&&!b.disabled) go(b.getAttribute('data-go'));});
+
+  var ENTER={};
+
+  /* intro cartoon: plays with sound after a tap, English captions, Russian on request */
+  var CUES=[[0.6,6.6,'Every book is alive… while somebody reads it.','Каждая книга жива… пока её кто-то читает.'],
+    [7.0,14.1,'But this winter, nobody opened me. My stories began to freeze.','Но этой зимой меня никто не открыл. Мои истории начали замерзать.'],
+    [14.2,22.9,'Then the Mouse King’s army came. The mice ate my words!','Потом пришло войско Мышиного короля. Мыши съели мои слова!'],
+    [23.0,30.9,'The characters fell out of their books… and got lost in the winter forest.','Герои выпали из своих книг… и потерялись в зимнем лесу.'],
+    [31.5,39.1,'Hello! I’m Alice. I followed a white rabbit… and now I’m lost. Will you help me?','Привет! Я Алиса. Я побежала за белым кроликом… и теперь потерялась. Ты мне поможешь?',1],
+    [39.35,44.8,'Light the fire. Bring them home.','Разожги костёр. Верни их домой.']];
+  var ivid=$('#ivid'), icap=$('#icap'), lastCue=-1;
+  $('#iplay').addEventListener('click',function(){
+    SND.music(false); ivid.muted=false; var pr=ivid.play(); if(pr&&pr.catch) pr.catch(function(){ go('library'); });
+    $('#istart').classList.add('gone'); icap.hidden=false; $('.ishade').style.opacity='.6';
+  });
+  ivid.addEventListener('timeupdate',function(){
+    var t=ivid.currentTime, k=-1; CUES.forEach(function(c,i){ if(t>=c[0]&&t<c[1]) k=i; });
+    if(k===lastCue) return; lastCue=k; var en=$('#icapEn');
+    if(k<0){ en.textContent=''; $('#icapRu').textContent=''; return; }
+    en.classList.toggle('alice',!!CUES[k][4]); speak(en,CUES[k][2],true); $('#icapRu').textContent=CUES[k][3];
+  });
+  ivid.addEventListener('ended',function(){ go('library'); });
+  $('#iru').addEventListener('click',function(){ var on=icap.classList.toggle('ru-on'); this.setAttribute('aria-pressed',on?'true':'false'); });
+  ENTER.intro=function(){ SND.music(false); };
+  ENTER.library=function(p){ try{ivid.pause();}catch(e){} SND.music(true); p.then(function(){later($('[data-scene="library"] .later'),300);});};
+
+
+  /* name + track */
+  var name=$('#name'), toBoard=$('#toBoard');
+  name.value=state.name;
+  function pick(t){state.track=t; document.body.className='t-'+t; $$('.track').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.track===t);}); toBoard.disabled=!t;}
+  $$('.track').forEach(function(b){b.addEventListener('click',function(){pick(b.dataset.track);});});
+  if(state.track) pick(state.track);
+  toBoard.addEventListener('click',function(){state.name=name.value.trim().slice(0,20); save(); go('board');});
+
+  /* board */
+  var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
+  var MOUSESVG='<img src="../img/07_mouse.webp" alt="">';
+  var CELLS=[[40,74.8],[57.6,71.2],[72.9,67.2],[82.4,60.4],[77.1,51.2],[66.7,43.2]];
+  var START=[24,90], token=$('#token'), rolled=false;
+  function place(xy){token.style.left=xy[0]+'%'; token.style.top=xy[1]+'%';}
+  place(START);
+  var NUM=['one','two','three','four','five','six'];
+  ENTER.board=function(){
+    var hi=state.name?('Nice to meet you, '+state.name+'! '):'Nice to meet you! ';
+    speak($('#boardSay'),hi+'This is my winter forest. Roll the dice!');
+  };
+  /* special cells: a spark on the first step, mouse tracks on the third */
+  var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
+  var EV={0:'spark',2:'mouse'};
+  Object.keys(EV).forEach(function(k){var c=document.createElement('div'); c.className='cell-ico ico-'+EV[k]; c.innerHTML=EV[k]==='spark'?SPARK:PAW;
+    c.style.left=CELLS[k][0]+'%'; c.style.top=CELLS[k][1]+'%'; $('#forest').insertBefore(c,token);});
+  var MOUSE={
+    little:{say:'Oh! Mice! Shoo them away: one, two, three!',ru:'Ой, мыши! Прогони их: нажми на каждую и считай вслух.'},
+    explorers:{say:'Mice ate words from my page! Put them back.',ru:'Мыши съели слова с моей страницы. Верни их на место!',
+      text:'I {0} a magic book. Children {1} me by the fire, and my stories {2} alive.',
+      gaps:[[['is','am','are'],'am'],[['reads','read','reading'],'read'],[['is','am','are'],'are']]},
+    experts:{say:'Mice ate the verbs from my page! Put them back.',ru:'',gloss:['froze','замёрзли'],
+      text:'Long ago, children {0} (sit) by the fire every night, and the Book {1} (tell) them stories. Then people {2} (forget) about books, and the stories froze.',
+      gaps:[[['sitted','sat','sit'],'sat'],[['told','telled','tells'],'told'],[['forgetted','forget','forgot'],'forgot']]}
+  };
+  function event(kind){
+    var box=$('#ev'), say=$('#boardSay'), ru=$('#boardRu');
+    if(kind==='spark'){
+      var st=$('.cell-ico.ico-spark'); st.classList.add('got'); SND.fx('spark');
+      ru.textContent='Искра! Забирай её в свою коллекцию.';
+      state.spark=true; return Promise.all([speak(say,'A spark! Take it for your collection.'),wait(2200)]).then(function(){return wait(250);});
+    }
+    var m=MOUSE[state.track]||MOUSE.explorers; speak(say,m.say); ru.textContent=m.ru;
+    $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
+    return taskPage(box,'Мышиный след',state.track==='little'?'Нажми на страницу':'Open the page',function(body,finish){
+      body.innerHTML=(m.gaps?'<img class="thief" src="../img/07_mouse.webp" alt="Мышь с кусочком страницы в зубах">':'')+'<p class="say"></p>'+(m.ru?'<p class="ru">'+m.ru+'</p>':'');
+      var ps=$('.say',body); speak(ps,m.say);
+      if(!m.gaps){
+        var left=3; body.insertAdjacentHTML('beforeend','<div class="mice">'+[0,1,2].map(function(){return '<button class="mouse" aria-label="Мышь">'+MOUSESVG+'</button>';}).join('')+'</div>');
+        $$('.mouse',body).forEach(function(b){b.addEventListener('click',function(){ if(b.disabled) return; b.disabled=true; b.classList.add('run'); left--; SND.fx('squeak'); var pv=SND.say(['One!','Two!','Three!'][2-left]);
+          ps.textContent=['One!','Two!','Three!'][2-left];
+          if(!left) Promise.all([pv,wait(700)]).then(finish); });});
+      } else {
+        var g=0, txt=m.text.replace(/\{(\d)\}/g,function(_,i){return '<span class="gap" data-i="'+i+'">\u2003\u2003\u2003</span>';}).replace(/\((\w+)\)/g,'<small class="base">($1)</small>');
+        body.insertAdjacentHTML('beforeend','<p class="gtext">'+txt+'</p>'+(m.gloss?'<button class="gloss" aria-expanded="false" data-tr="'+m.gloss[1]+'">Что значит '+m.gloss[0]+'?</button>':'')+'<div class="opts gopts"></div><p class="fb" aria-live="polite"></p>');
+        var gl=$('.gloss',body); if(gl) gl.addEventListener('click',function(){gl.setAttribute('aria-expanded',gl.getAttribute('aria-expanded')!=='true');});
+        (function next(){
+          $$('.gap',body).forEach(function(x){x.classList.toggle('cur',+x.dataset.i===g);});
+          if(g>=m.gaps.length){ speak(ps,'Yes! My page is whole again.').then(function(){return wait(300);}).then(function(){SND.say(m.text.replace(/\{(\d)\}/g,function(_,i){return m.gaps[i][1];}).replace(/ \(\w+\)/g,''));}); $('.thief',body).classList.add('run'); SND.fx('squeak'); $('.gopts',body).innerHTML='<button class="btn btn-gold later">Go on</button>'; var gb=$('.gopts .btn',body); later(gb,1500); gb.addEventListener('click',function(){gb.disabled=true; finish();}); return; }
+          var gp=m.gaps[g], o=$('.gopts',body);
+          o.innerHTML=gp[0].map(function(w){return '<button class="opt">'+w+'</button>';}).join('');
+          $$('.opt',o).forEach(function(b){b.addEventListener('click',function(){
+            if(b.textContent===gp[1]){ var sp=$('.gap[data-i="'+g+'"]',body); sp.textContent=gp[1]; sp.classList.add('ok'); SND.fx('ok'); $('.fb',body).textContent=''; g++; setTimeout(next,450);}
+            else{ SND.fx('no'); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('.fb',body).textContent='Not quite. Try again!';}
+          });});
+        })();
+      }
+    }).then(function(){
+      box.hidden=true; $('.dierow').hidden=false;
+      var p=m.gaps?speak(say,'The words are back! The mice ran away.'):speak(say,'Well done! Go on!');
+      ru.textContent=m.gaps?'Слова вернулись! Мыши убежали.':'Молодец! Идём дальше!';
+      return Promise.all([p,wait(1300)]).then(function(){return wait(250);});
+    });
+  }
+  $('#die').addEventListener('click',function(){
+    if(rolled) return; rolled=true; SND.fx('dice');
+    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count');
+    die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll');
+    wait(900).then(function(){
+      $('#dieN').textContent=n; $('#dieN').classList.add('in');
+      var i=0;(function step(){
+        if(i>=n){
+          var m=$('#mark'); m.style.left=CELLS[n-1][0]+'%'; m.style.top=CELLS[n-1][1]+'%'; m.classList.add('in');
+          speak($('#boardSay'),(n===1?'One step':NUM[n-1][0].toUpperCase()+NUM[n-1].slice(1)+' steps')+'! Brr… it is cold here. Let’s make a fire!');
+          $('#boardRu').textContent='Шагов: '+n+'. Бр-р, здесь холодно. Давай разведём костёр!';
+          out.textContent=NUM.slice(0,n).join(', ')+'!';
+          later($('#toFire'),900); return;}
+        place(CELLS[i]); var t=document.createElement('div'); t.className='cell-mark in'; t.style.left=CELLS[i][0]+'%'; t.style.top=CELLS[i][1]+'%'; t.style.opacity='.55'; $('#forest').insertBefore(t,token); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+        out.textContent=NUM.slice(0,i+1).join(', ')+(i+1===n?'!':'…');
+        var k=i; i++;
+        wait(520).then(function(){ return EV[k]?event(EV[k]):null; }).then(step);
+      })();
+    });
+  });
+
+  /* fire: three taps */
+  var taps=0, fireImgs=$$('#fire img'), camp=$('#camp');
+  function stage(k,imgs){imgs.forEach(function(im,i){im.classList.toggle('on',i===k);});}
+  $('#fire').addEventListener('click',function(){
+    if(taps>=3) return; taps++; SND.fx('fire'); var pv=SND.say(['One!','Two!','Three!'][taps-1]);
+    stage(taps,fireImgs);
+    camp.style.setProperty('--glow',(.08+taps*.08).toFixed(2));
+    this.style.setProperty('--glow',(taps*.14).toFixed(2));
+    var pop=document.createElement('div'); pop.className='pop'; pop.textContent=['One!','Two!','Three!'][taps-1];
+    $('[data-scene="fire"]').appendChild(pop); setTimeout(function(){pop.remove();},1300);
+    if(taps===3){
+      Promise.all([pv,wait(700)]).then(function(){
+        speak($('#fireSay'),'Thank you! Now the stories can wake up. Listen… a riddle!');
+        $('#fireRu').textContent='Спасибо! Теперь истории смогут проснуться. Слушай… загадка!';
+        later($('#toRiddle'),1200);
+      });
+    }
+  });
+
+  /* riddle: one per track */
+  var RID={
+    little:{say:'Where is the book? Show me!',ru:'Где книга? Покажи! (Взрослому: прочитайте вопрос вслух, малыш выбирает картинку. Потом скажите вместе: It’s a book!)',
+      pics:[['04_die','a dice'],['04_frozen_book_1','a book',1],['04_token','a girl']],
+      yes:'Yes! It’s a book! Say it with me: It’s a book!',yesRu:'Да! Это книга! Скажите вместе: It’s a book!'},
+    explorers:{say:'I’ve got a lot of pages. I haven’t got legs, but I can take you far, far away. What am I?',ru:'Загадка: у меня много страниц, ног нет, но я могу унести тебя далеко-далеко. Кто я?',
+      opts:[['a fish'],['a book',1],['a tree']],
+      yes:'Yes! I am a book. And you can read me!',yesRu:'Да! Я книга. И меня можно читать!'},
+    experts:{say:'The more you take, the more you leave behind. What are they?',ru:'Чем больше берёшь, тем больше оставляешь позади. Что это?',gloss:1,
+      opts:[['books'],['footsteps',1],['memories']],
+      yes:'Footsteps! Remember that word. You will need it soon…',yesRu:'Следы! Запомни это слово. Оно скоро тебе понадобится…'}
+  };
+  ENTER.riddle=function(){
+    var r=RID[state.track]||RID.explorers, box=$('#riddleBox');
+    box.innerHTML='<p class="say" data-say></p><p class="ru">'+(state.track==='little'?'Слушай… загадка! Нажми на страницу.':'Слушай… загадка! Открой страницу.')+'</p><div id="rpage" style="display:grid"></div><button class="btn btn-gold later" data-go="shelf">Кто придёт к костру?</button>';
+    ruBtns(box); speak($('[data-say]',box),'Listen… a riddle! Open the page.');
+    taskPage($('#rpage'),'Загадка',state.track==='little'?'Нажми на страницу':'Open the page',function(body,finish){
+      var html='<p class="say"></p><p class="ru">'+r.ru+'</p>';
+      if(r.gloss) html+='<button class="gloss" aria-expanded="false" data-tr="оставлять позади">Что значит leave behind?</button>';
+      if(r.pics){html+='<div class="opts pics">'+r.pics.map(function(o){return '<button class="opt" data-ok="'+(o[2]?1:0)+'" aria-label="'+o[1]+'"><img src="../img/'+o[0]+'.webp" alt=""></button>';}).join('')+'</div>';}
+      else{html+='<div class="opts">'+r.opts.map(function(o){return '<button class="opt" data-ok="'+(o[1]?1:0)+'">'+o[0]+'</button>';}).join('')+'</div>';}
+      body.innerHTML=html+'<p class="fb" aria-live="polite"></p>';
+      var ps=$('.say',body); speak(ps,r.say);
+      var gl=$('.gloss',body); if(gl) gl.addEventListener('click',function(){gl.setAttribute('aria-expanded',gl.getAttribute('aria-expanded')!=='true');});
+      var ok=false;
+      $$('.opt',body).forEach(function(b){b.addEventListener('click',function(){
+        if(ok) return;
+        if(b.dataset.ok==='1'){ok=true; SND.fx('ok'); b.classList.add('yes'); $('.fb',body).textContent=''; setTimeout(finish,1100);}
+        else{SND.fx('no'); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('.fb',body).textContent='Not quite. Try again! (Почти! Попробуй ещё.)';}
+      });});
+    }).then(function(){
+      speak($('[data-say]',box),r.yes); var ru=$('.ru',box); ru.textContent=r.yesRu; later($('.later',box),1400);
+    });
+  };
+
+  /* shelf of silhouettes */
+  var G=[['alice','27.12','Девочка, которая упала в кроличью нору','Curiouser and curiouser…','The girl who fell down a rabbit hole','The girl who falls down a rabbit hole'],
+    ['mowgli','28.12','Мальчик, которого вырастили волки','','The boy who grew up with wolves','The boy who lives with wolves'],
+    ['gerda','29.12','Девочка, которая пошла босиком через всю зиму','','The girl who walked across the winter to find her friend','The girl who walks across the winter to find her friend'],
+    ['sherlock','30.12','Сыщик, который видит то, чего не видят другие','','The detective who sees what other people don\u2019t','The detective who sees everything'],
+    ['dorothy','02.01','Девочка, чей дом унёс ураган','','The girl who flew to a magic land in her house','The girl who flies to a magic land in her house'],
+    ['peter_pan','03.01','Мальчик, который никогда не вырастет','','The boy who never grows up','The boy who never grows up'],
+    ['jim_hawkins','04.01','Мальчик с картой сокровищ','','The boy with a treasure map','The boy with a treasure map'],
+    ['pinocchio','05.01','Деревянный мальчик, у которого растёт нос','','The wooden boy with a growing nose','The wooden boy with a long nose'],
+    ['mary_lennox','06.01','Девочка, нашедшая ключ от тайного сада','','The girl who found the key to a secret garden','The girl who has got a key to a secret garden'],
+    ['nutcracker','07.01','Тот, кто сражается с Мышиным королём','','The one who fights the Mouse King','The one who fights the Mouse King']];
+  var shelf=$('#shelf');
+  G.forEach(function(g,i){var b=document.createElement('button'); b.className='slot'+(i===0?' first':''); b.setAttribute('aria-pressed','false');
+    b.setAttribute('aria-label','Гость истории '+(i+1)+', '+g[1]);
+    b.innerHTML='<img src="../img/h_'+g[0]+'.webp" alt=""><small>'+g[1]+'</small>';
+    b.addEventListener('click',function(){
+      $$('.slot',shelf).forEach(function(x){x.setAttribute('aria-pressed','false');}); b.setAttribute('aria-pressed','true');
+      var ruTxt='<b>История '+(i+1)+' · '+g[1]+'</b><br>'+g[2]+'. '+(g[3]?'<i>«'+g[3]+'»</i>':'Кто это? Узнаешь в его истории.');
+      if(state.track==='experts'||state.track==='explorers'){
+        var exp=state.track==='experts';
+        $('#hint').innerHTML='<b>Story '+(i+1)+' · '+g[1]+'</b><br>'+(exp?g[4]:g[5])+'. '+(g[3]?'<i>\u201c'+g[3]+'\u201d</i>':'Who is it? You will find out in Story '+(i+1)+'.')
+          +(exp?'':'<br><button class="rubtn" id="hintRu" style="margin-top:8px">Не понятно? По-русски</button><span class="ru" id="hintRuT" style="display:none">'+g[2]+'.</span>');
+        var hb=$('#hintRu'); if(hb) hb.addEventListener('click',function(){hb.hidden=true; $('#hintRuT').style.display='block';});
+      } else $('#hint').innerHTML=ruTxt;
+      SND.say(state.track==='experts'?g[4]+'.':g[5]+'.');
+      later($('#toCliff'),400);
+    });
+    shelf.appendChild(b);});
+  ENTER.shelf=function(){$$('.slot',shelf).forEach(function(s,i){setTimeout(function(){s.classList.add('in');},reduce?0:200+i*90);}); later($('#toCliff'),4000);};
+
+  /* cliffhanger: fire dies, paw prints cross the snow */
+  ENTER.cliff=function(p){
+    var imgs=$$('#fire2 img'), c2=$('#camp2'), paws=$('#paws2'); paws.innerHTML='';
+    var k=3; (function dim(){ if(k<=0) return; setTimeout(function(){k--; stage(k,imgs); c2.style.setProperty('--glow',(.08+k*.08).toFixed(2)); dim();}, reduce?20:1100);})();
+    for(var i=0;i<9;i++){(function(i){
+      var d=document.createElement('div'); d.className='paw'; d.innerHTML=PAW;
+      d.style.left=(4+i*9)+'%'; d.style.top=(66+(i%2?4:0)-i*.9)+'%'; d.style.transform='rotate('+(78+(i%2?10:-6))+'deg)';
+      paws.appendChild(d); setTimeout(function(){d.classList.add('in'); if(i%3===0) SND.fx('patter');}, reduce?0:2600+i*260);
+    })(i);}
+    Promise.all([p,wait(5400)]).then(function(){return wait(400);}).then(function(){
+      speak($('#cliffSay'),'Come back on the 27th of December. I’ll be waiting…');
+      $('#cliffRu').textContent='Возвращайся 27 декабря. Я буду ждать…';
+      later($('#toEnd'),1600);
+    });
+  };
+  ENTER.end=function(){ if(state.name) $('#endTitle').textContent=state.name+', Пролог пройден';
+    if(state.spark&&!$('#sparkLi')){var li=document.createElement('li'); li.id='sparkLi'; li.innerHTML=SPARK+'Первая находка уже в коллекции: искра из зимнего леса'; $('.end ul').appendChild(li);} };
+
+  $('#again').addEventListener('click',function(){location.reload();});
+
+  /* snow */
+  var c=document.getElementById('snow'); if(reduce||!c.getContext) {go('intro'); return;}
+  var x=c.getContext('2d'), W,H,dpr=Math.min(devicePixelRatio||1,2), F=[];
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.round(Math.min(90,W*H/7000)); F=[];
+    for(var i=0;i<n;i++)F.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.6,s:Math.random()*.5+.25,w:Math.random()*6.28,o:Math.random()*.5+.3});}
+  function tick(){ x.clearRect(0,0,W,H);
+    for(var i=0;i<F.length;i++){var f=F[i]; f.y+=f.s; f.w+=.01; f.x+=Math.sin(f.w)*.35;
+      if(f.y>H+4){f.y=-4;f.x=Math.random()*W;}
+      x.globalAlpha=f.o; x.beginPath(); x.arc(f.x,f.y,f.r,0,6.283); x.fillStyle='#fff'; x.fill();}
+    requestAnimationFrame(tick);}
+  size(); addEventListener('resize',size); requestAnimationFrame(tick);
+  go('intro');
+})();
+</script>
+</body>
+</html>

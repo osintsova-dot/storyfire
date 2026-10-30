@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Speak and Smile//Story Fire//RU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:storyfire-2026-sale@storyfire.ru
+DTSTAMP:20261030T000000Z
+DTSTART;VALUE=DATE:20261201
+DTEND;VALUE=DATE:20261202
+SUMMARY:Костёр историй: открылись продажи
+DESCRIPTION:Сегодня можно купить доступ к 10 историям зимнего квеста (3 500 ₽). https://storyfire.ru
+URL:https://storyfire.ru
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Открылись продажи «Костра историй»
+TRIGGER:PT10H
+END:VALARM
+END:VEVENT
+END:VCALENDAR

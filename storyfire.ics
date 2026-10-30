@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Speak and Smile//Story Fire//RU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:storyfire-2026-night1@storyfire.ru
+DTSTAMP:20261029T000000Z
+DTSTART;VALUE=DATE:20261227
+DTEND;VALUE=DATE:20261228
+SUMMARY:Костёр историй: первая история квеста
+DESCRIPTION:Сегодня открывается История 1 (Alice). Ссылка: https://storyfire.ru
+URL:https://storyfire.ru
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Завтра первая история «Костра историй»
+TRIGGER:-PT6H
+END:VALARM
+END:VEVENT
+END:VCALENDAR
