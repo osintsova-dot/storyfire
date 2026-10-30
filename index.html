@@ -112,17 +112,20 @@ section{position:relative}
 .steps em{font-family:var(--display);font-size:1.12em;color:var(--ink)}
 
 /* camp scroll */
-.camp{height:340vh;background:var(--night-2)}
-.camp-stick{position:sticky;top:0;height:100svh;display:grid;align-items:center;overflow:hidden}
+.camp{background:var(--night-2)}
+.camp-stick{position:relative;height:min(100svh,780px);min-height:560px;display:grid;align-items:center;overflow:hidden}
 .camp-frames{position:absolute;inset:0}
 .camp-frames img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s ease}
 .camp-frames img.on{opacity:1}
 .camp-frames::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,10,34,.86) 0%,rgba(14,10,34,.55) 38%,rgba(14,10,34,0) 70%),linear-gradient(180deg,var(--night-2) 0%,rgba(23,16,53,0) 16%,rgba(23,16,53,0) 84%,var(--night-2) 100%)}
-@media (max-width:760px){.camp-frames img{object-position:62% 50%}.camp-frames::after{background:linear-gradient(180deg,var(--night-2) 0%,rgba(14,10,34,.15) 25%,rgba(14,10,34,.1) 45%,rgba(14,10,34,.85) 75%,var(--night-2) 100%)}.camp-stick{align-items:end;padding-bottom:9svh}}
+@media (max-width:760px){.camp-stick{display:block;height:auto;min-height:0;padding-bottom:48px}.camp-frames{position:relative;inset:auto;aspect-ratio:4/5;max-width:100%}.camp-frames img{object-position:62% 75%}.camp-frames::after{background:linear-gradient(180deg,var(--night-2) 0%,rgba(14,10,34,0) 18%,rgba(14,10,34,0) 78%,var(--night-2) 100%)}.camp-copy{margin-top:-24px}}
 .camp-copy{position:relative;display:grid;gap:18px;max-width:30rem}
 .camp-night{display:flex;gap:6px;margin-top:6px}
-.camp-night i{height:4px;flex:1;border-radius:2px;background:rgba(247,238,219,.2);transition:background-color .4s}
-.camp-night i.on{background:var(--gold)}
+.camp-night button{flex:1;border:0;background:none;padding:10px 0 0;cursor:pointer;display:grid;gap:8px;justify-items:start;color:var(--ink-3);font:500 13px/1 var(--body);min-height:44px}
+.camp-night button i{display:block;width:100%;height:4px;border-radius:2px;background:rgba(247,238,219,.2);transition:background-color .4s}
+.camp-night button.on i{background:var(--gold)}
+.camp-night button[aria-pressed="true"]{color:var(--gold-2)}
+.camp-hint{font-size:14px;color:var(--ink-3)}
 .camp-label{font:500 15px/1 var(--body);color:var(--gold);font-variant-numeric:tabular-nums}
 
 /* guests */
@@ -151,6 +154,13 @@ section{position:relative}
 .levels{background:var(--night)}
 .board{margin-top:44px;border-radius:24px;overflow:hidden;box-shadow:0 40px 90px -40px rgba(0,0,0,.9),0 0 0 1px var(--line)}
 .board img{width:100%;height:auto}
+ .skills{margin-top:56px;display:grid;gap:16px}
+.skills h3{font-family:var(--display);font-weight:600;font-size:clamp(26px,5vw,34px);line-height:1.15}
+.sk{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+@media (min-width:860px){.sk{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}}
+.sk li{display:grid;gap:4px;padding-block:16px;border-bottom:1px solid var(--line)}
+.sk b{font:600 15px/1.2 var(--body);color:var(--gold);letter-spacing:.02em}
+.sk span{color:var(--ink-2)}
 .lv{margin-top:56px;display:grid;gap:0;border-top:1px solid var(--line)}
 .lv>div{display:grid;gap:8px 32px;padding-block:28px;border-bottom:1px solid var(--line)}
 @media (min-width:860px){.lv>div{grid-template-columns:220px minmax(0,1fr) 140px;align-items:baseline}}
@@ -189,7 +199,8 @@ section{position:relative}
 .gift-grid{display:grid;gap:36px;align-items:center}
 @media (min-width:900px){.gift-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
 .gift img{border-radius:20px;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6))}
-.shelf-wrap{position:relative}
+.shelf-wrap{position:relative;aspect-ratio:1400/934;max-width:100%}
+.shelf-wrap>img{width:100%;height:100%;object-fit:contain}
 .shelf-wrap .badges{position:absolute;left:6%;right:6%;top:24%;bottom:14%;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:4% 3%;padding:2% 3%}
 .shelf-wrap .badges img{width:72%;margin:auto;border-radius:0;filter:drop-shadow(0 6px 8px rgba(0,0,0,.6))}
 
@@ -280,7 +291,7 @@ footer b{color:var(--ink-2);font-weight:500}
 
 <section class="sec night" id="how">
   <div class="wrap">
-    <h2 class="fade">Как проходит вечер</h2>
+    <h2 class="fade">Как проходит одна история</h2>
     <ol class="steps">
       <li class="fade"><div class="art"><img src="img/04_fire_1.webp" alt="Погасший костёр в снегу" loading="lazy" width="150" height="150"></div><h3>Костёр гаснет</h3><p>Ребёнок бросает кубик и&nbsp;идёт по полю через зимний лес. Клетка может оказаться гостем, ловушкой или бонусом.</p></li>
       <li class="fade"><div class="art"><img src="img/h_alice.webp" alt="Алиса" loading="lazy" height="150"></div><h3>Приходит гость</h3><p>Алиса, Маугли, Шерлок Холмс… Он рассказывает свою историю на английском, с&nbsp;озвучкой и&nbsp;картинками, под уровень ребёнка.</p></li>
@@ -303,9 +314,10 @@ footer b{color:var(--ink-2);font-weight:500}
       <div class="camp-copy">
         <span class="camp-label" id="campLabel">История 1</span>
         <h2>Лагерь растёт с каждой историей</h2>
-        <p class="lead">В первый вечер пустая поляна и угли. К&nbsp;финалу палатка, фонари, снеговик и&nbsp;книжная полка с&nbsp;десятью героями. Ребёнок видит, сколько уже сделал.</p>
+        <p class="lead">В первый день пустая поляна и угли. К&nbsp;финалу палатка, фонари, снеговик и&nbsp;книжная полка с&nbsp;десятью героями. Ребёнок видит, сколько уже сделал.</p>
         <p class="lead">Одна история в день. Прошёл, и дальше закрыто до завтра. Никакой бесконечной ленты.</p>
-        <div class="camp-night" id="campBar" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <div class="camp-night" id="campBar" role="group" aria-label="Каким становится лагерь"><button aria-pressed="true" class="on"><i></i>1</button><button aria-pressed="false"><i></i>3</button><button aria-pressed="false"><i></i>5</button><button aria-pressed="false"><i></i>8</button><button aria-pressed="false"><i></i>10</button></div>
+        <p class="camp-hint">Нажмите на номер истории, чтобы увидеть лагерь</p>
       </div>
     </div>
   </div>
@@ -332,6 +344,18 @@ footer b{color:var(--ink-2);font-weight:500}
         <source media="(max-width: 760px)" srcset="img/04_board_vertical.webp">
         <img src="img/04_board_horizontal.webp" alt="Игровое поле: тропа из клеток ведёт через зимний лес мимо норы Кролика, джунглей, ледяного дворца, корабля и кукольного театра к замку" loading="lazy">
       </picture>
+    </div>
+    <div class="skills fade">
+      <h3>Что внутри каждой истории</h3>
+      <p class="lead measure">Каждая история — полноценный урок английского на материале книги героя. Шесть навыков, и каждый спрятан в&nbsp;игру: у&nbsp;героя замёрзли шесть страниц книги, и&nbsp;каждое задание оттаивает одну.</p>
+      <ul class="sk">
+        <li><b>Listening</b><span>слушает, как герой и&nbsp;волшебная Книга рассказывают историю, и&nbsp;отвечает, что услышал</span></li>
+        <li><b>Reading</b><span>читает страницу книги: отрывок, адаптированный под уровень, и&nbsp;настоящие строки автора</span></li>
+        <li><b>Vocabulary</b><span>новые слова из истории: ловит их, находит на картинке, раскладывает по полкам</span></li>
+        <li><b>Grammar</b><span>мыши выгрызли слова из книги, надо вернуть: грамматика, пройденная с&nbsp;сентября</span></li>
+        <li><b>Writing</b><span>пишет сам: ярлык, записку герою, свою загадку для друга</span></li>
+        <li><b>Speaking</b><span>говорит вслух «фразу героя» и&nbsp;отвечает на вопросы, костёр разгорается от голоса</span></li>
+      </ul>
     </div>
     <div class="lv">
       <div class="fade"><div class="age">5–7 лет<small>Little Explorers</small></div><p>Слушает и&nbsp;находит. Читать не нужно: картинки, озвучка, «повтори за героем», «покажи и&nbsp;принеси». Взрослый рядом: «ход для взрослого» почти в&nbsp;каждой истории.</p><span class="time">10–12 минут</span></div>
@@ -368,7 +392,7 @@ footer b{color:var(--ink-2);font-weight:500}
 <section class="sec gift" id="gift">
   <div class="wrap gift-grid">
     <div class="shelf-wrap fade">
-      <img src="img/05_bookshelf.webp" alt="Книжная полка на десять карточек героев" loading="lazy">
+      <img src="img/05_bookshelf.webp" alt="Книжная полка на десять карточек героев" loading="lazy" width="1400" height="934">
       <div class="badges" id="shelf" aria-hidden="true"></div>
     </div>
     <div class="stack fade">
@@ -487,15 +511,20 @@ footer b{color:var(--ink-2);font-weight:500}
     document.querySelectorAll('.fade').forEach(function(el){io.observe(el);});
   } else document.querySelectorAll('.fade').forEach(function(el){el.classList.add('in');});
 
-  /* camp grows with scroll */
+  /* camp: a slideshow that plays by itself; tap a story to jump */
   var camp=document.getElementById('camp'), frames=camp.querySelectorAll('.camp-frames img'),
-      bars=document.querySelectorAll('#campBar i'), lab=document.getElementById('campLabel'),
-      nights=[1,3,5,8,10], cur=0, dock=document.getElementById('dock'), hero=document.getElementById('top');
+      bars=document.querySelectorAll('#campBar button'), lab=document.getElementById('campLabel'),
+      nights=[1,3,5,8,10], cur=0, dock=document.getElementById('dock'), hero=document.getElementById('top'), auto=null, seen=false;
+  function show(k){ frames[cur].classList.remove('on'); frames[k].classList.add('on'); cur=k;
+    bars.forEach(function(b,i){ b.classList.toggle('on',i<=k); b.setAttribute('aria-pressed',i===k?'true':'false'); }); lab.textContent='История '+nights[k]; }
+  bars.forEach(function(b,i){ b.addEventListener('click',function(){ clearInterval(auto); auto=null; show(i); }); });
+  if('IntersectionObserver' in window && !reduce){
+    new IntersectionObserver(function(es){ es.forEach(function(e){
+      if(e.isIntersecting && !seen){ seen=true; auto=setInterval(function(){ show(cur<4?cur+1:0); },2600); }
+      else if(!e.isIntersecting && auto){ clearInterval(auto); auto=null; seen=false; }
+    }); },{threshold:.5}).observe(camp);
+  }
   function onScroll(){
-    var r=camp.getBoundingClientRect(), span=camp.offsetHeight-innerHeight;
-    var p=Math.min(1,Math.max(0,-r.top/span)), k=Math.min(4,Math.floor(p*5));
-    if(k!==cur){frames[cur].classList.remove('on');frames[k].classList.add('on');cur=k;
-      bars.forEach(function(b,i){b.classList.toggle('on',i<=k);}); lab.textContent='История '+nights[k];}
     var hb=hero.getBoundingClientRect().bottom, pr=document.getElementById('price').getBoundingClientRect();
     dock.classList.toggle('show', hb<0 && !(pr.top<innerHeight && pr.bottom>0));
   }
