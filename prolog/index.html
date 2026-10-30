@@ -472,9 +472,11 @@ img{display:block;max-width:100%}
     return new Promise(function(done){
       var card=document.createElement('button'); card.className='pagecard'; card.innerHTML='<i></i><span>'+label+'</span>';
       holder.appendChild(card); var id=Math.random().toString(36).slice(2);
+      var fin=false; // задание решено: страница оттаивает, повторный тап её уже не открывает
       card.addEventListener('click',function(){
+        if(fin) return;
         if(sheetOwner!==id){sheetOwner=id; $('#sheetK').textContent=kicker; var body=$('#sheetBody'); body.innerHTML='';
-          render(body,function(){closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
+          render(body,function(){ if(fin) return; fin=true; card.disabled=true; closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
           ruBtns(body);}
         openSheet(card.querySelector('i'));
       });
