@@ -118,11 +118,11 @@ async function start(ctx) {
   window._keep = [src, proc]; // iOS: не дать сборщику мусора выбросить узлы
   const stop = async () => { proc.disconnect(); src.disconnect(); stream.getTracks().forEach(t => t.stop()); $('lvl').style.width = '0';
     const len = chunks.reduce((a, c) => a + c.length, 0), all = new Float32Array(len); let o = 0; chunks.forEach(c => { all.set(c, o); o += c.length; });
-    const rate = ctx.sampleRate;
-    const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(len * 16000 / rate)), 16000);
-    const buf = off.createBuffer(1, Math.max(1, len), rate); if (len) buf.copyToChannel(all, 0);
-    const s = off.createBufferSource(); s.buffer = buf; s.connect(off.destination); s.start();
-    const out = (await off.startRendering()).getChannelData(0); out.peak = peak; return out; };
+    // перевод в 16 кГц вручную (OfflineAudioContext в Safari на 16 кГц отдаёт нули): среднее по окну
+    const r = ctx.sampleRate / 16000, n = Math.floor(len / r), out = new Float32Array(n);
+    for (let i = 0; i < n; i++) { const a = Math.floor(i * r), b = Math.min(len, Math.floor((i + 1) * r)); let sum = 0; for (let k = a; k < b; k++) sum += all[k]; out[i] = b > a ? sum / (b - a) : 0; }
+    let p2 = 0; for (let i = 0; i < n; i += 4) p2 = Math.max(p2, Math.abs(out[i])); out.peak2 = p2;
+    out.peak = peak; return out; };
   const auto = setTimeout(() => { if (rec) toggle(); }, 6000);
   return { stop: () => { clearTimeout(auto); return stop(); } };
 }
@@ -147,7 +147,7 @@ async function toggle() {
   const heard = (out.text || '').trim(), sc = score(target, heard), ok = sc >= 0.75;
   $('heard').textContent = heard ? '«' + heard + '»' : '— тишина —';
   $('verdict').textContent = ok ? 'Верно!' : 'Не совпало'; $('verdict').className = 'verdict ' + (ok ? 'ok' : 'bad');
-  $('tm').textContent = `Распознано за ${sec.toFixed(1)} с · запись ${(audio.length / 16000).toFixed(1)} с · громкость ${Math.round((audio.peak || 0) * 100)}% · ${model}`;
+  $('tm').textContent = `Распознано за ${sec.toFixed(1)} с · запись ${(audio.length / 16000).toFixed(1)} с · громкость ${Math.round((audio.peak || 0) * 100)}% → ${Math.round((audio.peak2 || 0) * 100)}% · ${model}`;
   $('res').classList.add('show');
   if (!$('log').querySelector('table')) $('log').innerHTML = '<table><tbody></tbody></table>';
   const tr = document.createElement('tr');
