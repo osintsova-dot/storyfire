@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Проверка микрофона</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b2140;--paper:#fbf4e4;--line:#e3d4b1;--gold:#f5c842;--violet:#5a3a9c;--ok:#2f7d4f;--bad:#a8402f;--ease:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box}
+body{margin:0;background:#1c1640;color:var(--ink);font:16px/1.45 'Golos Text',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+main{max-width:520px;margin:0 auto;padding:20px 16px 48px}
+.card{background:var(--paper);border-radius:22px;padding:22px 18px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+h1{font:700 30px/1.05 'Cormorant Garamond',Georgia,serif;margin:0 0 6px;color:#1c1640}
+.sub{margin:0 0 18px;color:#6b5a3e;font-size:14px}
+.models{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+.models button{border:1.5px solid var(--line);background:#fffaf0;border-radius:14px;padding:12px 10px;font:600 15px 'Golos Text';color:var(--ink);text-align:left;cursor:pointer;transition:transform .15s var(--ease),border-color .2s}
+.models button small{display:block;font-weight:400;font-size:12px;color:#7a6440;margin-top:2px}
+.models button.on{border-color:var(--violet);outline:2px solid var(--violet);outline-offset:-2px}
+.models button:active{transform:scale(.97)}
+.bar{height:8px;border-radius:4px;background:#eadfc6;overflow:hidden;margin:4px 0 6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),#8a63d2);transition:width .25s linear}
+.status{font-size:13px;color:#6b5a3e;min-height:20px}
+.words{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.words button{border:0;background:#efe3c6;border-radius:999px;padding:9px 14px;font:600 15px 'Golos Text';color:var(--ink);cursor:pointer;transition:background .2s,transform .15s var(--ease)}
+.words button.on{background:var(--violet);color:#fff}
+.words button:active{transform:scale(.96)}
+.target{font:700 34px/1.1 'Cormorant Garamond',Georgia,serif;text-align:center;margin:18px 0 14px;color:#1c1640;min-height:38px}
+.mic{display:block;margin:0 auto;width:96px;height:96px;border-radius:50%;border:0;background:var(--violet);color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(28,22,64,.25);transition:transform .2s var(--ease),background .2s}
+.mic svg{width:40px;height:40px}
+.mic:disabled{background:#b9add3;box-shadow:none;cursor:default}
+.mic.rec{background:#c0392b;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.hint{text-align:center;font-size:13px;color:#6b5a3e;margin:10px 0 0}
+.res{margin-top:16px;border-radius:14px;padding:12px 14px;background:#fffaf0;border:1.5px solid var(--line);display:none}
+.res.show{display:block;animation:in .3s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.res .heard{font:600 20px 'Golos Text'}
+.res .verdict{font-weight:600;margin-top:4px}
+.res .verdict.ok{color:var(--ok)}.res .verdict.bad{color:var(--bad)}
+.res .t{font-size:13px;color:#6b5a3e;margin-top:4px}
+.log{margin-top:18px;font-size:13px}
+.log table{width:100%;border-collapse:collapse}
+.log td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.note{color:#d8cdf0;font-size:12.5px;margin:16px 4px 0;line-height:1.5}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+ <div class="card">
+  <h1>Проверка микрофона</h1>
+  <p class="sub">Распознавание работает прямо в телефоне, голос никуда не отправляется.</p>
+  <div class="models">
+   <button data-m="moonshine-tiny">Распознаватель<small>скачается один раз, ~30 МБ</small></button>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="status" id="status">Нажмите «Распознаватель» — он скачается один раз.</div>
+  <div class="words" id="words"></div>
+  <div class="target" id="target"></div>
+  <button class="mic" id="mic" disabled aria-label="Говорить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></button>
+  <p class="hint" id="hint">Нажмите, скажите фразу, нажмите ещё раз.</p>
+  <div class="res" id="res"><div class="heard" id="heard"></div><div class="verdict" id="verdict"></div><div class="t" id="tm"></div></div>
+  <div class="log" id="log"></div>
+ </div>
+ <p class="note">Это тестовая страница. Скажите фразы чётко, потом как ребёнок — тихо, быстро, с ошибкой. Пришлите скриншот таблицы внизу.</p>
+</main>
+<script type="module">
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.1';
+env.allowRemoteModels = false; env.allowLocalModels = true;
+env.localModelPath = new URL('models/', location.href).href;
+
+const PHRASES = ['apple','cheese','banana','ice cream','I like cake','I don’t like fish','Do you like milk?','Yes, I do','There are two ships','She’s got a hat'];
+const $ = id => document.getElementById(id);
+let asr = null, model = '', target = PHRASES[0], rec = null, loadSec = 0;
+
+PHRASES.forEach((p, i) => { const b = document.createElement('button'); b.textContent = p; if (!i) b.classList.add('on');
+  b.onclick = () => { target = p; document.querySelectorAll('.words button').forEach(x => x.classList.toggle('on', x === b)); $('target').textContent = p; $('res').classList.remove('show'); };
+  $('words').appendChild(b); });
+$('target').textContent = target;
+
+document.querySelectorAll('.models button').forEach(b => b.onclick = async () => {
+  if (rec) return;
+  document.querySelectorAll('.models button').forEach(x => x.classList.toggle('on', x === b));
+  model = b.dataset.m; asr = null; $('mic').disabled = true;
+  const files = {}; const t0 = performance.now();
+  $('status').textContent = 'Скачиваю…'; $('bar').style.width = '0';
+  try {
+    asr = await pipeline('automatic-speech-recognition', model, { dtype: 'q8', device: 'wasm',
+      progress_callback: e => { if (e.status === 'progress' && e.total) { files[e.file] = [e.loaded, e.total];
+        const l = Object.values(files).reduce((a, v) => a + v[0], 0), t = Object.values(files).reduce((a, v) => a + v[1], 0);
+        $('bar').style.width = (100 * l / t).toFixed(0) + '%'; $('status').textContent = `Скачиваю… ${(l / 1e6).toFixed(0)} из ${(t / 1e6).toFixed(0)} МБ`; } } });
+    loadSec = (performance.now() - t0) / 1000;
+    $('bar').style.width = '100%'; $('status').textContent = `Готово за ${loadSec.toFixed(1)} с. Можно говорить.`; $('mic').disabled = false;
+  } catch (e) { $('status').textContent = 'Ошибка загрузки: ' + e.message; }
+});
+
+// запись: сырые сэмплы с микрофона → 16 кГц моно
+async function start() {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), chunks = [];
+  proc.onaudioprocess = e => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  src.connect(proc); proc.connect(ctx.destination);
+  const stop = async () => { proc.disconnect(); src.disconnect(); stream.getTracks().forEach(t => t.stop());
+    const len = chunks.reduce((a, c) => a + c.length, 0), all = new Float32Array(len); let o = 0; chunks.forEach(c => { all.set(c, o); o += c.length; });
+    const rate = ctx.sampleRate; await ctx.close();
+    const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(len * 16000 / rate)), 16000);
+    const buf = off.createBuffer(1, len, rate); buf.copyToChannel(all, 0);
+    const s = off.createBufferSource(); s.buffer = buf; s.connect(off.destination); s.start();
+    return (await off.startRendering()).getChannelData(0); };
+  const auto = setTimeout(() => { if (rec) toggle(); }, 6000);
+  return { stop: () => { clearTimeout(auto); return stop(); } };
+}
+
+const norm = t => t.toLowerCase().replace(/[’']/g, '').replace(/[^a-z ]/g, ' ').split(/\s+/).filter(Boolean);
+function score(a, b) { // доля слов цели, услышанных по порядку
+  const A = norm(a), B = norm(b); let j = 0, hit = 0;
+  for (const w of A) { const k = B.indexOf(w, j); if (k >= 0) { hit++; j = k + 1; } }
+  return A.length ? hit / A.length : 0;
+}
+
+async function toggle() {
+  if (!asr) return;
+  if (!rec) {
+    try { rec = await start(); } catch (e) { $('status').textContent = 'Нет доступа к микрофону: ' + e.message; return; }
+    $('mic').classList.add('rec'); $('hint').textContent = 'Говорите… нажмите, когда закончите.'; return;
+  }
+  const r = rec; rec = null; $('mic').classList.remove('rec'); $('mic').disabled = true; $('hint').textContent = 'Слушаю запись…';
+  const audio = await r.stop(); const t0 = performance.now();
+  const out = await asr(audio); const sec = (performance.now() - t0) / 1000;
+  const heard = (out.text || '').trim(), sc = score(target, heard), ok = sc >= 0.75;
+  $('heard').textContent = heard ? '«' + heard + '»' : '— тишина —';
+  $('verdict').textContent = ok ? 'Верно!' : 'Не совпало'; $('verdict').className = 'verdict ' + (ok ? 'ok' : 'bad');
+  $('tm').textContent = `Распознано за ${sec.toFixed(1)} с · запись ${(audio.length / 16000).toFixed(1)} с · ${model}`;
+  $('res').classList.add('show');
+  if (!$('log').querySelector('table')) $('log').innerHTML = '<table><tbody></tbody></table>';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${ok ? '✓' : '✗'}</td><td><b>${target}</b><br>${heard || '—'}</td><td>${sec.toFixed(1)} с<br><small>${model.split('-')[0]}</small></td>`;
+  $('log').querySelector('tbody').prepend(tr);
+  $('mic').disabled = false; $('hint').textContent = 'Нажмите, скажите фразу, нажмите ещё раз.';
+}
+$('mic').onclick = toggle;
+</script>
+</body>
+</html>
