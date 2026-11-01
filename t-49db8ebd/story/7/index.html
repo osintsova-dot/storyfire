@@ -1,0 +1,1775 @@
+<!doctype html>
+<html lang="ru">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>История 7 · Jim Hawkins · Костёр историй</title>
+<meta name="description" content="Бесплатный Пролог зимнего квеста «Костёр историй»: кубик, зимний лес, костёр и первая загадка на английском.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0a22'/%3E%3Cpath d='M32 10c4 9 14 14 14 27a14 14 0 0 1-28 0c0-7 4-11 7-15 1 5 3 7 5 8 0-7-1-13 2-20z' fill='%23f5c842'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="../../img/10_board_s7.webp">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --night-3:#221849;
+  --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d; --violet:#6c3fc5;
+  --line:rgba(247,238,219,.16);
+  --paper:#f3e8cf; --paper-2:#dfcca6; --paper-ink:#2b2140; --paper-ink-2:#5b4d63;
+  --display:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--night);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow:hidden;height:100svh}
+::selection{background:var(--gold);color:var(--night)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+
+/* backdrop for wide screens: the vertical stage sits on a blurred copy of its scene */
+.backdrop{position:fixed;inset:-40px;background:center/cover no-repeat;filter:blur(38px) brightness(.38) saturate(1.2);transform:scale(1.1);transition:background-image .8s}
+.stage{position:relative;height:100svh;max-width:520px;margin:0 auto;overflow:hidden;background:var(--night);isolation:isolate}
+@media (min-width:560px){.stage{box-shadow:0 30px 120px -20px rgba(0,0,0,.85),0 0 0 1px var(--line)}}
+
+.top{position:absolute;z-index:20;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));font-size:14px;color:var(--ink-2)}
+.top a{color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.top a b{font-family:var(--display);font-size:19px;font-weight:600;color:var(--ink)}
+.dots{display:flex;gap:6px}
+.topr{display:flex;align-items:center;gap:10px}
+.snd{width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--ink-2);display:grid;place-items:center;cursor:pointer;border-radius:50%}
+.snd svg{width:22px;height:22px}
+.snd .i-off,.snd[aria-pressed="false"] .i-on{display:none}
+.snd[aria-pressed="false"] .i-off{display:block}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(247,238,219,.25);transition:background-color .4s,transform .4s var(--ease-out)}
+.dots i.on{background:var(--gold);transform:scale(1.25)}
+
+#snow{position:absolute;inset:0;z-index:5;pointer-events:none;width:100%;height:100%}
+
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;opacity:0;visibility:hidden;transition:opacity .9s var(--ease-out),visibility 0s .9s}
+.scene.on{opacity:1;visibility:visible;transition:opacity .9s var(--ease-out),visibility 0s}
+.scene>.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.scene>.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55) 0%,rgba(14,10,34,0) 20%,rgba(14,10,34,0) 45%,rgba(14,10,34,.85) 70%,var(--night) 100%)}
+.scene.on>.bg{animation:drift 14s var(--ease-out) both}
+@keyframes drift{from{transform:scale(1.08)}to{transform:scale(1)}}
+
+/* the Book's voice */
+.voice{margin-top:auto;position:relative;z-index:10;padding:0 max(18px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px}
+.say{font-family:var(--display);font-weight:600;font-size:clamp(21px,5.6vw,25px);line-height:1.25;color:var(--ink);text-align:center;text-wrap:balance;text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 16px rgba(14,10,34,.95);max-width:30ch;justify-self:center}
+.say .w{opacity:0;display:inline-block;transform:translateY(.25em);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
+.say .w.in{opacity:1;transform:none}
+.ru{font-size:14px;line-height:1.4;color:var(--ink-2);max-width:40ch;text-align:center;justify-self:center;text-shadow:0 1px 12px rgba(14,10,34,.9)}
+.who{font:500 13px/1 var(--body);letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:8px}
+.who svg{width:16px;height:16px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--body);text-decoration:none;cursor:pointer;border:0;transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),background-color .2s,opacity .4s}
+.btn-gold{background:var(--gold);color:#1b1206;box-shadow:0 10px 24px -10px rgba(0,0,0,.7),inset 0 -2px 0 rgba(0,0,0,.12)}
+.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}
+.btn-gold:active{transform:scale(.97)}
+.btn-ghost{background:rgba(14,10,34,.5);color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.4)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.later{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.later.in{opacity:1;transform:none;pointer-events:auto}
+
+/* 1 library */
+.glowbook{position:absolute;left:52%;top:9%;width:30%;aspect-ratio:1;border-radius:50%;border:0;background:radial-gradient(circle,rgba(255,217,104,.45),rgba(255,155,61,0) 65%);cursor:pointer;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.65}}
+
+/* 2 name + track */
+.field{display:grid;gap:8px}
+.field label{font-size:14px;color:var(--ink-2)}
+.field input{height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);color:var(--ink);padding:0 18px;font:500 18px/1 var(--body);caret-color:var(--gold)}
+.field input::placeholder{color:var(--ink-3)}
+.field input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.tracks{display:grid;gap:8px}
+.track{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 14px;text-align:left;padding:12px 16px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22);cursor:pointer;transition:box-shadow .25s,background-color .25s}
+.track b{grid-row:span 2;font-family:var(--display);font-size:28px;font-weight:600;line-height:1;font-variant-numeric:lining-nums;min-width:2.6em}
+.track span{font-weight:600;font-size:15px}
+.track small{font-size:13px;color:var(--ink-3);line-height:1.3}
+.track[aria-pressed="true"]{background:rgba(245,200,66,.14);box-shadow:inset 0 0 0 2px var(--gold)}
+.track[aria-pressed="true"] b{color:var(--gold)}
+
+/* 3 board */
+.forest{position:relative;margin:calc(env(safe-area-inset-top,0px) + 62px) 12px 4px;aspect-ratio:420/500;flex:1 1 auto;min-height:0;max-width:calc(100% - 24px);align-self:center;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px var(--line)}
+.forest>img{width:100%;height:100%;object-fit:cover}
+.cell-mark{position:absolute;width:15%;aspect-ratio:1.5;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--gold),0 6px 12px rgba(0,0,0,.5);background:rgba(245,200,66,.22);opacity:0;transition:opacity .3s}
+.cell-mark.in{opacity:1}
+.token{position:absolute;width:27%;left:0;top:0;transform:translate(-50%,-86%);transition:left .38s var(--ease-out),top .38s var(--ease-out);filter:drop-shadow(0 8px 8px rgba(0,0,0,.55));z-index:2}
+.token.hop img{animation:hop .38s var(--ease-out)}
+@keyframes hop{40%{transform:translateY(-22%)}}
+.dierow{display:flex;align-items:center;gap:16px}
+.die{width:84px;height:84px;padding:0;border:0;background:none;cursor:pointer;flex:none;position:relative}
+.die img{width:100%;height:100%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))}
+.die.roll img{animation:roll .9s cubic-bezier(.3,.7,.2,1)}
+@keyframes roll{0%{transform:rotate(0) scale(1)}30%{transform:rotate(-200deg) scale(1.15) translateY(-14px)}70%{transform:rotate(340deg) scale(.95)}100%{transform:rotate(360deg) scale(1)}}
+.die .n{position:absolute;right:-6px;top:-6px;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1b1206;font:700 18px/34px var(--body);text-align:center;transform:scale(0);transition:transform .4s var(--ease-out)}
+.die .n.in{transform:scale(1)}
+.cell-ico{position:absolute;width:11%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;z-index:1;box-shadow:0 4px 10px rgba(0,0,0,.55)}
+.cell-ico svg{width:62%;height:62%}
+.cell-ico.ico-spark{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 4px 10px rgba(0,0,0,.55)}
+.cell-ico.ico-spark.got{animation:got .9s var(--ease-out) forwards}
+@keyframes got{40%{transform:translate(-50%,-50%) scale(1.6)}to{transform:translate(-50%,-160%) scale(.4);opacity:0}}
+.cell-ico.ico-mouse{background:#1a1338;color:#cbbfe8;box-shadow:0 0 0 2px #cbbfe8,0 4px 10px rgba(0,0,0,.55)}
+.mice{display:flex;justify-content:center;gap:14px}
+.mouse{width:84px;height:60px;border:0;background:rgba(14,10,34,.6);border-radius:16px;box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);cursor:pointer;padding:8px;transition:transform .5s var(--ease-out),opacity .5s}
+.mouse.run{transform:translateX(120px);opacity:0}
+.opts.letters{grid-template-columns:repeat(3,1fr)}
+.opts.letters .opt{font:700 26px/1 var(--body)}
+.count{font-family:var(--display);font-size:22px;color:var(--gold);min-height:1.2em}
+
+/* 4 fire */
+.camp{position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 45% at 50% 52%,rgba(255,155,61,var(--glow,.08)),rgba(14,10,34,0) 70%),linear-gradient(180deg,#120c2c 0%,#1b1342 45%,#2a2150 58%,#7d74ac 63%,#5d5490 76%,#3a3168 100%);transition:--glow 1s}
+.camp::after{content:"";position:absolute;left:0;right:0;top:60%;bottom:0;background:linear-gradient(180deg,rgba(14,10,34,.15),rgba(14,10,34,.75) 75%,var(--night))}
+.trees{position:absolute;left:0;right:0;top:32%;height:29%;z-index:-1;color:#0b0820}
+.fire{position:absolute;left:50%;top:calc(14% + 20px);width:min(86%,46svh);max-width:400px;transform:translateX(-50%);border:0;padding:0;background:none;cursor:pointer;aspect-ratio:1}
+.fire img{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .7s var(--ease-out)}
+.fire img.on{opacity:1}
+.fire::before{content:"";position:absolute;inset:-25%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,70,var(--glow,0)),rgba(255,120,40,0) 60%);transition:background .9s;z-index:-1}
+.pop{position:absolute;left:50%;top:20%;font-family:var(--display);font-weight:700;font-size:44px;color:var(--gold-2);pointer-events:none;animation:popup 1.2s var(--ease-out) forwards;text-shadow:0 4px 20px rgba(0,0,0,.6)}
+@keyframes popup{from{opacity:0;transform:translate(-50%,10px) scale(.7)}25%{opacity:1;transform:translate(-50%,-10px) scale(1)}to{opacity:0;transform:translate(-50%,-60px) scale(1)}}
+.paws{position:absolute;inset:0;pointer-events:none}
+.paw{position:absolute;width:36px;opacity:0;color:#140e30;transition:opacity .5s,transform .5s var(--ease-out)}
+.paw.in{opacity:1}
+
+/* 5 riddle */
+.opts{display:grid;gap:10px}
+.opts.pics{grid-template-columns:repeat(3,1fr)}
+.opt{min-height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);font:600 18px/1.2 var(--body);cursor:pointer;padding:10px 16px;transition:box-shadow .2s,background-color .2s}
+.opt:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.opts.pics .opt{aspect-ratio:1;padding:10px;display:grid;place-items:center}
+.opts.pics .opt img{width:100%;height:100%;object-fit:contain}
+.opt.no{animation:shake .45s;box-shadow:inset 0 0 0 1.5px #c9718a}
+.opt.yes{background:rgba(245,200,66,.2);box-shadow:inset 0 0 0 2px var(--gold)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.gloss{justify-self:center;border:0;background:none;color:var(--gold);font:500 14px/1.3 var(--body);text-decoration:underline dotted;text-underline-offset:.25em;cursor:pointer;padding:6px 0;min-height:44px}
+.gloss[aria-expanded="true"]::after{content:" — " attr(data-tr);color:var(--ink-2);text-decoration:none}
+.fb{min-height:1.4em;font-size:15px;color:var(--ink-2)}
+
+.rfire{flex:none;align-self:center;height:clamp(120px,30svh,280px);width:auto;margin-top:calc(env(safe-area-inset-top,0px) + 58px)}
+.t-experts .ru,.t-explorers .ru{display:none}
+.t-explorers .ru.show{display:block}
+.rubtn{display:none;justify-self:center;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);padding:0 14px;min-height:36px;border-radius:999px;cursor:pointer}
+.t-explorers .rubtn{display:inline-flex;align-items:center}
+.t-explorers .rubtn[hidden]{display:none}
+
+/* book page: a task opens as a full-screen page over the scene */
+.pagecard{justify-self:center;display:grid;justify-items:center;gap:8px;border:0;background:none;padding:4px;cursor:pointer;color:var(--ink-2);font:500 14px/1.2 var(--body)}
+.pagecard i{display:block;width:70px;height:92px;border-radius:3px 8px 8px 3px;background:url(../../img/07_page_s.webp) center/100% 100%,linear-gradient(160deg,var(--paper),var(--paper-2));box-shadow:0 10px 24px -8px rgba(0,0,0,.8),inset 0 0 0 1px rgba(91,77,99,.25),inset 6px 0 10px -6px rgba(91,77,99,.5);position:relative;transform:rotate(-5deg);animation:flutter 2.6s ease-in-out infinite}
+.pagecard i::before{content:"";position:absolute;inset:22px 16px auto;height:30px;background:repeating-linear-gradient(180deg,rgba(43,33,64,.3) 0 2px,transparent 2px 8px)}
+.pagecard i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(220,235,255,.75),rgba(220,235,255,0) 45%,rgba(220,235,255,0) 70%,rgba(220,235,255,.6))}
+.pagecard.thaw i{animation:thaw .7s var(--ease-out) forwards}
+@keyframes flutter{50%{transform:rotate(3deg) translateY(-4px)}}
+@keyframes thaw{to{transform:scale(1.25) rotate(0);opacity:0;filter:brightness(1.6)}}
+.sheet{position:absolute;inset:0;z-index:60;transform-origin:0 0;transition:transform .55s var(--ease-out),border-radius .55s var(--ease-out);border-radius:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;color:var(--paper-ink);
+  background:url(../../img/07_page.webp) center/100% 100% no-repeat,var(--paper)}
+.sheet.small{border-radius:10px}
+.sheet:focus{outline:none}
+.sheet-in{min-height:100%;display:grid;align-content:center;gap:16px;justify-items:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 70px) max(44px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 60px) max(44px,env(safe-area-inset-left,0px));opacity:0;transition:opacity .3s}
+.sheet.open .sheet-in{opacity:1;transition:opacity .4s .3s}
+.sheet-k{margin:0;font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-ink-2)}
+.sheet .say{color:var(--paper-ink);text-shadow:none;font-size:clamp(25px,7vw,32px);max-width:20ch}
+.sheet .ru{color:var(--paper-ink-2);text-shadow:none;font-size:15px}
+.sheet .opts{width:min(100%,360px)}
+.sheet .opt,.sheet .mouse{background:rgba(255,250,238,.75);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
+.sheet .opt:hover{box-shadow:inset 0 0 0 2px var(--violet)}
+.sheet .opt.yes{background:rgba(245,200,66,.45);box-shadow:inset 0 0 0 2px #b8901c}
+.sheet .opt.no{box-shadow:inset 0 0 0 2px #b0485f}
+.sheet .mice{gap:6px}
+.gtext{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(20px,5.4vw,24px);line-height:1.6;text-align:left;max-width:30ch;color:var(--paper-ink)}
+.gap{display:inline-block;min-width:3.2em;border-bottom:2px dotted rgba(43,33,64,.45);line-height:1.15;text-align:center;transition:border-color .3s,background-color .3s}
+.gap.cur{border-bottom:2px solid var(--violet);background:rgba(108,63,197,.1);border-radius:4px 4px 0 0}
+.gap.ok{min-width:0;border-bottom-color:transparent;font-weight:700;color:#5a3a9c;animation:fillin .45s var(--ease-out)}
+@keyframes fillin{from{opacity:0;transform:translateY(-6px)}}
+.base{font-family:var(--body);font-size:.62em;color:var(--paper-ink-2);margin-left:.15em}
+.gap.ok+.base{display:none}
+.gopts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:54px}
+.gopts .opt{min-height:48px;padding:8px 16px}
+.sheet .mouse{background:none;box-shadow:none;width:min(88px,27vw);height:68px;padding:0}
+.sheet .mouse img{width:100%;height:100%;object-fit:contain;animation:sniff .9s ease-in-out infinite alternate}
+.sheet .mouse:nth-child(2) img{animation-delay:-.3s}.sheet .mouse:nth-child(3) img{animation-delay:-.6s}
+@keyframes sniff{to{transform:translateY(-3px) rotate(-3deg)}}
+.thief{width:min(56%,210px);transition:transform .8s cubic-bezier(.5,0,.75,0),opacity .8s;animation:sniff 1s ease-in-out infinite alternate}
+.thief.run{transform:translateX(170%);opacity:0;animation:none}
+.sheet .fb{color:var(--paper-ink-2)}
+.sheet .gloss{color:var(--violet)}
+.sheet .gloss[aria-expanded="true"]::after{color:var(--paper-ink-2)}
+.sheet .rubtn{background:rgba(43,33,64,.08);box-shadow:inset 0 0 0 1px rgba(43,33,64,.3);color:var(--paper-ink-2)}
+.sheet-x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 34px);right:max(36px,env(safe-area-inset-right,0px));z-index:2;border:0;background:none;color:var(--paper-ink-2);font:500 14px/1 var(--body);min-height:44px;padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+
+/* 0 intro cartoon */
+.ivid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;background:var(--night)}
+.ishade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55),rgba(14,10,34,0) 18%,rgba(14,10,34,0) 58%,rgba(14,10,34,.85) 82%,var(--night));transition:opacity .6s}
+.istart{margin:auto;display:grid;justify-items:center;gap:14px;text-align:center;padding:0 24px;transition:opacity .5s,transform .5s var(--ease-out)}
+.istart.gone{opacity:0;transform:scale(.96);pointer-events:none}
+.ikick{margin:0;font:600 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.ititle{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(32px,9vw,44px);line-height:1.08;text-wrap:balance;text-shadow:0 2px 24px rgba(14,10,34,.9)}
+.iplay{width:88px;height:88px;border-radius:50%;border:0;background:var(--gold);color:#1b1206;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 10px rgba(245,200,66,.18),0 18px 40px -12px rgba(0,0,0,.8);transition:transform .25s var(--ease-out)}
+.iplay svg{width:38px;height:38px;margin-left:5px}
+.iplay:active{transform:scale(.95)}
+@media (prefers-reduced-motion:no-preference){.iplay{animation:breathe 2.6s ease-in-out infinite}}
+@keyframes breathe{50%{box-shadow:0 0 0 18px rgba(245,200,66,.08),0 18px 40px -12px rgba(0,0,0,.8)}}
+.inote{margin:0;font-size:14px;color:var(--ink-2)}
+.icap .say{min-height:2.6em}
+.icap .say.alice{color:var(--gold-2)}
+.icap .ru{display:none}
+.icap.ru-on .ru{display:block}
+.ibar{position:absolute;z-index:11;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 60px);display:flex;justify-content:space-between;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.ibtn{pointer-events:auto;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;border-radius:999px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ibtn[aria-pressed="true"]{color:var(--gold-2);box-shadow:inset 0 0 0 1px var(--gold)}
+
+/* 6 shelf */
+.shelf{margin:calc(env(safe-area-inset-top,0px) + 62px) 16px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px 8px}
+.slot{position:relative;border:0;padding:0 0 6px;background:linear-gradient(180deg,rgba(34,24,73,.0),rgba(34,24,73,.85));border-bottom:3px solid #5a3a22;border-radius:10px 10px 2px 2px;cursor:pointer;display:grid;justify-items:center;gap:4px;opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.slot.in{opacity:1;transform:none}
+.slot img{height:clamp(80px,16svh,150px);width:auto;max-width:100%;object-fit:contain;filter:brightness(0) drop-shadow(0 0 1px rgba(200,190,255,.6));opacity:.85}
+.slot small{font:500 11px/1 var(--body);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.slot.first img{filter:brightness(0) drop-shadow(0 0 6px rgba(245,200,66,.9))}
+.slot.first small{color:var(--gold)}
+.slot[aria-pressed="true"]{background:linear-gradient(180deg,rgba(245,200,66,0),rgba(245,200,66,.18))}
+.hint{min-height:2.6em;text-align:center;font-size:15px;color:var(--ink-2)}
+.hint b{font-family:var(--display);font-size:21px;color:var(--ink);font-weight:600}
+
+/* 8 end */
+.end{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 76px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 28px) max(20px,env(safe-area-inset-left,0px));display:grid;align-content:start;gap:18px;background:radial-gradient(90% 50% at 50% 0%,rgba(108,63,197,.35),rgba(14,10,34,0) 70%),var(--night)}
+.end h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,10vw,48px);line-height:1.02;margin:0;text-wrap:balance}
+.end p{margin:0;color:var(--ink-2)}
+.end ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+.end li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:15px;color:var(--ink-2)}
+.end li svg{width:18px;height:18px;color:var(--gold);margin-top:3px;fill:none}
+#sparkLi svg{fill:currentColor}
+.end .cta{display:grid;gap:10px;margin-top:4px}
+.end .note{font-size:13px;color:var(--ink-3)}
+.end .seal{width:120px;justify-self:center;filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+
+@media (max-height:700px){.say{font-size:20px}.ru{font-size:13px}.voice{gap:8px}.slot img{height:13svh}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* ===== История: доска, страницы, задания ===== */
+.say.alice{color:var(--gold-2)}
+.pages{display:flex;justify-content:center;gap:6px}
+.pg{display:grid;justify-items:center;gap:2px;width:50px;color:#9fb8e6;opacity:.85;transition:color .5s,opacity .5s}
+.pg svg{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(159,184,230,.5))}
+.pg em{font:500 11px/1 var(--body);font-style:normal;letter-spacing:.02em;color:var(--ink-3);white-space:nowrap}
+.pg.warm{color:var(--gold);opacity:1}
+.pg.warm svg{filter:drop-shadow(0 0 8px rgba(245,200,66,.7))}
+.forest .cell-ico{width:8.5%}
+.cell-ico.ico-page{background:#1c2a4a;color:#cfe0ff;box-shadow:0 0 0 2px #cfe0ff,0 0 14px rgba(159,184,230,.7)}
+.cell-ico.ico-page.got{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 0 14px rgba(245,200,66,.7)}
+.cell-ico.ico-snow{background:#eaf2ff;color:#5d7bb5;box-shadow:0 0 0 2px #fff,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-adult{background:#3a1d4a;color:#f3c7ff;box-shadow:0 0 0 2px #f3c7ff,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-spark.got,.cell-ico.ico-page.got{animation:none}
+.finimg.big{height:clamp(240px,52svh,520px);border-radius:18px;box-shadow:0 0 0 1px rgba(247,238,219,.15)}
+.finimg{position:relative;align-self:center;height:clamp(200px,44svh,420px);width:auto;margin-top:calc(env(safe-area-inset-top,0px) + 64px);filter:drop-shadow(0 20px 30px rgba(0,0,0,.6))}
+.hcard{display:flex;align-items:center;gap:12px;justify-self:center;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px var(--gold);border-radius:16px;padding:10px 16px 10px 10px;opacity:0;transform:translateY(10px) scale(.96);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+.hcard.in{opacity:1;transform:none}
+.hcard img{width:56px;height:56px}
+.hcard span{display:grid;font-size:13px;color:var(--ink-2)}
+.hcard b{font-family:var(--display);font-size:22px;color:var(--ink)}
+/* tasks on the paper page */
+.sheet .opts{width:min(100%,380px)}
+.sheet .opts.emo .opt{font-size:40px;line-height:1}
+.sheet .opts.pics{grid-template-columns:repeat(auto-fit,minmax(72px,1fr))}
+.sheet .opts.bottles .opt{font:italic 500 18px/1.25 var(--display);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35),0 4px 0 rgba(91,77,99,.25);border-radius:6px 6px 14px 14px}
+.order .opt{display:flex;align-items:center;gap:10px;text-align:left;font-size:16px}
+.order .opt i{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 14px/1 var(--body);font-style:normal;background:rgba(43,33,64,.1);color:var(--paper-ink)}
+.order .opt.yes i{background:var(--gold);color:#1b1206}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,400px)}
+.match>div{display:grid;gap:8px;align-content:start}
+.match .opt{min-height:48px;font-size:16px;padding:8px 10px}
+.match .opt.m{font-size:30px}
+.match.long .opt.m{font-size:14px;line-height:1.25;font-weight:500}
+.match .opt.sel{box-shadow:inset 0 0 0 2.5px var(--violet);background:rgba(108,63,197,.12)}
+.match .opt.yes{opacity:.55;pointer-events:none}
+.opts.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.opts.tiles .opt{min-height:48px;padding:8px 16px}
+.opts.tiles .opt.used{opacity:.25}
+.opts.letters2 .opt{font:700 26px/1 var(--body);width:58px;height:58px;padding:0;background:#f6d7a4;box-shadow:inset 0 0 0 2px #b8803a,0 4px 0 #9b6a2c;border-radius:14px}
+.tline{min-height:1.6em;font-family:var(--display);font-size:clamp(22px,6vw,28px);font-weight:600;color:var(--paper-ink);margin:0}
+.tline.ok{color:#5a3a9c}
+.tfq{margin:0;font-family:var(--display);font-size:clamp(22px,6vw,26px);font-weight:600;line-height:1.25;max-width:24ch;min-height:2.5em}
+.code{margin:0;font:700 clamp(26px,8vw,36px)/1.1 "Courier New",ui-monospace,monospace;letter-spacing:.12em;color:var(--paper-ink);background:rgba(255,250,238,.7);border:1.5px dashed rgba(43,33,64,.4);border-radius:10px;padding:12px 16px}
+.code.mirror{transform:scaleX(-1)}
+.abc{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;width:min(100%,400px)}
+.abc span{display:grid;justify-items:center;width:24px;font:600 13px/1.2 var(--body);color:var(--paper-ink)}
+.abc i{font-style:normal;font-size:11px;color:var(--paper-ink-2)}
+.passage{max-width:34ch;text-align:left;font-family:var(--display);font-size:clamp(19px,5vw,22px);line-height:1.5;color:var(--paper-ink)}
+.ptitle{margin:0;font:600 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-ink-2)}
+.inp{width:min(100%,380px);border:0;border-radius:12px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35);color:var(--paper-ink);font:400 17px/1.4 var(--body);padding:12px 14px}
+textarea.inp{min-height:130px;resize:vertical}
+.inp:focus{outline:none;box-shadow:inset 0 0 0 2px var(--violet)}
+.row2{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.sheet .btn-ghost{background:rgba(43,33,64,.08);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35)}
+.rec.on{background:#d9485f;color:#fff}
+.iplay.small{width:76px;height:76px}
+.iplay.small svg{width:32px;height:32px}
+.pimg{height:min(36svh,330px);width:auto;max-width:100%;aspect-ratio:1080/1920;object-fit:cover;border-radius:14px;box-shadow:0 10px 24px -10px rgba(43,33,64,.6),inset 0 0 0 1px rgba(43,33,64,.2)}
+.bscene{position:relative;width:min(100%,320px);aspect-ratio:1080/1920;max-height:46svh;overflow:hidden;border-radius:14px;box-shadow:0 10px 24px -10px rgba(43,33,64,.6)}
+.bscene img{width:100%;height:100%;object-fit:cover}
+.btag{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:0;background:#fffaf0;color:var(--paper-ink);font:700 16px/1 var(--body);box-shadow:0 0 0 2px var(--paper-ink),0 4px 10px rgba(0,0,0,.4);cursor:pointer}
+.btag.yes{background:var(--gold)}
+.btag.no{animation:shake .45s;box-shadow:0 0 0 2px #b0485f}
+.clabel{position:absolute;transform:translate(-50%,-50%);max-width:30%;font:italic 600 11px/1.15 var(--display);color:var(--paper-ink);text-align:center;overflow-wrap:anywhere}
+.pnote{margin:0;max-width:34ch;font-size:15px;line-height:1.45;color:var(--paper-ink);background:rgba(255,250,238,.75);box-shadow:inset 0 0 0 1px rgba(43,33,64,.25);border-radius:12px;padding:10px 14px;text-align:left}
+.sheet .opts.pics .opt{padding:6px}
+.sheet .opts.pics .opt img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.match .opt.m.im{padding:4px;min-height:58px}
+.match .opt.m.im img{height:50px;width:auto;margin:auto;border-radius:8px}
+.drow{display:flex;justify-content:center;gap:4px}
+.drow img{width:48px;height:48px;object-fit:contain;border-radius:8px}
+.abg{transition:opacity .8s}
+.abg.off{opacity:0}
+.avid{object-fit:cover}
+#agate{position:absolute;inset:0;display:grid;align-content:end;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 70px);z-index:12;background:linear-gradient(180deg,rgba(14,10,34,0) 40%,rgba(14,10,34,.85) 80%)}
+#agate .say{margin:0}
+#agate.gone{opacity:0;pointer-events:none}
+.sheet .opts.words .opt{aspect-ratio:auto;min-height:54px;font:600 18px/1.2 var(--body)}
+.lvid{width:min(100%,300px);aspect-ratio:9/16;max-height:52svh;object-fit:cover;border-radius:14px;background:#2b2140;box-shadow:0 10px 24px -10px rgba(43,33,64,.6)}
+.vplay{margin-top:-60px;position:relative;z-index:2}
+[data-scene="arrive"]:has(#agate:not(.gone)) .voice{visibility:hidden}
+.lvid.full{position:fixed;inset:0;z-index:90;width:100%;height:100%;max-width:none;max-height:none;border-radius:0;object-fit:cover;background:#000}
+.vclose{position:fixed;z-index:91;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(14px,env(safe-area-inset-right,0px));border:0;border-radius:999px;background:rgba(14,10,34,.6);color:var(--ink);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.replay{border:0;background:rgba(43,33,64,.08);color:var(--paper-ink);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer;margin-top:-6px}
+.replay svg{width:20px;height:20px}
+.t-little #sheetBody .ru{font-size:15px;line-height:1.45;color:var(--paper-ink);background:rgba(255,250,238,.75);box-shadow:inset 0 0 0 1px rgba(43,33,64,.25);border-radius:12px;padding:10px 14px;text-align:left;max-width:34ch}
+.vsub{position:fixed;z-index:92;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 40px);width:max-content;max-width:88%;margin:0;padding:8px 14px;border-radius:12px;background:rgba(14,10,34,.72);color:#fff;font:600 18px/1.3 var(--body);text-align:center}
+.vsub small{display:block;font-size:14px;font-weight:500;opacity:.85;margin-top:3px}
+.vsubbtn{position:fixed;z-index:91;top:calc(env(safe-area-inset-top,0px) + 14px);left:max(14px,env(safe-area-inset-left,0px));border:0;border-radius:999px;background:rgba(14,10,34,.6);color:var(--ink);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.vsubbtn[aria-pressed="true"]{color:var(--gold-2);box-shadow:inset 0 0 0 1px var(--gold)}
+/* ===== История 2: новые механики ===== */
+.cell-ico.ico-flower{background:#3a1206;color:#ff9b3d;box-shadow:0 0 0 2px #ff9b3d,0 0 14px rgba(255,155,61,.7)}
+.mem{display:grid;grid-template-columns:repeat(var(--c,4),1fr);gap:8px;width:min(100%,380px)}
+.mcard{position:relative;aspect-ratio:3/4;border:0;padding:0;background:none;cursor:pointer;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .4s var(--ease-out)}
+.mcard>span{position:absolute;inset:0;display:grid;place-items:center;border-radius:12px;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.mcard .back{background:#1c2a4a;color:#cfe0ff;box-shadow:inset 0 0 0 2px #cfe0ff,0 4px 0 rgba(28,42,74,.5)}
+.mcard .back svg{width:40%;opacity:.8}
+.mcard .face{transform:rotateY(180deg);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35);padding:4px;color:var(--paper-ink);font:600 15px/1.2 var(--body);text-align:center}
+.mcard.txt .face{font-size:13px}
+.mcard .face img{width:100%;height:100%;object-fit:contain;border-radius:8px}
+.mcard.open{transform:rotateY(180deg)}
+.mcard.yes .face{box-shadow:inset 0 0 0 2.5px var(--gold),0 0 12px rgba(245,200,66,.6)}
+.sortq{margin:0;font-family:var(--display);font-size:clamp(22px,6vw,27px);font-weight:600;color:var(--paper-ink);background:#fffaf0;border-radius:14px;padding:12px 18px;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3),0 6px 0 rgba(91,77,99,.2);max-width:22ch}
+.sortq.popin{animation:popin .35s var(--ease-out)}
+.sortq.ok{color:#5a3a9c}
+@keyframes popin{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,400px)}
+.bin{display:grid;align-content:start;gap:6px;min-height:150px;border:0;border-radius:16px;padding:12px 10px;background:rgba(108,63,197,.08);box-shadow:inset 0 0 0 2px rgba(108,63,197,.45);color:var(--paper-ink);cursor:pointer;text-align:left}
+.bin b{font:700 16px/1.2 var(--body);text-align:center}
+.bin ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.bin li{font-size:14px;line-height:1.25;background:#fffaf0;border-radius:8px;padding:4px 8px;animation:popin .3s var(--ease-out)}
+.bin.no{animation:shake .45s}
+.clues{margin:0;padding:0 0 0 1.4em;display:grid;gap:6px;max-width:30ch;text-align:left;font-family:var(--display);font-size:clamp(20px,5.4vw,23px);color:var(--paper-ink)}
+.clues li{animation:popin .35s var(--ease-out)}
+.vbtn.pulse{animation:vpulse 1.6s ease-in-out 3}
+@keyframes vpulse{50%{box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35),0 0 0 8px rgba(245,200,66,.35)}}
+.fuse{position:relative;display:flex;align-items:center;gap:8px;width:min(100%,360px);height:14px}
+.fuse i{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,#ff5a1f,#ffc23d);transform-origin:left;transition:transform .1s linear}
+.fuse svg{width:28px;height:28px;color:#ff7a1f;filter:drop-shadow(0 0 6px rgba(255,122,31,.8))}
+.fuse.low svg{animation:shake .5s infinite}
+.fuse.win svg{transform:scale(1.4);color:var(--gold)}
+.echo .opt{display:grid;gap:4px;justify-items:center}
+.echo .opt em{font:600 13px/1 var(--body);font-style:normal;color:var(--paper-ink)}
+.echo .opt.sel{box-shadow:inset 0 0 0 2.5px var(--violet)}
+.echo .opt.yes{box-shadow:inset 0 0 0 2.5px var(--gold),0 0 16px rgba(245,200,66,.7)}
+.poster{display:grid;justify-items:center;gap:4px;width:min(100%,260px);background:#f1dfb6;border-radius:4px;padding:12px 14px 14px;box-shadow:0 10px 22px -10px rgba(43,33,64,.7),inset 0 0 0 2px #9b6a2c;transform:rotate(-1.5deg);color:#3a2410}
+.poster b{font:700 26px/1 "Courier New",ui-monospace,monospace;letter-spacing:.2em}
+.poster img{width:58%;border-radius:6px}
+.poster strong{font:700 15px/1 var(--body);letter-spacing:.12em}
+.poster p{margin:0;min-height:1.3em;font:italic 600 16px/1.3 var(--display);text-align:center}
+.ppic img{height:110px;width:auto;border-radius:12px}
+.opts.letters2.wpaws .opt{border-radius:50% 50% 45% 45%;background:#e9eef8;box-shadow:inset 0 0 0 2px #5d7bb5,0 4px 0 #3f5a8f}
+.code.vowels{letter-spacing:.18em}
+.forest .cell-ico{width:6.6%}
+.dm{width:20px;height:30px;display:block}
+
+/* ===== История 7 · Джим Хокинс: попугай, карта острова, компас, монеты, чёрная метка, координаты, свинарник, трюм, шторм, путь к сокровищу ===== */
+.cell-ico.ico-storm{background:#0f3b5c;color:#9fe0ff;box-shadow:0 0 0 2px #9fe0ff,0 0 14px rgba(120,210,255,.75)}
+/* песок вместо снега: назови — и место выйдет из-под песка */
+.sheet .ppic.snowy img,.sheet .ppic.snowy .actw{filter:blur(8px) sepia(.9) brightness(1.15) saturate(1.4)}
+.sheet .ppic.snowy::after{background:radial-gradient(circle at 30% 30%,rgba(240,206,140,.85),rgba(222,180,110,.55) 60%,transparent 76%)}
+/* монеты фоники: звук = монета, ue / er / ar — монета-двойняшка */
+.sheet .gph .gp{min-width:66px;height:66px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#f0c24a 55%,#c8902a);box-shadow:inset 0 0 0 3px #a8741f,inset 0 0 0 6px rgba(255,236,170,.6),0 4px 0 #8a5d19;color:#5b3a0c}
+.sheet .gph .gp.dg{min-width:96px;border-radius:40px;color:#7a2f0c}
+.sheet .gph .gp.dg::after{background:#7a2f0c}
+.sheet .gph .gp.on{background:radial-gradient(circle at 35% 30%,#fffbe6,#ffd75e 55%,#e0a53a);box-shadow:inset 0 0 0 3px #a8741f,0 0 16px rgba(255,200,60,.9),0 4px 0 #8a5d19}
+.sheet .gph.joined .gp{border-radius:0}
+.sheet .gph.joined .gp:first-child{border-radius:40px 0 0 40px}
+.sheet .gph.joined .gp:last-child{border-radius:0 40px 40px 0}
+.opts.coins .opt{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#f0c24a 55%,#c8902a);box-shadow:inset 0 0 0 3px #a8741f,0 4px 0 #8a5d19;color:#5b3a0c}
+.opts.coins .opt[data-n]{width:auto;min-width:58px;padding:0 12px;border-radius:30px}
+/* попугай повторяет */
+.parrotbox{position:relative;display:flex;align-items:center;gap:8px;width:min(100%,360px)}
+.parrotbox img{width:84px;height:84px;object-fit:contain;border-radius:50%;background:#fffaf0;box-shadow:inset 0 0 0 2px #2f8a3b;flex:none;transform-origin:50% 90%}
+.parrotbox.talk img{animation:pbob .45s ease-in-out infinite alternate}
+@keyframes pbob{to{transform:rotate(-7deg) translateY(-3px)}}
+.pbub{flex:1;min-height:52px;display:flex;align-items:center;padding:8px 14px;border-radius:16px 16px 16px 4px;background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3);font:600 17px/1.25 var(--display);color:var(--paper-ink)}
+.prow .opt.yes{box-shadow:inset 0 0 0 3px var(--gold),0 0 12px rgba(245,200,66,.7)}
+.prow .opt.lit{animation:popin .35s var(--ease-out);box-shadow:inset 0 0 0 3px #2f8a3b}
+/* карта острова */
+.isle{position:relative;width:min(100%,330px);aspect-ratio:1;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse 46% 40% at 50% 52%,#e9d39b 0 70%,#d9bd7a 86%,transparent 87%),radial-gradient(circle at 30% 30%,#7cc2d6,#3d8fae);box-shadow:inset 0 0 0 3px #8a6334,0 10px 22px -12px rgba(43,33,64,.6)}
+.isle::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 31px,rgba(80,50,20,.08) 31px 32px),repeating-linear-gradient(90deg,transparent 0 31px,rgba(80,50,20,.08) 31px 32px);pointer-events:none}
+.isle .ik{position:absolute;transform:translate(-50%,-50%);width:var(--w,16%);aspect-ratio:1;border-radius:50%;overflow:hidden;background:#fffaf0;box-shadow:0 0 0 2px #8a6334,0 3px 6px rgba(0,0,0,.3)}
+.isle .ik img{width:100%;height:100%;object-fit:cover}
+.isle .ik .actw{min-height:0;font-size:10px;padding:2px}
+.isle .ix{position:absolute;transform:translate(-50%,-50%);font:700 26px/1 var(--body);color:#b0303a}
+.isle .imouse{position:absolute;right:4%;bottom:4%;width:26%;opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s}
+.isle .imouse img{width:100%}
+.isle.laugh .imouse{opacity:1;transform:none;animation:shake .5s 2}
+/* компас */
+.rose{position:relative;width:min(100%,280px);aspect-ratio:1}
+.rose svg.rs{position:absolute;inset:22%;width:56%;height:56%;color:#3a5d8f}
+.rose .opt{position:absolute;width:30%;aspect-ratio:1;min-height:0;padding:4px;transform:translate(-50%,-50%)}
+.rose .opt img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.rose .dN{left:50%;top:13%}.rose .dE{left:87%;top:50%}.rose .dS{left:50%;top:87%}.rose .dW{left:13%;top:50%}
+.carrows{display:flex;gap:10px;justify-content:center;font-family:var(--body)}
+.carrows span{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35)}
+.carrows span.on{background:var(--gold)}
+.carrows span.cur{box-shadow:inset 0 0 0 3px var(--violet)}
+.cslots{display:flex;gap:6px;justify-content:center}
+.cslots span{width:48px;height:56px;display:grid;place-items:center;border-radius:50%;background:rgba(240,194,74,.25);box-shadow:inset 0 0 0 2px #c8902a;font:700 28px/1 var(--body);color:#5b3a0c}
+.cslots span.on{background:radial-gradient(circle at 35% 30%,#fff3c4,#f0c24a 55%,#c8902a);animation:popin .35s var(--ease-out)}
+.cslots.joined{gap:0}
+/* чёрная метка */
+.bspot{position:relative;display:flex;gap:6px;align-items:center;justify-content:center;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3a3340,#141018 70%);box-shadow:0 0 0 6px #f1dfb6,0 10px 22px -8px rgba(0,0,0,.6);transform:rotate(-4deg)}
+.bspot b{font:700 38px/1 "Courier New",ui-monospace,monospace;color:#f1dfb6;letter-spacing:.04em}
+.bspot b.miss{min-width:40px;border-bottom:3px dashed #f1dfb6;color:#f5c842}
+.bspot.ok{box-shadow:0 0 0 6px var(--gold),0 0 26px rgba(245,200,66,.8)}
+/* координаты карты */
+.tgrid{display:grid;grid-template-columns:28px repeat(5,1fr);gap:3px;width:min(100%,300px);padding:10px;border-radius:12px;background:#f1dfb6;box-shadow:inset 0 0 0 2px #9b6a2c,0 8px 18px -10px rgba(43,33,64,.6)}
+.tgrid i{display:grid;place-items:center;font:700 14px/1 var(--body);font-style:normal;color:#8a5d19}
+.tgrid button{aspect-ratio:1;border:0;border-radius:6px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1px rgba(91,58,12,.35);font:700 18px/1 "Courier New",ui-monospace,monospace;color:#3a2410;cursor:pointer;padding:0}
+.tgrid button.lit{background:var(--gold);box-shadow:inset 0 0 0 2px #a8741f}
+.code.coords{font-size:clamp(17px,4.8vw,22px);letter-spacing:.06em;line-height:1.5;text-align:center}
+/* свинарник */
+.dm.pp{width:22px;height:22px}
+.abc.pack .dm.pp{width:24px;height:24px}
+.code.pack .dm.pp{width:26px;height:26px}
+.code.pack{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 3px}
+.code.pack .gapw{width:12px}
+/* трюм: бочки How many / How much */
+.bins.hold .bin{border-radius:40% 40% 40% 40% / 14% 14% 14% 14%;background:repeating-linear-gradient(90deg,#b07a3e 0 22px,#9a6833 22px 24px);box-shadow:inset 0 14px 0 -8px #5b3a14,inset 0 -14px 0 -8px #5b3a14,0 6px 0 rgba(60,36,10,.35);color:#fff7e0}
+.bins.hold .bin b{color:#fff7e0;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.bins.chests .bin{border-radius:14px 14px 10px 10px;background:linear-gradient(180deg,#8b5a2b 0 30%,#a8733d 30%);box-shadow:inset 0 0 0 3px #4b2e12,0 6px 0 rgba(60,36,10,.35);color:#fff7e0}
+.bins.chests .bin b{color:#fff7e0;font-size:14px}
+/* шторм: капли */
+.deck{position:relative;width:min(100%,330px);height:230px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#1b2b4a,#2f4f7a 60%,#6b4a2a 60%,#7d5631);box-shadow:inset 0 0 0 3px #4b2e12}
+.deck .water{position:absolute;left:0;right:0;bottom:0;height:var(--lv,60%);background:linear-gradient(180deg,rgba(120,200,240,.75),rgba(40,110,170,.9));transition:height .4s var(--ease-out)}
+.deck .opt.drop{position:absolute;width:36px;height:36px;min-height:0;padding:0;margin:-18px 0 0 -18px;border-radius:0 50% 50% 50%;transform:rotate(45deg);background:radial-gradient(circle at 60% 60%,#e8f8ff,#4fa8e0 70%);box-shadow:0 0 0 2px #fff,0 4px 8px rgba(0,0,0,.3);animation:dbob 1.4s ease-in-out infinite alternate}
+.deck .opt.drop.yes{opacity:0;pointer-events:none;transform:rotate(45deg) translate(-20px,-20px) scale(.4);transition:opacity .3s,transform .3s;animation:none}
+.deck::before{content:"";position:absolute;left:12%;right:12%;bottom:8%;height:28%;border-radius:0 0 50% 50%/0 0 100% 100%;background:#6b4423;box-shadow:inset 0 6px 0 #8a5a30;z-index:0}
+.deck .water{z-index:0}
+.deck .opt.drop{z-index:1}
+@keyframes dbob{to{margin-top:-24px}}
+.dcount{margin:0;font:700 clamp(30px,9vw,42px)/1 var(--display);color:var(--paper-ink)}
+.dcount small{display:block;font:500 15px/1.3 var(--body);color:var(--paper-ink-2)}
+/* путь к сокровищу */
+.rmap{position:relative;width:min(100%,330px);aspect-ratio:1;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse 48% 44% at 50% 50%,#eedcae 0 72%,#d9bd7a 88%,transparent 89%),radial-gradient(circle at 30% 30%,#7cc2d6,#3d8fae);box-shadow:inset 0 0 0 3px #8a6334}
+.rmap svg{position:absolute;inset:0;width:100%;height:100%}
+.rmap svg path{fill:none;stroke:#b0303a;stroke-width:1.2;stroke-dasharray:2.5 2;stroke-linecap:round}
+.rmap .rs{position:absolute;transform:translate(-50%,-50%);width:17%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:#fffaf0;box-shadow:0 0 0 2px #8a6334}
+.rmap .rs img{width:100%;height:100%;object-fit:cover}
+.rmap .rs .actw{min-height:0;font-size:10px;padding:2px}
+.rmap .rs.done{box-shadow:0 0 0 3px var(--gold),0 0 12px rgba(245,200,66,.8)}
+.rmap .walker{position:absolute;transform:translate(-50%,-80%);width:13%;aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #fff,0 4px 8px rgba(0,0,0,.4);transition:left .9s var(--ease-out),top .9s var(--ease-out);z-index:2}
+.rmap .walker img{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+/* open cloze в журнале капитана */
+.logp{max-width:34ch;text-align:left;font-family:var(--display);font-size:clamp(18px,4.8vw,21px);line-height:1.9;color:var(--paper-ink);background:#f6ead0;padding:12px 14px;border-radius:10px;box-shadow:inset 0 0 0 1.5px rgba(91,58,12,.35)}
+.logp .cz{display:inline-block;width:5.2em;padding:2px 6px;margin:0 2px;border:0;border-bottom:2px solid #8a5d19;border-radius:4px 4px 0 0;background:rgba(255,250,238,.9);font:600 17px/1.2 var(--body);color:var(--paper-ink);text-align:center}
+.logp .cz.ok{background:#fff3c8;border-color:var(--gold);color:#5a3a9c}
+.logp .cz.bad{border-color:#b0485f;animation:shake .45s}
+.birds{display:flex;gap:6px;justify-content:center}
+.birds img{width:58px;height:58px;object-fit:contain;border-radius:50%;background:#fffaf0}
+.rpics figure{margin:0}
+.rpics.r3{grid-template-columns:repeat(3,1fr)}
+
+/* ===== общее для всех историй: поле на весь экран ===== */
+[data-scene="board"]{overflow:hidden}
+[data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
+[data-scene="board"] .forest .token{width:calc(25% / var(--z,1))}
+[data-scene="board"] .forest .cell-ico{width:calc(7.5% / var(--z,1))}
+[data-scene="board"] .pages{position:absolute;z-index:6;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 58px);padding:8px 0 18px;background:linear-gradient(180deg,rgba(14,10,34,.7),rgba(14,10,34,0))}
+[data-scene="board"] .voice{position:absolute;left:0;right:0;bottom:0;z-index:5;margin:0;padding-top:56px;gap:6px;background:linear-gradient(180deg,rgba(14,10,34,0) 0,rgba(14,10,34,.78) 52px,rgba(14,10,34,.9) 100%)}
+[data-scene="board"] .voice .say{font-size:clamp(19px,5vw,22px)}
+[data-scene="board"] .voice .ru{font-size:13px}
+[data-scene="board"] .dierow{justify-content:center}
+[data-scene="board"] .die{width:76px;height:76px}
+/* приход героя: картинка на весь экран (постер видео iOS рисует «contain» с полосами), видео проявляется, когда пошло */
+.apost{object-fit:cover;object-position:50% 30%}
+.avid{opacity:0;transition:opacity .35s;object-position:50% 30%}
+.avid.on{opacity:1}
+
+/* ===== урок-план: новые задания (01.11) ===== */
+.actw{display:grid;place-items:center;width:100%;height:100%;min-height:64px;font:600 15px/1.15 var(--body);color:var(--paper-ink);text-align:center;padding:4px}
+.ppic{position:relative;display:grid;place-items:center}
+.ppic img,.ppic .actw{height:clamp(110px,22svh,170px);width:auto;border-radius:14px;transition:filter .8s var(--ease-out),transform .8s var(--ease-out)}
+.ppic .actw{width:clamp(140px,40vw,190px);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
+.ppic.snowy img,.ppic.snowy .actw{filter:blur(9px) brightness(1.5) saturate(.3);transform:scale(.94)}
+.ppic.snowy::after{content:"";position:absolute;inset:-6px;border-radius:18px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.75),rgba(235,242,255,.4) 60%,transparent 75%);pointer-events:none;transition:opacity .8s}
+.ppic:not(.snowy)::after{opacity:0}
+.ppic.flop img{animation:flop 1.1s var(--ease-out)}
+@keyframes flop{25%{transform:translateY(-28px) rotate(-8deg)}55%{transform:translateY(30px) rotate(14deg) scale(.95);filter:brightness(1.4) saturate(.5)}100%{transform:none}}
+.bigword{margin:0;font:700 clamp(44px,13vw,64px)/1 var(--body);letter-spacing:.04em;color:var(--paper-ink)}
+.opts.yn{grid-template-columns:1fr 1fr;width:min(100%,280px)}
+.opts.yn .opt{font-size:40px;min-height:74px}
+.who2{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(100%,360px)}
+.wcard{display:grid;gap:8px}
+.wplay{display:grid;justify-items:center;gap:6px;border:0;border-radius:16px;padding:10px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3);color:var(--paper-ink);font:600 15px/1 var(--body);cursor:pointer}
+.wplay img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.wplay.heard{box-shadow:inset 0 0 0 2px var(--violet)}
+.wpick:disabled{opacity:.35}
+.slots{display:flex;gap:8px;justify-content:center;transition:gap .5s var(--ease-out)}
+.slot{display:grid;place-items:center;width:52px;height:60px;border-radius:12px;background:rgba(43,33,64,.08);box-shadow:inset 0 0 0 2px rgba(43,33,64,.25);font:700 32px/1 var(--body);color:var(--paper-ink-2)}
+.slot.on{background:#f6d7a4;box-shadow:inset 0 0 0 2px #b8803a;color:var(--paper-ink)}
+.slots.joined{gap:0}
+.slots.joined .slot{border-radius:0}
+.slots.joined .slot:first-child{border-radius:12px 0 0 12px}
+.slots.joined .slot:last-child{border-radius:0 12px 12px 0}
+.gph{display:flex;gap:10px;justify-content:center;transition:gap .6s var(--ease-out)}
+.gp{min-width:64px;height:76px;padding:0 10px;border:0;border-radius:16px;background:#fffaf0;box-shadow:inset 0 0 0 2px rgba(43,33,64,.35),0 4px 0 rgba(91,77,99,.25);font:700 40px/1 var(--body);color:var(--paper-ink);cursor:pointer;transition:background .25s,transform .2s}
+.gp.dg{color:var(--violet)}
+.gp.dg::after{content:"";display:block;height:3px;margin:4px 8px 0;border-radius:2px;background:currentColor}
+.gp.on{background:var(--gold)}
+.gp:active{transform:scale(.94)}
+.gph.joined{gap:0}
+.gph.joined .gp{border-radius:0;box-shadow:0 4px 0 rgba(91,77,99,.25)}
+.gph.joined .gp:first-child{border-radius:16px 0 0 16px}
+.gph.joined .gp:last-child{border-radius:0 16px 16px 0}
+.rules{display:grid;gap:10px;width:min(100%,380px)}
+.rule{display:grid;gap:4px;text-align:left;border:0;border-radius:14px;padding:12px 14px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3);color:var(--paper-ink);cursor:pointer}
+.rule b{font:600 14px/1.3 var(--body);color:var(--violet)}
+.rule span{font:italic 600 20px/1.25 var(--display)}
+.rule.on{box-shadow:inset 0 0 0 2px var(--violet)}
+.fixline{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0;max-width:24ch}
+.fw{border:0;border-radius:10px;padding:6px 10px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.25);font:600 clamp(20px,5.5vw,24px)/1.2 var(--display);color:var(--paper-ink);cursor:pointer}
+.fw.sel{background:#f7d3d9;box-shadow:inset 0 0 0 2px #b0485f;text-decoration:line-through}
+.fw.fixed{background:#dff1dc;box-shadow:inset 0 0 0 2px #4f8a4a}
+.opts.show{grid-template-columns:repeat(4,1fr)}
+.bins.b3{grid-template-columns:repeat(3,1fr);gap:8px}
+.bins.b3 .bin{min-height:130px;padding:10px 8px}
+.chk{display:flex;gap:6px;justify-content:center}
+.chk i{width:26px;height:8px;border-radius:4px;background:rgba(43,33,64,.15)}
+.chk i.ok{background:var(--gold)}
+.chk i.half{background:#c9b6e8}
+.chkbody{display:grid;justify-items:center;gap:14px;width:100%}
+.score{margin:0;font:600 22px/1 var(--body);color:var(--paper-ink-2)}
+.score b{font:700 64px/1 var(--display);color:var(--paper-ink)}
+.report{width:min(100%,380px);text-align:left;border-radius:16px;padding:14px 16px;background:rgba(255,250,238,.9);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.25);color:var(--paper-ink)}
+.report>b{font:600 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--paper-ink-2)}
+.report dl{display:grid;gap:4px;margin:10px 0 0}
+.report dt{font:600 13px/1.3 var(--body);color:var(--violet);margin-top:6px}
+.report dd{margin:0;font-size:15px;line-height:1.4}
+.end .report{margin:0 auto}
+.rpics{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:min(100%,360px)}
+.rpics figure{margin:0;display:grid;gap:4px}
+.rpics img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.rpics figcaption{font:600 13px/1.25 var(--body);color:var(--paper-ink)}
+.kwords{margin:0;max-width:34ch;font:600 15px/1.5 var(--body);color:var(--violet)}
+.wcount{margin:0;font-size:13px;color:var(--paper-ink-2)}
+.rec{display:inline-flex;align-items:center;gap:8px}
+.rec svg{width:20px;height:20px}
+.abc.pack span{font-size:20px;width:30px}
+.code.pack{letter-spacing:.08em;font-size:clamp(22px,6.5vw,30px);line-height:1.5;max-width:100%;overflow-wrap:anywhere}
+.poster.wcard2 p{font-size:14px}
+/* шифр-ключ: малыши нажимают буквы прямо в ключе; слоты с открытыми буквами; лесенка подсказок */
+.abc.keys{gap:6px}
+.abc.keys button{display:grid;justify-items:center;width:40px;padding:6px 0 4px;border:0;border-radius:10px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.25);font:600 22px/1.1 var(--body);color:var(--paper-ink);cursor:pointer}
+.abc.keys button i{font-size:12px}
+.abc .lit{box-shadow:inset 0 0 0 2px var(--gold),0 0 14px rgba(245,200,66,.75);background:#fff3c8;animation:popin .45s var(--ease-out)}
+.code.pack{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 4px}
+.code.pack .sl{display:grid;justify-items:center;min-width:30px}
+.code.pack .sl i{display:block;min-width:24px;min-height:24px;margin-top:2px;border-bottom:2px solid rgba(43,33,64,.35);font:700 18px/1.2 var(--body);font-style:normal;color:var(--violet)}
+.code.pack .sl.cur{border-radius:8px;background:rgba(245,200,66,.25)}
+.code.pack .sl.on i{border-color:var(--gold)}
+.code.pack .gapw{width:14px}
+.hladder{display:grid;justify-items:center;gap:6px}
+.hwait{margin:0;font-size:13px;color:var(--paper-ink-2)}
+.hbtn{animation:popin .45s var(--ease-out)}
+.hspark small{opacity:.7}
+
+/* «назови вслух»: начало фразы-ответа под картинкой */
+.vframe{margin:2px 0 0;font:600 clamp(26px,7.5vw,34px)/1.1 var(--display);color:var(--paper-ink);letter-spacing:.01em}
+.rec.on{box-shadow:0 0 0 calc(4px + var(--lv,0) * 14px) color-mix(in srgb,var(--gold,#f5c84c) 35%,transparent);transition:box-shadow .08s linear}
+</style>
+</head>
+<body>
+<div class="backdrop" id="backdrop" style="background-image:url(../../img/06_t1_library.webp)"></div>
+
+<main class="stage" id="stage">
+  <canvas id="snow" aria-hidden="true"></canvas>
+
+  <header class="top">
+    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
+  </header>
+
+    <!-- who: pick a level if the Prologue was skipped -->
+  <section class="scene" data-scene="who" aria-label="Выбор уровня">
+    <img class="bg" src="../../img/06_t2_open.webp" alt="" style="object-position:50% 0">
+    <div class="shade" style="background:linear-gradient(180deg,rgba(14,10,34,.5) 0%,rgba(14,10,34,0) 14%,rgba(14,10,34,.35) 26%,rgba(14,10,34,.9) 42%,var(--night) 60%)"></div>
+    <div class="voice">
+      <p class="say" data-say>Story seven. Who is playing tonight?</p>
+      <p class="ru">История 7. Выберите уровень ребёнка.</p>
+      <div class="tracks">
+        <button class="track" data-track="little"><b>5–7</b><span>Little Explorers</span><small>играем вместе со взрослым</small></button>
+        <button class="track" data-track="explorers"><b>8–10</b><span>Explorers</span><small>короткие тексты и загадки</small></button>
+        <button class="track" data-track="experts"><b>11–14</b><span>Experts</span><small>отрывки из книги и формат A2 Key</small></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- arrive: tap to start, Jim speaks (talking video later) -->
+  <section class="scene" data-scene="arrive" aria-label="Джим у костра">
+    <img class="bg apost" src="../../img/08_v11_jim.webp" alt="">
+    <div class="shade"></div>
+    <div class="istart" id="agate">
+      <p class="ikick">История 7 · Jim Hawkins</p>
+      <p class="say">Listen! Somebody is singing a sea song on the ice…</p>
+      <button class="iplay" id="astart" aria-label="Начать историю со звуком"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
+      <p class="inote">Включите звук</p>
+    </div>
+    <div class="voice">
+      <div class="who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Jim Hawkins</div>
+      <p class="say alice" id="herSay"></p>
+      <p class="ru">Джим: «Мой корабль вмёрз в озеро, а карта сокровищ зашифрована. Мыши утащили страницы моей книги! Нужен смелый матрос. Поможешь?»</p>
+      <button class="btn btn-gold later" id="toBoard" data-go="board">Помочь Джиму</button>
+    </div>
+  </section>
+
+  <!-- board: six frozen pages on the path -->
+  <section class="scene" data-scene="board" aria-label="Замёрзшее озеро и остров">
+    <div class="forest" id="forest" style="aspect-ratio:720/840">
+      <img src="../../img/10_board_s7.webp" alt="Пеньки по льду озера от костра к острову сокровищ">
+      <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
+    </div>
+    <div class="voice">
+      <div class="pages" id="pages" aria-label="Страницы книги Джима"></div>
+      <p class="say" data-say id="boardSay"></p>
+      <p class="ru" id="boardRu">На льду спрятаны шесть замёрзших страниц. Прыгай по пенькам — бросай кубик!</p>
+      <div class="dierow">
+        <button class="die" id="die" aria-label="Бросить кубик"><img src="../../img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+      <div id="ev" hidden></div>
+      <button class="btn btn-gold later" id="toFinal" data-go="final">Вернуть книгу Джиму</button>
+    </div>
+  </section>
+
+  <!-- final: Jim gets his book back -->
+  <section class="scene" data-scene="final" aria-label="Книга Джима оттаяла">
+    <div class="camp" style="--glow:.4"></div>
+    <img class="finimg big" src="../../img/09_j5_treasure.webp" alt="Джим и Сильвер у сундука с сокровищами">
+    <div class="voice">
+      <p class="say alice" id="finSay"></p>
+      <div class="hcard" id="card"><img src="../../img/badge_07.webp" alt=""><span><b>Jim Hawkins</b>Bravery · «Pieces of eight!»</span></div>
+      <button class="btn btn-gold later" id="toEnd" data-go="end">Дальше</button>
+    </div>
+  </section>
+
+  <!-- end -->
+  <section class="scene" data-scene="end" aria-label="История 7 пройдена">
+    <div class="end">
+      <img class="seal" src="../../img/04_frozen_book_2.webp" alt="Книга Джима оттаяла">
+      <h1 id="endTitle">История 7 пройдена</h1>
+      <p>Шесть страниц книги Джима оттаяли. Карточка Джима и значок «Храбрость» уже на полке.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Listening, Vocabulary, Grammar</li>
+        <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Reading, Writing, Speaking</li>
+        <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Битва за значок</li>
+      </ul>
+      <div id="report" hidden></div>
+      <p class="note">Под золотом в сундуке лежал ещё один кусок старой карты. Мыши что-то собирают… Завтра к костру придёт Пиноккио.</p>
+      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+    </div>
+  </section>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
+    <button class="sheet-x" id="sheetX">Свернуть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="sheet-in"><p class="sheet-k" id="sheetK"></p><div id="sheetBody" style="display:grid;gap:14px;justify-items:center;width:100%"></div></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(s,r){return (r||document).querySelector(s);}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
+  var ORDER=['arrive','board','final','end'];
+  var BG={who:'06_t2_open',arrive:'08_v11_jim',board:'10_board_s7',final:'04_fire_4',end:'05_card_back'};
+  var state={name:'',track:''};
+  try{var s=JSON.parse(localStorage.getItem('sf_prolog')||'{}'); state.name=s.name||''; state.track=s.track||'';}catch(e){}
+  function save(){try{localStorage.setItem('sf_prolog',JSON.stringify(state));}catch(e){}}
+  var wait=function(ms){return new Promise(function(r){setTimeout(r,reduce?Math.min(ms,60):ms);});};
+
+  var dots=$('#dots'); ORDER.forEach(function(){dots.appendChild(document.createElement('i'));});
+
+  /* word-by-word reveal of the Book's line */
+  function speak(el,text,silent){
+    if(text!=null) el.textContent=text;
+    var v=(!silent&&typeof SND!=='undefined')?SND.say(el.textContent):Promise.resolve();
+    var words=el.textContent.split(/\s+/); el.textContent='';
+    words.forEach(function(w,i){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; el.appendChild(sp); el.appendChild(document.createTextNode(' '));
+      setTimeout(function(){sp.classList.add('in');}, reduce?0:120+i*110);});
+    return Promise.all([wait(220+words.length*110),v]);
+  }
+  function later(el,ms){ if(!el) return; setTimeout(function(){el.classList.add('in');}, reduce?0:ms); }
+
+  function ruBtns(root){$$('.voice .ru, #sheetBody .ru',root).forEach(function(ru){ if(ru.previousElementSibling&&ru.previousElementSibling.classList.contains('rubtn')) return;
+    var b=document.createElement('button'); b.className='rubtn'; b.textContent='Не понятно? По-русски'; ru.parentNode.insertBefore(b,ru);
+    b.addEventListener('click',function(){ru.classList.add('show'); b.hidden=true;});});}
+  ruBtns(document);
+
+  /* a task is a frozen book page: tap the small page, it opens over the whole screen */
+  var sheet=$('#sheet'), sheetCard=null, sheetOwner=null;
+  function fromCard(card){var s=$('.stage').getBoundingClientRect(), c=card.getBoundingClientRect();
+    return 'translate('+(c.left-s.left)+'px,'+(c.top-s.top)+'px) scale('+(c.width/s.width)+','+(c.height/s.height)+')';}
+  function openSheet(card){
+    SND.fx('page');
+    sheetCard=card; sheet.hidden=false; sheet.classList.remove('open');
+    if(!reduce){sheet.style.transition='none'; sheet.style.transform=fromCard(card); sheet.classList.add('small'); void sheet.offsetWidth; sheet.style.transition='';}
+    requestAnimationFrame(function(){sheet.style.transform='none'; sheet.classList.remove('small'); sheet.classList.add('open'); sheet.focus({preventScroll:true});});
+  }
+  function closeSheet(){
+    return new Promise(function(res){
+      sheet.classList.remove('open'); SND.fx('page');
+      if(reduce||!sheetCard||!sheetCard.isConnected){sheet.hidden=true; return res();}
+      setTimeout(function(){sheet.classList.add('small'); sheet.style.transform=fromCard(sheetCard.querySelector('i')||sheetCard);},150);
+      setTimeout(function(){sheet.hidden=true; sheet.style.transform=''; res();},720);
+    });
+  }
+  $('#sheetX').addEventListener('click',function(){closeSheet(); if(sheetCard) sheetCard.focus({preventScroll:true});});
+  /* taskPage(holder,kicker,render): render(body,finish) fills the page once; finish() closes it and thaws the card */
+  function taskPage(holder,kicker,label,render){
+    return new Promise(function(done){
+      var card=document.createElement('button'); card.className='pagecard'; card.innerHTML='<i></i><span>'+label+'</span>';
+      holder.appendChild(card); var id=Math.random().toString(36).slice(2);
+      var fin=false; // задание решено: страница оттаивает, повторный тап её уже не открывает
+      card.addEventListener('click',function(){
+        if(fin) return;
+        if(sheetOwner!==id){sheetOwner=id; $('#sheetK').textContent=kicker; var body=$('#sheetBody'); body.innerHTML='';
+          render(body,function(){ if(fin) return; fin=true; card.disabled=true; closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
+          ruBtns(body);}
+        openSheet(card.querySelector('i'));
+      });
+    });
+  }
+
+  /* ---------- sound: voice of the Book, music, effects (all start after the first tap) ---------- */
+  var SND=(function(){
+    var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
+    var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
+    fetch('audio/voice.json').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
+    function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
+    function unlock(){
+      if(ctx) return; var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      ctx=new AC(); master=ctx.createGain(); master.gain.value=on?1:0; master.connect(ctx.destination);
+      musicGain=ctx.createGain(); musicGain.gain.value=.22; musicGain.connect(master);
+      sfxGain=ctx.createGain(); sfxGain.gain.value=.7; sfxGain.connect(master);
+      voiceGain=ctx.createGain(); voiceGain.gain.value=1; voiceGain.connect(master);
+      music=new Audio('audio/music.mp3'); music.loop=true; music.preload='auto';
+      try{ ctx.createMediaElementSource(music).connect(musicGain); }catch(e){}
+      if(musicOn) music.play().catch(function(){}); else musicGain.gain.value=0;
+      /* wind: brown noise through a slowly moving band-pass */
+      var n=ctx.createBufferSource(); n.buffer=noise(4); n.loop=true; var f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=500; f.Q.value=.7;
+      var lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=.09; lg.gain.value=260; lfo.connect(lg); lg.connect(f.frequency); lfo.start();
+      wind=ctx.createGain(); wind.gain.value=.05; n.connect(f); f.connect(wind); wind.connect(master); n.start();
+      /* fire crackle: low rumble + random clicks, volume set per scene */
+      crackle=ctx.createGain(); crackle.gain.value=0; crackle.connect(sfxGain);
+      var r=ctx.createBufferSource(); r.buffer=noise(3); r.loop=true; var rf=ctx.createBiquadFilter(); rf.type='lowpass'; rf.frequency.value=380; var rg=ctx.createGain(); rg.gain.value=.5; r.connect(rf); rf.connect(rg); rg.connect(crackle); r.start();
+      (function pop(){ if(crackle.gain.value>.01) click(.4+Math.random()*.6); setTimeout(pop,60+Math.random()*260); })();
+      if(pending){ var t=pending; pending=null; say(t); }
+      setScene(curScene);
+    }
+    function env(g,t,a,d,v){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);}
+    function click(v){ var t=ctx.currentTime, b=ctx.createBufferSource(); b.buffer=noise(.05); var f=ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=1800+Math.random()*2500; var g=ctx.createGain(); env(g,t,.001,.03+Math.random()*.04,.25*v); b.connect(f); f.connect(g); g.connect(crackle); b.start(t); b.stop(t+.12); }
+    function tone(freq,t,dur,v,type,dest){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type||'sine'; o.frequency.setValueAtTime(freq,t); env(g,t,.008,dur,v); o.connect(g); g.connect(dest||sfxGain); o.start(t); o.stop(t+dur+.05); return o; }
+    function hiss(t,dur,v,from,to,type){ var b=ctx.createBufferSource(); b.buffer=noise(dur+.1); var f=ctx.createBiquadFilter(); f.type=type||'bandpass'; f.Q.value=1.2; f.frequency.setValueAtTime(from,t); f.frequency.exponentialRampToValueAtTime(to,t+dur); var g=ctx.createGain(); env(g,t,dur*.25,dur*.75,v); b.connect(f); f.connect(g); g.connect(sfxGain); b.start(t); b.stop(t+dur+.1); }
+    var FX={
+      page:function(t){ hiss(t,.32,.5,900,3800); hiss(t+.1,.22,.3,2600,1200); },
+      whoosh:function(t){ hiss(t,.7,.35,300,1400,'lowpass'); },
+      dice:function(t){ for(var i=0;i<9;i++){ var k=t+i*.07+Math.random()*.03; tone(700+Math.random()*900,k,.05,.18,'triangle'); hiss(k,.04,.25,3000,2500);} },
+      step:function(t){ tone(220,t,.12,.25,'triangle'); tone(330,t+.01,.08,.12); },
+      spark:function(t){ [1319,1568,2093,2637].forEach(function(f,i){tone(f,t+i*.07,.5,.12);}); },
+      ok:function(t){ tone(784,t,.35,.18); tone(1175,t+.09,.55,.16); },
+      no:function(t){ tone(196,t,.22,.22,'triangle'); tone(185,t+.08,.25,.16,'triangle'); },
+      squeak:function(t){ var o=tone(2400,t,.12,.08,'sine'); o.frequency.exponentialRampToValueAtTime(3600,t+.06); o.frequency.exponentialRampToValueAtTime(2800,t+.12); },
+      fire:function(t){ hiss(t,.9,.6,200,1600,'lowpass'); for(var i=0;i<6;i++) setTimeout(function(){click(1);},i*70); },
+      patter:function(t){ for(var i=0;i<4;i++) tone(900+Math.random()*300,t+i*.09,.04,.06,'triangle'); }
+    };
+    function fx(name){ if(!ctx||!on) return; try{ FX[name](ctx.currentTime+.01); }catch(e){} }
+    function duck(v){ if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(v,ctx.currentTime,.25); }
+    function tts(text){
+      return new Promise(function(fin){
+        try{ var s=window.speechSynthesis; if(!s||!text) return fin();
+          s.cancel(); var u=new SpeechSynthesisUtterance(String(text).replace(/…|\.\.\./g,', ')); u.lang='en-GB'; u.rate=.9;
+          var v=s.getVoices().filter(function(x){ return /^en(-|_)GB/i.test(x.lang); })[0] || s.getVoices().filter(function(x){ return /^en/i.test(x.lang); })[0]; if(v) u.voice=v;
+          u.onend=u.onerror=function(){ fin(); }; setTimeout(fin,12000); s.speak(u);
+        }catch(e){ fin(); } });
+    }
+    function say(text){
+      var id=VOICE[key(text)]; if(!on) return Promise.resolve();
+      if(!id) return tts(text);  // фразы ещё без записи — голос телефона, чтобы кнопка не молчала
+      if(!ctx){ pending=text; return Promise.resolve(); }
+      return new Promise(function(fin){
+      var ok=false, done=function(){ if(!ok){ok=true; fin();} }; setTimeout(done,15000);
+      var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
+      var play=function(b){ if(!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ src.start(ctx.currentTime+.06); setTimeout(done,b.duration*1000+900); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
+      if(buf[id]) return play(buf[id]);
+      fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+        .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
+      });
+    }
+    var lastKey='', curScene='library', seq=0;
+    function setScene(id){ curScene=id; if(!crackle) return; var v={fire:.5,riddle:.45,cliff:.35}[id]||0; crackle.gain.setTargetAtTime(v,ctx.currentTime,.6); }
+    function toggle(){ on=!on; try{localStorage.setItem('sf_sound',on?'on':'off');}catch(e){} unlock(); if(master) master.gain.setTargetAtTime(on?1:0,ctx.currentTime,.05); if(on&&music) music.play().catch(function(){}); if(!on&&cur){try{cur.stop();}catch(e){}} paint(); }
+    function paint(){ var b=$('#sndBtn'); if(!b) return; b.setAttribute('aria-pressed',on?'true':'false'); b.setAttribute('aria-label',on?'Выключить звук':'Включить звук'); }
+    ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ unlock(); if(ctx&&ctx.state==='suspended') ctx.resume(); },{passive:true}); });
+    var musicOn=true;
+    function musicSet(v){ musicOn=v; if(!musicGain) return; musicGain.gain.setTargetAtTime(v?.22:0,ctx.currentTime,.4); if(v&&music) music.play().catch(function(){}); }
+    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint};
+  })();
+  $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
+  var cur='who';
+  function go(id){
+    var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
+    from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
+    $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
+    $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
+    var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
+    (ENTER[id]||function(){})(p);
+  }
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-go]'); if(b&&!b.disabled) go(b.getAttribute('data-go'));});
+
+  var ENTER={};
+
+  /* ===== общий движок заданий (истории с пометкой «uses engine»). История задаёт: T, SID, ACTW, HERO, REPORT, LISTEN_POSTER, SUBS_LITTLE, QUICK_WIN ===== */
+  var shuffle=function(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x;} return a; };
+  var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
+  // картинки: i: предметы, a: действия (лист GPT, пока может не быть — тогда слово), w: картинки фоники, g: сцены, m: мышь
+  var pic=function(v){ v=String(v); var k=v.slice(2);
+    if(v.indexOf('i:')===0) return '<img src="../../img/items/'+k+'.webp" alt="'+k+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(WORDS[k]||k)+'</span>\'">';
+    if(v.indexOf('a:')===0) return '<img src="../../img/items/act_'+k+'.webp" alt="'+(ACTW[k]||k)+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(ACTW[k]||k)+'</span>\'">';
+    if(v.indexOf('w:')===0) return '<img src="../../img/ph/w_'+k+'.jpg" alt="'+k+'">';
+    if(v.indexOf('g:')===0) return '<img src="../../img/'+k+'.webp" alt="">';
+    if(v.indexOf('m:')===0) return '<img src="../../img/07_mouse.webp" alt="mouse">';
+    return null; };
+  var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
+  var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
+  // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
+  var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
+  // распознавание речи: адрес сервиса на нашем VPS; пока не задан — ребёнок слушает себя и жмёт «Сказал ✓»
+  var ASR=window.SF_ASR||null;
+  var MISS=0;
+
+  /* --- помощники для данных --- */
+  var nameIt=function(list,ru){ return list.map(function(x){ var q=x[1]||'What is it?', ln=phrase(x[3],q);
+    return {t:'voice',pic:x[0],reveal:1,q:q,frame:frameOf(ln,x[2]),want:[x[2]],line:ln,ru:ru&&!/фраз/.test(ru)?ru+' Отвечаем целой фразой — начало подсказано на странице.':ru}; }); };
+  // «Назови вслух» — ребёнок отвечает ФРАЗОЙ, не словом (правило Оксаны 01.11): It’s a bear. · I can run. · I’m happy.
+  var PH_MY='mum dad brother sister grandma grandpa head nose mouth hair'.split(' '), PH_MYS='eyes ears arms legs hands feet'.split(' '),
+      PH_FEEL='happy sad scared tired hungry angry'.split(' '), PH_IT='cold sunny hot windy snowy rainy'.split(' '), PH_THE='sky moon sun sea'.split(' '),
+      PH_UNC=['cheese','milk','fish','ice cream','snow','bread','water','rice','sugar','butter','flour','chocolate','juice'];
+  function phrase(line,q){ var w=String(line).trim();
+    if(/[.!?]$/.test(w)) return w;                      // уже фраза
+    if(/^an? /.test(w)) return 'It’s '+w+'.';
+    if(/can you do/i.test(q||'')) return 'I can '+w+'.';
+    if(PH_MY.indexOf(w)>=0) return 'It’s my '+w+'.';
+    if(PH_MYS.indexOf(w)>=0) return 'They’re my '+w+'.';
+    if(w==='friend') return 'It’s my friend.';
+    if(PH_FEEL.indexOf(w)>=0) return 'I’m '+w+'.';
+    if(PH_IT.indexOf(w)>=0||PH_UNC.indexOf(w)>=0) return 'It’s '+w+'.';
+    if(PH_THE.indexOf(w)>=0) return 'It’s the '+w+'.';
+    if(/s$/.test(w)&&!/(ss|us)$/.test(w)) return 'They’re '+w+'.';
+    return 'It’s '+(/^[aeiou]/.test(w)?'an ':'a ')+w+'.'; }
+  function frameOf(line,key){ var i=line.toLowerCase().indexOf(String(key).split('|')[0].slice(0,3)); return i>0?line.slice(0,i).trim()+' …':''; }
+  var blendIt=function(list){ var out=[]; list.forEach(function(x){ var w=x[0].join('');
+    out.push({t:'blend',g:x[0],q:'Tap the sounds. Blend them!',ru:'Нажимай звуки по очереди и сливай их в слово.'});
+    out.push({t:'voice',show:w,pic:'w:'+w,reveal:1,late:1,q:'Read the word!',want:[w],line:w,sec:4,ru:'Прочитай слово вслух — и картинка покажется из-под снега.'}); }); return out; };
+
+  /* --- step renderers (inside the book page) --- */
+  function head(body,q,ru,note){ var ps=document.createElement('p'); ps.className='say'; body.appendChild(ps);
+    if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label','Послушать ещё раз'); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); ruBtns(body); return ps; }
+  function wrong(b,fb){ MISS++; SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent='Not quite. Try again!'; }
+  function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
+  function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
+  function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+  var R={};
+  R.mcq=function(body,s,next){
+    head(body,s.q,s.ru,s.note);
+    if(s.ph){ var pb=el('button','btn btn-ghost','▶ звук'); body.appendChild(pb); pb.addEventListener('click',function(){ phs(s.ph); }); setTimeout(function(){ phs(s.ph); },1600); }
+    if(s.show) body.appendChild(el('p','bigword',esc(s.show)));
+    if(s.img) body.appendChild(el('div','ppic',pic(s.img)));
+    var box=document.createElement('div'); box.className='opts'+(s.pics?' pics emo':''); body.appendChild(box);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    shuffle(s.opts).forEach(function(o){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; if(!s.show) sayWord(o[0]); if(o[1]){ box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(s.show) SND.say(s.show); setTimeout(next,900); } else wrong(b,fb); }); });
+  };
+  R.order=function(body,s,next){
+    head(body,s.q,s.ru); var k=0, box=document.createElement('div'); box.className='opts order'; body.appendChild(box);
+    shuffle(s.items).forEach(function(it){ var b=document.createElement('button'); b.className='opt'; b.innerHTML='<i></i>'+esc(it); b.dataset.n=s.items.indexOf(it); box.appendChild(b);
+      b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; if(it===s.items[k]){ k++; b.classList.add('yes'); b.querySelector('i').textContent=k; SND.fx('step'); if(k===s.items.length){ SND.fx('ok'); setTimeout(next,900);} } else wrong(b); }); });
+  };
+  R.tiles=function(body,s,next){
+    head(body,s.q,s.ru); var line=document.createElement('p'); line.className='tline'; line.textContent=s.pre||''; body.appendChild(line);
+    var box=document.createElement('div'); box.className='opts tiles'+(s.paws?' wpaws':''); body.appendChild(box); var k=0;
+    shuffle(s.words).forEach(function(w){ var b=document.createElement('button'); b.className='opt'; b.textContent=w; b.dataset.n=s.words.indexOf(w); box.appendChild(b);
+      b.addEventListener('click',function(){ if(b.disabled) return; if(w.length<=2||s.words.length<=4) sayWord(w); if(w===s.words[k]){ k++; b.disabled=true; b.classList.add('used'); line.textContent+=(k>1&&!s.paws?' ':'')+w; SND.fx('step');
+        if(k===s.words.length){ SND.fx('ok'); line.classList.add('ok'); var said=s.pre?s.pre+s.words.join('').toLowerCase():line.textContent; speak(line,said); line.textContent=s.pre?said:line.textContent; setTimeout(next,1400);} } else wrong(b); }); });
+  };
+  R.gaps=function(body,s,next){
+    head(body,s.q,s.ru); var g=0;
+    var txt=esc(s.text).replace(/\{(\d)\}/g,function(_,i){return '<span class="gap" data-i="'+i+'">   </span>';}).replace(/\((\w+)\)/g,'<small class="base">($1)</small>');
+    body.insertAdjacentHTML('beforeend','<p class="gtext">'+txt+'</p><div class="opts gopts"></div><p class="fb" aria-live="polite"></p>');
+    (function step(){
+      $$('.gap',body).forEach(function(x){x.classList.toggle('cur',+x.dataset.i===g);});
+      if(g>=s.gaps.length){ $('.gopts',body).innerHTML=''; var full=s.text.replace(/\{(\d)\}/g,function(_,i){return s.gaps[i][1];}).replace(/ \(\w+\)/g,''); SND.say(full); nextBtn(body,'Next',next,900); return; }
+      var gp=s.gaps[g], o=$('.gopts',body); o.innerHTML=''; delete o.dataset.lock;
+      shuffle(gp[0]).forEach(function(w){ var b=document.createElement('button'); b.className='opt'; b.textContent=w; b.dataset.ok=w===gp[1]?1:0; o.appendChild(b);
+        b.addEventListener('click',function(){ if(o.dataset.lock) return; if(w===gp[1]){ o.dataset.lock=1; var sp=$('.gap[data-i="'+g+'"]',body); sp.textContent=w; sp.classList.add('ok'); SND.fx('ok'); $('.fb',body).textContent=''; g++; setTimeout(step,450);} else wrong(b,$('.fb',body)); }); });
+    })();
+  };
+  R.tf=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, card=document.createElement('p'); card.className='tfq'; body.appendChild(card);
+    var box=document.createElement('div'); box.className='opts tf'; body.appendChild(box); var fb=document.createElement('p'); fb.className='fb'; body.appendChild(fb);
+    var keys=s.ns?[['True','T'],['False','F'],['Not stated','N']]:[['True','T'],['False','F']];
+    function show(){ if(i>=s.items.length){ setTimeout(next,500); return; } card.textContent=s.items[i][0]; speak(card,s.items[i][0]); box.innerHTML='';
+      keys.forEach(function(k){ var b=document.createElement('button'); b.className='opt'; b.textContent=k[0]; b.dataset.ok=k[1]===s.items[i][1]?1:0; box.appendChild(b);
+        b.addEventListener('click',function(){ if(k[1]===s.items[i][1]){ b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; i++; setTimeout(show,700);} else wrong(b,fb); }); }); }
+    show();
+  };
+  // малыши: правда / неправда на слух, без чтения; на «неправду» зверь смешно падает в сугроб
+  R.tfa=function(body,s,next){
+    head(body,s.q,s.ru); var i=0;
+    var pp=el('div','ppic'); body.appendChild(pp);
+    var rep=el('button','btn btn-ghost','▶ Ещё раз'); body.appendChild(rep); rep.addEventListener('click',function(){ SND.say(s.items[i][0]); });
+    var box=el('div','opts tf yn'); body.appendChild(box); var fb=el('p','fb'); body.appendChild(fb);
+    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; pp.className='ppic'; pp.innerHTML=pic(it[2])||''; setTimeout(function(){ SND.say(it[0]); },i?200:1500); box.innerHTML='';
+      [['✓','T','Правда'],['✗','F','Неправда']].forEach(function(k){ var b=el('button','opt',k[0]); b.setAttribute('aria-label',k[2]); b.dataset.ok=k[1]===it[1]?1:0; box.appendChild(b);
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]===it[1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(it[1]==='F') pp.classList.add('flop'); i++; setTimeout(function(){ delete box.dataset.lock; show(); },1300);} else wrong(b,fb); }); }); }
+    show();
+  };
+  // Маугли и мышь говорят фразу; кто сказал правильно?
+  R.who2=function(body,s,next){
+    head(body,s.q,s.ru); var heard={};
+    var row=el('div','who2'); body.appendChild(row);
+    var fb=el('p','fb'); body.appendChild(fb);
+    shuffle([[s.hero||HERO[0],s.good,1,HERO[1]],['m:mouse',s.bad,0,'Mouse']]).forEach(function(c){
+      var card=el('div','wcard'); var play=el('button','wplay',pic(c[0])+'<span>▶ '+c[3]+'</span>'); play.setAttribute('aria-label','Послушать: '+c[3]); card.appendChild(play);
+      var pick=el('button','opt wpick','✓ Right'); pick.dataset.ok=c[2]; pick.disabled=true; card.appendChild(pick); row.appendChild(card);
+      play.addEventListener('click',function(){ SND.say(c[1]); heard[c[3]]=1; play.classList.add('heard'); if(Object.keys(heard).length===2) $$('.wpick',row).forEach(function(x){ x.disabled=false; }); else fb.textContent='Теперь послушай второго.'; });
+      pick.addEventListener('click',function(){ if(row.dataset.done) return; if(c[2]){ row.dataset.done=1; pick.classList.add('yes'); SND.fx('ok'); fb.textContent='Yes! '+s.good; SND.say(s.good); setTimeout(next,1600); } else wrong(pick,fb); });
+    });
+  };
+  R.cipher=function(body,s,next){
+    head(body,s.q,s.ru,s.note);
+    var c=document.createElement('p'); c.className='code '+s.mode; c.textContent=s.code; body.appendChild(c);
+    R.mcq(body,{q:'',opts:s.opts},next); var emp=body.querySelectorAll('.say'); var last=emp[emp.length-1]; if(last&&!last.textContent.trim()) last.remove();
+  };
+  // расшифровка с вводом ответа: atbash / shift / rev
+  // лесенка подсказок (как в квест-играх): сначала время подумать, потом намёк → буква → ответ; искра открывает ступеньку сразу
+  var THINK={little:30,explorers:45,experts:60};
+  function hintLadder(body,steps,fb){
+    var row=el('div','hladder'); body.appendChild(row); var k=0, left=THINK[T]||45, iv=null, done=false;
+    var wait=el('p','hwait'); row.appendChild(wait);
+    var btn=el('button','gloss hbtn'); btn.hidden=true; row.appendChild(btn);
+    var spk=el('button','gloss hspark'); row.appendChild(spk);
+    var sparks=function(){ try{ return +(localStorage.getItem('sf_sparks')||0); }catch(e){ return 0; } };
+    function paint(){ if(done) return; var n=sparks(); spk.hidden=!(n>0)||!btn.hidden; spk.innerHTML='✦ Искра → подсказка сейчас <small>('+n+')</small>';
+      if(btn.hidden){ wait.hidden=false; wait.textContent='Подумай сам! Подсказка откроется через '+left+' с'; } else wait.hidden=true; }
+    function tick(){ clearInterval(iv); iv=setInterval(function(){ left--; if(left<=0){ clearInterval(iv); btn.hidden=false; btn.textContent=k===steps.length-1?'Показать ответ':'Подсказка '+(k+1); SND.fx('spark'); } paint(); },1000); paint(); }
+    function use(){ if(k>=steps.length) return; var t=steps[k](); if(fb&&t) fb.textContent=t; k++; btn.hidden=true; if(k>=steps.length){ done=true; row.hidden=true; clearInterval(iv); return; } left=Math.round((THINK[T]||45)*.6); tick(); }
+    btn.addEventListener('click',use);
+    spk.addEventListener('click',function(){ var n=sparks(); if(n<1) return; try{ localStorage.setItem('sf_sparks',String(n-1)); }catch(e){} SND.fx('spark'); use(); });
+    tick(); return {stop:function(){ done=true; clearInterval(iv); row.hidden=true; }};
+  }
+  R.decode=function(body,s,next){
+    head(body,s.q,s.ru); var AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    if(s.kind==='atbash'||s.kind==='shift'){ var k=el('div','abc'); AB.forEach(function(ch,i){ var to=s.kind==='atbash'?AB[25-i]:AB[(i+s.shift)%26]; k.insertAdjacentHTML('beforeend','<span>'+to+'<i>'+ch+'</i></span>'); }); body.appendChild(k); body.appendChild(el('p','ru',s.kind==='atbash'?'Сверху буква шифра, снизу — настоящая.':'Сверху буква шифра, снизу — настоящая (сдвиг на '+s.shift+').')); }
+    if(s.kind==='num') body.appendChild(el('p','ru','A=1, B=2, C=3 … Z=26'));
+    body.appendChild(el('p','code'+(s.kind==='mirror'?' mirror':''),esc(s.code)));
+    var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder='Ответ…'; inp.dataset.ans=s.answer; inp.setAttribute('aria-label','Ответ'); body.appendChild(inp);
+    var fb=el('p','fb'); body.appendChild(fb);
+    var ok=el('button','btn btn-gold','Проверить'); body.appendChild(ok);
+    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); }, ans=norm(s.answer);
+    var upto=function(n){ var out='', c2=0; for(var i=0;i<s.answer.length&&c2<n;i++){ out+=s.answer[i]; if(/[A-Z]/.test(s.answer[i])) c2++; } inp.value=out; inp.focus(); };
+    var nudge={rev:'Намёк: читай с конца — справа налево.',mirror:'Намёк: буквы отражены. Поднеси к зеркалу или переверни в уме.',num:'Намёк: '+s.code.split(/[^0-9]+/)[0]+' — это '+ans[0]+'. Считай по алфавиту.',shift:'Намёк: '+s.code.replace(/[^A-Z]/g,'')[0]+' → '+ans[0]+'. Каждую букву — на '+s.shift+' назад.',atbash:'Намёк: A ↔ Z, B ↔ Y… первая буква — '+ans[0]+'.'}[s.kind]||('Первая буква — '+ans[0]+'.');
+    var lad=hintLadder(body,[function(){ return nudge; },function(){ upto(Math.ceil(ans.length/2)); return 'Половина уже есть. Дальше сам!'; },function(){ upto(ans.length); return 'Ответ: '+s.answer; }],fb);
+    ok.addEventListener('click',function(){ if(norm(inp.value)===ans){ lad.stop(); ok.disabled=true; inp.disabled=true; SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(next,1400); } else { wrong(ok,fb); fb.textContent='Not yet. Проверь буквы ещё раз.'; } });
+  };
+  // знаки Стаи / снежинки: ключ «знак → буква». Малыши нажимают буквы прямо в ключе, старшие пишут ответ
+  R.sym=function(body,s,next){
+    head(body,s.q,s.ru); var letters=s.answer.replace(/[^A-Z]/g,'').split(''), tap=s.mode==='tiles';
+    var used={}; letters.forEach(function(l){ used[l]=1; }); var keyL=Object.keys(PACK).filter(function(l){ return used[l]; });
+    var lim=Math.max(tap?8:10,keyL.length+(tap?4:6)); shuffle(Object.keys(PACK)).forEach(function(l){ if(!used[l]&&keyL.length<lim) keyL.push(l); });
+    var k=el('div','abc pack'+(tap?' keys':'')+(s.crib?' crib':'')); body.appendChild(k); var cells={};
+    if(s.crib) s.crib.split('').forEach(function(l){ if(l===' '){ k.appendChild(el('span','gapw','')); return; } var c=el('span','',PACK[l]+'<i>'+l+'</i>'); k.appendChild(c); if(!cells[l]) cells[l]=c; }); // ключа нет: буквы узнаём из подписанной строки
+    else keyL.sort().forEach(function(l){ var c=el(tap?'button':'span','',PACK[l]+'<i>'+l+'</i>'); c.dataset.l=l; k.appendChild(c); cells[l]=c; });
+    var code=el('p','code pack'); body.appendChild(code); var slots=[];
+    s.answer.split('').forEach(function(c){ if(c===' '){ code.appendChild(el('span','gapw','')); return; } var sl=el('span','sl',PACK[c]+'<i></i>'); sl.dataset.l=c; code.appendChild(sl); slots.push(sl); });
+    var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); var pos=0, lad;
+    var fill=function(n){ while(pos<n&&pos<slots.length){ slots[pos].classList.add('on'); slots[pos].querySelector('i').textContent=slots[pos].dataset.l; pos++; } };
+    var cur=function(){ slots.forEach(function(x,i){ x.classList.toggle('cur',tap&&i===pos); }); };
+    var fin=function(){ lad.stop(); SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(function(){ if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else next(); },1400); };
+    var steps=[function(){ var l=slots[pos].dataset.l; $$('.lit',k).forEach(function(x){ x.classList.remove('lit'); }); cells[l].classList.add('lit'); return s.crib?'Намёк: этот знак уже есть в подписанной строке — он светится.':'Намёк: найди в ключе такой же знак, как первый неразгаданный — он светится.'; },
+               function(){ fill(pos+1); cur(); if(pos>=slots.length) fin(); return 'Одна буква уже есть. Дальше сам!'; },
+               function(){ fill(slots.length); cur(); if(tap) fin(); else inp.value=s.answer; return 'Ответ: '+s.answer; }];
+    if(tap){ cur(); body.appendChild(fb); lad=hintLadder(body,steps,fb);
+      keyL.forEach(function(l){ cells[l].addEventListener('click',function(){ if(pos>=slots.length) return; phs(l.toLowerCase());
+        if(l===slots[pos].dataset.l){ fill(pos+1); cur(); SND.fx('step'); $$('.lit',k).forEach(function(x){ x.classList.remove('lit'); }); if(pos>=slots.length) fin(); } else wrong(cells[l],fb); }); });
+      return; }
+    var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder='Ответ…'; inp.dataset.ans=s.answer; inp.setAttribute('aria-label','Ответ'); body.appendChild(inp);
+    body.appendChild(fb); var ok=el('button','btn btn-gold','Проверить'); body.appendChild(ok); lad=hintLadder(body,steps,fb);
+    ok.addEventListener('click',function(){ if(inp.value.toUpperCase().replace(/[^A-Z]/g,'')===letters.join('')){ ok.disabled=true; inp.disabled=true; fill(slots.length); fin(); } else { wrong(ok,fb); fb.textContent='Not yet. Сверь каждый знак с ключом.'; } });
+  };
+  // первые звуки картинок → слово (шифр малышей = та же фоника)
+  R.picode=function(body,s,next){
+    head(body,s.q,s.ru); var got=0;
+    var slots=el('div','slots'); s.word.split('').forEach(function(){ slots.appendChild(el('span','slot','?')); }); body.appendChild(slots);
+    var row=el('div','opts pics emo'); body.appendChild(row);
+    s.pics.forEach(function(p,i){ var b=el('button','opt',pic(p)); b.setAttribute('aria-label',p.slice(2)); row.appendChild(b);
+      b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; sayWord(p); b.classList.add('yes'); setTimeout(function(){ phs(s.word[i]); var sl=slots.children[i]; sl.textContent=s.word[i]; sl.classList.add('on'); got++;
+        if(got===s.word.length) setTimeout(function(){ slots.classList.add('joined'); SND.say(s.word); R.mcq(body,{q:'',pics:1,opts:s.opts},next); },900); },900); }); });
+  };
+  // фоника: нажимай звуки по порядку → слияние
+  R.blend=function(body,s,next){
+    head(body,s.q,s.ru); var k=0;
+    var row=el('div','gph'); body.appendChild(row);
+    s.g.forEach(function(g,i){ var b=el('button','gp'+(g.length>1?' dg':''),esc(g)); b.setAttribute('aria-label','Звук '+g); row.appendChild(b);
+      b.addEventListener('click',function(){ phs(g); if(i===k){ k++; b.classList.add('on'); SND.fx('step'); if(k===s.g.length) setTimeout(function(){ row.classList.add('joined'); setTimeout(next,900); },700); } else if(i>k) wrong(b); }); });
+  };
+  R.letters=function(body,s,next){ R.tiles(body,{q:s.q,ru:s.ru,words:s.word.split(''),paws:s.paws,pre:s.pre},next); var b=body.querySelector('.opts'); b.classList.add('letters2'); };
+  // выбрать любое → готовое предложение
+  R.choose=function(body,s,next){
+    head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
+    var line=el('p','tline'); body.appendChild(line);
+    s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+        if(T==='little') setTimeout(next,1800); else R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); });
+  };
+  // правило Балу: карточки с примерами
+  R.rule=function(body,s,next){
+    head(body,s.q,s.ru); var box=el('div','rules'); body.appendChild(box);
+    s.rows.forEach(function(r){ var b=el('button','rule','<b>'+esc(r[0])+'</b><span>'+esc(r[1])+'</span>'); box.appendChild(b); b.addEventListener('click',function(){ SND.say(r[1]); b.classList.add('on'); }); });
+    nextBtn(body,'Понятно',next,1500);
+  };
+  // нажми на ошибку мышей → выбери исправление
+  R.fix=function(body,s,next){
+    head(body,s.q,s.ru); var line=el('p','fixline'); body.appendChild(line);
+    var box=el('div','opts'); body.appendChild(box); var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    s.words.forEach(function(w,i){ var b=el('button','fw',esc(w)); b.dataset.ok=i===s.bad?1:0; line.appendChild(b); line.appendChild(document.createTextNode(' '));
+      b.addEventListener('click',function(){ if(line.dataset.found) return; if(i!==s.bad) return wrong(b,fb); line.dataset.found=1; b.classList.add('sel'); fb.textContent='Нашёл! Чем заменить?';
+        shuffle(s.opts).forEach(function(o){ var c=el('button','opt',esc(o[0])); c.dataset.ok=o[1]?1:0; box.appendChild(c);
+          c.addEventListener('click',function(){ if(box.dataset.done) return; if(o[1]){ box.dataset.done=1; c.classList.add('yes'); b.textContent=o[0]; b.classList.remove('sel'); b.classList.add('fixed'); SND.fx('ok'); fb.textContent=s.ok; SND.say(s.ok); setTimeout(next,1700); } else wrong(c,fb); }); }); }); });
+  };
+  // нажимай на всё — каждое называет себя
+  R.show=function(body,s,next){
+    head(body,s.q,s.ru); var left=s.items.length, box=el('div','opts pics emo show'); body.appendChild(box);
+    s.items.forEach(function(v){ var b=el('button','opt',pic(v)); b.setAttribute('aria-label',v.slice(2)); box.appendChild(b);
+      b.addEventListener('click',function(){ sayWord(v); if(!b.classList.contains('yes')){ b.classList.add('yes'); left--; if(!left) nextBtn(body,'Next',next,800); } }); });
+  };
+  // «Найди пару»: cards face down, open two at a time
+  R.memory=function(body,s,next){
+    head(body,s.q,s.ru); var cards=[];
+    s.pairs.forEach(function(p,i){ cards.push([i,p[0]],[i,p[1]]); });
+    var grid=document.createElement('div'); grid.className='mem'; grid.style.setProperty('--c',cards.length===6?3:4); body.appendChild(grid);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    var first=null, lock=false, left=s.pairs.length;
+    shuffle(cards).forEach(function(c){ var b=document.createElement('button'); b.className='mcard'+(pic(c[1])?'':' txt'); b.dataset.k=c[0]; b.setAttribute('aria-label','Карточка');
+      b.innerHTML='<span class="back">'+PAW+'</span><span class="face">'+face(c[1])+'</span>'; grid.appendChild(b);
+      b.addEventListener('click',function(){ if(lock||b.classList.contains('open')) return; b.classList.add('open'); b.setAttribute('aria-label',String(c[1]).replace(/^[iaw]:/,''));
+        if(s.say&&s.say[c[1]]) SND.say(s.say[c[1]]); else if(pic(c[1])||c[1].length<16) sayWord(c[1]); SND.fx('step');
+        if(!first){ first=b; return; }
+        if(first.dataset.k===b.dataset.k){ first.classList.add('yes'); b.classList.add('yes'); first=null; left--; SND.fx('ok'); fb.textContent=left?'A pair! Ещё '+left+'.':'';
+          if(!left){ fb.textContent='All pairs! Все пары найдены!'; setTimeout(next,1300); } return; }
+        lock=true; var a=first; first=null; setTimeout(function(){ a.classList.remove('open'); b.classList.remove('open'); lock=false; },1100); }); });
+  };
+  // two (or three) baskets: tap the basket the card belongs to
+  R.sort=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, items=shuffle(s.items);
+    var card=document.createElement('p'); card.className='sortq'; body.appendChild(card);
+    var row=document.createElement('div'); row.className='bins'+(s.bins.length>2?' b3':''); body.appendChild(row);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    var bins=s.bins.map(function(bn){ var b=document.createElement('button'); b.className='bin'; b.dataset.key=bn[0]; b.innerHTML='<b>'+esc(bn[1])+'</b><ul></ul>'; row.appendChild(b);
+      b.addEventListener('click',function(){ if(i>=items.length) return;
+        if(items[i][1]===bn[0]){ var li=document.createElement('li'); li.textContent=items[i][0]; b.querySelector('ul').appendChild(li); SND.fx('ok'); fb.textContent=''; i++; show(); } else wrong(b,fb); }); return b; });
+    function show(){ if(i>=items.length){ card.textContent='Well done!'; card.classList.add('ok'); setTimeout(next,1000); return; }
+      card.textContent=items[i][0]; card.classList.remove('popin'); void card.offsetWidth; card.classList.add('popin'); SND.say(items[i][0]); bins.forEach(function(b){ b.dataset.ok=b.dataset.key===items[i][1]?1:0; }); }
+    show();
+  };
+  // timed questions: answer before the Red Flower goes out (no penalty, just try again)
+  R.quick=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, timer=null, t0=0;
+    var fuse=document.createElement('div'); fuse.className='fuse'; fuse.innerHTML='<i></i>'+FLAME; body.appendChild(fuse); var bar=fuse.querySelector('i');
+    var card=document.createElement('p'); card.className='tfq'; body.appendChild(card);
+    var box=document.createElement('div'); box.className='opts'; body.appendChild(box);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    function tick(){ var left=1-(Date.now()-t0)/(s.sec*1000); bar.style.transform='scaleX('+Math.max(0,left)+')'; fuse.classList.toggle('low',left<.3);
+      if(left<=0){ clearInterval(timer); SND.fx('no'); fb.textContent='The fire went out! Ещё раз — быстрее!'; setTimeout(show,1200); } }
+    function show(){ clearInterval(timer); if(i>=s.items.length){ fuse.classList.add('win'); card.textContent=QUICK_WIN[0]; speak(card,QUICK_WIN[0]); SND.fx('fire'); box.innerHTML=''; fb.textContent=QUICK_WIN[1]; setTimeout(next,1800); return; }
+      var it=s.items[i]; card.textContent=it.q; SND.say(it.q.replace(/_+/g,'…')); box.className='opts'+(it.pics?' pics emo':''); box.innerHTML=''; fb.textContent='';
+      shuffle(it.opts).forEach(function(o){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
+        b.addEventListener('click',function(){ if(!timer) return; sayWord(o[0]); if(o[1]){ clearInterval(timer); timer=null; b.classList.add('yes'); SND.fx('ok'); i++; setTimeout(show,700); } else wrong(b,fb); }); });
+      t0=Date.now(); timer=setInterval(tick,100); }
+    show();
+  };
+  R.write=function(body,s,next){
+    head(body,s.q,s.ru); var ins=[];
+    var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
+    s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
+      if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
+    var cnt=null; if(s.area){ cnt=el('p','wcount'); body.appendChild(cnt); ins[0].addEventListener('input',function(){ var n=ins[0].value.trim().split(/\s+/).filter(Boolean).length; cnt.textContent=n+' words'; }); }
+    var fb=document.createElement('p'); fb.className='fb'; body.appendChild(fb);
+    var row=document.createElement('div'); row.className='row2'; body.appendChild(row);
+    var hint=el('button','gloss','Подсказка: пример'); row.appendChild(hint);
+    hint.addEventListener('click',function(){ fb.textContent='Например: '+s.model; });
+    var go2=el('button','btn btn-gold','Готово'); body.appendChild(go2);
+    go2.addEventListener('click',function(){
+      var why=''; s.fields.forEach(function(f,i){ if(why) return; var v=ins[i].value.trim(), n=v.split(/\s+/).filter(Boolean).length;
+        if(!f.need.test(v)) why=f.why||(s.area?'Нужно: love / like / enjoy / hate + глагол с -ing.':'Закончи «'+f.ph.replace(' …','')+'» — с -ing, где нужно.');
+        else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
+        else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
+        else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(why) ins[i].focus(); });
+      if(why){ wrong(null,fb); fb.textContent=why; return; }
+      go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
+      fb.textContent=post?(s.doneMsg||'Карточка готова!'):(s.doneMsg||'Записано в твою книгу!'); setTimeout(next,1000);
+    });
+  };
+  R.parent=function(body,s,next){
+    head(body,s.q,s.ru); if(s.pic) body.insertAdjacentHTML('beforeend','<div class="ppic">'+pic(s.pic)+'</div>');
+    var play=el('button','btn btn-ghost','▶ Послушать'); body.appendChild(play);
+    play.addEventListener('click',function(){ SND.say(s.line); });
+    nextBtn(body,'Получилось ✓',function(){ SND.fx('ok'); SND.fx('fire'); next(); },400);
+  };
+  // распознавание прямо в браузере (Moonshine tiny, ~30 МБ, качается один раз и лежит в кэше). Голос ребёнка никуда не уходит.
+  // iPhone: AudioContext создаём в самом нажатии; 16 кГц пересчитываем вручную (OfflineAudioContext в Safari даёт нули).
+  var LASR=(function(){
+    var A={state:'idle',pct:0,asr:null,wait:[],ctx:null};
+    var gum=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia, AC=window.AudioContext||window.webkitAudioContext;
+    if(!gum||!AC||!window.WebAssembly){ A.state='fail'; }
+    function done(ok){ A.state=ok?'ready':'fail'; var w=A.wait; A.wait=[]; w.forEach(function(f){ f(ok); }); }
+    A.load=function(){ if(A.state!=='idle') return; A.state='loading';
+      var imp; try{ imp=new Function('u','return import(u)'); }catch(e){ return done(false); }
+      imp('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.1').then(function(m){
+        m.env.allowRemoteModels=false; m.env.allowLocalModels=true; m.env.localModelPath=new URL('/asr-test/models/',location.href).href;
+        var files={};
+        return m.pipeline('automatic-speech-recognition','moonshine-tiny',{dtype:'q8',device:'wasm',progress_callback:function(e){
+          if(e.status==='progress'&&e.total){ files[e.file]=[e.loaded,e.total]; var l=0,t=0; for(var k in files){ l+=files[k][0]; t+=files[k][1]; } A.pct=Math.round(100*l/t); } }});
+      }).then(function(p){ A.asr=p; done(true); }).catch(function(){ done(false); }); };
+    A.ready=function(cb){ if(A.state==='ready'||A.state==='fail') return cb(A.state==='ready'); A.wait.push(cb); A.load(); };
+    A.wake=function(){ if(!A.ctx) A.ctx=new AC(); if(A.ctx.state!=='running') A.ctx.resume(); return A.ctx; };
+    A.start=function(ctx,lvl){ return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+      if(ctx.state!=='running') ctx.resume();
+      var src=ctx.createMediaStreamSource(st), pr=ctx.createScriptProcessor(4096,1,1), ch=[], peak=0;
+      pr.onaudioprocess=function(e){ var d=e.inputBuffer.getChannelData(0); ch.push(new Float32Array(d)); var m=0; for(var i=0;i<d.length;i+=8) m=Math.max(m,Math.abs(d[i])); peak=Math.max(peak,m); if(lvl) lvl(m); };
+      src.connect(pr); pr.connect(ctx.destination); A._keep=[src,pr];
+      return {stop:function(){ pr.disconnect(); src.disconnect(); st.getTracks().forEach(function(t){ t.stop(); });
+        var len=0; ch.forEach(function(c){ len+=c.length; }); var all=new Float32Array(len), o=0; ch.forEach(function(c){ all.set(c,o); o+=c.length; });
+        var r=ctx.sampleRate/16000, n=Math.floor(len/r), out=new Float32Array(n);
+        for(var i=0;i<n;i++){ var a=Math.floor(i*r), b=Math.min(len,Math.floor((i+1)*r)), sum=0; for(var k=a;k<b;k++) sum+=all[k]; out[i]=b>a?sum/(b-a):0; }
+        out.peak=peak; return out; }}; }); };
+    A.hear=function(f32){ return A.asr(f32).then(function(o){ window._asrLast=(o&&o.text)||''; return window._asrLast; }); };
+    return A; })();
+  // голос: запись → распознавание в браузере (или на сервере, если задан SF_ASR) → проверка слов; иначе «послушай себя» + «Сказал ✓»
+  var normT=function(t){ return ' '+String(t).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ')+' '; };
+  R.voice=function(body,s,next){
+    var ps=null; if(s.q||s.ru) ps=head(body,s.q,s.ru,s.note);
+    if(s.top) body.insertAdjacentHTML('beforeend',s.top);
+    if(s.show) body.appendChild(el('p','bigword',esc(s.show)));
+    var pp=null; if(s.pic){ pp=el('div','ppic'+(s.reveal?' snowy':''),pic(s.pic)||''); body.appendChild(pp); }
+    if(s.frame) body.appendChild(el('p','vframe',esc(s.frame)));
+    var row=el('div','row2 vrow'); body.appendChild(row);
+    var hear=null; if(s.line){ hear=el('button','btn btn-ghost','▶ Образец'); hear.hidden=!!s.late; row.appendChild(hear); hear.addEventListener('click',function(){ SND.say(s.line); }); }
+    var rec=el('button','btn btn-gold rec',MIC+'<span>Скажи</span>'); row.appendChild(rec);
+    var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
+    var tries=0, fin=false, mr=null;
+    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) SND.say(s.line); setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function judge(text){ var t=normT(text);
+      if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
+      if(!s.want) return t.trim().length>0;
+      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+    function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
+      try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
+      fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
+    skip.addEventListener('click',function(){ fb.textContent='Скажи вслух — взрослый слышит.'; skip.hidden=true; nextBtn(body,'Сказал(а) ✓',pass,300); });
+    var media=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder;
+    LASR.load();
+    if(!media&&LASR.state==='fail'){ rec.hidden=true; skip.click(); }
+    var lr=null, lt=0;
+    function local(){ // запись сырых сэмплов → распознавание на устройстве
+      if(lr){ var r=lr; lr=null; clearTimeout(lt); rec.classList.remove('on'); rec.querySelector('span').textContent='Скажи'; rec.style.removeProperty('--lv');
+        var a=r.stop(); if(a.peak<0.02) return retry('Ничего не слышно. Нажми и говори громче!');
+        rec.disabled=true;
+        var tick=setInterval(function(){ if(LASR.state==='loading') fb.textContent='Книга учится слушать… '+LASR.pct+'%'; },400);
+        fb.textContent=LASR.state==='ready'?'Книга слушает…':'Книга учится слушать… '+LASR.pct+'%';
+        LASR.ready(function(ok){ if(!ok){ clearInterval(tick); rec.disabled=false; fb.textContent=''; return selfOk(); }
+          fb.textContent='Книга слушает…';
+          LASR.hear(a).then(function(t){ clearInterval(tick); rec.disabled=false; if(judge(t)) pass(); else retry(); })
+            .catch(function(){ clearInterval(tick); rec.disabled=false; selfOk(); }); });
+        return; }
+      var ctx=LASR.wake();
+      LASR.start(ctx,function(m){ rec.style.setProperty('--lv',Math.min(1,m*3).toFixed(2)); }).then(function(r){ lr=r;
+        rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
+        lt=setTimeout(function(){ if(lr) local(); },(s.sec||6)*1000);
+      }).catch(function(){ rec.hidden=true; skip.click(); });
+    }
+    function selfOk(){ fb.textContent='Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
+    rec.addEventListener('click',function(){
+      if(!ASR&&LASR.state!=='fail') return local();
+      if(mr&&mr.state==='recording'){ mr.stop(); return; }
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+        var chunks=[]; mr=new MediaRecorder(st); mr.ondataavailable=function(e){ chunks.push(e.data); };
+        mr.onstop=function(){ st.getTracks().forEach(function(t){t.stop();}); rec.classList.remove('on'); rec.querySelector('span').textContent='Скажи';
+          var blob=new Blob(chunks,{type:mr.mimeType||'audio/webm'}); if(blob.size<1500) return retry('Ничего не слышно. Нажми и говори громче!');
+          if(!ASR) return self(blob);
+          fb.textContent='Книга слушает…';
+          fetch(ASR,{method:'POST',body:blob,headers:{'X-Track':T}}).then(function(r){ return r.json(); }).then(function(j){ if(judge(j.text||'')) pass(); else retry(); }).catch(function(){ self(blob); }); };
+        mr.start(); rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
+        setTimeout(function(){ if(mr&&mr.state==='recording') mr.stop(); },(s.sec||6)*1000);
+      }).catch(function(){ rec.hidden=true; skip.click(); });
+    });
+  };
+  // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
+  R.retell=function(body,s,next){
+    var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
+    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:'Отличный пересказ!'},next);
+    if(s.type){ var tb=el('button','gloss','Написать текстом'); body.appendChild(tb);
+      tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold','Готово'); body.appendChild(ok);
+        ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
+          if(n>=s.need){ ok.disabled=true; SND.fx('ok'); f2.textContent='Отличный пересказ! Ключевых слов: '+n+'.'; setTimeout(next,1200); } else { wrong(null,f2); f2.textContent='Ключевых слов пока '+n+' из '+s.need+'. Добавь: '+s.keys.filter(function(k){ return t.indexOf(k)<0; }).slice(0,3).join(', '); } }); }); }
+  };
+  // «Битва за значок»: 5 заданий подряд, засчитываем с первой попытки
+  R.check=function(body,items,next){
+    var i=0, score=0, sub;
+    var bar=el('div','chk'); body.appendChild(bar); items.forEach(function(){ bar.appendChild(el('i','')); });
+    sub=el('div','chkbody'); body.appendChild(sub);
+    (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0;
+      if(i>=items.length) return result();
+      var before=MISS; sub.innerHTML=''; R[items[i].t](sub,items[i],function(){ var ok=MISS===before; if(ok) score++; bar.children[i].className=ok?'ok':'half'; i++; nx(); }); })();
+    function result(){ sub.innerHTML=''; var r=REPORT[T];
+      var rep={track:T,score:score,of:items.length,words:r.words,grammar:r.grammar,more:r.more,date:new Date().toISOString().slice(0,10)};
+      try{ localStorage.setItem('sf_s'+SID+'_report',JSON.stringify(rep)); }catch(e){}
+      SND.fx('spark'); sub.appendChild(el('p','score','<b>'+score+'</b> / '+items.length));
+      sub.appendChild(el('p','say',score>=4?'The badge is yours!':'Good fight! The badge is yours!'));
+      sub.appendChild(reportCard(rep)); nextBtn(sub,'Забрать значок',next,900); }
+  };
+  function reportCard(r){ return el('div','report','<b>Что повторили</b><dl><dt>Слова</dt><dd>'+esc(r.words)+'</dd><dt>Грамматика</dt><dd>'+esc(r.grammar)+'</dd><dt>Ещё</dt><dd>'+esc(r.more)+'</dd><dt>Битва за значок</dt><dd>'+r.score+' из '+r.of+'</dd></dl>'); }
+
+  R.listen=function(body,s,next){ // Маугли рассказывает: мультик, а пока он не переозвучен под новый текст — голос + картинка
+    var pi=body.querySelector('.pimg'); if(pi) pi.remove();
+    head(body,s.prompt,s.ru);
+    if(!s.video){
+      body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+LISTEN_POSTER+'.webp" alt="">');
+      var b0=el('button','iplay small vplay','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'); b0.setAttribute('aria-label','Слушать'); body.appendChild(b0);
+      var f0=el('p','fb','Нажми и слушай'+(HERO[2]?' '+HERO[2]:'')); body.appendChild(f0); var shown0=false, n0=0;
+      var go0=function(){ if(!shown0){ shown0=true; nextBtn(body,'К вопросам',function(){ SND.music(true); next(); },200);} };
+      b0.addEventListener('click',function(){ n0++; SND.music(false); f0.textContent=''; SND.say(s.text).then(function(){ SND.music(true); f0.textContent=n0<2?'Можно послушать ещё раз':''; go0(); }); });
+      setTimeout(go0,T==='experts'?40000:20000); return;
+    }
+    var v=document.createElement('video'); v.className='lvid'; v.src='video/listen_'+T+'.mp4'; v.poster='../../img/'+LISTEN_POSTER+'.webp'; v.setAttribute('playsinline',''); v.preload='auto'; body.appendChild(v);
+    var b=document.createElement('button'); b.className='iplay small vplay'; b.setAttribute('aria-label','Смотреть'); b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'; body.appendChild(b);
+    var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
+    var x=null;
+    var cleanup=function(){ try{ v.pause(); }catch(e){} v.classList.remove('full'); if(x) x.remove(); sub.remove(); st.remove(); SND.music(true); };
+    var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function(){ cleanup(); next(); },200);} };
+    var SUB=T==='little'?SUBS_LITTLE:[], subOn=T==='little';
+    var sub=document.createElement('p'); sub.className='vsub'; sub.hidden=true; $('#stage').appendChild(sub);
+    var st=document.createElement('button'); st.className='vsubbtn'; st.hidden=true; $('#stage').appendChild(st);
+    var paintSt=function(){ st.textContent=subOn?'Субтитры ✓':'Субтитры'; st.setAttribute('aria-pressed',subOn?'true':'false'); };
+    paintSt(); st.addEventListener('click',function(){ subOn=!subOn; paintSt(); upd(); });
+    var upd=function(){ var t=v.currentTime, c=SUB.filter(function(q){return t>=q[0]&&t<q[1];})[0];
+      var full=v.classList.contains('full'); st.hidden=!full||T!=='little';
+      if(!c||!subOn||!full){ sub.hidden=true; return; }
+      sub.textContent=c[2]; sub.hidden=!sub.textContent; };
+    v.addEventListener('timeupdate',upd);
+    x=document.createElement('button'); x.className='vclose'; x.textContent='Свернуть ✕'; x.hidden=true; $('#stage').appendChild(x);
+    var shrink=function(){ v.classList.remove('full'); x.hidden=true; sub.hidden=true; st.hidden=true; };
+    x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2(); });
+    b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent=''; v.classList.add('full'); x.hidden=false; st.hidden=T!=='little';
+      var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ shrink(); SND.say(s.text).then(go2); }); });
+    v.addEventListener('ended',function(){ shrink(); SND.music(true); b.hidden=false; fb.textContent=n<2?'Можно посмотреть ещё раз':''; go2(); });
+    setTimeout(go2,T==='experts'?45000:22000);
+  };
+  R.readp=function(body,s,next){
+    body.insertAdjacentHTML('beforeend','<p class="ptitle">'+esc(s.title)+'</p>'+(s.ru?'<p class="ru">'+esc(s.ru)+'</p>':'')+'<div class="passage">'+esc(s.text).replace(/\n\n/g,'<br><br>')+'</div>'); ruBtns(body);
+    var row=el('div','row2'); body.appendChild(row);
+    var p=el('button','btn btn-ghost','▶ Послушать'); row.appendChild(p); p.addEventListener('click',function(){ SND.say(s.text); });
+    nextBtn(body,'Прочитано',next,T==='little'?400:1500);
+  };
+  var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1};
+  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+    if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+    R[st.t](body,st,nx); })(); }
+
+
+  /* uses engine */
+  /* ===== История 7 · Jim Hawkins — «Корабль вмёрз в озеро, карта зашифрована» (план: docs/plans/story-07.md) ===== */
+  var T=state.track||'explorers';
+  var POSTERS={little:'09_j3_map',explorers:'08_v11_jim',experts:'09_j2_barrel'};
+  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; LISTEN_POSTER=POSTERS[t]||'09_j3_map'; }
+  var ACTW={};
+  var SID=7, HERO=['g:08_v11_jim','Jim','Джима'], LISTEN_POSTER='09_j3_map', QUICK_WIN=['Land ho!','Земля! Шторм позади.'], SUBS_LITTLE=[];
+  WORDS.apple2='apples'; WORDS.cheese2='cheese'; WORDS.chest='a treasure chest'; WORDS.coin='a gold coin'; WORDS.ship='a ship'; WORDS.palm='a palm tree'; WORDS.piratehat='a pirate hat';
+  WORDS.shiplantern='a lantern'; WORDS.seachest='a sea chest'; WORDS.wheel='a ship’s wheel'; WORDS.spyglass='a spyglass'; WORDS.storm='a storm'; WORDS.water='water'; WORDS.rice='rice'; WORDS.isle_hill='a hill'; WORDS.isle_bridge='a bridge'; WORDS.isle_path='a path'; WORDS.pond='a pond';
+  function mk(tag,cls,parent,html){ var e=el(tag,cls,html); if(parent) parent.appendChild(e); return e; }
+  // числа словами (шторм: считаем до 10 и десятками до 100)
+  var NUM1=['zero','one','two','three','four','five','six','seven','eight','nine','ten'], NUM10=['','ten','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety','a hundred'];
+  // прошедшее время для «Судового журнала»: минимум 4 глагола
+  var PAST4=/^(?=(?:[\s\S]*?\b(?:\w{2,}ed|went|saw|took|found|hid|ran|thought|brought|was|were|had|came|left|got|made|sat|told|heard|began|fell|said|set|hit|swam|ate|drank|flew|knew|lost|met|slept|stood|woke|caught|gave|felt|kept|wrote|did|could|became|blew|sank|shouted|climbed)\b){4})/i;
+  // карта острова для малышей: одна лодка, два дерева, три цветка, холм, скала, пруд, мост, тропинка
+  var ISLE=[['i:isle_hill',50,24,24],['i:tree',24,30,15],['i:tree',78,58,15],['i:rock',76,32,16],['i:pond',30,52,20],['i:isle_bridge',52,52,16],['w:flower',36,76,11],['w:flower',47,80,11],['w:flower',58,76,11],['i:isle_path',70,78,15],['i:boat',12,84,17]];
+  function isleHTML(){ return '<div class="isle">'+ISLE.map(function(x){ return '<span class="ik" style="left:'+x[1]+'%;top:'+x[2]+'%;--w:'+x[3]+'%">'+pic(x[0])+'</span>'; }).join('')+'<b class="ix" style="left:62%;top:36%">✕</b><span class="imouse">'+pic('m:mouse')+'</span></div>'; }
+
+  /* --- content per track: six stations + warm-up; «Битва за значок» в конце --- */
+  var L={
+    little:{
+      listen:{prompt:'Jim shows his map. Listen!', ru:'Взрослому: нажмите ▶ и слушайте вместе. Джим рассказывает, что есть на карте: There’s a … — есть один; There are two … — есть два.',
+        text:'I’m Jim. Look at my map! There’s an island. There’s a hill and a big rock. There’s a pond and a bridge. There are two trees and three flowers. There’s a path to the treasure. And there’s my boat!',
+        warm:[{t:'voice',top:'<div class="birds">'+pic('i:bird')+pic('i:bird')+'</div>',q:'How many birds? Count!',want:['two','2','to'],line:'Two birds!',ru:'Взрослому: повторяем Питера Пэна. Джим считает чаек над кораблём — ребёнок отвечает голосом числом: Two!'},
+              {t:'voice',top:'<div class="birds">'+[1,2,3,4,5].map(function(){ return pic('i:bird'); }).join('')+'</div>',q:'How many birds now?',want:['five','5'],line:'Five birds!'},
+              {t:'voice',top:'<div class="birds">'+[1,2,3,4,5,6,7].map(function(){ return pic('i:bird'); }).join('')+'</div>',q:'And now? How many birds?',want:['seven','7'],line:'Seven birds!'}],
+        steps:[{t:'mcq',q:'What did Jim say? Tap!',ru:'Взрослому: «Что было на карте?» Каждая картинка при нажатии называет себя.',pics:1,opts:[['i:isle_bridge',1],['i:anchor'],['i:bell']]},
+               {t:'mcq',q:'And this? Tap what you heard!',ru:'Взрослому: ещё одно слово из рассказа Джима.',pics:1,opts:[['i:pond',1],['i:wheel'],['i:compass']]},
+               {t:'mcq',q:'One more! What did you hear?',ru:'Взрослому: и последнее.',pics:1,opts:[['i:boat',1],['i:anchor'],['i:spyglass']]},
+               {t:'mcq',q:'How many trees are on the map?',ru:'Взрослому: «Сколько деревьев?» Two trees — два дерева.',opts:[['2',1],['3']]}]},
+      vocab:{steps:[{t:'show',q:'Tap and listen!',ru:'Взрослому: нажимайте на каждую картинку — она назовёт себя. Повторяйте вслух. 8 слов: что есть на острове.',items:['i:tree','i:isle_hill','i:pond','i:isle_bridge','i:boat','i:isle_path','w:flower','i:rock']},
+               {t:'parrot',q:'The parrot repeats! Listen and tap in the same order.',ru:'Взрослому: попугай говорит слова по порядку — сначала два, потом три, потом четыре. Нажимайте картинки в том же порядке. Можно послушать ещё раз.',pool:['i:tree','i:isle_hill','i:pond','i:isle_bridge','i:boat','i:isle_path','w:flower','i:rock'],chains:[['i:tree','i:boat'],['i:rock','w:flower','i:pond'],['i:isle_bridge','i:isle_hill','i:isle_path','i:tree']]}]
+             .concat(nameIt([['i:tree',0,'tree|tri','tree'],['i:isle_hill',0,'hill|hil|heal','hill'],['i:pond',0,'pond|pon','pond'],['i:isle_bridge',0,'bridge|brij|brid','bridge'],['i:boat',0,'boat|bot|bout','boat'],['i:isle_path',0,'path|pat|paf|pas','path'],['w:flower',0,'flow|flaw','flower'],['i:rock',0,'rock|rok|rak','rock']],'Взрослому: место острова спряталось под песком. Назови его вслух — и оно выйдет из-под песка! Не получается — нажмите «Образец».'))},
+      grammar:{steps:[{t:'maptf',q:'Look at Jim’s map. Yes or no?',ru:'Взрослому: Книга говорит, что есть на карте. Посчитайте вместе и нажмите ✓ (правда) или ✗ (неправда). На неправду выбегает мышь — это она перепутала!',items:[['There are two boats!','F'],['There are two trees.','T'],['There’s a bridge.','T'],['There are four flowers.','F']]},
+               {t:'who2',q:'Who says it right? Jim or the mouse?',ru:'Взрослому: нажмите на Джима и на мышь — каждый скажет фразу. Два дерева — значит There are. Мышь говорит There is two trees. Кто прав?',good:'There are two trees.',bad:'There is two trees.'},
+               {t:'voice',top:isleHTML(),q:'What’s on the map? Say it! There’s a … / There are two …',want:['there','theres','tree','hill','rock','pond','boat'],line:'There’s a hill. There are two trees.',sec:7,ru:'Взрослому: ребёнок говорит одну фразу про карту: There’s a boat! или There are three flowers!'}]},
+      read:{lock:{t:'compass',q:'The page is locked! Follow the compass arrows.',ru:'Взрослому: стрелки показывают на картинки вокруг компаса: ↑ — вверх, → — вправо, ↓ — вниз. Нажмите картинку, куда смотрит стрелка, — она назовёт себя, а первый звук станет буквой.',
+                   dirs:{N:'i:moon',E:'i:apple',S:'w:pen',W:'w:sun'},path:['N','E','S'],word:'MAP',opts:[['w:map',1],['w:cup'],['w:box']]},
+        steps:blendIt([[['m','a','p']],[['b','o','x']],[['s','u','n']],[['c','u','p']],[['b','l','ue']],[['c','l','ue']],[['g','l','ue']],[['f','er','n']],[['sh','ar','k']],[['s','t','ar']]])},
+      write:{steps:[{t:'coinword',pre:'There’s a ',coins:['S','T','AR'],q:'Gold coins with letters! Make: There’s a …',ru:'Взрослому: монеты из сундука. Соберите STAR по порядку. AR — монета-двойняшка: две буквы, один звук.'},
+               {t:'choose',q:'What’s on the map? Tap!',ru:'Взрослому: выберите картинку — получится целое предложение. Скажите его вместе.',pics:1,opts:['w:star','w:shark','w:fern'],tpl:'There’s a {}!'}]},
+      speak:{steps:[{t:'voice',pic:'g:08_v11_jim',q:'Tell Jim about your room! There’s a bed. There are two …',want:['there','theres','bed','are'],line:'There’s a bed. There are two chairs.',sec:8,ru:'Взрослому: ребёнок рассказывает Джиму про свою комнату: There’s a bed. There are two chairs.'},
+               {t:'voice',pic:'g:08_v11_jim',q:'Is there a window in your room?',want:['yes','no','there','is'],line:'Yes, there is!',sec:6,ru:'Взрослому: ответ голосом: Yes, there is! / No, there isn’t!'}]}
+    },
+    explorers:{
+      listen:{prompt:'Jim is loading the ship. Listen!', ru:'Джим грузит припасы на «Испаньолу». Слушай: чего много (a lot of), чего мало (a little), чего нет (not any).',
+        text:'We’ve got a lot of water. We’ve got a hundred apples in a big barrel. There’s some bread, but there isn’t any cheese. We’ve got a little salt and a little sugar. How much rice? A lot! How many apples? A hundred! And Mr Silver has got a thousand gold coins…',
+        warm:[{t:'mcq',img:'g:h_peter_pan',q:'Peter Pan asks from the mast: which is the biggest?',ru:'Повтор Питера Пэна: превосходная степень. Что самое большое?',pics:1,opts:[['i:ship',1],['i:boat'],['i:barrel']]},
+              {t:'voice',pic:'g:h_peter_pan',q:'Which is the brightest star? Say: The … is the brightest.',want:['brightest','biggest','est'],line:'The North Star is the brightest!',sec:7,ru:'Ответь голосом: The North Star is the brightest! / The moon is the biggest!'}],
+        steps:[{t:'sort',q:'What has the ship got?',ru:'Разложи: чего много, чего мало и чего нет совсем.',bins:[['lot','a lot of'],['few','a little'],['none','not any']],items:[['water','lot'],['rice','lot'],['salt','few'],['sugar','few'],['cheese','none']]},
+               {t:'mcq',q:'How many apples are in the barrel?',ru:'Сколько яблок в бочке?',opts:[['a hundred',1],['a few'],['a thousand']]},
+               {t:'mcq',q:'How many gold coins has Mr Silver got?',ru:'А сколько монет у мистера Сильвера?',opts:[['a thousand',1],['a hundred'],['a little']]}]},
+      vocab:{steps:[{t:'show',q:'Food for the voyage. Tap and listen!',ru:'Припасы для плавания. Нажми на каждую картинку и повтори.',items:['i:water','i:bread','i:apple2','i:rice','w:oil','w:salt','i:sugar','i:cheese2']},
+               {t:'memory',q:'Find the pairs: a word and a picture.',ru:'«Найди пару»: слово + картинка. Карточка говорит фразу урока.',
+                 pairs:[['bread','i:bread'],['apples','i:apple2'],['salt','w:salt'],['sugar','i:sugar'],['cheese','i:cheese2'],['oil','w:oil']],
+                 say:{'bread':'There’s some bread.','i:bread':'There’s some bread.','apples':'We’ve got a hundred apples!','i:apple2':'We’ve got a hundred apples!','salt':'We’ve got a little salt.','w:salt':'We’ve got a little salt.','sugar':'Only a few bags of sugar!','i:sugar':'Only a few bags of sugar!','cheese':'There isn’t any cheese.','i:cheese2':'There isn’t any cheese.','oil':'Is there any oil?','w:oil':'Is there any oil?'}},
+               {t:'parrot',voice:1,q:'The parrot repeats! Listen, then say the words in the same order.',ru:'Попугай говорит слова по порядку. Запомни и повтори голосом — в том же порядке.',chains:[['i:bread','w:salt','i:apple2'],['i:water','i:rice','i:cheese2','i:sugar']]},
+               {t:'mcq',q:'A hundred apples! How many is a hundred?',ru:'a hundred — это сколько?',opts:[['100',1],['1000'],['10']]},
+               {t:'mcq',q:'A thousand gold coins! How many is a thousand?',ru:'a thousand — это сколько?',opts:[['1000',1],['100'],['10 000']]}]},
+      grammar:{steps:[{t:'rule',q:'Jim’s rule in the hold',ru:'How many — про то, что считаем (apples, bags). How much — про то, что не считаем (water, sugar). a few — несколько штук, a little — немного вещества. some — в утверждении, any — в вопросе и с not.',
+                 rows:[['How many + things we count','How many apples? How many bags?'],['How much + things we don’t count','How much water? How much sugar?'],['a few + apples, bags, coins','We’ve got a few apples.'],['a little + water, salt, rice','We’ve got a little salt.'],['some: ✓ sentences','There’s some bread.'],['any: questions and not','Is there any cheese? There isn’t any cheese.']]},
+               {t:'hold',q:'Load the hold! How many or how much?',ru:'Трюм корабля: загрузи бочки. Считаем штуки — How many. Не считаем — How much.',bins:[['many','How many …?'],['much','How much …?']],items:[['apples','many'],['water','much'],['bags of rice','many'],['salt','much'],['gold coins','many'],['sugar','much'],['barrels','many'],['oil','much']]},
+               {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей и исправь.',words:['We’ve got','a few','water.'],bad:1,opts:[['a little',1],['a many'],['a few of']],ok:'We’ve got a little water.'},
+               {t:'fix',q:'And here?',ru:'И здесь ошибка.',words:['How many','sugar','have we got?'],bad:0,opts:[['How much',1],['How lot'],['How few']],ok:'How much sugar have we got?'},
+               {t:'fix',q:'One more!',ru:'Это вопрос. Что нужно в вопросе: some или any?',words:['Is there','some','cheese?'],bad:1,opts:[['any',1],['a few'],['many']],ok:'Is there any cheese?'},
+               {t:'fix',q:'And the last one!',ru:'Яблоки считаем!',words:['We’ve got','a little','apples.'],bad:1,opts:[['a few',1],['a much'],['any']],ok:'We’ve got a few apples.'},
+               {t:'voice',q:'What have you got in your kitchen? We’ve got a lot of … / a few … / a little …',want:['lot','few','little','some','got'],line:'We’ve got a lot of apples and a little sugar.',sec:8,ru:'Скажи голосом, что есть у тебя на кухне.'}]},
+      read:{title:'The Cook’s List',ru:'Прочитай страницу книги.',
+        text:'The ship is ready to sail. The cook is a tall man with one leg. His name is Long John Silver. He is very friendly, and all the sailors like him. “We need a lot of water,” says Silver. “How much water have we got?” Jim looks. “We’ve got a lot of water, sir. And we’ve got a hundred apples in a big barrel.” “Good. Is there any rice?” “Yes, there is. But there isn’t any cheese.” “That’s fine. Sailors don’t eat a lot of cheese. How many bags of sugar?” “Only a few,” says Jim. Silver laughs. “A few bags of sugar for a long trip? We need more!” Jim writes everything on the cook’s list. He doesn’t know yet that Silver is a pirate.',
+        lock:[{t:'grid',answer:'RICE',q:'The page is locked! Read the treasure map coordinates.',ru:'Карта с сеткой: буквы сверху — колонки (A–E), цифры слева — строки (1–5). B2 — колонка B, строка 2. Найди буквы и напиши слово. Можно нажимать на клетки.'},
+              {t:'grid',answer:'A LOT OF WATER',q:'And the second line on the map!',ru:'Вторая строка — целая фраза урока. Косая черта / — пробел между словами.'}],
+        steps:[{t:'tf',q:'True or false?',ru:'Правда или нет?',items:[['Silver is the cook.','T'],['There is a lot of cheese.','F'],['Jim knows that Silver is a pirate.','F']]},
+               {t:'mcq',q:'How many apples are in the barrel?',opts:[['a hundred',1],['a few'],['a thousand']]},
+               {t:'retell',q:'Tell the Book about the cook’s list!',ru:'Перескажи по картинкам: 4 предложения. Используй a lot of, a few, any.',
+                 pics:[['i:parrot','Silver, the cook'],['i:barrel','a barrel, apples'],['i:water','a lot of water'],['i:rice','a few · rice · no cheese']],
+                 keys:['silver','cook','barrel','apples','water','rice','cheese','sugar'],need:4,sec:40,line:'Long John Silver is the cook. There are a hundred apples in a barrel. We’ve got a lot of water and some rice. There are only a few bags of sugar, and there isn’t any cheese.'}]},
+      write:{steps:[{t:'write',poster:'card',cardTitle:'THE COOK’S LIST',cardPic:'i:barrel',doneMsg:'Список у кока! «Good lad, Jim!»',q:'Write the cook’s list!',ru:'Список кока: some — в утверждении, a few + то, что считаем (apples), a little + то, что не считаем (salt), any — с not.',
+               fields:[{ph:'We need some …',need:/\bsome \w+/i,why:'Начни так: We need some bread / water …'},
+                       {ph:'We need a few …',need:/\ba few \w+s\b/i,why:'a few + то, что считаем, во множественном числе: a few apples, a few bags.'},
+                       {ph:'We need a little …',need:/\ba little (?!\w+s\b)\w+/i,why:'a little + то, что не считаем: a little salt / sugar / water.'},
+                       {ph:'We haven’t got any …',need:/\bany \w+/i,why:'Нужно: We haven’t got any … (с not — any).'}],model:'We need some bread. We need a few apples. We need a little salt. We haven’t got any cheese.'}]},
+      speak:{steps:[{t:'voice',pic:'g:09_j2_barrel',q:'Silver asks: How much water do we need?',want:['lot','little','much','water','need'],line:'We need a lot of water!',sec:7,ru:'Сильвер спрашивает. Ответь коротко и добавь деталь: We need a lot of water!'},
+               {t:'voice',pic:'g:09_j2_barrel',q:'Is there any bread?',want:['yes','no','there','any','some'],line:'Yes, there is. There’s some bread in the barrel.',sec:8,ru:'Краткий ответ + добавка: Yes, there is. There’s some bread…'}]}
+    },
+    experts:{
+      listen:{prompt:'Jim is in the apple barrel. Silver is whispering. Listen!', ru:'',
+        text:'Listen, lads. We sailed for three weeks, and yesterday I saw the island through my spyglass. The captain has got the map in his cabin. Tonight we’ll take the map. Then we’ll find Flint’s treasure, and we won’t share it with anybody. But be quiet — and keep smiling at the captain.',
+        warm:[{t:'voice',pic:'g:h_peter_pan',q:'Peter Pan asks: What are you going to do tomorrow?',want:['going to','gonna','will','tomorrow'],line:'Tomorrow I’m going to visit my grandma.',sec:8,ru:'Повтор Питера Пэна: будущее. Ответь полным предложением: I’m going to …'},
+              {t:'voice',pic:'g:h_peter_pan',q:'Will it snow tomorrow?',want:['will','wont','might','snow'],line:'It might snow. I think it will!',sec:7}],
+        steps:[{t:'mcq',q:'How long did they sail?',opts:[['for three weeks',1],['for three days'],['for a year']]},
+               {t:'mcq',q:'How did Silver see the island?',opts:[['through his spyglass',1],['on the map'],['from the barrel']]},
+               {t:'mcq',q:'Where is the map now?',opts:[['in the captain’s cabin',1],['in Silver’s pocket'],['in the apple barrel']]},
+               {t:'mcq',q:'What are the pirates planning?',opts:[['to take the map and keep all the treasure',1],['to share the treasure with the captain'],['to go back to Bristol']]}]},
+      vocab:{steps:[{t:'chests',q:'The harbour: put the words into the chests.',ru:'',bins:[['b','before the journey'],['o','on the journey'],['p','problems']],items:[['pack your luggage','b'],['buy a map','b'],['take a compass','b'],['set sail','o'],['travel by ship','o'],['travel by coach','o'],['arrive at an island','o'],['get lost','p'],['a big storm','p'],['lose your luggage','p']]},
+               {t:'memory',q:'Find the pairs: a word and its meaning.',ru:'',pairs:[['harbour','a place where ships stop'],['crew','all the people who work on a ship'],['captain','the person in charge of a ship'],['voyage','a long journey by sea'],['luggage','bags and suitcases for a trip'],['compass','it shows you where north is']]},
+               {t:'mcq',q:'We ___ off early in the morning. (started the journey)',opts:[['set',1],['got'],['arrived']]},
+               {t:'mcq',q:'Without a map you can easily get ___ .',opts:[['lost',1],['off'],['sail']]}]},
+      grammar:{steps:[{t:'rule',q:'The captain’s log: irregular verbs',ru:'Нажми на строчку — услышишь пример. В вопросе и с not — did + обычная форма: Did you see? I didn’t find.',
+                 rows:[['go → went','We went to the island.'],['find → found','Jim found the map.'],['see → saw','I saw a ship.'],['take → took','Silver took the gold.'],['hide → hid','The pirates hid the treasure.'],['run → ran','Everyone ran to the side.'],['think → thought','I thought he was my friend.'],['bring → brought','The cook brought apples.'],['Did you see …? Yes, I did.','not: Did you saw …?'],['didn’t + verb','I didn’t find it. (not: didn’t found)']]},
+               {t:'fix',q:'The mice wrote in the log. Fix it!',words:['We','goed','to the island.'],bad:1,opts:[['went',1],['did go'],['wented']],ok:'We went to the island.'},
+               {t:'fix',q:'And this one?',words:['Did you','saw','the map?'],bad:1,opts:[['see',1],['seen'],['sawed']],ok:'Did you see the map?'},
+               {t:'fix',q:'One more!',words:['Jim','didn’t found','the treasure.'],bad:1,opts:[['didn’t find',1],['didn’t founded'],['not found']],ok:'Jim didn’t find the treasure.'},
+               {t:'fix',q:'And the last one!',words:['Silver','did went','away.'],bad:1,opts:[['went',1],['did gone'],['goed']],ok:'Silver went away.'},
+               {t:'voice',q:'Now you: Last summer I went … I didn’t …',want:['went','didnt','did','saw','was'],line:'Last summer I went to the sea. I didn’t see any pirates!',sec:10}]},
+      read:{title:'The Apple Barrel',ru:'',
+        text:'We left Bristol in June and sailed for many weeks. The crew worked hard, and the cook, Long John Silver, was everyone’s friend. He often told me stories about the sea, and his green parrot shouted “Pieces of eight!” all day long.\n\nOne evening, just before we saw the island, I wanted an apple. The big apple barrel was almost empty, so I climbed inside it to find the last one. It was dark and warm in there, and I nearly fell asleep. Then I heard voices. Silver sat down next to the barrel and began to talk quietly to a young sailor.\n\n“I was with Captain Flint,” he said. “Most of this crew are Flint’s old men. When we find the treasure, we won’t share it with the captain. We’ll take it all.” I didn’t move. I didn’t breathe. My friend, the kind cook, was a pirate!\n\nAt that moment someone shouted, “Land ho!” Everyone ran to look at the island, and I quickly climbed out of the barrel. I found the captain and the doctor and told them everything. The captain listened carefully. “Thank you, Jim,” he said. “You are a brave boy. Now we know the truth, and that is our best weapon.”',
+        lock:{t:'sym',answer:'SET SAIL',q:'Pigpen code on the map! The key is on the back.',ru:'Шифр «свинарник»: каждая буква — кусочек решётки или креста, некоторые с точкой. Ключ сверху. Расшифруй и напиши.'},
+        steps:[{t:'cloze',q:'The captain’s log: write one word in each gap.',ru:'Open cloze (A2 Key): в каждый пропуск — одно слово. Подсказок-вариантов нет!',
+                 text:'Three weeks {0} we left Bristol. Yesterday {1} weather was terrible, and the sea {2} very rough. In the evening Jim {3} {4} the apple barrel. Why {5} he go there? He wanted an apple!',gaps:['ago','the','was','went','to','did']},
+               {t:'mcq',q:'1. Where did Jim go to find an apple?',opts:[['A  into the barrel',1],['B  to the kitchen'],['C  to the captain']]},
+               {t:'mcq',q:'2. Who did Silver sail with before?',opts:[['A  Captain Flint',1],['B  the doctor'],['C  Jim’s father']]},
+               {t:'mcq',q:'3. What did the pirates want to do?',opts:[['A  take all the treasure',1],['B  go home'],['C  buy a new ship']]},
+               {t:'mcq',q:'4. What did Jim do when everyone ran to look at the island?',opts:[['A  climbed out and told the captain',1],['B  fell asleep'],['C  ate the last apple']]},
+               {t:'mcq',q:'5. Why did the captain call Jim brave?',opts:[['A  he told the truth about the pirates',1],['B  he climbed the mast'],['C  he found the treasure']]},
+               {t:'retell',type:1,q:'What happened on the ship? Retell in 5–6 sentences.',ru:'Перескажи голосом (или напиши). Используй минимум 6 слов из списка и Past Simple.',
+                 keys:['ship','island','barrel','apples','silver','pirates','map','captain'],need:6,sec:60,line:'Jim sailed on a ship to find an island with treasure. One evening he climbed into the apple barrel to get the last apple. Silver sat next to the barrel and talked to a sailor. Jim heard that Silver and his men were pirates and wanted the map and all the treasure. When someone saw the island, Jim climbed out and told the captain everything.'}]},
+      write:{steps:[{t:'logbook',area:1,doneMsg:'Запись в судовом журнале! «Well done, sailor!»',q:'The ship’s log: write the story (35–45 words).',ru:'Key Part 7: история по трём картинкам. Нужно 35–45 слов и минимум 4 глагола в Past Simple (sailed, saw, went, found…).',
+               pics:[['i:ship','1 · set sail'],['i:storm','2 · a storm'],['i:palm','3 · an island']],
+               fields:[{ph:'Three weeks ago we …',need:PAST4,why:'Нужно минимум 4 глагола в Past Simple: sailed, was, saw, went, found…',also:[/\b(ship|sea|island|storm|sail|waves?|boat)\b/i],alsoWhy:'Расскажи про все три картинки: корабль, шторм, остров.',min:35,max:45}],
+               model:'Three weeks ago we set sail from Bristol. The sea was calm and we were happy. Then a big storm came and the waves hit our ship. We didn’t sleep all night. In the morning Jim saw an island and shouted, “Land ho!”'}]},
+      speak:{steps:[{t:'voice',pic:'i:spyglass',q:'Captain Smollett asks: Where did you go last summer?',want:['went','go','was','stayed','visited'],line:'Last summer I went to the seaside with my family.',sec:8,ru:'Капитан Смоллетт строгий: отвечай полным предложением в Past Simple.'},
+               {t:'voice',pic:'i:spyglass',q:'How did you travel?',want:['by','train','car','plane','ship','bus','coach','travelled','went'],line:'We travelled by train.',sec:7},
+               {t:'voice',pic:'i:spyglass',q:'What did you see there?',want:['saw','see','was','were'],line:'I saw the sea and a lot of big ships.',sec:8}]}
+    }
+  };
+  var ART={listen:'09_j3_map',vocab:'09_j4_island',grammar:'09_j1_inn',read:'09_j2_barrel',write:'09_j3_map',speak:'08_v11_jim'};
+  var ST=[['listen','Listening','Карта Джима','Listen'],['vocab','Vocabulary','Попугай повторяет','Words'],['grammar','Grammar','Трюм корабля','Grammar'],['read','Reading','Бочка с яблоками','Read'],['write','Writing','Судовой журнал','Write'],['speak','Speaking','Разговор на палубе','Speak']];
+
+  /* --- «Битва за значок» --- */
+  var CHECK={
+    little:[{t:'mcq',q:'Find the bridge!',pics:1,opts:[['i:isle_bridge',1],['i:boat'],['i:tree']]},
+            {t:'mcq',q:'Find the pond!',pics:1,opts:[['i:pond',1],['i:rock'],['w:flower']]},
+            {t:'voice',pic:'i:boat',q:'What is it? Say it!',want:['boat|bot|bout'],line:'It’s a boat.',frame:'It’s a …'},
+            {t:'who2',q:'Who says it right?',good:'There are two trees.',bad:'There is two trees.'},
+            {t:'mcq',show:'shark',q:'Read the word. Find the picture!',pics:1,opts:[['w:shark',1],['w:star'],['w:fern']]}],
+    explorers:[{t:'mcq',q:'Find the cheese!',pics:1,opts:[['i:cheese2',1],['i:bread'],['w:salt']]},
+               {t:'mcq',q:'Find the salt!',pics:1,opts:[['w:salt',1],['i:sugar'],['i:apple2']]},
+               {t:'voice',pic:'i:bread',q:'What is it? Say it!',want:['bread|bred'],line:'It’s bread.',frame:'It’s …'},
+               {t:'gaps',q:'Fill the gap.',text:'We’ve got a {0} water.',gaps:[[['little','few','many'],'little']]},
+               {t:'mcq',q:'How many apples are in the barrel?',opts:[['a hundred',1],['a few'],['a thousand']]}],
+    experts:[{t:'mcq',q:'A place where ships stop. It’s a …',opts:[['harbour',1],['voyage'],['crew']]},
+             {t:'gaps',q:'Fill the gap.',text:'At six in the morning the ship set {0}.',gaps:[[['sail','lost','by'],'sail']]},
+             {t:'fix',q:'Fix the mistake.',words:['Did you','saw','the island?'],bad:1,opts:[['see',1],['seen'],['saws']],ok:'Did you see the island?'},
+             {t:'gaps',q:'Past Simple: fill the gap.',text:'Jim {0} (find) the map in the sea chest.',gaps:[[['found','finded','find'],'found']]},
+             {t:'mcq',q:'Why did the captain call Jim brave?',opts:[['He told the truth about the pirates.',1],['He climbed the mast.'],['He found the treasure.']]}]
+  };
+  var REPORT={
+    little:{words:'tree, hill, pond, bridge, boat, path, flower, rock + числа до 12',grammar:'There’s a … · There are two … · Is there a …? Yes, there is / No, there isn’t',more:'Фоника: повтор (map, box, sun, cup) + ue, er, ar (blue, clue, glue, fern, shark, star)'},
+    explorers:{words:'water, bread, apples, rice, oil, salt, sugar, cheese, a hundred, a thousand',grammar:'some / any · a lot of / a few / a little · How much / How many',more:'Чтение: «The Cook’s List» + пересказ, список кока; координаты карты, предлоги пути (across, past, through, over)'},
+    experts:{words:'luggage, map, compass, voyage, by ship, by coach, set off, set sail, get lost, arrive, harbour, island, crew, captain',grammar:'Past Simple: неправильные глаголы · Did you …? · didn’t + глагол',more:'Чтение: «The Apple Barrel» (A2 Key, 5 вопросов) + open cloze, пересказ, судовой журнал 35–45 слов'}
+  };
+
+  /* --- шифры и события на поле (повтор) --- */
+  // шифр «свинарник» (pigpen): A–I — решётка, J–R — решётка с точкой, S–V — крест, W–Z — крест с точкой; рисуем SVG сами
+  var PACK=(function(){ var out={}, AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var X=[['M4 5 12 15 20 5','12,8'],['M5 4 15 12 5 20','8,12'],['M19 4 9 12 19 20','16,12'],['M4 19 12 9 20 19','12,16']];
+    AB.split('').forEach(function(l,i){ var d='', dot=null;
+      if(i<18){ var p=i%9, r=Math.floor(p/3), c=p%3; if(r>0) d+='M3 3H21'; if(r<2) d+='M3 21H21'; if(c>0) d+='M3 3V21'; if(c<2) d+='M21 3V21'; if(i>=9) dot='12,12'; }
+      else { var q=X[(i-18)%4]; d=q[0].replace(/^M(\S+) (\S+) /,'M$1 $2L').replace(/ (\S+) (\S+)$/,'L$1 $2'); if(i>=22) dot=q[1]; }
+      out[l]='<svg class="dm pp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+d+'"/>'+(dot?'<circle cx="'+dot.split(',')[0]+'" cy="'+dot.split(',')[1]+'" r="2" fill="currentColor" stroke="none"/>':'')+'</svg>'; });
+    return out; })();
+  var MOUSE={
+    little:[[{t:'spot',word:'SUN',miss:[1,1],opts:['U','A','I'],pic:'w:sun',q:'The black spot! A letter is gone.',ru:'Взрослому: мыши оставили «чёрную метку» — одна буква стёрлась. Послушайте слово и выберите монету с нужной буквой.'}],
+            [{t:'spot',word:'SHARK',miss:[2,2],opts:['AR','ER','UE'],pic:'w:shark',q:'Another black spot! Two letters are gone.',ru:'Взрослому: стёрлась монета-двойняшка — две буквы, один звук. Послушайте слово: sh-ar-k.'}]],
+    explorers:[[{t:'grid',answer:'A FEW WATER',q:'A black spot from the mice! Read the coordinates.',ru:'Мыши оставили «чёрную метку» с координатами. Расшифруй по карте — и найди их ошибку.'},
+                {t:'fix',q:'The mice made a mistake. Fix it!',ru:'Воду не считаем штуками!',words:['We’ve got','a few','water.'],bad:1,opts:[['a little',1],['a many'],['a few of']],ok:'We’ve got a little water.'}],
+               [{t:'grid',answer:'SUGAR',q:'Mouse tracks on the map! Read the coordinates.',ru:'Мыши отметили на карте припасы. Расшифруй координаты.'},
+                {t:'mcq',q:'…and use it: How ___ sugar have we got?',opts:[['much',1],['many'],['few']]}]],
+    experts:[[{t:'sym',answer:'WE GOED TO THE ISLAND',q:'A note from Silver’s mice in pigpen code!',ru:'Записка «свинарником». Расшифруй — и найди ошибку.'},
+              {t:'fix',q:'Find the mistake and fix it!',words:['We','goed','to the island.'],bad:1,opts:[['went',1],['did go'],['wented']],ok:'We went to the island.'}],
+             [{t:'sym',answer:'HARBOUR',q:'Pigpen again. Write the word.'},
+              {t:'mcq',q:'…and what is it?',opts:[['a place where ships stop',1],['a person who works on a ship'],['a long journey by sea']]}]]
+  };
+  // событие поля — шторм
+  var STORM={
+    little:[{t:'drops',n:10,step:1,q:'A storm! Water in the boat! Tap the drops and count!',ru:'Взрослому: шторм! В лодку набралась вода. Нажимайте на капли и считайте вслух вместе: one, two, three … ten!'}],
+    explorers:[{t:'drops',n:10,step:10,q:'A storm! Scoop out the water. Count in tens!',ru:'Шторм! Вычерпай воду: нажимай капли и считай десятками вслух: ten, twenty … a hundred!'},
+               {t:'route',q:'The storm is over. Help Jim find the treasure!',ru:'Шторм унёс лодку к острову. Веди Джима по карте: выбери, как он идёт — across (через мост), past (мимо), through (сквозь), over (через холм), to (к).',start:[12,86],
+                 stops:[['across','the bridge','i:isle_bridge',30,66,['across','under','past']],['past','the big rock','i:rock',56,76,['past','through','in']],['through','the trees','i:palm',70,50,['through','on','across']],['over','the hill','i:isle_hill',44,30,['over','through','under']],['to','the treasure','i:chest',74,18,['to','from','under']]]}],
+    experts:[{t:'quick',sec:7,q:'A storm! Choose the right form — quickly!',ru:'Шторм! Выбери верную форму, пока волна не накрыла корабль.',
+              items:[{q:'Yesterday we ___ to the island.',opts:[['went',1],['goed']]},{q:'Jim ___ the map in the sea chest.',opts:[['found',1],['finded']]},{q:'We ___ a big ship on the horizon.',opts:[['saw',1],['seed']]},{q:'The pirates ___ the gold.',opts:[['hid',1],['hided']]},{q:'Did you ___ the treasure?',opts:[['find',1],['found']]}]}]
+  };
+  var ADULT={
+    little:[{t:'parent',pic:'i:chest',q:'Grown-up, hide a treasure! Ask: Is there a treasure under the sofa?',ru:'Взрослому: спрячьте «сокровище» (монетку, игрушку). Ребёнок ищет и спрашивает по-английски: Is there a treasure under the sofa? Вы отвечаете Yes, there is! / No, there isn’t! Потом поменяйтесь.',line:'Is there a treasure under the sofa? No, there isn’t!'}],
+    explorers:[{t:'parent',pic:'i:barrel',q:'Check the kitchen with a grown-up: Is there any rice? How much sugar have we got?',ru:'Инвентаризация кухни! Спроси взрослого по-английски: Is there any rice? How much sugar have we got? How many apples? Взрослый отвечает, потом спрашивает тебя.',line:'Is there any rice? How much sugar have we got?'}],
+    experts:[{t:'parent',pic:'i:compass',q:'Interview a grown-up: Where did you go when you were 12? How did you travel?',ru:'Возьми интервью у взрослого: куда он ездил в 12 лет, на чём, что видел. Взрослый отвечает в Past Simple, потом спрашивает тебя.',line:'Where did you go when you were twelve? How did you travel?'}]
+  };
+
+  /* --- свои задания Джима --- */
+  // «Попугай повторяет»: попугай говорит цепочку слов → нажми картинки по порядку (малыши) или повтори голосом (voice:1)
+  R.parrot=function(body,s,next){
+    head(body,s.q,s.ru); var r=0, k=0, ready=false, timers=[];
+    var top=mk('div','parrotbox',body,pic('i:parrot')+'<b class="pbub">…</b>'), bub=top.querySelector('.pbub');
+    var rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'), box=mk('div','opts pics emo prow',body), sub=mk('div','psub',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    var name=function(v){ var k2=v.slice(2); return String(WORDS[k2]||k2).replace(/^an? /,''); };
+    var btns=[]; if(!s.voice) s.pool.forEach(function(v){ var b=mk('button','opt',box,pic(v)); b.dataset.v=v; b.dataset.ok=0; b.setAttribute('aria-label',name(v)); btns.push(b);
+      b.addEventListener('click',function(){ if(!ready||b.classList.contains('yes')) return; var c=s.chains[r];
+        if(v!==c[k]) return wrong(b,fb); sayWord(v); b.classList.add('yes'); SND.fx('step'); k++; fb.textContent=''; mark();
+        if(k===c.length){ ready=false; SND.fx('ok'); fb.textContent='Squawk! Right!'; r++; setTimeout(function(){ btns.forEach(function(x){ x.classList.remove('yes'); }); if(r<s.chains.length) play(); else { bub.textContent='Pieces of eight!'; setTimeout(next,900); } },1100); } }); });
+    function mark(){ var c=s.chains[r]||[]; btns.forEach(function(b){ b.dataset.ok=(ready&&b.dataset.v===c[k])?1:0; }); }
+    function play(){ timers.forEach(clearTimeout); timers=[]; ready=false; k=0; mark(); var c=s.chains[r]; top.classList.add('talk'); bub.textContent=''; fb.textContent='';
+      if(s.voice){ box.innerHTML=''; sub.innerHTML=''; }
+      c.forEach(function(v,i){ timers.push(setTimeout(function(){ bub.textContent=c.slice(0,i+1).map(name).join(', '); sayWord(v);
+        if(s.voice){ var p=mk('span','opt lit',box,pic(v)); p.setAttribute('aria-label',name(v)); } },400+i*1100)); });
+      timers.push(setTimeout(function(){ top.classList.remove('talk'); ready=true; mark();
+        if(!s.voice){ fb.textContent='Your turn! Нажимай по порядку.'; return; }
+        bub.textContent='Your turn!'; var words=c.map(name);
+        R.voice(sub,{q:'',line:words.join(', '),keys:words.map(function(w){ return w.split(' ').pop().slice(0,4); }),need:Math.max(2,c.length-1),sec:8,good:'Squawk! Great memory!'},function(){ r++; sub.innerHTML=''; if(r<s.chains.length) play(); else { bub.textContent='Pieces of eight!'; setTimeout(next,700); } }); },400+c.length*1100+200));
+    }
+    rep.addEventListener('click',function(){ if(!s.voice&&k>0) return; play(); });
+    play();
+  };
+  // карта острова: правда / неправда; на неправду выбегает мышь — это она перепутала
+  R.maptf=function(body,s,next){
+    head(body,s.q,s.ru); var i=0;
+    body.insertAdjacentHTML('beforeend',isleHTML()); var isle=body.querySelector('.isle');
+    var line=mk('p','tfq',body), rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'); rep.addEventListener('click',function(){ SND.say(s.items[i][0]); });
+    var box=mk('div','opts tf yn',body), fb=mk('p','fb',body);
+    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; isle.classList.remove('laugh'); line.textContent=it[0]; setTimeout(function(){ SND.say(it[0]); },i?200:1500); box.innerHTML='';
+      [['✓','T','Правда'],['✗','F','Неправда']].forEach(function(k2){ var b=mk('button','opt',box,k2[0]); b.setAttribute('aria-label',k2[2]); b.dataset.ok=k2[1]===it[1]?1:0;
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k2[1]!==it[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=it[1]==='F'?'Ha-ha! The mouse got it wrong!':'';
+          if(it[1]==='F') isle.classList.add('laugh'); i++; setTimeout(function(){ delete box.dataset.lock; fb.textContent=''; show(); },1500); }); }); }
+    show();
+  };
+  // компас (замок малышей): стрелки ↑ → ↓ ← показывают на картинки вокруг розы ветров; первый звук картинки = буква
+  var ROSE='<svg class="rs" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#fffaf0" stroke="currentColor" stroke-width="2"/><path d="M50 6 58 42 94 50 58 58 50 94 42 58 6 50 42 42Z" fill="currentColor" opacity=".85"/><path d="M50 6 58 42 50 50Z M94 50 58 58 50 50Z M50 94 42 58 50 50Z M6 50 42 42 50 50Z" fill="#fff" opacity=".55"/><circle cx="50" cy="50" r="4" fill="#b0303a"/></svg>';
+  R.compass=function(body,s,next){
+    head(body,s.q,s.ru); var AR={N:'↑',E:'→',S:'↓',W:'←'}, k=0;
+    var row=mk('p','carrows',body,s.path.map(function(d){ return '<span>'+AR[d]+'</span>'; }).join(''));
+    var rose=mk('div','rose',body,ROSE), slots=mk('div','cslots',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    s.word.split('').forEach(function(){ mk('span','',slots,'?'); });
+    var btns=Object.keys(s.dirs).map(function(d){ var v=s.dirs[d], b=mk('button','opt d'+d,rose,pic(v)); b.dataset.d=d; b.setAttribute('aria-label',v.slice(2));
+      b.addEventListener('click',function(){ if(k>=s.path.length) return; sayWord(v); if(d!==s.path[k]) return wrong(b,fb);
+        var i=k; k++; SND.fx('step'); mark(); setTimeout(function(){ phs(s.word[i].toLowerCase()); var sl=slots.children[i]; sl.textContent=s.word[i]; sl.classList.add('on'); row.children[i].classList.add('on');
+          if(i===s.path.length-1) setTimeout(function(){ slots.classList.add('joined'); SND.say(s.word.toLowerCase()); fb.textContent=s.word+'! Find the picture.'; R.mcq(body,{q:'',pics:1,opts:s.opts},next); },900); },900); }); return b; });
+    function mark(){ btns.forEach(function(b){ b.dataset.ok=(k<s.path.length&&b.dataset.d===s.path[k])?1:0; }); $$('span',row).forEach(function(x,j){ x.classList.toggle('cur',j===k); }); }
+    mark();
+  };
+  // «Чёрная метка» малышей: одна буква (или двойняшка) стёрлась — послушай слово и выбери монету
+  R.spot=function(body,s,next){
+    head(body,s.q,s.ru); var w=s.word, a=s.miss[0], n=s.miss[1];
+    var sp=mk('div','bspot',body,'<b>'+w.slice(0,a)+'</b><b class="miss">?</b><b>'+w.slice(a+n)+'</b>');
+    var rep=mk('button','btn btn-ghost',body,'▶ Послушать слово'); rep.addEventListener('click',function(){ SND.say(w.toLowerCase()); }); setTimeout(function(){ SND.say(w.toLowerCase()); },1500);
+    var box=mk('div','opts coins',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    shuffle(s.opts).forEach(function(o){ var b=mk('button','opt',box,o); b.dataset.ok=o===w.substr(a,n)?1:0;
+      b.addEventListener('click',function(){ if(box.dataset.done) return; phs(o.toLowerCase()); if(o!==w.substr(a,n)) return wrong(b,fb); box.dataset.done=1; b.classList.add('yes');
+        sp.querySelector('.miss').textContent=o; sp.classList.add('ok'); SND.fx('ok'); setTimeout(function(){ SND.say(w.toLowerCase()); fb.textContent=w+'!'; body.appendChild(el('div','ppic',pic(s.pic))); setTimeout(next,1800); },700); }); });
+  };
+  // координаты карты сокровищ: сетка A–E × 1–5 с буквами; B2 = колонка B, строка 2
+  R.grid=function(body,s,next){
+    head(body,s.q,s.ru,s.note); var COLS='ABCDE', ans=s.answer, need=[];
+    ans.replace(/[^A-Z]/g,'').split('').forEach(function(l){ if(need.indexOf(l)<0) need.push(l); });
+    var spots=shuffle(Array.apply(null,{length:25}).map(function(_,i){ return i; })), cell={}, at={};
+    var fill=shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').filter(function(l){ return need.indexOf(l)<0; }));
+    need.forEach(function(l,i){ cell[spots[i]]=l; at[l]=spots[i]; }); for(var i=need.length,f=0;i<25;i++) cell[spots[i]]=fill[f++%fill.length];
+    var co=function(p){ return COLS[p%5]+(Math.floor(p/5)+1); };
+    var g=mk('div','tgrid',body,'<i></i>'+COLS.split('').map(function(c){ return '<i>'+c+'</i>'; }).join('')), btn={};
+    for(var r=0;r<5;r++){ mk('i','',g,String(r+1)); for(var c=0;c<5;c++){ (function(p){ var b=mk('button','',g,cell[p]); b.setAttribute('aria-label',co(p)); btn[p]=b; b.addEventListener('click',function(){ inp.value+=cell[p]; SND.fx('step'); }); })(r*5+c); } }
+    mk('p','code coords',body,ans.split(' ').map(function(wd){ return wd.split('').map(function(l){ return co(at[l]); }).join(' '); }).join('  /  '));
+    var inp=mk('input','inp',body); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder='Ответ…'; inp.dataset.ans=ans; inp.setAttribute('aria-label','Ответ');
+    var fb=mk('p','fb',body); fb.setAttribute('aria-live','polite'); var row=mk('div','row2',body), clr=mk('button','gloss',row,'Стереть'), ok=mk('button','btn btn-gold',body,'Проверить');
+    clr.addEventListener('click',function(){ inp.value=''; });
+    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); }, A=norm(ans);
+    var lad=hintLadder(body,[function(){ var p=at[A[0]]; btn[p].classList.add('lit'); return 'Намёк: '+co(p)+' — колонка '+COLS[p%5]+', строка '+(Math.floor(p/5)+1)+'. Там буква '+A[0]+' — она светится.'; },
+      function(){ var w0=ans.split(' ')[0]; inp.value=w0+(ans.indexOf(' ')>0?' ':''); return 'Первое слово уже есть. Дальше сам!'; },
+      function(){ inp.value=ans; return 'Ответ: '+ans; }],fb);
+    ok.addEventListener('click',function(){ if(norm(inp.value)===A){ lad.stop(); ok.disabled=true; inp.disabled=true; SND.fx('ok'); fb.textContent=ans; SND.say(ans.toLowerCase()); setTimeout(next,1500); } else { wrong(ok,fb); fb.textContent='Not yet. Сверь координаты: сначала колонка (буква), потом строка (цифра).'; } });
+  };
+  // трюм корабля и сундуки порта: те же корзины, но бочками / сундуками
+  R.hold=function(body,s,next){ R.sort(body,s,next); body.querySelector('.bins').classList.add('hold'); };
+  R.chests=function(body,s,next){ R.sort(body,s,next); body.querySelector('.bins').classList.add('chests'); };
+  // монеты с буквами: собери слово (ar — одна монета)
+  R.coinword=function(body,s,next){ R.tiles(body,{q:s.q,ru:s.ru,words:s.coins,paws:1,pre:s.pre},next); body.querySelector('.opts').classList.add('letters2','coins'); };
+  // open cloze: по одному слову в каждый пропуск, без вариантов
+  R.cloze=function(body,s,next){
+    head(body,s.q,s.ru); var p=mk('p','logp',body), ins=[];
+    s.text.split(/\{(\d)\}/).forEach(function(part,j){ if(j%2===0){ p.appendChild(document.createTextNode(part)); return; }
+      var i=+part, e=document.createElement('input'); e.className='inp cz'; e.type='text'; e.autocomplete='off'; e.spellcheck=false; e.setAttribute('autocapitalize','off'); e.dataset.ans=s.gaps[i]; e.setAttribute('aria-label','Пропуск '+(i+1)); p.appendChild(e); ins[i]=e; });
+    var fb=mk('p','fb',body); fb.setAttribute('aria-live','polite'); var ok=mk('button','btn btn-gold',body,'Проверить');
+    var lad=hintLadder(body,[function(){ return 'Намёк: нужны слова '+s.gaps.length+' разных видов: время (ago), артикль, глаголы was / went, предлог, did в вопросе.'; },
+      function(){ ins.forEach(function(e){ if(!e.disabled&&!e.value) e.value=e.dataset.ans[0]; }); return 'Первые буквы уже стоят. Допиши слова!'; },
+      function(){ ins.forEach(function(e){ e.value=e.dataset.ans; }); return 'Ответы: '+s.gaps.join(', '); }],fb);
+    ok.addEventListener('click',function(){ var bad=0; ins.forEach(function(e){ var good=e.value.trim().toLowerCase().replace(/[’']/g,'')===e.dataset.ans; e.classList.toggle('ok',good); e.classList.toggle('bad',!good); if(good) e.disabled=true; else bad++; });
+      if(!bad){ lad.stop(); ok.disabled=true; SND.fx('ok'); fb.textContent='The log is complete!'; SND.say(s.text.replace(/\{(\d)\}/g,function(_,i){ return s.gaps[i]; })); setTimeout(next,1800); }
+      else { wrong(ok,fb); fb.textContent='Пока неверно: '+bad+'. Красные пропуски — подумай ещё.'; } });
+  };
+  // «Судовой журнал»: письмо по трём картинкам
+  R.logbook=function(body,s,next){ R.write(body,s,next); var first=body.querySelector('.inp'); body.insertBefore(el('div','rpics r3',s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')),first); };
+  // шторм: вода в лодке — нажимай капли и считай вслух (по одной или десятками)
+  R.drops=function(body,s,next){
+    head(body,s.q,s.ru); var n=0, spots=[[18,30],[42,22],[70,28],[86,46],[60,48],[30,52],[14,72],[46,74],[74,72],[88,82]];
+    var deck=mk('div','deck',body,'<i class="water"></i>'), cnt=mk('p','dcount',body,'0<small>Tap a drop!</small>'), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    var water=deck.querySelector('.water'); water.style.setProperty('--lv','62%');
+    shuffle(spots).slice(0,s.n).forEach(function(p){ var b=mk('button','opt drop',deck,''); b.dataset.ok=1; b.style.left=p[0]+'%'; b.style.top=p[1]+'%'; b.setAttribute('aria-label','Капля');
+      b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; b.classList.add('yes'); n++; var v=n*s.step, w=s.step===10?NUM10[n]:NUM1[n];
+        SND.say(w); SND.fx('step'); cnt.innerHTML=v+'<small>'+esc(w)+'</small>'; water.style.setProperty('--lv',Math.round(62*(1-n/s.n))+'%');
+        if(n===s.n){ SND.fx('ok'); fb.textContent=s.step===10?'A hundred! The boat is dry!':'Ten! The boat is dry!'; setTimeout(next,1600); } }); });
+  };
+  // путь к сокровищу: Джим идёт по карте — выбери предлог (across, past, through, over, to)
+  R.route=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, pts=[s.start].concat(s.stops.map(function(x){ return [x[3],x[4]]; }));
+    var map=mk('div','rmap',body,'<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M'+pts.map(function(p){ return p[0]+' '+p[1]; }).join(' L')+'"/></svg>');
+    var stops=s.stops.map(function(x){ var d=mk('span','rs',map,pic(x[2])); d.style.left=x[3]+'%'; d.style.top=x[4]+'%'; return d; });
+    mk('b','ix',map,'✕').setAttribute('style','position:absolute;left:'+(s.stops[s.stops.length-1][3]+8)+'%;top:'+(s.stops[s.stops.length-1][4]-6)+'%;font:700 22px/1 var(--body);color:#b0303a');
+    var walker=mk('span','walker',map,'<img src="../../img/08_v11_jim.webp" alt="Jim">'); walker.style.left=s.start[0]+'%'; walker.style.top=s.start[1]+'%';
+    var line=mk('p','gtext',body), box=mk('div','opts',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    function show(){ if(i>=s.stops.length){ line.textContent='You found the treasure!'; SND.say('You found the treasure!'); box.innerHTML=''; SND.fx('spark'); setTimeout(next,1800); return; }
+      var st=s.stops[i]; line.innerHTML='Jim goes <span class="gap cur">   </span> '+esc(st[1])+'.'; box.innerHTML=''; delete box.dataset.lock;
+      shuffle(st[5]).forEach(function(w){ var b=mk('button','opt',box,esc(w)); b.dataset.ok=w===st[0]?1:0;
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(w!==st[0]) return wrong(b,fb); box.dataset.lock=1; var gp=line.querySelector('.gap'); gp.textContent=w; gp.classList.add('ok'); SND.fx('ok'); fb.textContent='';
+          SND.say('Jim goes '+w+' '+st[1]+'.'); walker.style.left=st[3]+'%'; walker.style.top=st[4]+'%'; stops[i].classList.add('done'); i++; setTimeout(show,1500); }); }); }
+    show();
+  };
+
+  var EVS={0:'spark',2:'mouse',4:'storm',6:'adult',8:'mouse',10:'spark'};
+  var STATIONS=[1,3,5,7,9,11];
+  var CELLS=[[34.4,86.2],[46.4,81],[58.7,74.1],[51.7,67.1],[47,59.8],[53.8,54.1],[61.2,49],[70.1,44.8],[77.7,41.2],[82.3,37.8],[81.2,34.6],[77,32.4]];
+  var START=[24,90];
+  var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
+  var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
+  var WAVE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 14c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>', FLAME=WAVE;
+  var ICO={spark:SPARK,mouse:PAW,storm:WAVE,adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
+  var PAGE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg>';
+  var MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
+
+  var token=$('#token'), forest=$('#forest'), pos=-1, mice=0, rolling=false, done=0;
+  function place(xy){ token.style.left=xy[0]+'%'; token.style.top=xy[1]+'%'; }
+  place(START);
+  CELLS.forEach(function(c,i){
+    var st=STATIONS.indexOf(i);
+    var d=document.createElement('div');
+    if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
+    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; }
+    else return;
+    d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
+  });
+  var pages=$('#pages');
+  ST.forEach(function(s){ var p=document.createElement('span'); p.className='pg'; p.innerHTML=PAGE+'<em>'+s[3]+'</em>'; p.title=s[1]; pages.appendChild(p); });
+
+  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} };
+  var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,parrot:1,maptf:1,compass:1,spot:1,grid:1,drops:1,route:1,cloze:1,logbook:1,hold:1,chests:1,coinword:1};
+  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+    if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+    R[st.t](body,st,nx); })(); }
+
+  /* --- stations & events on the board --- */
+  var say=$('#boardSay'), ru=$('#boardRu');
+  function station(k){
+    var key=ST[k][0], d=L[T][key], steps=[];
+    if(d.warm) steps=steps.concat(d.warm);
+    if(key==='listen') steps.push({t:'listen',prompt:d.prompt,ru:d.ru,text:d.text,video:d.video});
+    if(d.lock) steps=steps.concat(d.lock);
+    if(key==='read'&&d.text) steps.push({t:'readp',title:d.title,ru:d.ru,text:d.text});
+    steps=steps.concat(d.steps);
+    $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
+    speak(say,'A frozen page! '+ST[k][1]+'. Open it!'); ru.textContent='Замёрзшая страница: '+ST[k][2]+'. Открой её!';
+    return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key]); })
+      .then(function(){ box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
+        try{ localStorage.setItem('sf_s7_done',String(done)); }catch(e){}
+        if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
+        ru.textContent='Страница оттаяла! Бросай кубик дальше.'; return speak(say,'The page is warm again! Roll the dice.'); });
+  }
+  function badge(){
+    $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
+    return taskPage(box,'Битва за значок','В бой!',function(body,finish){ R.check(body,CHECK[T],finish); })
+      .then(function(){ box.hidden=true; ru.textContent='Значок твой! Верни книгу Джиму.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
+  }
+  function event(kind){
+    var box=$('#ev');
+    if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return !x.classList.contains('got');})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
+      ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
+    $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
+    var steps, kick, lbl;
+    if(kind==='mouse'){ steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a black spot.'); ru.textContent='Мышиный след! Мыши оставили «чёрную метку».'; }
+    else if(kind==='storm'){ kick='Шторм'; lbl='Спасать корабль!'; speak(say,'A storm! Big waves! Save the ship!'); ru.textContent='Шторм! Огромные волны! Спасай корабль!'; steps=STORM[T]; }
+    else { kick='Ход для взрослого'; lbl='Открыть'; speak(say,'A move for a grown-up! Play together.'); ru.textContent='Ход для взрослого: играем вместе!'; steps=ADULT[T]; }
+    return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish); }).then(function(){ box.hidden=true; $('.dierow').hidden=false; return wait(300); });
+  }
+  $('#die').addEventListener('click',function(){
+    if(rolling||done>=6) return; rolling=true; SND.fx('dice');
+    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count');
+    die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll'); $('#dieN').classList.remove('in');
+    wait(900).then(function(){
+      $('#dieN').textContent=n; $('#dieN').classList.add('in'); var left=n;
+      (function step(){
+        if(left<=0||pos>=CELLS.length-1){ rolling=false; ru.textContent='Бросай ещё!'; speak(say,'Roll again!'); return; }
+        pos++; left--; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+        out.textContent=(n-left)+' / '+n;
+        var k=STATIONS.indexOf(pos);
+        wait(480).then(function(){
+          if(k>=0){ out.textContent=''; return station(k).then(function(){ rolling=false; }); }
+          return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(step);
+        });
+      })();
+    });
+  });
+
+  /* --- scenes --- */
+  ENTER.who=function(){};
+  $$('.track').forEach(function(b){ b.addEventListener('click',function(){ setTrack(b.dataset.track); save(); go('arrive'); }); });
+  var avid=$('#avid'), ARRIVE_LINE='Ahoy! My ship is frozen in the lake, and the treasure map is in code. The mice took the pages of my book! I need a brave sailor. Will you help me?';
+  ENTER.arrive=function(){ SND.music(false); };
+  $('#astart').addEventListener('click',function(){ // говорящего видео пока нет — Джим говорит голосом поверх картинки
+    $('#agate').classList.add('gone'); SND.music(false);
+    var done=false, end=function(){ if(done) return; done=true; SND.music(true); later($('#toBoard'),200); };
+    if(avid){ avid.muted=false; avid.currentTime=0; var pr=avid.play(); if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#herSay'),ARRIVE_LINE,true); },300); }).catch(function(){ speak($('#herSay'),ARRIVE_LINE).then(end); }); avid.addEventListener('ended',end); setTimeout(end,10000); }
+    else speak($('#herSay'),ARRIVE_LINE).then(end);
+  });
+  ENTER.board=function(){ speak(say,'Six frozen pages are hidden on the ice. Jump from stump to stump — roll the dice!'); };
+  ENTER.final=function(p){
+    p.then(function(){ return wait(500); }).then(function(){ return speak($('#finSay'),'Pieces of eight! Pieces of eight! … That’s my parrot. He likes you! You were brave, like a real sailor. Here is my card for your shelf.'); })
+     .then(function(){ $('#card').classList.add('in'); SND.fx('spark'); return wait(1400); })
+     .then(function(){ return speak($('#finSay'),'And look — under the gold in the chest… another piece of the old map. The mice were here!'); })
+     .then(function(){ later($('#toEnd'),400); });
+  };
+  ENTER.end=function(){
+    if(state.name) $('#endTitle').textContent=state.name+', история 7 пройдена';
+    try{ localStorage.setItem('sf_s7_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s7_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); box.hidden=false; } }catch(e){}
+  };
+  var START_SCENE=state.track?'arrive':'who';
+  if(state.track) setTrack(state.track);
+
+
+  /* ===== общее для всех историй: поле на весь экран, камера идёт за фишкой ===== */
+  (function(){
+    var sc=$('[data-scene="board"]'), f=$('#forest'); if(!sc||!f) return;
+    var img=f.querySelector('img'), pg=$('#pages'); if(pg) sc.appendChild(pg);
+    var last=START;
+    function ar(){ if(img.naturalWidth) return img.naturalWidth/img.naturalHeight; var m=/([\d.]+)\s*\/\s*([\d.]+)/.exec(f.style.aspectRatio||''); return m?m[1]/m[2]:720/840; }
+    function fit(xy){ if(xy) last=xy; var W=sc.clientWidth, H=sc.clientHeight; if(!W||!H) return;
+      var a=ar(), h=H*1.18, w=h*a; if(w<W){ w=W; h=W/a; }
+      var xs=CELLS.concat([START]).map(function(c){return c[0];});
+      var cx=(Math.min.apply(0,xs)+Math.max.apply(0,xs))/200;
+      var left=Math.min(0,Math.max(W-w,W/2-cx*w));
+      var top=Math.min(0,Math.max(H*.66-h,H*.4-last[1]/100*h)); // фишка — чуть выше середины, над текстом и кубиком
+      f.style.width=w+'px'; f.style.height=h+'px'; f.style.left=left+'px'; f.style.top=top+'px'; f.style.setProperty('--z',(w/W).toFixed(3)); }
+    var _pl=place; place=function(xy){ _pl(xy); fit(xy); };
+    var _eb=ENTER.board; ENTER.board=function(){ fit(); return _eb&&_eb.apply(this,arguments); };
+    if(!img.complete) img.addEventListener('load',function(){ fit(); });
+    window.addEventListener('resize',function(){ fit(); });
+    fit();
+  })();
+  (function(){ var v=$('#avid'); if(!v) return; v.addEventListener('playing',function(){ v.classList.add('on'); }); })();
+
+  /* snow */
+  var c=document.getElementById('snow'); if(reduce||!c.getContext) {go(START_SCENE); return;}
+  var x=c.getContext('2d'), W,H,dpr=Math.min(devicePixelRatio||1,2), F=[];
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.round(Math.min(90,W*H/7000)); F=[];
+    for(var i=0;i<n;i++)F.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.6,s:Math.random()*.5+.25,w:Math.random()*6.28,o:Math.random()*.5+.3});}
+  function tick(){ x.clearRect(0,0,W,H);
+    for(var i=0;i<F.length;i++){var f=F[i]; f.y+=f.s; f.w+=.01; f.x+=Math.sin(f.w)*.35;
+      if(f.y>H+4){f.y=-4;f.x=Math.random()*W;}
+      x.globalAlpha=f.o; x.beginPath(); x.arc(f.x,f.y,f.r,0,6.283); x.fillStyle='#fff'; x.fill();}
+    requestAnimationFrame(tick);}
+  size(); addEventListener('resize',size); requestAnimationFrame(tick);
+  go(START_SCENE);
+})();
+</script>
+</body>
+</html>

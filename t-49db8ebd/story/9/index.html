@@ -1,0 +1,1903 @@
+<!doctype html>
+<html lang="ru">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>История 9 · Mary · Костёр историй</title>
+<meta name="description" content="Бесплатный Пролог зимнего квеста «Костёр историй»: кубик, зимний лес, костёр и первая загадка на английском.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0a22'/%3E%3Cpath d='M32 10c4 9 14 14 14 27a14 14 0 0 1-28 0c0-7 4-11 7-15 1 5 3 7 5 8 0-7-1-13 2-20z' fill='%23f5c842'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="../../img/10_board_s9.webp">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --night-3:#221849;
+  --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d; --violet:#6c3fc5;
+  --line:rgba(247,238,219,.16);
+  --paper:#f3e8cf; --paper-2:#dfcca6; --paper-ink:#2b2140; --paper-ink-2:#5b4d63;
+  --display:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--night);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow:hidden;height:100svh}
+::selection{background:var(--gold);color:var(--night)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+
+/* backdrop for wide screens: the vertical stage sits on a blurred copy of its scene */
+.backdrop{position:fixed;inset:-40px;background:center/cover no-repeat;filter:blur(38px) brightness(.38) saturate(1.2);transform:scale(1.1);transition:background-image .8s}
+.stage{position:relative;height:100svh;max-width:520px;margin:0 auto;overflow:hidden;background:var(--night);isolation:isolate}
+@media (min-width:560px){.stage{box-shadow:0 30px 120px -20px rgba(0,0,0,.85),0 0 0 1px var(--line)}}
+
+.top{position:absolute;z-index:20;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));font-size:14px;color:var(--ink-2)}
+.top a{color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.top a b{font-family:var(--display);font-size:19px;font-weight:600;color:var(--ink)}
+.dots{display:flex;gap:6px}
+.topr{display:flex;align-items:center;gap:10px}
+.snd{width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--ink-2);display:grid;place-items:center;cursor:pointer;border-radius:50%}
+.snd svg{width:22px;height:22px}
+.snd .i-off,.snd[aria-pressed="false"] .i-on{display:none}
+.snd[aria-pressed="false"] .i-off{display:block}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(247,238,219,.25);transition:background-color .4s,transform .4s var(--ease-out)}
+.dots i.on{background:var(--gold);transform:scale(1.25)}
+
+#snow{position:absolute;inset:0;z-index:5;pointer-events:none;width:100%;height:100%}
+
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;opacity:0;visibility:hidden;transition:opacity .9s var(--ease-out),visibility 0s .9s}
+.scene.on{opacity:1;visibility:visible;transition:opacity .9s var(--ease-out),visibility 0s}
+.scene>.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.scene>.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55) 0%,rgba(14,10,34,0) 20%,rgba(14,10,34,0) 45%,rgba(14,10,34,.85) 70%,var(--night) 100%)}
+.scene.on>.bg{animation:drift 14s var(--ease-out) both}
+@keyframes drift{from{transform:scale(1.08)}to{transform:scale(1)}}
+
+/* the Book's voice */
+.voice{margin-top:auto;position:relative;z-index:10;padding:0 max(18px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px}
+.say{font-family:var(--display);font-weight:600;font-size:clamp(21px,5.6vw,25px);line-height:1.25;color:var(--ink);text-align:center;text-wrap:balance;text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 16px rgba(14,10,34,.95);max-width:30ch;justify-self:center}
+.say .w{opacity:0;display:inline-block;transform:translateY(.25em);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
+.say .w.in{opacity:1;transform:none}
+.ru{font-size:14px;line-height:1.4;color:var(--ink-2);max-width:40ch;text-align:center;justify-self:center;text-shadow:0 1px 12px rgba(14,10,34,.9)}
+.who{font:500 13px/1 var(--body);letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:8px}
+.who svg{width:16px;height:16px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--body);text-decoration:none;cursor:pointer;border:0;transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),background-color .2s,opacity .4s}
+.btn-gold{background:var(--gold);color:#1b1206;box-shadow:0 10px 24px -10px rgba(0,0,0,.7),inset 0 -2px 0 rgba(0,0,0,.12)}
+.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}
+.btn-gold:active{transform:scale(.97)}
+.btn-ghost{background:rgba(14,10,34,.5);color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.4)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.later{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.later.in{opacity:1;transform:none;pointer-events:auto}
+
+/* 1 library */
+.glowbook{position:absolute;left:52%;top:9%;width:30%;aspect-ratio:1;border-radius:50%;border:0;background:radial-gradient(circle,rgba(255,217,104,.45),rgba(255,155,61,0) 65%);cursor:pointer;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.65}}
+
+/* 2 name + track */
+.field{display:grid;gap:8px}
+.field label{font-size:14px;color:var(--ink-2)}
+.field input{height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);color:var(--ink);padding:0 18px;font:500 18px/1 var(--body);caret-color:var(--gold)}
+.field input::placeholder{color:var(--ink-3)}
+.field input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.tracks{display:grid;gap:8px}
+.track{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 14px;text-align:left;padding:12px 16px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22);cursor:pointer;transition:box-shadow .25s,background-color .25s}
+.track b{grid-row:span 2;font-family:var(--display);font-size:28px;font-weight:600;line-height:1;font-variant-numeric:lining-nums;min-width:2.6em}
+.track span{font-weight:600;font-size:15px}
+.track small{font-size:13px;color:var(--ink-3);line-height:1.3}
+.track[aria-pressed="true"]{background:rgba(245,200,66,.14);box-shadow:inset 0 0 0 2px var(--gold)}
+.track[aria-pressed="true"] b{color:var(--gold)}
+
+/* 3 board */
+.forest{position:relative;margin:calc(env(safe-area-inset-top,0px) + 62px) 12px 4px;aspect-ratio:420/500;flex:1 1 auto;min-height:0;max-width:calc(100% - 24px);align-self:center;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px var(--line)}
+.forest>img{width:100%;height:100%;object-fit:cover}
+.cell-mark{position:absolute;width:15%;aspect-ratio:1.5;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--gold),0 6px 12px rgba(0,0,0,.5);background:rgba(245,200,66,.22);opacity:0;transition:opacity .3s}
+.cell-mark.in{opacity:1}
+.token{position:absolute;width:27%;left:0;top:0;transform:translate(-50%,-86%);transition:left .38s var(--ease-out),top .38s var(--ease-out);filter:drop-shadow(0 8px 8px rgba(0,0,0,.55));z-index:2}
+.token.hop img{animation:hop .38s var(--ease-out)}
+@keyframes hop{40%{transform:translateY(-22%)}}
+.dierow{display:flex;align-items:center;gap:16px}
+.die{width:84px;height:84px;padding:0;border:0;background:none;cursor:pointer;flex:none;position:relative}
+.die img{width:100%;height:100%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))}
+.die.roll img{animation:roll .9s cubic-bezier(.3,.7,.2,1)}
+@keyframes roll{0%{transform:rotate(0) scale(1)}30%{transform:rotate(-200deg) scale(1.15) translateY(-14px)}70%{transform:rotate(340deg) scale(.95)}100%{transform:rotate(360deg) scale(1)}}
+.die .n{position:absolute;right:-6px;top:-6px;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1b1206;font:700 18px/34px var(--body);text-align:center;transform:scale(0);transition:transform .4s var(--ease-out)}
+.die .n.in{transform:scale(1)}
+.cell-ico{position:absolute;width:11%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;z-index:1;box-shadow:0 4px 10px rgba(0,0,0,.55)}
+.cell-ico svg{width:62%;height:62%}
+.cell-ico.ico-spark{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 4px 10px rgba(0,0,0,.55)}
+.cell-ico.ico-spark.got{animation:got .9s var(--ease-out) forwards}
+@keyframes got{40%{transform:translate(-50%,-50%) scale(1.6)}to{transform:translate(-50%,-160%) scale(.4);opacity:0}}
+.cell-ico.ico-mouse{background:#1a1338;color:#cbbfe8;box-shadow:0 0 0 2px #cbbfe8,0 4px 10px rgba(0,0,0,.55)}
+.mice{display:flex;justify-content:center;gap:14px}
+.mouse{width:84px;height:60px;border:0;background:rgba(14,10,34,.6);border-radius:16px;box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);cursor:pointer;padding:8px;transition:transform .5s var(--ease-out),opacity .5s}
+.mouse.run{transform:translateX(120px);opacity:0}
+.opts.letters{grid-template-columns:repeat(3,1fr)}
+.opts.letters .opt{font:700 26px/1 var(--body)}
+.count{font-family:var(--display);font-size:22px;color:var(--gold);min-height:1.2em}
+
+/* 4 fire */
+.camp{position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 45% at 50% 52%,rgba(255,155,61,var(--glow,.08)),rgba(14,10,34,0) 70%),linear-gradient(180deg,#120c2c 0%,#1b1342 45%,#2a2150 58%,#7d74ac 63%,#5d5490 76%,#3a3168 100%);transition:--glow 1s}
+.camp::after{content:"";position:absolute;left:0;right:0;top:60%;bottom:0;background:linear-gradient(180deg,rgba(14,10,34,.15),rgba(14,10,34,.75) 75%,var(--night))}
+.trees{position:absolute;left:0;right:0;top:32%;height:29%;z-index:-1;color:#0b0820}
+.fire{position:absolute;left:50%;top:calc(14% + 20px);width:min(86%,46svh);max-width:400px;transform:translateX(-50%);border:0;padding:0;background:none;cursor:pointer;aspect-ratio:1}
+.fire img{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .7s var(--ease-out)}
+.fire img.on{opacity:1}
+.fire::before{content:"";position:absolute;inset:-25%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,70,var(--glow,0)),rgba(255,120,40,0) 60%);transition:background .9s;z-index:-1}
+.pop{position:absolute;left:50%;top:20%;font-family:var(--display);font-weight:700;font-size:44px;color:var(--gold-2);pointer-events:none;animation:popup 1.2s var(--ease-out) forwards;text-shadow:0 4px 20px rgba(0,0,0,.6)}
+@keyframes popup{from{opacity:0;transform:translate(-50%,10px) scale(.7)}25%{opacity:1;transform:translate(-50%,-10px) scale(1)}to{opacity:0;transform:translate(-50%,-60px) scale(1)}}
+.paws{position:absolute;inset:0;pointer-events:none}
+.paw{position:absolute;width:36px;opacity:0;color:#140e30;transition:opacity .5s,transform .5s var(--ease-out)}
+.paw.in{opacity:1}
+
+/* 5 riddle */
+.opts{display:grid;gap:10px}
+.opts.pics{grid-template-columns:repeat(3,1fr)}
+.opt{min-height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);font:600 18px/1.2 var(--body);cursor:pointer;padding:10px 16px;transition:box-shadow .2s,background-color .2s}
+.opt:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.opts.pics .opt{aspect-ratio:1;padding:10px;display:grid;place-items:center}
+.opts.pics .opt img{width:100%;height:100%;object-fit:contain}
+.opt.no{animation:shake .45s;box-shadow:inset 0 0 0 1.5px #c9718a}
+.opt.yes{background:rgba(245,200,66,.2);box-shadow:inset 0 0 0 2px var(--gold)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.gloss{justify-self:center;border:0;background:none;color:var(--gold);font:500 14px/1.3 var(--body);text-decoration:underline dotted;text-underline-offset:.25em;cursor:pointer;padding:6px 0;min-height:44px}
+.gloss[aria-expanded="true"]::after{content:" — " attr(data-tr);color:var(--ink-2);text-decoration:none}
+.fb{min-height:1.4em;font-size:15px;color:var(--ink-2)}
+
+.rfire{flex:none;align-self:center;height:clamp(120px,30svh,280px);width:auto;margin-top:calc(env(safe-area-inset-top,0px) + 58px)}
+.t-experts .ru,.t-explorers .ru{display:none}
+.t-explorers .ru.show{display:block}
+.rubtn{display:none;justify-self:center;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);padding:0 14px;min-height:36px;border-radius:999px;cursor:pointer}
+.t-explorers .rubtn{display:inline-flex;align-items:center}
+.t-explorers .rubtn[hidden]{display:none}
+
+/* book page: a task opens as a full-screen page over the scene */
+.pagecard{justify-self:center;display:grid;justify-items:center;gap:8px;border:0;background:none;padding:4px;cursor:pointer;color:var(--ink-2);font:500 14px/1.2 var(--body)}
+.pagecard i{display:block;width:70px;height:92px;border-radius:3px 8px 8px 3px;background:url(../../img/07_page_s.webp) center/100% 100%,linear-gradient(160deg,var(--paper),var(--paper-2));box-shadow:0 10px 24px -8px rgba(0,0,0,.8),inset 0 0 0 1px rgba(91,77,99,.25),inset 6px 0 10px -6px rgba(91,77,99,.5);position:relative;transform:rotate(-5deg);animation:flutter 2.6s ease-in-out infinite}
+.pagecard i::before{content:"";position:absolute;inset:22px 16px auto;height:30px;background:repeating-linear-gradient(180deg,rgba(43,33,64,.3) 0 2px,transparent 2px 8px)}
+.pagecard i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(220,235,255,.75),rgba(220,235,255,0) 45%,rgba(220,235,255,0) 70%,rgba(220,235,255,.6))}
+.pagecard.thaw i{animation:thaw .7s var(--ease-out) forwards}
+@keyframes flutter{50%{transform:rotate(3deg) translateY(-4px)}}
+@keyframes thaw{to{transform:scale(1.25) rotate(0);opacity:0;filter:brightness(1.6)}}
+.sheet{position:absolute;inset:0;z-index:60;transform-origin:0 0;transition:transform .55s var(--ease-out),border-radius .55s var(--ease-out);border-radius:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;color:var(--paper-ink);
+  background:url(../../img/07_page.webp) center/100% 100% no-repeat,var(--paper)}
+.sheet.small{border-radius:10px}
+.sheet:focus{outline:none}
+.sheet-in{min-height:100%;display:grid;align-content:center;gap:16px;justify-items:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 70px) max(44px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 60px) max(44px,env(safe-area-inset-left,0px));opacity:0;transition:opacity .3s}
+.sheet.open .sheet-in{opacity:1;transition:opacity .4s .3s}
+.sheet-k{margin:0;font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-ink-2)}
+.sheet .say{color:var(--paper-ink);text-shadow:none;font-size:clamp(25px,7vw,32px);max-width:20ch}
+.sheet .ru{color:var(--paper-ink-2);text-shadow:none;font-size:15px}
+.sheet .opts{width:min(100%,360px)}
+.sheet .opt,.sheet .mouse{background:rgba(255,250,238,.75);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
+.sheet .opt:hover{box-shadow:inset 0 0 0 2px var(--violet)}
+.sheet .opt.yes{background:rgba(245,200,66,.45);box-shadow:inset 0 0 0 2px #b8901c}
+.sheet .opt.no{box-shadow:inset 0 0 0 2px #b0485f}
+.sheet .mice{gap:6px}
+.gtext{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(20px,5.4vw,24px);line-height:1.6;text-align:left;max-width:30ch;color:var(--paper-ink)}
+.gap{display:inline-block;min-width:3.2em;border-bottom:2px dotted rgba(43,33,64,.45);line-height:1.15;text-align:center;transition:border-color .3s,background-color .3s}
+.gap.cur{border-bottom:2px solid var(--violet);background:rgba(108,63,197,.1);border-radius:4px 4px 0 0}
+.gap.ok{min-width:0;border-bottom-color:transparent;font-weight:700;color:#5a3a9c;animation:fillin .45s var(--ease-out)}
+@keyframes fillin{from{opacity:0;transform:translateY(-6px)}}
+.base{font-family:var(--body);font-size:.62em;color:var(--paper-ink-2);margin-left:.15em}
+.gap.ok+.base{display:none}
+.gopts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:54px}
+.gopts .opt{min-height:48px;padding:8px 16px}
+.sheet .mouse{background:none;box-shadow:none;width:min(88px,27vw);height:68px;padding:0}
+.sheet .mouse img{width:100%;height:100%;object-fit:contain;animation:sniff .9s ease-in-out infinite alternate}
+.sheet .mouse:nth-child(2) img{animation-delay:-.3s}.sheet .mouse:nth-child(3) img{animation-delay:-.6s}
+@keyframes sniff{to{transform:translateY(-3px) rotate(-3deg)}}
+.thief{width:min(56%,210px);transition:transform .8s cubic-bezier(.5,0,.75,0),opacity .8s;animation:sniff 1s ease-in-out infinite alternate}
+.thief.run{transform:translateX(170%);opacity:0;animation:none}
+.sheet .fb{color:var(--paper-ink-2)}
+.sheet .gloss{color:var(--violet)}
+.sheet .gloss[aria-expanded="true"]::after{color:var(--paper-ink-2)}
+.sheet .rubtn{background:rgba(43,33,64,.08);box-shadow:inset 0 0 0 1px rgba(43,33,64,.3);color:var(--paper-ink-2)}
+.sheet-x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 34px);right:max(36px,env(safe-area-inset-right,0px));z-index:2;border:0;background:none;color:var(--paper-ink-2);font:500 14px/1 var(--body);min-height:44px;padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+
+/* 0 intro cartoon */
+.ivid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;background:var(--night)}
+.ishade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55),rgba(14,10,34,0) 18%,rgba(14,10,34,0) 58%,rgba(14,10,34,.85) 82%,var(--night));transition:opacity .6s}
+.istart{margin:auto;display:grid;justify-items:center;gap:14px;text-align:center;padding:0 24px;transition:opacity .5s,transform .5s var(--ease-out)}
+.istart.gone{opacity:0;transform:scale(.96);pointer-events:none}
+.ikick{margin:0;font:600 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.ititle{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(32px,9vw,44px);line-height:1.08;text-wrap:balance;text-shadow:0 2px 24px rgba(14,10,34,.9)}
+.iplay{width:88px;height:88px;border-radius:50%;border:0;background:var(--gold);color:#1b1206;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 10px rgba(245,200,66,.18),0 18px 40px -12px rgba(0,0,0,.8);transition:transform .25s var(--ease-out)}
+.iplay svg{width:38px;height:38px;margin-left:5px}
+.iplay:active{transform:scale(.95)}
+@media (prefers-reduced-motion:no-preference){.iplay{animation:breathe 2.6s ease-in-out infinite}}
+@keyframes breathe{50%{box-shadow:0 0 0 18px rgba(245,200,66,.08),0 18px 40px -12px rgba(0,0,0,.8)}}
+.inote{margin:0;font-size:14px;color:var(--ink-2)}
+.icap .say{min-height:2.6em}
+.icap .say.alice{color:var(--gold-2)}
+.icap .ru{display:none}
+.icap.ru-on .ru{display:block}
+.ibar{position:absolute;z-index:11;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 60px);display:flex;justify-content:space-between;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.ibtn{pointer-events:auto;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;border-radius:999px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ibtn[aria-pressed="true"]{color:var(--gold-2);box-shadow:inset 0 0 0 1px var(--gold)}
+
+/* 6 shelf */
+.shelf{margin:calc(env(safe-area-inset-top,0px) + 62px) 16px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px 8px}
+.slot{position:relative;border:0;padding:0 0 6px;background:linear-gradient(180deg,rgba(34,24,73,.0),rgba(34,24,73,.85));border-bottom:3px solid #5a3a22;border-radius:10px 10px 2px 2px;cursor:pointer;display:grid;justify-items:center;gap:4px;opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.slot.in{opacity:1;transform:none}
+.slot img{height:clamp(80px,16svh,150px);width:auto;max-width:100%;object-fit:contain;filter:brightness(0) drop-shadow(0 0 1px rgba(200,190,255,.6));opacity:.85}
+.slot small{font:500 11px/1 var(--body);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.slot.first img{filter:brightness(0) drop-shadow(0 0 6px rgba(245,200,66,.9))}
+.slot.first small{color:var(--gold)}
+.slot[aria-pressed="true"]{background:linear-gradient(180deg,rgba(245,200,66,0),rgba(245,200,66,.18))}
+.hint{min-height:2.6em;text-align:center;font-size:15px;color:var(--ink-2)}
+.hint b{font-family:var(--display);font-size:21px;color:var(--ink);font-weight:600}
+
+/* 8 end */
+.end{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 76px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 28px) max(20px,env(safe-area-inset-left,0px));display:grid;align-content:start;gap:18px;background:radial-gradient(90% 50% at 50% 0%,rgba(108,63,197,.35),rgba(14,10,34,0) 70%),var(--night)}
+.end h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,10vw,48px);line-height:1.02;margin:0;text-wrap:balance}
+.end p{margin:0;color:var(--ink-2)}
+.end ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+.end li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:15px;color:var(--ink-2)}
+.end li svg{width:18px;height:18px;color:var(--gold);margin-top:3px;fill:none}
+#sparkLi svg{fill:currentColor}
+.end .cta{display:grid;gap:10px;margin-top:4px}
+.end .note{font-size:13px;color:var(--ink-3)}
+.end .seal{width:120px;justify-self:center;filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+
+@media (max-height:700px){.say{font-size:20px}.ru{font-size:13px}.voice{gap:8px}.slot img{height:13svh}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* ===== История: доска, страницы, задания ===== */
+.say.alice{color:var(--gold-2)}
+.pages{display:flex;justify-content:center;gap:6px}
+.pg{display:grid;justify-items:center;gap:2px;width:50px;color:#9fb8e6;opacity:.85;transition:color .5s,opacity .5s}
+.pg svg{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(159,184,230,.5))}
+.pg em{font:500 11px/1 var(--body);font-style:normal;letter-spacing:.02em;color:var(--ink-3);white-space:nowrap}
+.pg.warm{color:var(--gold);opacity:1}
+.pg.warm svg{filter:drop-shadow(0 0 8px rgba(245,200,66,.7))}
+.forest .cell-ico{width:8.5%}
+.cell-ico.ico-page{background:#1c2a4a;color:#cfe0ff;box-shadow:0 0 0 2px #cfe0ff,0 0 14px rgba(159,184,230,.7)}
+.cell-ico.ico-page.got{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 0 14px rgba(245,200,66,.7)}
+.cell-ico.ico-snow{background:#eaf2ff;color:#5d7bb5;box-shadow:0 0 0 2px #fff,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-adult{background:#3a1d4a;color:#f3c7ff;box-shadow:0 0 0 2px #f3c7ff,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-spark.got,.cell-ico.ico-page.got{animation:none}
+.finimg.big{height:clamp(240px,52svh,520px);border-radius:18px;box-shadow:0 0 0 1px rgba(247,238,219,.15)}
+.finimg{position:relative;align-self:center;height:clamp(200px,44svh,420px);width:auto;margin-top:calc(env(safe-area-inset-top,0px) + 64px);filter:drop-shadow(0 20px 30px rgba(0,0,0,.6))}
+.hcard{display:flex;align-items:center;gap:12px;justify-self:center;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px var(--gold);border-radius:16px;padding:10px 16px 10px 10px;opacity:0;transform:translateY(10px) scale(.96);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+.hcard.in{opacity:1;transform:none}
+.hcard img{width:56px;height:56px}
+.hcard span{display:grid;font-size:13px;color:var(--ink-2)}
+.hcard b{font-family:var(--display);font-size:22px;color:var(--ink)}
+/* tasks on the paper page */
+.sheet .opts{width:min(100%,380px)}
+.sheet .opts.emo .opt{font-size:40px;line-height:1}
+.sheet .opts.pics{grid-template-columns:repeat(auto-fit,minmax(72px,1fr))}
+.sheet .opts.bottles .opt{font:italic 500 18px/1.25 var(--display);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35),0 4px 0 rgba(91,77,99,.25);border-radius:6px 6px 14px 14px}
+.order .opt{display:flex;align-items:center;gap:10px;text-align:left;font-size:16px}
+.order .opt i{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 14px/1 var(--body);font-style:normal;background:rgba(43,33,64,.1);color:var(--paper-ink)}
+.order .opt.yes i{background:var(--gold);color:#1b1206}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,400px)}
+.match>div{display:grid;gap:8px;align-content:start}
+.match .opt{min-height:48px;font-size:16px;padding:8px 10px}
+.match .opt.m{font-size:30px}
+.match.long .opt.m{font-size:14px;line-height:1.25;font-weight:500}
+.match .opt.sel{box-shadow:inset 0 0 0 2.5px var(--violet);background:rgba(108,63,197,.12)}
+.match .opt.yes{opacity:.55;pointer-events:none}
+.opts.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.opts.tiles .opt{min-height:48px;padding:8px 16px}
+.opts.tiles .opt.used{opacity:.25}
+.opts.letters2 .opt{font:700 26px/1 var(--body);width:58px;height:58px;padding:0;background:#f6d7a4;box-shadow:inset 0 0 0 2px #b8803a,0 4px 0 #9b6a2c;border-radius:14px}
+.tline{min-height:1.6em;font-family:var(--display);font-size:clamp(22px,6vw,28px);font-weight:600;color:var(--paper-ink);margin:0}
+.tline.ok{color:#5a3a9c}
+.tfq{margin:0;font-family:var(--display);font-size:clamp(22px,6vw,26px);font-weight:600;line-height:1.25;max-width:24ch;min-height:2.5em}
+.code{margin:0;font:700 clamp(26px,8vw,36px)/1.1 "Courier New",ui-monospace,monospace;letter-spacing:.12em;color:var(--paper-ink);background:rgba(255,250,238,.7);border:1.5px dashed rgba(43,33,64,.4);border-radius:10px;padding:12px 16px}
+.code.mirror{transform:scaleX(-1)}
+.abc{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;width:min(100%,400px)}
+.abc span{display:grid;justify-items:center;width:24px;font:600 13px/1.2 var(--body);color:var(--paper-ink)}
+.abc i{font-style:normal;font-size:11px;color:var(--paper-ink-2)}
+.passage{max-width:34ch;text-align:left;font-family:var(--display);font-size:clamp(19px,5vw,22px);line-height:1.5;color:var(--paper-ink)}
+.ptitle{margin:0;font:600 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-ink-2)}
+.inp{width:min(100%,380px);border:0;border-radius:12px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35);color:var(--paper-ink);font:400 17px/1.4 var(--body);padding:12px 14px}
+textarea.inp{min-height:130px;resize:vertical}
+.inp:focus{outline:none;box-shadow:inset 0 0 0 2px var(--violet)}
+.row2{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.sheet .btn-ghost{background:rgba(43,33,64,.08);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35)}
+.rec.on{background:#d9485f;color:#fff}
+.iplay.small{width:76px;height:76px}
+.iplay.small svg{width:32px;height:32px}
+.pimg{height:min(36svh,330px);width:auto;max-width:100%;aspect-ratio:1080/1920;object-fit:cover;border-radius:14px;box-shadow:0 10px 24px -10px rgba(43,33,64,.6),inset 0 0 0 1px rgba(43,33,64,.2)}
+.bscene{position:relative;width:min(100%,320px);aspect-ratio:1080/1920;max-height:46svh;overflow:hidden;border-radius:14px;box-shadow:0 10px 24px -10px rgba(43,33,64,.6)}
+.bscene img{width:100%;height:100%;object-fit:cover}
+.btag{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:0;background:#fffaf0;color:var(--paper-ink);font:700 16px/1 var(--body);box-shadow:0 0 0 2px var(--paper-ink),0 4px 10px rgba(0,0,0,.4);cursor:pointer}
+.btag.yes{background:var(--gold)}
+.btag.no{animation:shake .45s;box-shadow:0 0 0 2px #b0485f}
+.clabel{position:absolute;transform:translate(-50%,-50%);max-width:30%;font:italic 600 11px/1.15 var(--display);color:var(--paper-ink);text-align:center;overflow-wrap:anywhere}
+.pnote{margin:0;max-width:34ch;font-size:15px;line-height:1.45;color:var(--paper-ink);background:rgba(255,250,238,.75);box-shadow:inset 0 0 0 1px rgba(43,33,64,.25);border-radius:12px;padding:10px 14px;text-align:left}
+.sheet .opts.pics .opt{padding:6px}
+.sheet .opts.pics .opt img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.match .opt.m.im{padding:4px;min-height:58px}
+.match .opt.m.im img{height:50px;width:auto;margin:auto;border-radius:8px}
+.drow{display:flex;justify-content:center;gap:4px}
+.drow img{width:48px;height:48px;object-fit:contain;border-radius:8px}
+.abg{transition:opacity .8s}
+.abg.off{opacity:0}
+.avid{object-fit:cover}
+#agate{position:absolute;inset:0;display:grid;align-content:end;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 70px);z-index:12;background:linear-gradient(180deg,rgba(14,10,34,0) 40%,rgba(14,10,34,.85) 80%)}
+#agate .say{margin:0}
+#agate.gone{opacity:0;pointer-events:none}
+.sheet .opts.words .opt{aspect-ratio:auto;min-height:54px;font:600 18px/1.2 var(--body)}
+.lvid{width:min(100%,300px);aspect-ratio:9/16;max-height:52svh;object-fit:cover;border-radius:14px;background:#2b2140;box-shadow:0 10px 24px -10px rgba(43,33,64,.6)}
+.vplay{margin-top:-60px;position:relative;z-index:2}
+[data-scene="arrive"]:has(#agate:not(.gone)) .voice{visibility:hidden}
+.lvid.full{position:fixed;inset:0;z-index:90;width:100%;height:100%;max-width:none;max-height:none;border-radius:0;object-fit:cover;background:#000}
+.vclose{position:fixed;z-index:91;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(14px,env(safe-area-inset-right,0px));border:0;border-radius:999px;background:rgba(14,10,34,.6);color:var(--ink);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.replay{border:0;background:rgba(43,33,64,.08);color:var(--paper-ink);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer;margin-top:-6px}
+.replay svg{width:20px;height:20px}
+.t-little #sheetBody .ru{font-size:15px;line-height:1.45;color:var(--paper-ink);background:rgba(255,250,238,.75);box-shadow:inset 0 0 0 1px rgba(43,33,64,.25);border-radius:12px;padding:10px 14px;text-align:left;max-width:34ch}
+.vsub{position:fixed;z-index:92;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 40px);width:max-content;max-width:88%;margin:0;padding:8px 14px;border-radius:12px;background:rgba(14,10,34,.72);color:#fff;font:600 18px/1.3 var(--body);text-align:center}
+.vsub small{display:block;font-size:14px;font-weight:500;opacity:.85;margin-top:3px}
+.vsubbtn{position:fixed;z-index:91;top:calc(env(safe-area-inset-top,0px) + 14px);left:max(14px,env(safe-area-inset-left,0px));border:0;border-radius:999px;background:rgba(14,10,34,.6);color:var(--ink);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.vsubbtn[aria-pressed="true"]{color:var(--gold-2);box-shadow:inset 0 0 0 1px var(--gold)}
+/* ===== История 2: новые механики ===== */
+.cell-ico.ico-flower{background:#3a1206;color:#ff9b3d;box-shadow:0 0 0 2px #ff9b3d,0 0 14px rgba(255,155,61,.7)}
+.mem{display:grid;grid-template-columns:repeat(var(--c,4),1fr);gap:8px;width:min(100%,380px)}
+.mcard{position:relative;aspect-ratio:3/4;border:0;padding:0;background:none;cursor:pointer;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .4s var(--ease-out)}
+.mcard>span{position:absolute;inset:0;display:grid;place-items:center;border-radius:12px;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.mcard .back{background:#1c2a4a;color:#cfe0ff;box-shadow:inset 0 0 0 2px #cfe0ff,0 4px 0 rgba(28,42,74,.5)}
+.mcard .back svg{width:40%;opacity:.8}
+.mcard .face{transform:rotateY(180deg);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35);padding:4px;color:var(--paper-ink);font:600 15px/1.2 var(--body);text-align:center}
+.mcard.txt .face{font-size:13px}
+.mcard .face img{width:100%;height:100%;object-fit:contain;border-radius:8px}
+.mcard.open{transform:rotateY(180deg)}
+.mcard.yes .face{box-shadow:inset 0 0 0 2.5px var(--gold),0 0 12px rgba(245,200,66,.6)}
+.sortq{margin:0;font-family:var(--display);font-size:clamp(22px,6vw,27px);font-weight:600;color:var(--paper-ink);background:#fffaf0;border-radius:14px;padding:12px 18px;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3),0 6px 0 rgba(91,77,99,.2);max-width:22ch}
+.sortq.popin{animation:popin .35s var(--ease-out)}
+.sortq.ok{color:#5a3a9c}
+@keyframes popin{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,400px)}
+.bin{display:grid;align-content:start;gap:6px;min-height:150px;border:0;border-radius:16px;padding:12px 10px;background:rgba(108,63,197,.08);box-shadow:inset 0 0 0 2px rgba(108,63,197,.45);color:var(--paper-ink);cursor:pointer;text-align:left}
+.bin b{font:700 16px/1.2 var(--body);text-align:center}
+.bin ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.bin li{font-size:14px;line-height:1.25;background:#fffaf0;border-radius:8px;padding:4px 8px;animation:popin .3s var(--ease-out)}
+.bin.no{animation:shake .45s}
+.clues{margin:0;padding:0 0 0 1.4em;display:grid;gap:6px;max-width:30ch;text-align:left;font-family:var(--display);font-size:clamp(20px,5.4vw,23px);color:var(--paper-ink)}
+.clues li{animation:popin .35s var(--ease-out)}
+.vbtn.pulse{animation:vpulse 1.6s ease-in-out 3}
+@keyframes vpulse{50%{box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.35),0 0 0 8px rgba(245,200,66,.35)}}
+.fuse{position:relative;display:flex;align-items:center;gap:8px;width:min(100%,360px);height:14px}
+.fuse i{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,#ff5a1f,#ffc23d);transform-origin:left;transition:transform .1s linear}
+.fuse svg{width:28px;height:28px;color:#ff7a1f;filter:drop-shadow(0 0 6px rgba(255,122,31,.8))}
+.fuse.low svg{animation:shake .5s infinite}
+.fuse.win svg{transform:scale(1.4);color:var(--gold)}
+.echo .opt{display:grid;gap:4px;justify-items:center}
+.echo .opt em{font:600 13px/1 var(--body);font-style:normal;color:var(--paper-ink)}
+.echo .opt.sel{box-shadow:inset 0 0 0 2.5px var(--violet)}
+.echo .opt.yes{box-shadow:inset 0 0 0 2.5px var(--gold),0 0 16px rgba(245,200,66,.7)}
+.poster{display:grid;justify-items:center;gap:4px;width:min(100%,260px);background:#f1dfb6;border-radius:4px;padding:12px 14px 14px;box-shadow:0 10px 22px -10px rgba(43,33,64,.7),inset 0 0 0 2px #9b6a2c;transform:rotate(-1.5deg);color:#3a2410}
+.poster b{font:700 26px/1 "Courier New",ui-monospace,monospace;letter-spacing:.2em}
+.poster img{width:58%;border-radius:6px}
+.poster strong{font:700 15px/1 var(--body);letter-spacing:.12em}
+.poster p{margin:0;min-height:1.3em;font:italic 600 16px/1.3 var(--display);text-align:center}
+.ppic img{height:110px;width:auto;border-radius:12px}
+.opts.letters2.wpaws .opt{border-radius:50% 50% 45% 45%;background:#e9eef8;box-shadow:inset 0 0 0 2px #5d7bb5,0 4px 0 #3f5a8f}
+.code.vowels{letter-spacing:.18em}
+.forest .cell-ico{width:6.6%}
+/* ===== История 3: новые механики ===== */
+.cell-ico.ico-wind{background:#dfeeff;color:#3e6db5;box-shadow:0 0 0 2px #fff,0 0 14px rgba(170,210,255,.8)}
+.shards{display:grid;grid-template-columns:repeat(var(--c,3),1fr);gap:6px;width:min(100%,330px);padding:8px;border-radius:14px;background:linear-gradient(135deg,#dfe9f6,#b9c9e2);box-shadow:inset 0 0 0 2px #fff,0 10px 22px -12px rgba(43,33,64,.6)}
+.shard{aspect-ratio:1;border:0;padding:6px;background:#fffaf0;cursor:pointer;clip-path:polygon(8% 0,100% 6%,92% 100%,0 88%);transform:rotate(var(--r,0deg));transition:transform .35s var(--ease-out),box-shadow .3s}
+.shard img{width:100%;height:100%;object-fit:contain}
+.shard.yes{box-shadow:inset 0 0 0 3px var(--gold);clip-path:none;border-radius:10px}
+.shards.whole{animation:popin .5s var(--ease-out);box-shadow:inset 0 0 0 2px #fff,0 0 26px rgba(245,200,66,.8)}
+.doll{position:relative;width:min(56%,220px)}
+.doll>img{width:100%;filter:drop-shadow(0 10px 14px rgba(43,33,64,.4))}
+.worn{position:absolute;right:-18%;top:6%;display:grid;gap:4px}
+.worn span{width:54px;height:54px;border-radius:50%;background:#fffaf0;box-shadow:0 0 0 2px var(--gold);padding:5px;animation:popin .4s var(--ease-out)}
+.worn img{width:100%;height:100%;object-fit:contain}
+.route{position:relative;display:flex;justify-content:space-between;align-items:center;width:min(100%,360px);padding:10px 0 26px}
+.route::before{content:"";position:absolute;left:24px;right:24px;top:36px;border-top:3px dashed rgba(43,33,64,.35)}
+.route .stop{position:relative;width:52px;height:52px;border-radius:50%;background:#fffaf0;box-shadow:inset 0 0 0 2px rgba(43,33,64,.3);padding:5px;z-index:1}
+.route .stop img{width:100%;height:100%;object-fit:contain}
+.route .stop.on{box-shadow:inset 0 0 0 3px var(--violet),0 0 14px rgba(108,63,197,.5)}
+.route .stop.done{box-shadow:inset 0 0 0 3px var(--gold)}
+.route .walker{position:absolute;bottom:-4px;left:0;width:30px;height:30px;transform:translateX(-50%);margin-left:26px;transition:left .9s var(--ease-out);z-index:2}
+.route .walker img{width:100%}
+.islots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.islots span{width:38px;height:46px;display:grid;place-items:center;border-radius:8px;background:rgba(214,232,250,.6);box-shadow:inset 0 0 0 2px #a9c4e6;font:700 24px/1 var(--body);color:#20406e}
+.islots span.ghost::before{content:attr(data-l);opacity:.22}
+.islots span.ok::before{content:none}
+.islots span.ok{background:#e9f4ff;box-shadow:inset 0 0 0 2px #6d9fd8,0 0 10px rgba(150,200,255,.8)}
+.islots.done span{animation:popin .45s var(--ease-out);background:#fff3c8;box-shadow:inset 0 0 0 2px var(--gold)}
+.opts.ice{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.opts.ice .opt{width:54px;height:58px;padding:0;font:700 24px/1 var(--body);color:#20406e;background:linear-gradient(160deg,#ffffff,#cfe3f8);box-shadow:inset 0 0 0 2px #9fbde3,0 4px 0 #7f9fc9;clip-path:polygon(10% 0,100% 8%,90% 100%,0 92%)}
+.opts.ice .opt.used{opacity:.2}
+.kim{position:relative}
+.kim .opt{pointer-events:none}
+.kim.blizzard::after{content:"";position:absolute;inset:-6px;border-radius:14px;background:radial-gradient(circle at 30% 40%,#fff 0 8%,transparent 9%),radial-gradient(circle at 70% 60%,#fff 0 6%,transparent 7%),rgba(235,243,255,.96);animation:popin .4s}
+.kim .opt.snowed{background:#eef4fb;box-shadow:inset 0 0 0 2px #fff}
+.kim .opt.snowed img{opacity:0}
+.fuse.wind i{background:linear-gradient(90deg,#9cc4f0,#e6f1ff)}
+.fuse.wind svg{color:#6d9fd8;filter:drop-shadow(0 0 6px rgba(150,200,255,.8))}
+.fishnote{position:relative;width:min(100%,340px)}
+.fishnote svg{width:100%;display:block}
+.fishtxt{position:absolute;left:20%;right:22%;top:28%;bottom:24%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;font:italic 600 13px/1.2 var(--display);color:#4a3216;text-align:center;overflow:hidden}
+.fishtxt img{width:34px;height:34px;object-fit:contain}
+.fishnote.sent{animation:fishgo 1s var(--ease-out) forwards}
+@keyframes fishgo{to{transform:translateX(120%) rotate(-8deg);opacity:0}}
+.iceblock{position:relative;width:150px;height:170px;border-radius:16px;overflow:hidden;box-shadow:0 10px 24px -10px rgba(43,33,64,.6)}
+.iceblock img{width:100%;height:100%;object-fit:cover;filter:saturate(calc(.3 + var(--h,0)*.7))}
+.iceblock i{position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.85),rgba(170,205,240,.8));box-shadow:inset 0 0 0 3px #fff;transition:opacity .3s}
+.ckey{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;width:min(100%,360px)}
+.ckey span{display:grid;justify-items:center;min-width:34px;padding:4px 6px;border-radius:8px;background:rgba(255,250,238,.8);box-shadow:inset 0 0 0 1px rgba(43,33,64,.25)}
+.ckey b{font:600 18px/1.1 var(--body);color:#3e6db5}
+.ckey.morse b{font:700 14px/1.2 "Courier New",ui-monospace,monospace;color:var(--paper-ink)}
+.ckey i{font:600 12px/1 var(--body);font-style:normal;color:var(--paper-ink-2)}
+.code.snow{color:#3e6db5;letter-spacing:.3em}
+.code.morse{font-size:clamp(18px,5vw,24px);letter-spacing:.05em;white-space:pre-wrap}
+.opts.duo{grid-template-columns:1fr 1fr}
+.opts.duo .opt em{display:block;font:600 15px/1 var(--body);font-style:normal;margin-top:4px}
+.islots{flex-wrap:nowrap;gap:4px}
+.islots span{width:min(36px,calc((100vw - 120px)/8));height:44px;font-size:22px}
+.route .walker{bottom:-8px}
+
+
+/* ===== История 9 · Мэри: малиновка ведёт, альбом, Magic E, семена, шёпот, звуки дома, грядки, времена года, изгородь, сто комнат ===== */
+.cell-ico.ico-season{background:#22381c;color:#f2b8c6;box-shadow:0 0 0 2px #cfe8b8,0 0 14px rgba(207,232,184,.7)}
+/* семена-шифр: ключ и грядка */
+.dm{width:20px;height:30px;display:block}
+.dm.sd{width:24px;height:24px}
+.abc.pack .dm.sd{width:26px;height:26px}
+.abc.keys .dm.sd{width:28px;height:28px}
+.abc.seedkey{gap:6px 4px;padding:8px;border-radius:14px;background:rgba(255,250,238,.75);box-shadow:inset 0 0 0 1.5px rgba(74,52,30,.25)}
+.abc.seedkey>*{border-radius:10px}
+.abc.keys button{border:0;background:#fffaf0;border-radius:10px;padding:4px 3px;box-shadow:inset 0 0 0 1.5px rgba(74,52,30,.3),0 3px 0 rgba(74,52,30,.2);cursor:pointer;display:grid;justify-items:center;gap:2px;color:var(--paper-ink)}
+.abc.keys button:active{transform:scale(.94)}
+.abc .lit{box-shadow:inset 0 0 0 2.5px var(--gold),0 0 12px rgba(245,200,66,.8)!important}
+.code.pack{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 3px;letter-spacing:0}
+.code.pack .sl{display:grid;justify-items:center;gap:2px;min-width:26px}
+.code.pack .sl i{font:700 16px/1 var(--body);font-style:normal;min-height:16px;color:#5a3a9c}
+.code.pack .sl.cur{border-radius:8px;box-shadow:0 0 0 2px var(--violet)}
+.code.pack .dm.sd{width:23px;height:23px}
+.code.pack .gapw{width:12px}
+.code.soil{gap:4px 2px;padding:10px 6px 8px;border-radius:14px;background:linear-gradient(180deg,#7a5534,#5b3d24);box-shadow:inset 0 3px 0 rgba(255,255,255,.12),inset 0 -4px 0 rgba(0,0,0,.25)}
+.code.soil .sl i{color:#fff3c8}
+.code.soil .sl{min-width:0;padding:3px 1px 2px;border-radius:12px;background:rgba(255,243,200,.88)}
+.code.soil .sl i{color:#5a3a9c!important}
+.code.soil .sl.on .dm{opacity:.55}
+.code.soil .sl.cur{box-shadow:0 0 0 2px #f5c842}
+/* малиновка */
+.rbird{position:absolute;left:50%;top:-10px;width:54px;height:54px;transform:translate(-50%,-80%);z-index:3;pointer-events:none;transition:left .6s var(--ease-out),top .6s var(--ease-out),opacity .5s}
+.rbird img,.rbird .actw{width:100%;height:100%;object-fit:cover;border-radius:50%;box-shadow:0 0 0 2.5px #fffaf0,0 6px 12px rgba(43,33,64,.45)}
+.rbird.hop{animation:rhop .6s var(--ease-out)}
+.rbird.away{opacity:0}
+@keyframes rhop{0%{transform:translate(-50%,-80%) scale(1)}45%{transform:translate(-50%,-140%) scale(1.08)}100%{transform:translate(-50%,-80%) scale(1)}}
+.rgrid{position:relative;width:min(100%,380px);padding-top:30px}
+.rgrid .opts.pics{width:100%;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rgrid .opts.pics .opt{min-width:0;padding:5px}
+.rgrid .opt .actw{font-size:14px}
+.rgrid .opt[data-ok="1"]{box-shadow:inset 0 0 0 2.5px #c8473a,0 0 14px rgba(200,71,58,.45)}
+/* семейный альбом */
+.ppic.album{padding:12px 12px 26px;background:#fffaf0;border-radius:6px;box-shadow:0 12px 24px -12px rgba(43,33,64,.6),inset 0 0 0 1px rgba(43,33,64,.12);transform:rotate(-2deg)}
+.ppic.album::before{content:"";position:absolute;top:-8px;left:50%;width:56px;height:16px;transform:translateX(-50%) rotate(3deg);background:rgba(242,184,198,.75);border-radius:2px}
+.ppic.album img,.ppic.album .actw{border-radius:2px}
+/* Magic E */
+.mword{display:flex;align-items:baseline;justify-content:center;gap:2px}
+.mword .v{transition:color .5s,text-shadow .5s}
+.mword .me{min-width:.6em;color:rgba(43,33,64,.25);transition:color .5s}
+.mword.magic .me{color:#b8901c;animation:popin .45s var(--ease-out)}
+.mword.magic .v{color:#5a3a9c;text-shadow:0 0 14px rgba(245,200,66,.9)}
+.opt.fairy{width:76px;height:76px;padding:0;border-radius:50%;font:700 40px/1 var(--body);color:#5a3a9c;background:radial-gradient(circle at 35% 30%,#fffbe6,#f5c842);box-shadow:0 0 0 3px #fffaf0,0 0 22px rgba(245,200,66,.85);animation:fairy 2.4s ease-in-out infinite}
+.opt.fairy.yes{animation:none;opacity:.4}
+@keyframes fairy{50%{transform:translateY(-6px) rotate(6deg)}}
+.gph.seeds .gp{border-radius:50% 50% 46% 46%/58% 58% 42% 42%;background:#f3e4c4;box-shadow:inset 0 0 0 2px #8a5a2b,0 4px 0 #6b4320}
+.gph.seeds .gp.on{background:#cfe8b8;box-shadow:inset 0 0 0 2px #4c8a3a,0 4px 0 #3a6b2c}
+.gph.seeds .gp.mv{box-shadow:inset 0 0 0 2px #8a5a2b,0 4px 0 #6b4320,0 0 0 3px rgba(108,63,197,.25)}
+.gph.seeds .gp.magic{color:#b8901c;background:#fff3c8;box-shadow:inset 0 0 0 2px #d9b24a,0 0 14px rgba(245,200,66,.6)}
+.gph.seeds.woke .gp.mv{color:#5a3a9c;text-shadow:0 0 12px rgba(245,200,66,.9)}
+.gph.seeds .gp{min-width:52px;height:68px;font-size:34px}
+.opts.letters2 .opt.magic{background:#fff3c8;box-shadow:inset 0 0 0 2px #d9b24a,0 0 16px rgba(245,200,66,.75)}
+/* шёпот */
+.ppic.wpic img{height:clamp(120px,24svh,190px);object-fit:cover}
+.hush{position:relative;display:grid;grid-template-columns:1fr 1fr;width:min(100%,300px);height:14px;border-radius:7px;background:linear-gradient(90deg,#cfe8b8 0 55%,#f2b8c6 55% 100%);overflow:hidden;font:600 11px/14px var(--body);color:rgba(43,33,64,.6)}
+.hush i{position:absolute;inset:0;background:rgba(76,138,58,.75);transform-origin:left;transform:scaleX(0);transition:transform .08s linear}
+.hush.loud i{background:rgba(200,71,58,.85)}
+.hush span{position:relative;padding:0 8px}
+.hush span+span{text-align:right}
+/* звуки старого дома */
+.night .wplay{background:#2b2140;color:#f7eedb;box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.25)}
+.night .wplay .nd svg{width:44px;height:52px;color:#f5c842}
+.night .wplay.heard{box-shadow:inset 0 0 0 2px var(--gold)}
+/* грядка: растения растут */
+.bed{display:flex;justify-content:center;align-items:flex-end;gap:4px;width:min(100%,340px);height:70px;padding:0 10px;border-radius:0 0 14px 14px;background:linear-gradient(180deg,transparent 0 72%,#6b4a2c 72%)}
+.plant{width:30px;height:60px}
+.plant svg{width:100%;height:100%;overflow:visible}
+.plant .st,.plant .lf{transform-origin:15px 58px;transform:scaleY(.08);transition:transform .7s var(--ease-out)}
+.plant .fl{transform-origin:15px 16px;transform:scale(0);transition:transform .6s var(--ease-out) .2s}
+.plant.up .st,.plant.up .lf{transform:none}
+.bed.bloom .plant .fl{transform:scale(1)}
+.opts.duo .opt{font-size:16px}
+/* круг времён года */
+.swheel{position:relative;width:170px;height:170px;margin-top:10px}
+.sw{--r:0deg;display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;border-radius:50%;overflow:hidden;transform:rotate(var(--r));transition:transform 1s var(--ease-out);box-shadow:0 0 0 4px #fffaf0,0 10px 22px -8px rgba(43,33,64,.55)}
+.sw .s0{order:0}.sw .s1{order:1}.sw .s2{order:3}.sw .s3{order:2}
+.sq{display:grid;place-items:center;background:var(--c);transition:filter .5s}
+.sq>span{display:grid;justify-items:center;gap:2px;transform:rotate(calc(-1 * var(--r)));transition:transform 1s var(--ease-out)}
+.sq img{width:34px;height:34px;object-fit:cover;border-radius:50%}
+.sq em{font:600 10px/1 var(--body);font-style:normal;color:var(--paper-ink)}
+.sw:has(.cur) .sq:not(.cur){filter:saturate(.5) brightness(.92)}
+.sptr{position:absolute;left:50%;top:-12px;width:0;height:0;transform:translateX(-50%);border:10px solid transparent;border-top:16px solid #c8473a;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+/* малиновка по буквам */
+.hopf{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:min(100%,330px);padding:44px 12px 14px;border-radius:18px;background:radial-gradient(circle at 20% 20%,#fff 0 30%,transparent 31%),linear-gradient(180deg,#eef4fb,#dbe6f5);box-shadow:inset 0 0 0 1.5px rgba(93,123,181,.3)}
+.hopf .stone{min-height:52px;padding:0;font:700 24px/1 var(--body);color:#2b2140;border-radius:46% 54% 50% 50%/56% 52% 48% 44%;background:#fffaf0;box-shadow:inset 0 -4px 0 rgba(93,123,181,.25),0 3px 0 rgba(93,123,181,.35)}
+.hopf .stone[data-ok="1"]{box-shadow:inset 0 0 0 2.5px #c8473a,0 3px 0 rgba(93,123,181,.35)}
+.hopf .stone.hit{animation:popin .35s var(--ease-out)}
+.hopf .rbird{width:44px;height:44px;left:50%;top:22px}
+.hslots{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin:0}
+.hslots .sl{width:30px;height:38px;display:grid;place-items:center;border-radius:8px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3);font:700 20px/1 var(--body);color:var(--paper-ink)}
+.hslots .sl.on{background:#fff3c8;box-shadow:inset 0 0 0 2px var(--gold);animation:popin .3s var(--ease-out)}
+.hslots .gapw{width:10px}
+.hslots.joined .sl{color:#5a3a9c}
+/* изгородь */
+.fence{display:grid;gap:10px;width:min(100%,380px);padding:14px 10px;border-radius:12px;background:repeating-linear-gradient(90deg,#a87a4c 0 26px,#946a40 26px 28px);box-shadow:inset 0 0 0 2px #6b4a2c}
+.fence .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin:0;padding:6px 8px;border-radius:6px;background:#e9cfa4;box-shadow:0 3px 0 #6b4a2c}
+.fence .rail b{min-width:20px;font:700 22px/1.2 "Courier New",ui-monospace,monospace;color:#3b2a1a;text-align:center}
+.fence.zig .rail{flex-wrap:nowrap;gap:1px;padding:4px}
+.fence.zig .rail b{min-width:0;flex:1;font-size:clamp(13px,4vw,20px)}
+.fence.zig .rail b.o{opacity:.25}
+/* сто комнат */
+.hall{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(100%,360px);padding:12px 10px 0;border-radius:14px 14px 0 0;background:linear-gradient(180deg,#3a2a4a,#2b2140);box-shadow:inset 0 -6px 0 #5b3d24}
+.opt.door{aspect-ratio:3/5;min-height:0;padding:4px;display:grid;place-items:center;border-radius:40px 40px 4px 4px;background:linear-gradient(180deg,#7a5534,#5b3d24);color:#f5c842;font:700 22px/1 var(--display);box-shadow:inset 0 0 0 2px #3b2a1a,inset 0 0 0 5px #8a6440}
+.opt.door[data-ok="1"]{box-shadow:inset 0 0 0 2px #3b2a1a,inset 0 0 0 5px #8a6440,0 0 16px rgba(245,200,66,.75)}
+.opt.door.open{background:linear-gradient(180deg,#fff3c8,#f5c842);color:#2b2140}
+.opt.door.named span{font:600 12px/1.15 var(--body)}
+.rdesc{max-width:28ch;font-size:clamp(19px,5vw,22px)}
+/* сад по подсказкам малиновки */
+.gmap{position:relative;width:min(100%,360px);aspect-ratio:1;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(20,30,40,.35),rgba(20,30,40,.55)),url(../../img/09_y3_garden.webp) center 35%/cover;box-shadow:0 10px 24px -10px rgba(43,33,64,.6)}
+.gspot{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:2px;min-height:0;padding:4px 8px 5px;border-radius:12px;background:rgba(255,250,238,.92);color:var(--paper-ink)}
+.gspot img,.gspot .actw{width:40px;height:40px;object-fit:cover;border-radius:50%}
+.gspot .actw{display:none}
+.gspot em{font:600 12px/1.1 var(--body);font-style:normal;white-space:nowrap}
+.gspot.yes{background:#fff3c8;box-shadow:inset 0 0 0 2px var(--gold)}
+.gmap .rbird{width:44px;height:44px}
+.who2.w3{grid-template-columns:repeat(3,1fr);gap:8px;width:min(100%,380px)}
+.who2.w3 .wplay span{font-size:13px}
+
+.sheet .opts.pics .opt:not(:has(img)){font:600 17px/1.15 var(--body)}
+
+/* ===== общее для всех историй: поле на весь экран ===== */
+[data-scene="board"]{overflow:hidden}
+[data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
+[data-scene="board"] .forest .token{width:calc(25% / var(--z,1))}
+[data-scene="board"] .forest .cell-ico{width:calc(7.5% / var(--z,1))}
+[data-scene="board"] .pages{position:absolute;z-index:6;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 58px);padding:8px 0 18px;background:linear-gradient(180deg,rgba(14,10,34,.7),rgba(14,10,34,0))}
+[data-scene="board"] .voice{position:absolute;left:0;right:0;bottom:0;z-index:5;margin:0;padding-top:56px;gap:6px;background:linear-gradient(180deg,rgba(14,10,34,0) 0,rgba(14,10,34,.78) 52px,rgba(14,10,34,.9) 100%)}
+[data-scene="board"] .voice .say{font-size:clamp(19px,5vw,22px)}
+[data-scene="board"] .voice .ru{font-size:13px}
+[data-scene="board"] .dierow{justify-content:center}
+[data-scene="board"] .die{width:76px;height:76px}
+/* приход героя: картинка на весь экран (постер видео iOS рисует «contain» с полосами), видео проявляется, когда пошло */
+.apost{object-fit:cover;object-position:50% 30%}
+.avid{opacity:0;transition:opacity .35s;object-position:50% 30%}
+.avid.on{opacity:1}
+
+/* ===== урок-план: новые задания (01.11) ===== */
+.actw{display:grid;place-items:center;width:100%;height:100%;min-height:64px;font:600 15px/1.15 var(--body);color:var(--paper-ink);text-align:center;padding:4px}
+.ppic{position:relative;display:grid;place-items:center}
+.ppic img,.ppic .actw{height:clamp(110px,22svh,170px);width:auto;border-radius:14px;transition:filter .8s var(--ease-out),transform .8s var(--ease-out)}
+.ppic .actw{width:clamp(140px,40vw,190px);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
+.ppic.snowy img,.ppic.snowy .actw{filter:blur(9px) brightness(1.5) saturate(.3);transform:scale(.94)}
+.ppic.snowy::after{content:"";position:absolute;inset:-6px;border-radius:18px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.75),rgba(235,242,255,.4) 60%,transparent 75%);pointer-events:none;transition:opacity .8s}
+.ppic:not(.snowy)::after{opacity:0}
+.ppic.flop img{animation:flop 1.1s var(--ease-out)}
+@keyframes flop{25%{transform:translateY(-28px) rotate(-8deg)}55%{transform:translateY(30px) rotate(14deg) scale(.95);filter:brightness(1.4) saturate(.5)}100%{transform:none}}
+.bigword{margin:0;font:700 clamp(44px,13vw,64px)/1 var(--body);letter-spacing:.04em;color:var(--paper-ink)}
+.opts.yn{grid-template-columns:1fr 1fr;width:min(100%,280px)}
+.opts.yn .opt{font-size:40px;min-height:74px}
+.who2{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(100%,360px)}
+.wcard{display:grid;gap:8px}
+.wplay{display:grid;justify-items:center;gap:6px;border:0;border-radius:16px;padding:10px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3);color:var(--paper-ink);font:600 15px/1 var(--body);cursor:pointer}
+.wplay img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.wplay.heard{box-shadow:inset 0 0 0 2px var(--violet)}
+.wpick:disabled{opacity:.35}
+.slots{display:flex;gap:8px;justify-content:center;transition:gap .5s var(--ease-out)}
+.slot{display:grid;place-items:center;width:52px;height:60px;border-radius:12px;background:rgba(43,33,64,.08);box-shadow:inset 0 0 0 2px rgba(43,33,64,.25);font:700 32px/1 var(--body);color:var(--paper-ink-2)}
+.slot.on{background:#f6d7a4;box-shadow:inset 0 0 0 2px #b8803a;color:var(--paper-ink)}
+.slots.joined{gap:0}
+.slots.joined .slot{border-radius:0}
+.slots.joined .slot:first-child{border-radius:12px 0 0 12px}
+.slots.joined .slot:last-child{border-radius:0 12px 12px 0}
+.gph{display:flex;gap:10px;justify-content:center;transition:gap .6s var(--ease-out)}
+.gp{min-width:64px;height:76px;padding:0 10px;border:0;border-radius:16px;background:#fffaf0;box-shadow:inset 0 0 0 2px rgba(43,33,64,.35),0 4px 0 rgba(91,77,99,.25);font:700 40px/1 var(--body);color:var(--paper-ink);cursor:pointer;transition:background .25s,transform .2s}
+.gp.dg{color:var(--violet)}
+.gp.dg::after{content:"";display:block;height:3px;margin:4px 8px 0;border-radius:2px;background:currentColor}
+.gp.on{background:var(--gold)}
+.gp:active{transform:scale(.94)}
+.gph.joined{gap:0}
+.gph.joined .gp{border-radius:0;box-shadow:0 4px 0 rgba(91,77,99,.25)}
+.gph.joined .gp:first-child{border-radius:16px 0 0 16px}
+.gph.joined .gp:last-child{border-radius:0 16px 16px 0}
+.rules{display:grid;gap:10px;width:min(100%,380px)}
+.rule{display:grid;gap:4px;text-align:left;border:0;border-radius:14px;padding:12px 14px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3);color:var(--paper-ink);cursor:pointer}
+.rule b{font:600 14px/1.3 var(--body);color:var(--violet)}
+.rule span{font:italic 600 20px/1.25 var(--display)}
+.rule.on{box-shadow:inset 0 0 0 2px var(--violet)}
+.fixline{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0;max-width:24ch}
+.fw{border:0;border-radius:10px;padding:6px 10px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.25);font:600 clamp(20px,5.5vw,24px)/1.2 var(--display);color:var(--paper-ink);cursor:pointer}
+.fw.sel{background:#f7d3d9;box-shadow:inset 0 0 0 2px #b0485f;text-decoration:line-through}
+.fw.fixed{background:#dff1dc;box-shadow:inset 0 0 0 2px #4f8a4a}
+.opts.show{grid-template-columns:repeat(4,1fr)}
+.bins.b3{grid-template-columns:repeat(3,1fr);gap:8px}
+.bins.b3 .bin{min-height:130px;padding:10px 8px}
+.chk{display:flex;gap:6px;justify-content:center}
+.chk i{width:26px;height:8px;border-radius:4px;background:rgba(43,33,64,.15)}
+.chk i.ok{background:var(--gold)}
+.chk i.half{background:#c9b6e8}
+.chkbody{display:grid;justify-items:center;gap:14px;width:100%}
+.score{margin:0;font:600 22px/1 var(--body);color:var(--paper-ink-2)}
+.score b{font:700 64px/1 var(--display);color:var(--paper-ink)}
+.report{width:min(100%,380px);text-align:left;border-radius:16px;padding:14px 16px;background:rgba(255,250,238,.9);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.25);color:var(--paper-ink)}
+.report>b{font:600 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--paper-ink-2)}
+.report dl{display:grid;gap:4px;margin:10px 0 0}
+.report dt{font:600 13px/1.3 var(--body);color:var(--violet);margin-top:6px}
+.report dd{margin:0;font-size:15px;line-height:1.4}
+.end .report{margin:0 auto}
+.rpics{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:min(100%,360px)}
+.rpics figure{margin:0;display:grid;gap:4px}
+.rpics img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.rpics figcaption{font:600 13px/1.25 var(--body);color:var(--paper-ink)}
+.kwords{margin:0;max-width:34ch;font:600 15px/1.5 var(--body);color:var(--violet)}
+.wcount{margin:0;font-size:13px;color:var(--paper-ink-2)}
+.rec{display:inline-flex;align-items:center;gap:8px}
+.rec svg{width:20px;height:20px}
+.abc.pack span{font-size:20px;width:30px}
+.code.pack{letter-spacing:.08em;font-size:clamp(22px,6.5vw,30px);line-height:1.5;max-width:100%;overflow-wrap:anywhere}
+.poster.wcard2 p{font-size:14px}
+/* шифр-ключ: малыши нажимают буквы прямо в ключе; слоты с открытыми буквами; лесенка подсказок */
+.abc.keys{gap:6px}
+.abc.keys button{display:grid;justify-items:center;width:40px;padding:6px 0 4px;border:0;border-radius:10px;background:rgba(255,250,238,.85);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.25);font:600 22px/1.1 var(--body);color:var(--paper-ink);cursor:pointer}
+.abc.keys button i{font-size:12px}
+.abc .lit{box-shadow:inset 0 0 0 2px var(--gold),0 0 14px rgba(245,200,66,.75);background:#fff3c8;animation:popin .45s var(--ease-out)}
+.code.pack{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 4px}
+.code.pack .sl{display:grid;justify-items:center;min-width:30px}
+.code.pack .sl i{display:block;min-width:24px;min-height:24px;margin-top:2px;border-bottom:2px solid rgba(43,33,64,.35);font:700 18px/1.2 var(--body);font-style:normal;color:var(--violet)}
+.code.pack .sl.cur{border-radius:8px;background:rgba(245,200,66,.25)}
+.code.pack .sl.on i{border-color:var(--gold)}
+.code.pack .gapw{width:14px}
+.hladder{display:grid;justify-items:center;gap:6px}
+.hwait{margin:0;font-size:13px;color:var(--paper-ink-2)}
+.hbtn{animation:popin .45s var(--ease-out)}
+.hspark small{opacity:.7}
+
+/* «назови вслух»: начало фразы-ответа под картинкой */
+.vframe{margin:2px 0 0;font:600 clamp(26px,7.5vw,34px)/1.1 var(--display);color:var(--paper-ink);letter-spacing:.01em}
+.rec.on{box-shadow:0 0 0 calc(4px + var(--lv,0) * 14px) color-mix(in srgb,var(--gold,#f5c84c) 35%,transparent);transition:box-shadow .08s linear}
+</style>
+</head>
+<body>
+<div class="backdrop" id="backdrop" style="background-image:url(../../img/06_t1_library.webp)"></div>
+
+<main class="stage" id="stage">
+  <canvas id="snow" aria-hidden="true"></canvas>
+
+  <header class="top">
+    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
+  </header>
+
+    <!-- who: pick a level if the Prologue was skipped -->
+  <section class="scene" data-scene="who" aria-label="Выбор уровня">
+    <img class="bg" src="../../img/06_t2_open.webp" alt="" style="object-position:50% 0">
+    <div class="shade" style="background:linear-gradient(180deg,rgba(14,10,34,.5) 0%,rgba(14,10,34,0) 14%,rgba(14,10,34,.35) 26%,rgba(14,10,34,.9) 42%,var(--night) 60%)"></div>
+    <div class="voice">
+      <p class="say" data-say>Story nine. Who is playing tonight?</p>
+      <p class="ru">История 9. Выберите уровень ребёнка.</p>
+      <div class="tracks">
+        <button class="track" data-track="little"><b>5–7</b><span>Little Explorers</span><small>играем вместе со взрослым</small></button>
+        <button class="track" data-track="explorers"><b>8–10</b><span>Explorers</span><small>короткие тексты и загадки</small></button>
+        <button class="track" data-track="experts"><b>11–14</b><span>Experts</span><small>отрывки из книги и формат A2 Key</small></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- arrive: tap to start, Mary speaks (talking video later) -->
+  <section class="scene" data-scene="arrive" aria-label="Мэри у костра">
+    <img class="bg apost" src="../../img/08_v13_mary.webp" alt="">
+    <div class="shade"></div>
+    <div class="istart" id="agate">
+      <p class="ikick">История 9 · Mary Lennox</p>
+      <p class="say">Listen! A little robin is singing in the snow…</p>
+      <button class="iplay" id="astart" aria-label="Начать историю со звуком"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
+      <p class="inote">Включите звук</p>
+    </div>
+    <div class="voice">
+      <div class="who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Mary Lennox</div>
+      <p class="say alice" id="herSay"></p>
+      <p class="ru">Мэри: «Привет! Я Мэри. Мой тайный сад замёрз, а мыши утащили страницы моей книги. Поможешь разбудить сад?»</p>
+      <button class="btn btn-gold later" id="toBoard" data-go="board">Помочь Мэри</button>
+    </div>
+  </section>
+
+  <!-- board: six frozen pages on the path -->
+  <section class="scene" data-scene="board" aria-label="Заснеженный сад у старого дома">
+    <div class="forest" id="forest" style="aspect-ratio:720/840">
+      <img src="../../img/10_board_s9.webp" alt="Пеньки по снегу от костра к двери в стене тайного сада">
+      <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
+    </div>
+    <div class="voice">
+      <div class="pages" id="pages" aria-label="Страницы книги Мэри"></div>
+      <p class="say" data-say id="boardSay"></p>
+      <p class="ru" id="boardRu">В заснеженном саду спрятаны шесть замёрзших страниц. Прыгай по пенькам — бросай кубик!</p>
+      <div class="dierow">
+        <button class="die" id="die" aria-label="Бросить кубик"><img src="../../img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+      <div id="ev" hidden></div>
+      <button class="btn btn-gold later" id="toFinal" data-go="final">Вернуть книгу Мэри</button>
+    </div>
+  </section>
+
+  <!-- final: Mary gets her book back -->
+  <section class="scene" data-scene="final" aria-label="Книга Мэри оттаяла">
+    <div class="camp" style="--glow:.4"></div>
+    <img class="finimg big" src="../../img/09_y5_spring.webp" alt="Мэри, Дикон и Колин в весеннем саду">
+    <div class="voice">
+      <p class="say alice" id="finSay"></p>
+      <div class="hcard" id="card"><img src="../../img/badge_09.webp" alt=""><span><b>Mary Lennox</b>Care · «It’s wick!»</span></div>
+      <button class="btn btn-gold later" id="toEnd" data-go="end">Дальше</button>
+    </div>
+  </section>
+
+  <!-- end -->
+  <section class="scene" data-scene="end" aria-label="История 9 пройдена">
+    <div class="end">
+      <img class="seal" src="../../img/04_frozen_book_2.webp" alt="Книга Мэри оттаяла">
+      <h1 id="endTitle">История 9 пройдена</h1>
+      <p>Шесть страниц книги Мэри оттаяли, тайный сад проснулся. Карточка Мэри и значок «Забота» уже на полке.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Listening, Vocabulary, Grammar</li>
+        <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Reading, Writing, Speaking</li>
+        <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Битва за значок</li>
+      </ul>
+      <div id="report" hidden></div>
+      <p class="note">Под розами малиновка нашла ещё один кусок старой карты. Мыши что-то собирают… Завтра — финал: к костру придут Щелкунчик и Мышиный король.</p>
+      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+    </div>
+  </section>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
+    <button class="sheet-x" id="sheetX">Свернуть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="sheet-in"><p class="sheet-k" id="sheetK"></p><div id="sheetBody" style="display:grid;gap:14px;justify-items:center;width:100%"></div></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(s,r){return (r||document).querySelector(s);}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
+  var ORDER=['arrive','board','final','end'];
+  var BG={who:'06_t2_open',arrive:'08_v13_mary',board:'10_board_s9',final:'04_fire_4',end:'05_card_back'};
+  var state={name:'',track:''};
+  try{var s=JSON.parse(localStorage.getItem('sf_prolog')||'{}'); state.name=s.name||''; state.track=s.track||'';}catch(e){}
+  function save(){try{localStorage.setItem('sf_prolog',JSON.stringify(state));}catch(e){}}
+  var wait=function(ms){return new Promise(function(r){setTimeout(r,reduce?Math.min(ms,60):ms);});};
+
+  var dots=$('#dots'); ORDER.forEach(function(){dots.appendChild(document.createElement('i'));});
+
+  /* word-by-word reveal of the Book's line */
+  function speak(el,text,silent){
+    if(text!=null) el.textContent=text;
+    var v=(!silent&&typeof SND!=='undefined')?SND.say(el.textContent):Promise.resolve();
+    var words=el.textContent.split(/\s+/); el.textContent='';
+    words.forEach(function(w,i){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; el.appendChild(sp); el.appendChild(document.createTextNode(' '));
+      setTimeout(function(){sp.classList.add('in');}, reduce?0:120+i*110);});
+    return Promise.all([wait(220+words.length*110),v]);
+  }
+  function later(el,ms){ if(!el) return; setTimeout(function(){el.classList.add('in');}, reduce?0:ms); }
+
+  function ruBtns(root){$$('.voice .ru, #sheetBody .ru',root).forEach(function(ru){ if(ru.previousElementSibling&&ru.previousElementSibling.classList.contains('rubtn')) return;
+    var b=document.createElement('button'); b.className='rubtn'; b.textContent='Не понятно? По-русски'; ru.parentNode.insertBefore(b,ru);
+    b.addEventListener('click',function(){ru.classList.add('show'); b.hidden=true;});});}
+  ruBtns(document);
+
+  /* a task is a frozen book page: tap the small page, it opens over the whole screen */
+  var sheet=$('#sheet'), sheetCard=null, sheetOwner=null;
+  function fromCard(card){var s=$('.stage').getBoundingClientRect(), c=card.getBoundingClientRect();
+    return 'translate('+(c.left-s.left)+'px,'+(c.top-s.top)+'px) scale('+(c.width/s.width)+','+(c.height/s.height)+')';}
+  function openSheet(card){
+    SND.fx('page');
+    sheetCard=card; sheet.hidden=false; sheet.classList.remove('open');
+    if(!reduce){sheet.style.transition='none'; sheet.style.transform=fromCard(card); sheet.classList.add('small'); void sheet.offsetWidth; sheet.style.transition='';}
+    requestAnimationFrame(function(){sheet.style.transform='none'; sheet.classList.remove('small'); sheet.classList.add('open'); sheet.focus({preventScroll:true});});
+  }
+  function closeSheet(){
+    return new Promise(function(res){
+      sheet.classList.remove('open'); SND.fx('page');
+      if(reduce||!sheetCard||!sheetCard.isConnected){sheet.hidden=true; return res();}
+      setTimeout(function(){sheet.classList.add('small'); sheet.style.transform=fromCard(sheetCard.querySelector('i')||sheetCard);},150);
+      setTimeout(function(){sheet.hidden=true; sheet.style.transform=''; res();},720);
+    });
+  }
+  $('#sheetX').addEventListener('click',function(){closeSheet(); if(sheetCard) sheetCard.focus({preventScroll:true});});
+  /* taskPage(holder,kicker,render): render(body,finish) fills the page once; finish() closes it and thaws the card */
+  function taskPage(holder,kicker,label,render){
+    return new Promise(function(done){
+      var card=document.createElement('button'); card.className='pagecard'; card.innerHTML='<i></i><span>'+label+'</span>';
+      holder.appendChild(card); var id=Math.random().toString(36).slice(2);
+      var fin=false; // задание решено: страница оттаивает, повторный тап её уже не открывает
+      card.addEventListener('click',function(){
+        if(fin) return;
+        if(sheetOwner!==id){sheetOwner=id; $('#sheetK').textContent=kicker; var body=$('#sheetBody'); body.innerHTML='';
+          render(body,function(){ if(fin) return; fin=true; card.disabled=true; closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
+          ruBtns(body);}
+        openSheet(card.querySelector('i'));
+      });
+    });
+  }
+
+  /* ---------- sound: voice of the Book, music, effects (all start after the first tap) ---------- */
+  var SND=(function(){
+    var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
+    var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
+    fetch('audio/voice.json').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
+    function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
+    function unlock(){
+      if(ctx) return; var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      ctx=new AC(); master=ctx.createGain(); master.gain.value=on?1:0; master.connect(ctx.destination);
+      musicGain=ctx.createGain(); musicGain.gain.value=.22; musicGain.connect(master);
+      sfxGain=ctx.createGain(); sfxGain.gain.value=.7; sfxGain.connect(master);
+      voiceGain=ctx.createGain(); voiceGain.gain.value=1; voiceGain.connect(master);
+      music=new Audio('audio/music.mp3'); music.loop=true; music.preload='auto';
+      try{ ctx.createMediaElementSource(music).connect(musicGain); }catch(e){}
+      if(musicOn) music.play().catch(function(){}); else musicGain.gain.value=0;
+      /* wind: brown noise through a slowly moving band-pass */
+      var n=ctx.createBufferSource(); n.buffer=noise(4); n.loop=true; var f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=500; f.Q.value=.7;
+      var lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=.09; lg.gain.value=260; lfo.connect(lg); lg.connect(f.frequency); lfo.start();
+      wind=ctx.createGain(); wind.gain.value=.05; n.connect(f); f.connect(wind); wind.connect(master); n.start();
+      /* fire crackle: low rumble + random clicks, volume set per scene */
+      crackle=ctx.createGain(); crackle.gain.value=0; crackle.connect(sfxGain);
+      var r=ctx.createBufferSource(); r.buffer=noise(3); r.loop=true; var rf=ctx.createBiquadFilter(); rf.type='lowpass'; rf.frequency.value=380; var rg=ctx.createGain(); rg.gain.value=.5; r.connect(rf); rf.connect(rg); rg.connect(crackle); r.start();
+      (function pop(){ if(crackle.gain.value>.01) click(.4+Math.random()*.6); setTimeout(pop,60+Math.random()*260); })();
+      if(pending){ var t=pending; pending=null; say(t); }
+      setScene(curScene);
+    }
+    function env(g,t,a,d,v){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);}
+    function click(v){ var t=ctx.currentTime, b=ctx.createBufferSource(); b.buffer=noise(.05); var f=ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=1800+Math.random()*2500; var g=ctx.createGain(); env(g,t,.001,.03+Math.random()*.04,.25*v); b.connect(f); f.connect(g); g.connect(crackle); b.start(t); b.stop(t+.12); }
+    function tone(freq,t,dur,v,type,dest){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type||'sine'; o.frequency.setValueAtTime(freq,t); env(g,t,.008,dur,v); o.connect(g); g.connect(dest||sfxGain); o.start(t); o.stop(t+dur+.05); return o; }
+    function hiss(t,dur,v,from,to,type){ var b=ctx.createBufferSource(); b.buffer=noise(dur+.1); var f=ctx.createBiquadFilter(); f.type=type||'bandpass'; f.Q.value=1.2; f.frequency.setValueAtTime(from,t); f.frequency.exponentialRampToValueAtTime(to,t+dur); var g=ctx.createGain(); env(g,t,dur*.25,dur*.75,v); b.connect(f); f.connect(g); g.connect(sfxGain); b.start(t); b.stop(t+dur+.1); }
+    var FX={
+      page:function(t){ hiss(t,.32,.5,900,3800); hiss(t+.1,.22,.3,2600,1200); },
+      whoosh:function(t){ hiss(t,.7,.35,300,1400,'lowpass'); },
+      dice:function(t){ for(var i=0;i<9;i++){ var k=t+i*.07+Math.random()*.03; tone(700+Math.random()*900,k,.05,.18,'triangle'); hiss(k,.04,.25,3000,2500);} },
+      step:function(t){ tone(220,t,.12,.25,'triangle'); tone(330,t+.01,.08,.12); },
+      spark:function(t){ [1319,1568,2093,2637].forEach(function(f,i){tone(f,t+i*.07,.5,.12);}); },
+      ok:function(t){ tone(784,t,.35,.18); tone(1175,t+.09,.55,.16); },
+      no:function(t){ tone(196,t,.22,.22,'triangle'); tone(185,t+.08,.25,.16,'triangle'); },
+      squeak:function(t){ var o=tone(2400,t,.12,.08,'sine'); o.frequency.exponentialRampToValueAtTime(3600,t+.06); o.frequency.exponentialRampToValueAtTime(2800,t+.12); },
+      fire:function(t){ hiss(t,.9,.6,200,1600,'lowpass'); for(var i=0;i<6;i++) setTimeout(function(){click(1);},i*70); },
+      patter:function(t){ for(var i=0;i<4;i++) tone(900+Math.random()*300,t+i*.09,.04,.06,'triangle'); }
+    };
+    function fx(name){ if(!ctx||!on) return; try{ FX[name](ctx.currentTime+.01); }catch(e){} }
+    function duck(v){ if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(v,ctx.currentTime,.25); }
+    function tts(text){
+      return new Promise(function(fin){
+        try{ var s=window.speechSynthesis; if(!s||!text) return fin();
+          s.cancel(); var u=new SpeechSynthesisUtterance(String(text).replace(/…|\.\.\./g,', ')); u.lang='en-GB'; u.rate=.9;
+          var v=s.getVoices().filter(function(x){ return /^en(-|_)GB/i.test(x.lang); })[0] || s.getVoices().filter(function(x){ return /^en/i.test(x.lang); })[0]; if(v) u.voice=v;
+          u.onend=u.onerror=function(){ fin(); }; setTimeout(fin,12000); s.speak(u);
+        }catch(e){ fin(); } });
+    }
+    function say(text){
+      var id=VOICE[key(text)]; if(!on) return Promise.resolve();
+      if(!id) return tts(text);  // фразы ещё без записи — голос телефона, чтобы кнопка не молчала
+      if(!ctx){ pending=text; return Promise.resolve(); }
+      return new Promise(function(fin){
+      var ok=false, done=function(){ if(!ok){ok=true; fin();} }; setTimeout(done,15000);
+      var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
+      var play=function(b){ if(!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ src.start(ctx.currentTime+.06); setTimeout(done,b.duration*1000+900); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
+      if(buf[id]) return play(buf[id]);
+      fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+        .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
+      });
+    }
+    var lastKey='', curScene='library', seq=0;
+    function setScene(id){ curScene=id; if(!crackle) return; var v={fire:.5,riddle:.45,cliff:.35}[id]||0; crackle.gain.setTargetAtTime(v,ctx.currentTime,.6); }
+    function toggle(){ on=!on; try{localStorage.setItem('sf_sound',on?'on':'off');}catch(e){} unlock(); if(master) master.gain.setTargetAtTime(on?1:0,ctx.currentTime,.05); if(on&&music) music.play().catch(function(){}); if(!on&&cur){try{cur.stop();}catch(e){}} paint(); }
+    function paint(){ var b=$('#sndBtn'); if(!b) return; b.setAttribute('aria-pressed',on?'true':'false'); b.setAttribute('aria-label',on?'Выключить звук':'Включить звук'); }
+    ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ unlock(); if(ctx&&ctx.state==='suspended') ctx.resume(); },{passive:true}); });
+    var musicOn=true;
+    function musicSet(v){ musicOn=v; if(!musicGain) return; musicGain.gain.setTargetAtTime(v?.22:0,ctx.currentTime,.4); if(v&&music) music.play().catch(function(){}); }
+    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint};
+  })();
+  $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
+  var cur='who';
+  function go(id){
+    var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
+    from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
+    $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
+    $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
+    var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
+    (ENTER[id]||function(){})(p);
+  }
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-go]'); if(b&&!b.disabled) go(b.getAttribute('data-go'));});
+
+  var ENTER={};
+
+  /* ===== общий движок заданий (истории с пометкой «uses engine»). История задаёт: T, SID, ACTW, HERO, REPORT, LISTEN_POSTER, SUBS_LITTLE, QUICK_WIN ===== */
+  var shuffle=function(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x;} return a; };
+  var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
+  // картинки: i: предметы, a: действия (лист GPT, пока может не быть — тогда слово), w: картинки фоники, g: сцены, m: мышь
+  var pic=function(v){ v=String(v); var k=v.slice(2);
+    if(v.indexOf('i:')===0) return '<img src="../../img/items/'+k+'.webp" alt="'+k+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(WORDS[k]||k)+'</span>\'">';
+    if(v.indexOf('a:')===0) return '<img src="../../img/items/act_'+k+'.webp" alt="'+(ACTW[k]||k)+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(ACTW[k]||k)+'</span>\'">';
+    if(v.indexOf('w:')===0) return '<img src="../../img/ph/w_'+k+'.jpg" alt="'+k+'">';
+    if(v.indexOf('g:')===0) return '<img src="../../img/'+k+'.webp" alt="">';
+    if(v.indexOf('m:')===0) return '<img src="../../img/07_mouse.webp" alt="mouse">';
+    return null; };
+  var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
+  var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
+  // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
+  var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
+  // распознавание речи: адрес сервиса на нашем VPS; пока не задан — ребёнок слушает себя и жмёт «Сказал ✓»
+  var ASR=window.SF_ASR||null;
+  var MISS=0;
+
+  /* --- помощники для данных --- */
+  var nameIt=function(list,ru){ return list.map(function(x){ var q=x[1]||'What is it?', ln=phrase(x[3],q);
+    return {t:'voice',pic:x[0],reveal:1,q:q,frame:frameOf(ln,x[2]),want:[x[2]],line:ln,ru:ru&&!/фраз/.test(ru)?ru+' Отвечаем целой фразой — начало подсказано на странице.':ru}; }); };
+  // «Назови вслух» — ребёнок отвечает ФРАЗОЙ, не словом (правило Оксаны 01.11): It’s a bear. · I can run. · I’m happy.
+  var PH_MY='mum dad brother sister grandma grandpa head nose mouth hair'.split(' '), PH_MYS='eyes ears arms legs hands feet'.split(' '),
+      PH_FEEL='happy sad scared tired hungry angry'.split(' '), PH_IT='cold sunny hot windy snowy rainy'.split(' '), PH_THE='sky moon sun sea'.split(' '),
+      PH_UNC=['cheese','milk','fish','ice cream','snow','bread','water','rice','sugar','butter','flour','chocolate','juice'];
+  function phrase(line,q){ var w=String(line).trim();
+    if(/[.!?]$/.test(w)) return w;                      // уже фраза
+    if(/^an? /.test(w)) return 'It’s '+w+'.';
+    if(/can you do/i.test(q||'')) return 'I can '+w+'.';
+    if(PH_MY.indexOf(w)>=0) return 'It’s my '+w+'.';
+    if(PH_MYS.indexOf(w)>=0) return 'They’re my '+w+'.';
+    if(w==='friend') return 'It’s my friend.';
+    if(PH_FEEL.indexOf(w)>=0) return 'I’m '+w+'.';
+    if(PH_IT.indexOf(w)>=0||PH_UNC.indexOf(w)>=0) return 'It’s '+w+'.';
+    if(PH_THE.indexOf(w)>=0) return 'It’s the '+w+'.';
+    if(/s$/.test(w)&&!/(ss|us)$/.test(w)) return 'They’re '+w+'.';
+    return 'It’s '+(/^[aeiou]/.test(w)?'an ':'a ')+w+'.'; }
+  function frameOf(line,key){ var i=line.toLowerCase().indexOf(String(key).split('|')[0].slice(0,3)); return i>0?line.slice(0,i).trim()+' …':''; }
+  var blendIt=function(list){ var out=[]; list.forEach(function(x){ var w=x[0].join('');
+    out.push({t:'blend',g:x[0],q:'Tap the sounds. Blend them!',ru:'Нажимай звуки по очереди и сливай их в слово.'});
+    out.push({t:'voice',show:w,pic:'w:'+w,reveal:1,late:1,q:'Read the word!',want:[w],line:w,sec:4,ru:'Прочитай слово вслух — и картинка покажется из-под снега.'}); }); return out; };
+
+  /* --- step renderers (inside the book page) --- */
+  function head(body,q,ru,note){ var ps=document.createElement('p'); ps.className='say'; body.appendChild(ps);
+    if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label','Послушать ещё раз'); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); ruBtns(body); return ps; }
+  function wrong(b,fb){ MISS++; SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent='Not quite. Try again!'; }
+  function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
+  function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
+  function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+  var R={};
+  R.mcq=function(body,s,next){
+    head(body,s.q,s.ru,s.note);
+    if(s.ph){ var pb=el('button','btn btn-ghost','▶ звук'); body.appendChild(pb); pb.addEventListener('click',function(){ phs(s.ph); }); setTimeout(function(){ phs(s.ph); },1600); }
+    if(s.show) body.appendChild(el('p','bigword',esc(s.show)));
+    if(s.img) body.appendChild(el('div','ppic',pic(s.img)));
+    var box=document.createElement('div'); box.className='opts'+(s.pics?' pics emo':''); body.appendChild(box);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    shuffle(s.opts).forEach(function(o){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; if(!s.show) sayWord(o[0]); if(o[1]){ box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(s.show) SND.say(s.show); setTimeout(next,900); } else wrong(b,fb); }); });
+  };
+  R.order=function(body,s,next){
+    head(body,s.q,s.ru); var k=0, box=document.createElement('div'); box.className='opts order'; body.appendChild(box);
+    shuffle(s.items).forEach(function(it){ var b=document.createElement('button'); b.className='opt'; b.innerHTML='<i></i>'+esc(it); b.dataset.n=s.items.indexOf(it); box.appendChild(b);
+      b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; if(it===s.items[k]){ k++; b.classList.add('yes'); b.querySelector('i').textContent=k; SND.fx('step'); if(k===s.items.length){ SND.fx('ok'); setTimeout(next,900);} } else wrong(b); }); });
+  };
+  R.tiles=function(body,s,next){
+    head(body,s.q,s.ru); var line=document.createElement('p'); line.className='tline'; line.textContent=s.pre||''; body.appendChild(line);
+    var box=document.createElement('div'); box.className='opts tiles'+(s.paws?' wpaws':''); body.appendChild(box); var k=0;
+    shuffle(s.words).forEach(function(w){ var b=document.createElement('button'); b.className='opt'; b.textContent=w; b.dataset.n=s.words.indexOf(w); box.appendChild(b);
+      b.addEventListener('click',function(){ if(b.disabled) return; if(w.length<=2||s.words.length<=4) sayWord(w); if(w===s.words[k]){ k++; b.disabled=true; b.classList.add('used'); line.textContent+=(k>1&&!s.paws?' ':'')+w; SND.fx('step');
+        if(k===s.words.length){ SND.fx('ok'); line.classList.add('ok'); var said=s.pre?s.pre+s.words.join('').toLowerCase():line.textContent; speak(line,said); line.textContent=s.pre?said:line.textContent; setTimeout(next,1400);} } else wrong(b); }); });
+  };
+  R.gaps=function(body,s,next){
+    head(body,s.q,s.ru); var g=0;
+    var txt=esc(s.text).replace(/\{(\d)\}/g,function(_,i){return '<span class="gap" data-i="'+i+'">   </span>';}).replace(/\((\w+)\)/g,'<small class="base">($1)</small>');
+    body.insertAdjacentHTML('beforeend','<p class="gtext">'+txt+'</p><div class="opts gopts"></div><p class="fb" aria-live="polite"></p>');
+    (function step(){
+      $$('.gap',body).forEach(function(x){x.classList.toggle('cur',+x.dataset.i===g);});
+      if(g>=s.gaps.length){ $('.gopts',body).innerHTML=''; var full=s.text.replace(/\{(\d)\}/g,function(_,i){return s.gaps[i][1];}).replace(/ \(\w+\)/g,''); SND.say(full); nextBtn(body,'Next',next,900); return; }
+      var gp=s.gaps[g], o=$('.gopts',body); o.innerHTML=''; delete o.dataset.lock;
+      shuffle(gp[0]).forEach(function(w){ var b=document.createElement('button'); b.className='opt'; b.textContent=w; b.dataset.ok=w===gp[1]?1:0; o.appendChild(b);
+        b.addEventListener('click',function(){ if(o.dataset.lock) return; if(w===gp[1]){ o.dataset.lock=1; var sp=$('.gap[data-i="'+g+'"]',body); sp.textContent=w; sp.classList.add('ok'); SND.fx('ok'); $('.fb',body).textContent=''; g++; setTimeout(step,450);} else wrong(b,$('.fb',body)); }); });
+    })();
+  };
+  R.tf=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, card=document.createElement('p'); card.className='tfq'; body.appendChild(card);
+    var box=document.createElement('div'); box.className='opts tf'; body.appendChild(box); var fb=document.createElement('p'); fb.className='fb'; body.appendChild(fb);
+    var keys=s.ns?[['True','T'],['False','F'],['Not stated','N']]:[['True','T'],['False','F']];
+    function show(){ if(i>=s.items.length){ setTimeout(next,500); return; } card.textContent=s.items[i][0]; speak(card,s.items[i][0]); box.innerHTML='';
+      keys.forEach(function(k){ var b=document.createElement('button'); b.className='opt'; b.textContent=k[0]; b.dataset.ok=k[1]===s.items[i][1]?1:0; box.appendChild(b);
+        b.addEventListener('click',function(){ if(k[1]===s.items[i][1]){ b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; i++; setTimeout(show,700);} else wrong(b,fb); }); }); }
+    show();
+  };
+  // малыши: правда / неправда на слух, без чтения; на «неправду» зверь смешно падает в сугроб
+  R.tfa=function(body,s,next){
+    head(body,s.q,s.ru); var i=0;
+    var pp=el('div','ppic'); body.appendChild(pp);
+    var rep=el('button','btn btn-ghost','▶ Ещё раз'); body.appendChild(rep); rep.addEventListener('click',function(){ SND.say(s.items[i][0]); });
+    var box=el('div','opts tf yn'); body.appendChild(box); var fb=el('p','fb'); body.appendChild(fb);
+    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; pp.className='ppic'; pp.innerHTML=pic(it[2])||''; setTimeout(function(){ SND.say(it[0]); },i?200:1500); box.innerHTML='';
+      [['✓','T','Правда'],['✗','F','Неправда']].forEach(function(k){ var b=el('button','opt',k[0]); b.setAttribute('aria-label',k[2]); b.dataset.ok=k[1]===it[1]?1:0; box.appendChild(b);
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]===it[1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(it[1]==='F') pp.classList.add('flop'); i++; setTimeout(function(){ delete box.dataset.lock; show(); },1300);} else wrong(b,fb); }); }); }
+    show();
+  };
+  // Маугли и мышь говорят фразу; кто сказал правильно?
+  R.who2=function(body,s,next){
+    head(body,s.q,s.ru); var heard={};
+    var row=el('div','who2'); body.appendChild(row);
+    var fb=el('p','fb'); body.appendChild(fb);
+    shuffle([[s.hero||HERO[0],s.good,1,HERO[1]],['m:mouse',s.bad,0,'Mouse']]).forEach(function(c){
+      var card=el('div','wcard'); var play=el('button','wplay',pic(c[0])+'<span>▶ '+c[3]+'</span>'); play.setAttribute('aria-label','Послушать: '+c[3]); card.appendChild(play);
+      var pick=el('button','opt wpick','✓ Right'); pick.dataset.ok=c[2]; pick.disabled=true; card.appendChild(pick); row.appendChild(card);
+      play.addEventListener('click',function(){ SND.say(c[1]); heard[c[3]]=1; play.classList.add('heard'); if(Object.keys(heard).length===2) $$('.wpick',row).forEach(function(x){ x.disabled=false; }); else fb.textContent='Теперь послушай второго.'; });
+      pick.addEventListener('click',function(){ if(row.dataset.done) return; if(c[2]){ row.dataset.done=1; pick.classList.add('yes'); SND.fx('ok'); fb.textContent='Yes! '+s.good; SND.say(s.good); setTimeout(next,1600); } else wrong(pick,fb); });
+    });
+  };
+  R.cipher=function(body,s,next){
+    head(body,s.q,s.ru,s.note);
+    var c=document.createElement('p'); c.className='code '+s.mode; c.textContent=s.code; body.appendChild(c);
+    R.mcq(body,{q:'',opts:s.opts},next); var emp=body.querySelectorAll('.say'); var last=emp[emp.length-1]; if(last&&!last.textContent.trim()) last.remove();
+  };
+  // расшифровка с вводом ответа: atbash / shift / rev
+  // лесенка подсказок (как в квест-играх): сначала время подумать, потом намёк → буква → ответ; искра открывает ступеньку сразу
+  var THINK={little:30,explorers:45,experts:60};
+  function hintLadder(body,steps,fb){
+    var row=el('div','hladder'); body.appendChild(row); var k=0, left=THINK[T]||45, iv=null, done=false;
+    var wait=el('p','hwait'); row.appendChild(wait);
+    var btn=el('button','gloss hbtn'); btn.hidden=true; row.appendChild(btn);
+    var spk=el('button','gloss hspark'); row.appendChild(spk);
+    var sparks=function(){ try{ return +(localStorage.getItem('sf_sparks')||0); }catch(e){ return 0; } };
+    function paint(){ if(done) return; var n=sparks(); spk.hidden=!(n>0)||!btn.hidden; spk.innerHTML='✦ Искра → подсказка сейчас <small>('+n+')</small>';
+      if(btn.hidden){ wait.hidden=false; wait.textContent='Подумай сам! Подсказка откроется через '+left+' с'; } else wait.hidden=true; }
+    function tick(){ clearInterval(iv); iv=setInterval(function(){ left--; if(left<=0){ clearInterval(iv); btn.hidden=false; btn.textContent=k===steps.length-1?'Показать ответ':'Подсказка '+(k+1); SND.fx('spark'); } paint(); },1000); paint(); }
+    function use(){ if(k>=steps.length) return; var t=steps[k](); if(fb&&t) fb.textContent=t; k++; btn.hidden=true; if(k>=steps.length){ done=true; row.hidden=true; clearInterval(iv); return; } left=Math.round((THINK[T]||45)*.6); tick(); }
+    btn.addEventListener('click',use);
+    spk.addEventListener('click',function(){ var n=sparks(); if(n<1) return; try{ localStorage.setItem('sf_sparks',String(n-1)); }catch(e){} SND.fx('spark'); use(); });
+    tick(); return {stop:function(){ done=true; clearInterval(iv); row.hidden=true; }};
+  }
+  R.decode=function(body,s,next){
+    head(body,s.q,s.ru); var AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    if(s.kind==='atbash'||s.kind==='shift'){ var k=el('div','abc'); AB.forEach(function(ch,i){ var to=s.kind==='atbash'?AB[25-i]:AB[(i+s.shift)%26]; k.insertAdjacentHTML('beforeend','<span>'+to+'<i>'+ch+'</i></span>'); }); body.appendChild(k); body.appendChild(el('p','ru',s.kind==='atbash'?'Сверху буква шифра, снизу — настоящая.':'Сверху буква шифра, снизу — настоящая (сдвиг на '+s.shift+').')); }
+    if(s.kind==='num') body.appendChild(el('p','ru','A=1, B=2, C=3 … Z=26'));
+    body.appendChild(el('p','code'+(s.kind==='mirror'?' mirror':''),esc(s.code)));
+    var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder='Ответ…'; inp.dataset.ans=s.answer; inp.setAttribute('aria-label','Ответ'); body.appendChild(inp);
+    var fb=el('p','fb'); body.appendChild(fb);
+    var ok=el('button','btn btn-gold','Проверить'); body.appendChild(ok);
+    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); }, ans=norm(s.answer);
+    var upto=function(n){ var out='', c2=0; for(var i=0;i<s.answer.length&&c2<n;i++){ out+=s.answer[i]; if(/[A-Z]/.test(s.answer[i])) c2++; } inp.value=out; inp.focus(); };
+    var nudge={rev:'Намёк: читай с конца — справа налево.',mirror:'Намёк: буквы отражены. Поднеси к зеркалу или переверни в уме.',num:'Намёк: '+s.code.split(/[^0-9]+/)[0]+' — это '+ans[0]+'. Считай по алфавиту.',shift:'Намёк: '+s.code.replace(/[^A-Z]/g,'')[0]+' → '+ans[0]+'. Каждую букву — на '+s.shift+' назад.',atbash:'Намёк: A ↔ Z, B ↔ Y… первая буква — '+ans[0]+'.'}[s.kind]||('Первая буква — '+ans[0]+'.');
+    var lad=hintLadder(body,[function(){ return nudge; },function(){ upto(Math.ceil(ans.length/2)); return 'Половина уже есть. Дальше сам!'; },function(){ upto(ans.length); return 'Ответ: '+s.answer; }],fb);
+    ok.addEventListener('click',function(){ if(norm(inp.value)===ans){ lad.stop(); ok.disabled=true; inp.disabled=true; SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(next,1400); } else { wrong(ok,fb); fb.textContent='Not yet. Проверь буквы ещё раз.'; } });
+  };
+  // знаки Стаи / снежинки: ключ «знак → буква». Малыши нажимают буквы прямо в ключе, старшие пишут ответ
+  R.sym=function(body,s,next){
+    head(body,s.q,s.ru); var letters=s.answer.replace(/[^A-Z]/g,'').split(''), tap=s.mode==='tiles';
+    var used={}; letters.forEach(function(l){ used[l]=1; }); var keyL=Object.keys(PACK).filter(function(l){ return used[l]; });
+    var lim=Math.max(tap?8:10,keyL.length+(tap?4:6)); shuffle(Object.keys(PACK)).forEach(function(l){ if(!used[l]&&keyL.length<lim) keyL.push(l); });
+    var k=el('div','abc pack'+(tap?' keys':'')+(s.crib?' crib':'')); body.appendChild(k); var cells={};
+    if(s.crib) s.crib.split('').forEach(function(l){ if(l===' '){ k.appendChild(el('span','gapw','')); return; } var c=el('span','',PACK[l]+'<i>'+l+'</i>'); k.appendChild(c); if(!cells[l]) cells[l]=c; }); // ключа нет: буквы узнаём из подписанной строки
+    else keyL.sort().forEach(function(l){ var c=el(tap?'button':'span','',PACK[l]+'<i>'+l+'</i>'); c.dataset.l=l; k.appendChild(c); cells[l]=c; });
+    var code=el('p','code pack'); body.appendChild(code); var slots=[];
+    s.answer.split('').forEach(function(c){ if(c===' '){ code.appendChild(el('span','gapw','')); return; } var sl=el('span','sl',PACK[c]+'<i></i>'); sl.dataset.l=c; code.appendChild(sl); slots.push(sl); });
+    var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); var pos=0, lad;
+    var fill=function(n){ while(pos<n&&pos<slots.length){ slots[pos].classList.add('on'); slots[pos].querySelector('i').textContent=slots[pos].dataset.l; pos++; } };
+    var cur=function(){ slots.forEach(function(x,i){ x.classList.toggle('cur',tap&&i===pos); }); };
+    var fin=function(){ lad.stop(); SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(function(){ if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else next(); },1400); };
+    var steps=[function(){ var l=slots[pos].dataset.l; $$('.lit',k).forEach(function(x){ x.classList.remove('lit'); }); cells[l].classList.add('lit'); return s.crib?'Намёк: этот знак уже есть в подписанной строке — он светится.':'Намёк: найди в ключе такой же знак, как первый неразгаданный — он светится.'; },
+               function(){ fill(pos+1); cur(); if(pos>=slots.length) fin(); return 'Одна буква уже есть. Дальше сам!'; },
+               function(){ fill(slots.length); cur(); if(tap) fin(); else inp.value=s.answer; return 'Ответ: '+s.answer; }];
+    if(tap){ cur(); body.appendChild(fb); lad=hintLadder(body,steps,fb);
+      keyL.forEach(function(l){ cells[l].addEventListener('click',function(){ if(pos>=slots.length) return; phs(l.toLowerCase());
+        if(l===slots[pos].dataset.l){ fill(pos+1); cur(); SND.fx('step'); $$('.lit',k).forEach(function(x){ x.classList.remove('lit'); }); if(pos>=slots.length) fin(); } else wrong(cells[l],fb); }); });
+      return; }
+    var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder='Ответ…'; inp.dataset.ans=s.answer; inp.setAttribute('aria-label','Ответ'); body.appendChild(inp);
+    body.appendChild(fb); var ok=el('button','btn btn-gold','Проверить'); body.appendChild(ok); lad=hintLadder(body,steps,fb);
+    ok.addEventListener('click',function(){ if(inp.value.toUpperCase().replace(/[^A-Z]/g,'')===letters.join('')){ ok.disabled=true; inp.disabled=true; fill(slots.length); fin(); } else { wrong(ok,fb); fb.textContent='Not yet. Сверь каждый знак с ключом.'; } });
+  };
+  // первые звуки картинок → слово (шифр малышей = та же фоника)
+  R.picode=function(body,s,next){
+    head(body,s.q,s.ru); var got=0;
+    var slots=el('div','slots'); s.word.split('').forEach(function(){ slots.appendChild(el('span','slot','?')); }); body.appendChild(slots);
+    var row=el('div','opts pics emo'); body.appendChild(row);
+    s.pics.forEach(function(p,i){ var b=el('button','opt',pic(p)); b.setAttribute('aria-label',p.slice(2)); row.appendChild(b);
+      b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; sayWord(p); b.classList.add('yes'); setTimeout(function(){ phs(s.word[i]); var sl=slots.children[i]; sl.textContent=s.word[i]; sl.classList.add('on'); got++;
+        if(got===s.word.length) setTimeout(function(){ slots.classList.add('joined'); SND.say(s.word); R.mcq(body,{q:'',pics:1,opts:s.opts},next); },900); },900); }); });
+  };
+  // фоника: нажимай звуки по порядку → слияние
+  R.blend=function(body,s,next){
+    head(body,s.q,s.ru); var k=0;
+    var row=el('div','gph'); body.appendChild(row);
+    s.g.forEach(function(g,i){ var b=el('button','gp'+(g.length>1?' dg':''),esc(g)); b.setAttribute('aria-label','Звук '+g); row.appendChild(b);
+      b.addEventListener('click',function(){ phs(g); if(i===k){ k++; b.classList.add('on'); SND.fx('step'); if(k===s.g.length) setTimeout(function(){ row.classList.add('joined'); setTimeout(next,900); },700); } else if(i>k) wrong(b); }); });
+  };
+  R.letters=function(body,s,next){ R.tiles(body,{q:s.q,ru:s.ru,words:s.word.split(''),paws:s.paws,pre:s.pre},next); var b=body.querySelector('.opts'); b.classList.add('letters2'); };
+  // выбрать любое → готовое предложение
+  R.choose=function(body,s,next){
+    head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
+    var line=el('p','tline'); body.appendChild(line);
+    s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+        if(T==='little') setTimeout(next,1800); else R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); });
+  };
+  // правило Балу: карточки с примерами
+  R.rule=function(body,s,next){
+    head(body,s.q,s.ru); var box=el('div','rules'); body.appendChild(box);
+    s.rows.forEach(function(r){ var b=el('button','rule','<b>'+esc(r[0])+'</b><span>'+esc(r[1])+'</span>'); box.appendChild(b); b.addEventListener('click',function(){ SND.say(r[1]); b.classList.add('on'); }); });
+    nextBtn(body,'Понятно',next,1500);
+  };
+  // нажми на ошибку мышей → выбери исправление
+  R.fix=function(body,s,next){
+    head(body,s.q,s.ru); var line=el('p','fixline'); body.appendChild(line);
+    var box=el('div','opts'); body.appendChild(box); var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    s.words.forEach(function(w,i){ var b=el('button','fw',esc(w)); b.dataset.ok=i===s.bad?1:0; line.appendChild(b); line.appendChild(document.createTextNode(' '));
+      b.addEventListener('click',function(){ if(line.dataset.found) return; if(i!==s.bad) return wrong(b,fb); line.dataset.found=1; b.classList.add('sel'); fb.textContent='Нашёл! Чем заменить?';
+        shuffle(s.opts).forEach(function(o){ var c=el('button','opt',esc(o[0])); c.dataset.ok=o[1]?1:0; box.appendChild(c);
+          c.addEventListener('click',function(){ if(box.dataset.done) return; if(o[1]){ box.dataset.done=1; c.classList.add('yes'); b.textContent=o[0]; b.classList.remove('sel'); b.classList.add('fixed'); SND.fx('ok'); fb.textContent=s.ok; SND.say(s.ok); setTimeout(next,1700); } else wrong(c,fb); }); }); }); });
+  };
+  // нажимай на всё — каждое называет себя
+  R.show=function(body,s,next){
+    head(body,s.q,s.ru); var left=s.items.length, box=el('div','opts pics emo show'); body.appendChild(box);
+    s.items.forEach(function(v){ var b=el('button','opt',pic(v)); b.setAttribute('aria-label',v.slice(2)); box.appendChild(b);
+      b.addEventListener('click',function(){ sayWord(v); if(!b.classList.contains('yes')){ b.classList.add('yes'); left--; if(!left) nextBtn(body,'Next',next,800); } }); });
+  };
+  // «Найди пару»: cards face down, open two at a time
+  R.memory=function(body,s,next){
+    head(body,s.q,s.ru); var cards=[];
+    s.pairs.forEach(function(p,i){ cards.push([i,p[0]],[i,p[1]]); });
+    var grid=document.createElement('div'); grid.className='mem'; grid.style.setProperty('--c',cards.length===6?3:4); body.appendChild(grid);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    var first=null, lock=false, left=s.pairs.length;
+    shuffle(cards).forEach(function(c){ var b=document.createElement('button'); b.className='mcard'+(pic(c[1])?'':' txt'); b.dataset.k=c[0]; b.setAttribute('aria-label','Карточка');
+      b.innerHTML='<span class="back">'+PAW+'</span><span class="face">'+face(c[1])+'</span>'; grid.appendChild(b);
+      b.addEventListener('click',function(){ if(lock||b.classList.contains('open')) return; b.classList.add('open'); b.setAttribute('aria-label',String(c[1]).replace(/^[iaw]:/,''));
+        if(s.say&&s.say[c[1]]) SND.say(s.say[c[1]]); else if(pic(c[1])||c[1].length<16) sayWord(c[1]); SND.fx('step');
+        if(!first){ first=b; return; }
+        if(first.dataset.k===b.dataset.k){ first.classList.add('yes'); b.classList.add('yes'); first=null; left--; SND.fx('ok'); fb.textContent=left?'A pair! Ещё '+left+'.':'';
+          if(!left){ fb.textContent='All pairs! Все пары найдены!'; setTimeout(next,1300); } return; }
+        lock=true; var a=first; first=null; setTimeout(function(){ a.classList.remove('open'); b.classList.remove('open'); lock=false; },1100); }); });
+  };
+  // two (or three) baskets: tap the basket the card belongs to
+  R.sort=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, items=shuffle(s.items);
+    var card=document.createElement('p'); card.className='sortq'; body.appendChild(card);
+    var row=document.createElement('div'); row.className='bins'+(s.bins.length>2?' b3':''); body.appendChild(row);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    var bins=s.bins.map(function(bn){ var b=document.createElement('button'); b.className='bin'; b.dataset.key=bn[0]; b.innerHTML='<b>'+esc(bn[1])+'</b><ul></ul>'; row.appendChild(b);
+      b.addEventListener('click',function(){ if(i>=items.length) return;
+        if(items[i][1]===bn[0]){ var li=document.createElement('li'); li.textContent=items[i][0]; b.querySelector('ul').appendChild(li); SND.fx('ok'); fb.textContent=''; i++; show(); } else wrong(b,fb); }); return b; });
+    function show(){ if(i>=items.length){ card.textContent='Well done!'; card.classList.add('ok'); setTimeout(next,1000); return; }
+      card.textContent=items[i][0]; card.classList.remove('popin'); void card.offsetWidth; card.classList.add('popin'); SND.say(items[i][0]); bins.forEach(function(b){ b.dataset.ok=b.dataset.key===items[i][1]?1:0; }); }
+    show();
+  };
+  // timed questions: answer before the Red Flower goes out (no penalty, just try again)
+  R.quick=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, timer=null, t0=0;
+    var fuse=document.createElement('div'); fuse.className='fuse'; fuse.innerHTML='<i></i>'+FLAME; body.appendChild(fuse); var bar=fuse.querySelector('i');
+    var card=document.createElement('p'); card.className='tfq'; body.appendChild(card);
+    var box=document.createElement('div'); box.className='opts'; body.appendChild(box);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    function tick(){ var left=1-(Date.now()-t0)/(s.sec*1000); bar.style.transform='scaleX('+Math.max(0,left)+')'; fuse.classList.toggle('low',left<.3);
+      if(left<=0){ clearInterval(timer); SND.fx('no'); fb.textContent='The fire went out! Ещё раз — быстрее!'; setTimeout(show,1200); } }
+    function show(){ clearInterval(timer); if(i>=s.items.length){ fuse.classList.add('win'); card.textContent=QUICK_WIN[0]; speak(card,QUICK_WIN[0]); SND.fx('fire'); box.innerHTML=''; fb.textContent=QUICK_WIN[1]; setTimeout(next,1800); return; }
+      var it=s.items[i]; card.textContent=it.q; SND.say(it.q.replace(/_+/g,'…')); box.className='opts'+(it.pics?' pics emo':''); box.innerHTML=''; fb.textContent='';
+      shuffle(it.opts).forEach(function(o){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
+        b.addEventListener('click',function(){ if(!timer) return; sayWord(o[0]); if(o[1]){ clearInterval(timer); timer=null; b.classList.add('yes'); SND.fx('ok'); i++; setTimeout(show,700); } else wrong(b,fb); }); });
+      t0=Date.now(); timer=setInterval(tick,100); }
+    show();
+  };
+  R.write=function(body,s,next){
+    head(body,s.q,s.ru); var ins=[];
+    var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
+    s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
+      if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
+    var cnt=null; if(s.area){ cnt=el('p','wcount'); body.appendChild(cnt); ins[0].addEventListener('input',function(){ var n=ins[0].value.trim().split(/\s+/).filter(Boolean).length; cnt.textContent=n+' words'; }); }
+    var fb=document.createElement('p'); fb.className='fb'; body.appendChild(fb);
+    var row=document.createElement('div'); row.className='row2'; body.appendChild(row);
+    var hint=el('button','gloss','Подсказка: пример'); row.appendChild(hint);
+    hint.addEventListener('click',function(){ fb.textContent='Например: '+s.model; });
+    var go2=el('button','btn btn-gold','Готово'); body.appendChild(go2);
+    go2.addEventListener('click',function(){
+      var why=''; s.fields.forEach(function(f,i){ if(why) return; var v=ins[i].value.trim(), n=v.split(/\s+/).filter(Boolean).length;
+        if(!f.need.test(v)) why=f.why||(s.area?'Нужно: love / like / enjoy / hate + глагол с -ing.':'Закончи «'+f.ph.replace(' …','')+'» — с -ing, где нужно.');
+        else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
+        else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
+        else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(why) ins[i].focus(); });
+      if(why){ wrong(null,fb); fb.textContent=why; return; }
+      go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
+      fb.textContent=post?(s.doneMsg||'Карточка готова!'):(s.doneMsg||'Записано в твою книгу!'); setTimeout(next,1000);
+    });
+  };
+  R.parent=function(body,s,next){
+    head(body,s.q,s.ru); if(s.pic) body.insertAdjacentHTML('beforeend','<div class="ppic">'+pic(s.pic)+'</div>');
+    var play=el('button','btn btn-ghost','▶ Послушать'); body.appendChild(play);
+    play.addEventListener('click',function(){ SND.say(s.line); });
+    nextBtn(body,'Получилось ✓',function(){ SND.fx('ok'); SND.fx('fire'); next(); },400);
+  };
+  // распознавание прямо в браузере (Moonshine tiny, ~30 МБ, качается один раз и лежит в кэше). Голос ребёнка никуда не уходит.
+  // iPhone: AudioContext создаём в самом нажатии; 16 кГц пересчитываем вручную (OfflineAudioContext в Safari даёт нули).
+  var LASR=(function(){
+    var A={state:'idle',pct:0,asr:null,wait:[],ctx:null};
+    var gum=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia, AC=window.AudioContext||window.webkitAudioContext;
+    if(!gum||!AC||!window.WebAssembly){ A.state='fail'; }
+    function done(ok){ A.state=ok?'ready':'fail'; var w=A.wait; A.wait=[]; w.forEach(function(f){ f(ok); }); }
+    A.load=function(){ if(A.state!=='idle') return; A.state='loading';
+      var imp; try{ imp=new Function('u','return import(u)'); }catch(e){ return done(false); }
+      imp('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.1').then(function(m){
+        m.env.allowRemoteModels=false; m.env.allowLocalModels=true; m.env.localModelPath=new URL('/asr-test/models/',location.href).href;
+        var files={};
+        return m.pipeline('automatic-speech-recognition','moonshine-tiny',{dtype:'q8',device:'wasm',progress_callback:function(e){
+          if(e.status==='progress'&&e.total){ files[e.file]=[e.loaded,e.total]; var l=0,t=0; for(var k in files){ l+=files[k][0]; t+=files[k][1]; } A.pct=Math.round(100*l/t); } }});
+      }).then(function(p){ A.asr=p; done(true); }).catch(function(){ done(false); }); };
+    A.ready=function(cb){ if(A.state==='ready'||A.state==='fail') return cb(A.state==='ready'); A.wait.push(cb); A.load(); };
+    A.wake=function(){ if(!A.ctx) A.ctx=new AC(); if(A.ctx.state!=='running') A.ctx.resume(); return A.ctx; };
+    A.start=function(ctx,lvl){ return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+      if(ctx.state!=='running') ctx.resume();
+      var src=ctx.createMediaStreamSource(st), pr=ctx.createScriptProcessor(4096,1,1), ch=[], peak=0;
+      pr.onaudioprocess=function(e){ var d=e.inputBuffer.getChannelData(0); ch.push(new Float32Array(d)); var m=0; for(var i=0;i<d.length;i+=8) m=Math.max(m,Math.abs(d[i])); peak=Math.max(peak,m); if(lvl) lvl(m); };
+      src.connect(pr); pr.connect(ctx.destination); A._keep=[src,pr];
+      return {stop:function(){ pr.disconnect(); src.disconnect(); st.getTracks().forEach(function(t){ t.stop(); });
+        var len=0; ch.forEach(function(c){ len+=c.length; }); var all=new Float32Array(len), o=0; ch.forEach(function(c){ all.set(c,o); o+=c.length; });
+        var r=ctx.sampleRate/16000, n=Math.floor(len/r), out=new Float32Array(n);
+        for(var i=0;i<n;i++){ var a=Math.floor(i*r), b=Math.min(len,Math.floor((i+1)*r)), sum=0; for(var k=a;k<b;k++) sum+=all[k]; out[i]=b>a?sum/(b-a):0; }
+        out.peak=peak; return out; }}; }); };
+    A.hear=function(f32){ return A.asr(f32).then(function(o){ window._asrLast=(o&&o.text)||''; return window._asrLast; }); };
+    return A; })();
+  // голос: запись → распознавание в браузере (или на сервере, если задан SF_ASR) → проверка слов; иначе «послушай себя» + «Сказал ✓»
+  var normT=function(t){ return ' '+String(t).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ')+' '; };
+  R.voice=function(body,s,next){
+    var ps=null; if(s.q||s.ru) ps=head(body,s.q,s.ru,s.note);
+    if(s.top) body.insertAdjacentHTML('beforeend',s.top);
+    if(s.show) body.appendChild(el('p','bigword',esc(s.show)));
+    var pp=null; if(s.pic){ pp=el('div','ppic'+(s.reveal?' snowy':''),pic(s.pic)||''); body.appendChild(pp); }
+    if(s.frame) body.appendChild(el('p','vframe',esc(s.frame)));
+    var row=el('div','row2 vrow'); body.appendChild(row);
+    var hear=null; if(s.line){ hear=el('button','btn btn-ghost','▶ Образец'); hear.hidden=!!s.late; row.appendChild(hear); hear.addEventListener('click',function(){ SND.say(s.line); }); }
+    var rec=el('button','btn btn-gold rec',MIC+'<span>Скажи</span>'); row.appendChild(rec);
+    var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
+    var tries=0, fin=false, mr=null;
+    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) SND.say(s.line); setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function judge(text){ var t=normT(text);
+      if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
+      if(!s.want) return t.trim().length>0;
+      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+    function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
+      try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
+      fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
+    skip.addEventListener('click',function(){ fb.textContent='Скажи вслух — взрослый слышит.'; skip.hidden=true; nextBtn(body,'Сказал(а) ✓',pass,300); });
+    var media=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder;
+    LASR.load();
+    if(!media&&LASR.state==='fail'){ rec.hidden=true; skip.click(); }
+    var lr=null, lt=0;
+    function local(){ // запись сырых сэмплов → распознавание на устройстве
+      if(lr){ var r=lr; lr=null; clearTimeout(lt); rec.classList.remove('on'); rec.querySelector('span').textContent='Скажи'; rec.style.removeProperty('--lv');
+        var a=r.stop(); if(a.peak<0.02) return retry('Ничего не слышно. Нажми и говори громче!');
+        rec.disabled=true;
+        var tick=setInterval(function(){ if(LASR.state==='loading') fb.textContent='Книга учится слушать… '+LASR.pct+'%'; },400);
+        fb.textContent=LASR.state==='ready'?'Книга слушает…':'Книга учится слушать… '+LASR.pct+'%';
+        LASR.ready(function(ok){ if(!ok){ clearInterval(tick); rec.disabled=false; fb.textContent=''; return selfOk(); }
+          fb.textContent='Книга слушает…';
+          LASR.hear(a).then(function(t){ clearInterval(tick); rec.disabled=false; if(judge(t)) pass(); else retry(); })
+            .catch(function(){ clearInterval(tick); rec.disabled=false; selfOk(); }); });
+        return; }
+      var ctx=LASR.wake();
+      LASR.start(ctx,function(m){ rec.style.setProperty('--lv',Math.min(1,m*3).toFixed(2)); }).then(function(r){ lr=r;
+        rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
+        lt=setTimeout(function(){ if(lr) local(); },(s.sec||6)*1000);
+      }).catch(function(){ rec.hidden=true; skip.click(); });
+    }
+    function selfOk(){ fb.textContent='Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
+    rec.addEventListener('click',function(){
+      if(!ASR&&LASR.state!=='fail') return local();
+      if(mr&&mr.state==='recording'){ mr.stop(); return; }
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+        var chunks=[]; mr=new MediaRecorder(st); mr.ondataavailable=function(e){ chunks.push(e.data); };
+        mr.onstop=function(){ st.getTracks().forEach(function(t){t.stop();}); rec.classList.remove('on'); rec.querySelector('span').textContent='Скажи';
+          var blob=new Blob(chunks,{type:mr.mimeType||'audio/webm'}); if(blob.size<1500) return retry('Ничего не слышно. Нажми и говори громче!');
+          if(!ASR) return self(blob);
+          fb.textContent='Книга слушает…';
+          fetch(ASR,{method:'POST',body:blob,headers:{'X-Track':T}}).then(function(r){ return r.json(); }).then(function(j){ if(judge(j.text||'')) pass(); else retry(); }).catch(function(){ self(blob); }); };
+        mr.start(); rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
+        setTimeout(function(){ if(mr&&mr.state==='recording') mr.stop(); },(s.sec||6)*1000);
+      }).catch(function(){ rec.hidden=true; skip.click(); });
+    });
+  };
+  // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
+  R.retell=function(body,s,next){
+    var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
+    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:'Отличный пересказ!'},next);
+    if(s.type){ var tb=el('button','gloss','Написать текстом'); body.appendChild(tb);
+      tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold','Готово'); body.appendChild(ok);
+        ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
+          if(n>=s.need){ ok.disabled=true; SND.fx('ok'); f2.textContent='Отличный пересказ! Ключевых слов: '+n+'.'; setTimeout(next,1200); } else { wrong(null,f2); f2.textContent='Ключевых слов пока '+n+' из '+s.need+'. Добавь: '+s.keys.filter(function(k){ return t.indexOf(k)<0; }).slice(0,3).join(', '); } }); }); }
+  };
+  // «Битва за значок»: 5 заданий подряд, засчитываем с первой попытки
+  R.check=function(body,items,next){
+    var i=0, score=0, sub;
+    var bar=el('div','chk'); body.appendChild(bar); items.forEach(function(){ bar.appendChild(el('i','')); });
+    sub=el('div','chkbody'); body.appendChild(sub);
+    (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0;
+      if(i>=items.length) return result();
+      var before=MISS; sub.innerHTML=''; R[items[i].t](sub,items[i],function(){ var ok=MISS===before; if(ok) score++; bar.children[i].className=ok?'ok':'half'; i++; nx(); }); })();
+    function result(){ sub.innerHTML=''; var r=REPORT[T];
+      var rep={track:T,score:score,of:items.length,words:r.words,grammar:r.grammar,more:r.more,date:new Date().toISOString().slice(0,10)};
+      try{ localStorage.setItem('sf_s'+SID+'_report',JSON.stringify(rep)); }catch(e){}
+      SND.fx('spark'); sub.appendChild(el('p','score','<b>'+score+'</b> / '+items.length));
+      sub.appendChild(el('p','say',score>=4?'The badge is yours!':'Good fight! The badge is yours!'));
+      sub.appendChild(reportCard(rep)); nextBtn(sub,'Забрать значок',next,900); }
+  };
+  function reportCard(r){ return el('div','report','<b>Что повторили</b><dl><dt>Слова</dt><dd>'+esc(r.words)+'</dd><dt>Грамматика</dt><dd>'+esc(r.grammar)+'</dd><dt>Ещё</dt><dd>'+esc(r.more)+'</dd><dt>Битва за значок</dt><dd>'+r.score+' из '+r.of+'</dd></dl>'); }
+
+  R.listen=function(body,s,next){ // Маугли рассказывает: мультик, а пока он не переозвучен под новый текст — голос + картинка
+    var pi=body.querySelector('.pimg'); if(pi) pi.remove();
+    head(body,s.prompt,s.ru);
+    if(!s.video){
+      body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+LISTEN_POSTER+'.webp" alt="">');
+      var b0=el('button','iplay small vplay','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'); b0.setAttribute('aria-label','Слушать'); body.appendChild(b0);
+      var f0=el('p','fb','Нажми и слушай'+(HERO[2]?' '+HERO[2]:'')); body.appendChild(f0); var shown0=false, n0=0;
+      var go0=function(){ if(!shown0){ shown0=true; nextBtn(body,'К вопросам',function(){ SND.music(true); next(); },200);} };
+      b0.addEventListener('click',function(){ n0++; SND.music(false); f0.textContent=''; SND.say(s.text).then(function(){ SND.music(true); f0.textContent=n0<2?'Можно послушать ещё раз':''; go0(); }); });
+      setTimeout(go0,T==='experts'?40000:20000); return;
+    }
+    var v=document.createElement('video'); v.className='lvid'; v.src='video/listen_'+T+'.mp4'; v.poster='../../img/'+LISTEN_POSTER+'.webp'; v.setAttribute('playsinline',''); v.preload='auto'; body.appendChild(v);
+    var b=document.createElement('button'); b.className='iplay small vplay'; b.setAttribute('aria-label','Смотреть'); b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'; body.appendChild(b);
+    var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
+    var x=null;
+    var cleanup=function(){ try{ v.pause(); }catch(e){} v.classList.remove('full'); if(x) x.remove(); sub.remove(); st.remove(); SND.music(true); };
+    var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function(){ cleanup(); next(); },200);} };
+    var SUB=T==='little'?SUBS_LITTLE:[], subOn=T==='little';
+    var sub=document.createElement('p'); sub.className='vsub'; sub.hidden=true; $('#stage').appendChild(sub);
+    var st=document.createElement('button'); st.className='vsubbtn'; st.hidden=true; $('#stage').appendChild(st);
+    var paintSt=function(){ st.textContent=subOn?'Субтитры ✓':'Субтитры'; st.setAttribute('aria-pressed',subOn?'true':'false'); };
+    paintSt(); st.addEventListener('click',function(){ subOn=!subOn; paintSt(); upd(); });
+    var upd=function(){ var t=v.currentTime, c=SUB.filter(function(q){return t>=q[0]&&t<q[1];})[0];
+      var full=v.classList.contains('full'); st.hidden=!full||T!=='little';
+      if(!c||!subOn||!full){ sub.hidden=true; return; }
+      sub.textContent=c[2]; sub.hidden=!sub.textContent; };
+    v.addEventListener('timeupdate',upd);
+    x=document.createElement('button'); x.className='vclose'; x.textContent='Свернуть ✕'; x.hidden=true; $('#stage').appendChild(x);
+    var shrink=function(){ v.classList.remove('full'); x.hidden=true; sub.hidden=true; st.hidden=true; };
+    x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2(); });
+    b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent=''; v.classList.add('full'); x.hidden=false; st.hidden=T!=='little';
+      var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ shrink(); SND.say(s.text).then(go2); }); });
+    v.addEventListener('ended',function(){ shrink(); SND.music(true); b.hidden=false; fb.textContent=n<2?'Можно посмотреть ещё раз':''; go2(); });
+    setTimeout(go2,T==='experts'?45000:22000);
+  };
+  R.readp=function(body,s,next){
+    body.insertAdjacentHTML('beforeend','<p class="ptitle">'+esc(s.title)+'</p>'+(s.ru?'<p class="ru">'+esc(s.ru)+'</p>':'')+'<div class="passage">'+esc(s.text).replace(/\n\n/g,'<br><br>')+'</div>'); ruBtns(body);
+    var row=el('div','row2'); body.appendChild(row);
+    var p=el('button','btn btn-ghost','▶ Послушать'); row.appendChild(p); p.addEventListener('click',function(){ SND.say(s.text); });
+    nextBtn(body,'Прочитано',next,T==='little'?400:1500);
+  };
+  var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1};
+  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+    if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+    R[st.t](body,st,nx); })(); }
+
+
+  /* uses engine */
+  /* ===== История 9 · Mary Lennox — «Тайный сад замёрз» (план: docs/plans/story-09.md) ===== */
+  var T=state.track||'explorers';
+  var POSTERS={little:'08_v13_mary',explorers:'09_y1_manor',experts:'09_y3_garden'};
+  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; LISTEN_POSTER=POSTERS[t]||'08_v13_mary'; }
+  var ACTW={};
+  var SID=9, HERO=['g:08_v13_mary','Mary','Мэри'], LISTEN_POSTER='08_v13_mary', QUICK_WIN=['It’s wick!','Сад живой!'], SUBS_LITTLE=[];
+  WORDS.secretgarden='a garden'; WORDS.oldkey='a key'; WORDS.gardendoor='a door'; WORDS.redfox='a fox'; WORDS.blackcrow='a crow'; WORDS.wateringcan='a watering can'; WORDS.skippingrope='a skipping rope';
+  WORDS.rosebush='roses'; WORDS.candleholder='a candle'; WORDS.colin='Colin'; WORDS.stonewall='a stone wall'; WORDS.woodgate='a wooden gate'; WORDS.gardenpath='a path'; WORDS.india='India'; WORDS.flowerpot='a flower pot';
+  function mk(tag,cls,parent,html){ var e=el(tag,cls,html); if(parent) parent.appendChild(e); return e; }
+  // Magic E: долгие гласные (звуки учителя ai / ie)
+  var LONG={a:'ai',i:'ie'};
+  // фоника малышей: семечки-звуки → слово → цветок из-под снега. 'c:s' — пишется c, звучит s; m — номер гласной, которую будит волшебная e
+  var seedIt=function(list){ var out=[]; list.forEach(function(x){ var w=x[0].map(function(g){ return g.split(':')[0]; }).join('');
+    out.push({t:'mblend',g:x[0],m:x[1]==null?-1:x[1],q:'Tap the seeds. Blend the sounds!',ru:x[1]==null?'Взрослому: нажимайте семечки по очереди — каждое звучит. Потом слейте звуки в слово.':'Взрослому: нажимайте семечки по очереди. Последняя e — волшебная: она молчит, но будит гласную — a звучит «эй», i звучит «ай».'});
+    out.push({t:'voice',show:w,pic:'w:'+w,reveal:1,late:1,q:'Read the word!',want:[w],line:w,sec:4,ru:'Прочитай слово вслух — и цветок вырастет из-под снега.'}); }); return out; };
+
+  /* --- content per track: six stations + warm-up; «Битва за значок» в конце --- */
+  var L={
+    little:{
+      listen:{prompt:'Mary shows her album. Listen!', ru:'Взрослому: нажмите ▶ и слушайте вместе. Мэри показывает альбом: This is my … — это мой / моя …; he — он, she — она.',
+        text:'I’m Mary. This is my garden. This is my friend Dickon — he’s my friend. And this is his family! This is his mum. This is his sister. And this is his grandma. Look! A rabbit! And this is my bird — the robin!',
+        warm:[{t:'voice',pic:'g:h_pinocchio',q:'Have you got long hair?',want:['yes','no','have','got'],line:'Yes, I have!',ru:'Взрослому: повторяем Пиноккио. Ребёнок отвечает голосом: Yes, I have! / No, I haven’t!'},
+              {t:'voice',pic:'g:h_pinocchio',q:'Have you got blue eyes?',want:['yes','no','have','got'],line:'No, I haven’t!'},
+              {t:'voice',pic:'g:h_pinocchio',q:'Have you got a long nose?',want:['yes','no','have','got'],line:'No, I haven’t! Pinocchio has got a long nose!'}],
+        steps:[{t:'mcq',q:'What did Mary say? Tap!',ru:'Взрослому: «Что было в рассказе Мэри?» Каждая картинка при нажатии называет себя.',pics:1,opts:[['i:rabbit',1],['i:redfox'],['i:lamb']]},
+               {t:'mcq',q:'And this? Tap what you heard!',ru:'Взрослому: ещё одно слово из рассказа.',pics:1,opts:[['i:grandma',1],['i:blackcrow'],['i:redfox']]},
+               {t:'mcq',q:'One more! What did you hear?',ru:'Взрослому: и последнее — птичка Мэри.',pics:1,opts:[['i:robin',1],['i:lamb'],['i:blackcrow']]},
+               {t:'mcq',img:'g:08_v13_mary',q:'This is Mary. He or she?',ru:'Взрослому: Мэри — девочка. Про девочку говорим she, про мальчика — he.',opts:[['She',1],['He']]},
+               {t:'mcq',img:'i:colin',q:'This is Colin. He or she?',ru:'Взрослому: Колин — мальчик. Значит, he.',opts:[['He',1],['She']]}]},
+      vocab:{steps:[{t:'show',q:'Tap and listen!',ru:'Взрослому: нажимайте на каждую картинку — она назовёт себя. Повторяйте вслух. 8 слов: семья и сад.',items:['i:mum','i:dad','i:brother','i:sister','i:grandma','i:rabbit','i:bird','i:secretgarden']},
+               {t:'robin',q:'The robin sings a word and sits on it. Tap the same picture!',ru:'Взрослому: малиновка поёт слово и садится на картинку. Повторите слово вслух и нажмите туда, где она сидит.',items:['i:mum','i:dad','i:brother','i:sister','i:grandma','i:rabbit','i:bird','i:secretgarden']}]
+             .concat(nameIt([['i:mum',0,'mum|mam|mom|ma','mum'],['i:dad',0,'dad|dat|da','dad'],['i:brother',0,'broth|brat|bro','brother'],['i:sister',0,'sist|sis','sister'],['i:grandma',0,'gran|grand','grandma'],['i:rabbit',0,'rab|rap','rabbit'],['i:bird',0,'bird|berd|bed|bud','bird'],['i:secretgarden',0,'gard|gar','garden']],'Взрослому: цветок спит под снегом. Назови картинку вслух — и цветок распустится! Не получается — нажмите «Образец».'))},
+      grammar:{steps:[{t:'album',q:'Mary’s family album. Yes or no?',ru:'Взрослому: Книга говорит про фото в альбоме. Посмотрите на фото и нажмите ✓ (правда) или ✗ (неправда).',items:[['This is my bird!','T','i:robin'],['This is my rabbit!','F','i:lamb'],['This is my dad!','F','i:grandma'],['This is my sister.','T','i:sister']]},
+               {t:'who2',q:'Who says it right? Mary or the mouse?',ru:'Взрослому: нажмите на Мэри и на мышь — каждая скажет фразу. Сестра — девочка, значит she. Мышь говорит He’s my sister. Кто прав?',good:'She’s my sister.',bad:'He’s my sister.'},
+               {t:'voice',pic:'i:mum',q:'Show your family! Say: This is my mum!',want:['this','my','mum','dad','sister','brother','gran'],line:'This is my mum!',sec:6,ru:'Взрослому: покажите фото семьи (или рисунок). Ребёнок говорит голосом: This is my mum! This is my brother!'}]},
+      read:{lock:{t:'seedgrid',mode:'tiles',answer:'CAKE',q:'The page is locked! Seeds in the garden bed.',ru:'Взрослому: у каждого семечка своя буква — ключ сверху. На грядке семена посажены по порядку. Для каждого семечка на грядке найдите такое же в ключе и нажмите — откроется буква.',opts:[['w:cake',1],['w:kite'],['w:face']]},
+        steps:[{t:'magice',from:'kit',to:'kite',v:'i',snd:'ie',pic:'w:kite',q:'Magic E! Tap the magic e.',ru:'Взрослому: слово kit. Нажмите волшебную e — она встанет в конец и разбудит гласную: i теперь звучит как «ай». kit → kite (воздушный змей)!'}]
+          .concat(seedIt([[['c','a','k','e'],1],[['f','a','c:s','e'],1],[['w','a','v','e'],1],[['p','l','a','t','e'],2],[['k','i','t','e'],1],[['b','i','k','e'],1],[['s','m','i','l','e'],2],[['r','ai','n']],[['s','oi','l']],[['sh','ee','p']]]))},
+      write:{steps:[{t:'letters',paws:1,pre:'This is my ',magic:1,q:'Seeds with letters! Make: This is my …',ru:'Взрослому: соберите KITE по семечкам. E в конце — волшебная, она светится. Получится «This is my kite!»',word:'KITE'},
+               {t:'choose',q:'What’s in your garden? Tap!',ru:'Взрослому: выберите картинку — получится целое предложение. Скажите его вместе.',pics:1,opts:['i:robin','i:rabbit','w:kite'],tpl:'This is my {}!'}]},
+      speak:{steps:[{t:'whisper',pic:'g:08_v13_mary',q:'A secret! Whisper to Mary: This is my mum.',line:'This is my mum.',sec:5,ru:'Взрослому: «Секрет шёпотом». Ребёнок шепчет Мэри про свою семью. Микрофон слушает: если слишком громко — секрет услышат мыши!'},
+               {t:'whisper',pic:'g:08_v13_mary',q:'One more secret! Whisper: This is my brother… or sister!',line:'This is my brother.',sec:5,ru:'Взрослому: ещё один секрет шёпотом — про брата, сестру или бабушку.'}]}
+    },
+    explorers:{
+      listen:{prompt:'Mary remembers. Listen!', ru:'Мэри вспоминает, как она жила раньше. Слушай глаголы в прошедшем времени: lived, moved, found.',
+        text:'I lived in India. I was very angry and very lonely. Then I moved house — to a big old house in England. There were a hundred rooms! I didn’t have a pet, but I found a friend — a robin. The robin found a key. And I found a door…',
+        warm:[{t:'mcq',img:'g:h_pinocchio',q:'The Fairy asks: What should you do with a cold?',ru:'Повтор Пиноккио: советы. Что нужно делать, если простудился?',opts:[['You should drink hot tea.',1],['You should eat ice cream.'],['You should run in the snow.']]},
+              {t:'voice',pic:'g:h_pinocchio',q:'And what should you do every day? You should …',want:['should','must'],line:'You should sleep well and eat fruit.',sec:7,ru:'Ответь голосом: You should …'}],
+        steps:[{t:'night',q:'Who is crying at night? Listen to the sounds of the old house.',ru:'Ночью в старом доме странные звуки. Послушай все три — и угадай, кто плачет.',
+                 sounds:['wind','mouse','boy'],cry:'Oh-oh-oh… I’m ill. I don’t want to go outside!',ask:'Who is crying at night?',askRu:'Кто плачет ночью?',opts:[['i:colin',1],['m:mouse'],['the wind']]},
+               {t:'mcq',q:'Where did Mary live before?',ru:'Где Мэри жила раньше?',opts:[['in India',1],['in England'],['in a garden']]},
+               {t:'mcq',q:'How many rooms were there in the house?',ru:'Сколько комнат было в доме?',opts:[['a hundred',1],['ten'],['a thousand']]},
+               {t:'mcq',q:'Who found the key?',ru:'Кто нашёл ключ?',opts:[['the robin',1],['Mary'],['a mouse']]}]},
+      vocab:{steps:[{t:'memory',q:'Find the pairs: now and then.',ru:'«Найди пару»: глагол сейчас ↔ глагол в прошлом. Карточка говорит фразу Мэри.',
+                 pairs:[['live','lived'],['find','found'],['get','got'],['learn','learnt'],['plant','planted'],['move','moved']],
+                 say:{lived:'I lived in India.',found:'I found a key.',got:'I got a pet.',learnt:'I learnt a lot.',planted:'We planted seeds.',moved:'I moved house.'}}]
+             .concat(nameIt([['i:oldkey',0,'key|ki','a key'],['i:gardendoor',0,'door|dor|do','a door'],['i:robin',0,'robin|robbin|rob','a robin'],['i:secretgarden',0,'gard|gar','a garden']],'Картинка спит под снегом. Назови её вслух — и она проснётся!'))},
+      grammar:{steps:[{t:'rule',q:'Mary’s garden rules',ru:'was — один (I, he, she), were — много (we, you, they). В прошлом глагол меняется: lived, found. Но в вопросе с did — обычная форма: Did she find?',
+                 rows:[['I / he / she was','She was in India.'],['we / you / they were','There were a hundred rooms.'],['Past Simple: -ed','She lived. She moved. She planted.'],['irregular','find → found, get → got, learn → learnt'],['Did she …? + verb','Did she find the key? Yes, she did.'],['Where did …?','Where did she live? In India.']]},
+               {t:'grow',q:'Plant and grow! Right — or did the mice write it?',ru:'«Посади и вырасти»: верно или мыши ошиблись? Каждый верный ответ — цветок растёт.',items:[['She was in India.','ok'],['She were in India.','bad'],['Did she find the key?','ok'],['Did she found the key?','bad'],['Mary found a door.','ok'],['Mary finded a door.','bad']]},
+               {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей и исправь.',words:['Yesterday','I was go','to the garden.'],bad:1,opts:[['I went',1],['I was went'],['I goed']],ok:'Yesterday I went to the garden.'},
+               {t:'fix',q:'And here?',ru:'После did — обычная форма глагола.',words:['Did','she found','the key?'],bad:1,opts:[['she find',1],['she finded'],['she founds']],ok:'Did she find the key?'},
+               {t:'voice',q:'Now you: When I was five, I lived in … I had …',want:['was','lived','had','live'],line:'When I was five, I lived in Moscow. I had a red bike.',sec:9,ru:'Расскажи голосом о себе в прошлом.'}]},
+      read:{title:'Mary’s Story',ru:'Прочитай страницу книги.',
+        text:'Mary Lennox lived in India. She was a rude, angry girl, and she didn’t have any friends. When she was ten, she moved house. She went to England to live with her uncle in a very big, very old house. There were a hundred rooms, but most of the doors were locked. Mary was lonely. Every day she walked in the gardens. One day she saw a little bird with a red chest — a robin. The robin jumped on the ground and showed her something in the earth. It was an old key! Then the wind moved the green leaves on a wall, and Mary saw a door. She opened it with the key. Behind the door there was a secret garden. Nobody went there for ten years.',
+        lock:{t:'seedgrid',answer:'SHE FOUND THE KEY',q:'Seeds on the garden bed! Use the key and write it.',ru:'Садовая сетка: у каждого семечка своя буква — ключ сверху. Расшифруй грядку и напиши.'},
+        steps:[{t:'order',q:'Put the story in order!',ru:'Расставь события по порядку: нажимай карточки, начиная с первой.',items:['Mary lived in India.','She moved to England.','She found the key.','She opened the door.']},
+               {t:'tf',q:'True or false?',ru:'Правда или нет?',items:[['There were a hundred rooms.','T'],['Mary had a lot of friends in India.','F']]},
+               {t:'retell',q:'Tell the Book Mary’s story!',ru:'Перескажи по картинкам: 4 предложения в прошедшем времени (lived, moved, found, opened).',
+                 pics:[['i:india','India · lived'],['g:09_y1_manor','moved · England'],['g:09_y2_robin','robin · key'],['g:09_y3_garden','door · garden']],
+                 keys:['lived','india','moved','england','robin','key','door','garden'],need:4,sec:40,line:'Mary lived in India. Then she moved to England. A robin showed her an old key. She found a door and opened the secret garden.'}]},
+      write:{steps:[{t:'write',poster:'card',cardTitle:'MARY’S DIARY',cardPic:'i:robin',doneMsg:'Дневник у Мэри! «Thank you!»',q:'Write Mary’s diary!',ru:'Дневник Мэри: три предложения в прошедшем времени. Помни: found, was — без was перед глаголом.',
+               fields:[{ph:'Yesterday I …',need:/\byesterday,? i (\w+ed|went|found|saw|got|had|was|learnt|made|took|met|came|ate|ran|dug|gave|read|wrote|sang)\b/i,why:'Нужно прошедшее время: Yesterday I planted… / Yesterday I went…'},
+                       {ph:'I found …',need:/\bi found \w+/i,why:'Нужно: I found … (что ты нашёл?)'},
+                       {ph:'I was …',need:/\bi was (?!\w+ing\b)\w+/i,why:'Нужно: I was happy / I was in the garden.'}],model:'Yesterday I planted seeds. I found an old key. I was very happy.'}]},
+      speak:{steps:[{t:'voice',pic:'g:09_y4_friends',q:'Dickon asks: Where did you live when you were small?',want:['lived','live','was','in'],line:'I lived in a small town. It was cold!',sec:8,ru:'Дикон спрашивает. Ответь коротко и добавь деталь.'},
+               {t:'voice',pic:'g:09_y4_friends',q:'Did you have a pet?',want:['yes','no','did','had','didnt'],line:'Yes, I did. I had a little cat.',sec:8,ru:'Краткий ответ + добавка: Yes, I did. I had … / No, I didn’t, but …'}]}
+    },
+    experts:{
+      listen:{prompt:'The robin sings: follow me to the key!', ru:'',
+        text:'Follow me, follow me! Go through the wooden gate. Walk along the path to the greenhouse — it has got a glass roof. Turn left at the old shed. The key is near the stone wall, under the ivy. Dig a little — and you will find it!',
+        warm:[{t:'voice',pic:'g:h_pinocchio',q:'Pinocchio asks: What do you have to do at home?',want:['have to','has to','must'],line:'I have to make my bed and wash up.',sec:8,ru:'Повтор Пиноккио: have to — надо (обязанность).'},
+              {t:'voice',pic:'g:h_pinocchio',q:'And what don’t you have to do?',want:['dont have to','do not have to','dont','not'],line:'I don’t have to cook dinner.',sec:8}],
+        steps:[{t:'follow',q:'Follow the robin! Where does it go?',ru:'',start:[50,94],win:'Here it is — the old key!',
+                 spots:[['gate','wooden gate',[20,82],'i:gardendoor'],['greenhouse','greenhouse',[76,66],'i:greenhouse'],['shed','old shed',[22,46],'i:shed'],['roses','roses',[52,58],'i:rosebush'],['swing','swing',[46,26],'i:swing'],['wall','stone wall',[78,20],'i:ivy']],
+                 stops:[['Go through the wooden gate.','gate'],['Walk along the path to the greenhouse — it has got a glass roof.','greenhouse'],['Turn left at the old shed.','shed'],['The key is near the stone wall, under the ivy!','wall']]},
+               {t:'mcq',q:'What has the greenhouse got?',opts:[['a glass roof',1],['a stone roof'],['a wooden gate']]},
+               {t:'mcq',q:'Where is the key?',opts:[['near the stone wall, under the ivy',1],['in the greenhouse'],['under the wooden gate']]},
+               {t:'mcq',q:'What do you have to do to find it?',opts:[['dig a little',1],['open the shed'],['climb the wall']]}]},
+      vocab:{steps:[{t:'rooms',q:'A hundred rooms! Open a door and read.',ru:'',names:['greenhouse','shed','Colin’s room','the secret garden'],
+                 items:[['greenhouse','There’s a glass roof, and there are lots of little plants in pots.'],['shed','There’s a wooden door. There are spades, seeds and an old watering can inside.'],['Colin’s room','There’s a big bed and a portrait on the wall. A boy is crying.'],['the secret garden','There’s a high stone wall and a door under the ivy. There are roses everywhere.']]},
+               {t:'memory',q:'Find the pairs: what is it made of?',ru:'',pairs:[['stone','a wall'],['glass','a greenhouse'],['metal','a key'],['wooden','a door'],['brick','a house']],
+                 say:{'stone':'a stone wall','a wall':'a stone wall','glass':'a glass greenhouse','a greenhouse':'a glass greenhouse','metal':'a metal key','a key':'a metal key','wooden':'a wooden door','a door':'a wooden door','brick':'a brick house','a house':'a brick house'}},
+               {t:'mcq',q:'A small wooden house in the garden for tools. It’s a …',opts:[['shed',1],['greenhouse'],['roof']]},
+               {t:'mcq',q:'There’s a high ___ wall around the garden.',opts:[['stone',1],['stony'],['stones']]},
+               {t:'mcq',q:'Dickon likes to ___ in the earth with his spade.',opts:[['dig',1],['grow'],['roof']]}]},
+      grammar:{steps:[{t:'rule',q:'Two garden beds: -ing or to?',ru:'Нажми на строчку — услышишь пример.',
+                 rows:[['enjoy / like / love / hate / don’t mind + -ing','I enjoy digging.'],['want / decide / hope / need + to','I want to plant roses.'],['there is + one thing','There is a wooden gate.'],['there are + many things','There are two gates.'],['material before a noun','a stone wall, a wooden door (not: a wood door)']]},
+               {t:'grow',q:'Put the verbs into the garden beds!',ru:'',bins:[['ing','+ -ing (digging)'],['to','+ to (to dig)']],win:'Both beds are growing!',
+                 items:[['enjoy','ing'],['hate','ing'],['don’t mind','ing'],['love','ing'],['want','to'],['decide','to'],['hope','to'],['need','to']]},
+               {t:'fix',q:'The mice wrote it wrong. Fix it!',words:['I','enjoy to dig','in the garden.'],bad:1,opts:[['enjoy digging',1],['enjoy dig'],['enjoying to dig']],ok:'I enjoy digging in the garden.'},
+               {t:'fix',q:'And this one?',words:['Mary','wants planting','roses.'],bad:1,opts:[['wants to plant',1],['wants plant'],['want planting']],ok:'Mary wants to plant roses.'},
+               {t:'fix',q:'One more!',words:['There is','two gates','in the wall.'],bad:0,opts:[['There are',1],['There be'],['It is']],ok:'There are two gates in the wall.'},
+               {t:'fix',q:'And the last one!',words:['Dickon made','a wood door','for the shed.'],bad:1,opts:[['a wooden door',1],['a woody door'],['a door wood']],ok:'Dickon made a wooden door for the shed.'},
+               {t:'voice',q:'Now you: I enjoy … but I want to …',want:['enjoy','want to','like','love'],line:'I enjoy reading, but I want to learn to dance.',sec:8}]},
+      read:{title:'A Letter from Misselthwaite',ru:'',
+        text:'Dear Mrs Sowerby,\n\nI want to thank you for the skipping rope and for your kind letter. I enjoy skipping very much — I can do a hundred skips now!\n\nI have a secret, and I want to tell you about it, because Dickon says you never tell secrets. There is a garden here behind a high stone wall. Nobody went into it for ten years. The door was under the ivy, and a robin showed me the key. When I opened the old wooden door, everything looked dead and grey. I was very sad.\n\nThen Dickon came. He knows everything about plants. He scratched a grey branch with his knife and said, “It’s wick!” — that means it’s alive. Now we go there every morning. Dickon digs and I plant seeds. We don’t mind getting dirty. There are little green points everywhere, and the roses are waking up.\n\nThere is one more secret. My cousin Colin lives in a room in the house. He was always ill and he hated going outside. Last week we took him to the garden in his chair. He loved being there! Today he decided to stand up, and he did. He wants to walk by the summer.\n\nPlease don’t tell anyone yet. We hope to show the garden to Colin’s father one day.\n\nLove from Mary',
+        lock:{t:'fence',answer:'I ENJOY DIGGING',q:'A note on the garden fence! Read it zigzag.',ru:'Шифр «изгородь»: буквы записаны зигзагом на двух досках — первая сверху, вторая снизу, третья снова сверху… Сейчас они собраны по доскам: сначала все верхние, потом все нижние. Расшифруй и напиши.'},
+        steps:[{t:'mcq',q:'1. Why does Mary thank Mrs Sowerby?',opts:[['A  for a skipping rope',1],['B  for a key'],['C  for seeds']]},
+               {t:'mcq',q:'2. Where was the door?',opts:[['A  under the ivy',1],['B  in the greenhouse'],['C  behind the house']]},
+               {t:'mcq',q:'3. What does “wick” mean?',opts:[['A  alive',1],['B  dead'],['C  old']]},
+               {t:'mcq',q:'4. What did Colin decide to do?',opts:[['A  stand up',1],['B  go home'],['C  plant roses']]},
+               {t:'mcq',q:'5. What do the children want to do one day?',opts:[['A  show the garden to Colin’s father',1],['B  sell the garden'],['C  build a greenhouse']]},
+               {t:'retell',type:1,q:'What happened in the secret garden? Retell in 5–6 sentences.',ru:'Перескажи голосом (или напиши). Используй минимум 6 слов из списка.',
+                 keys:['dickon','wall','door','key','roses','wick','dig','colin'],need:6,sec:60,line:'The secret garden is behind a high stone wall. A robin showed Mary the key, and she opened the old door under the ivy. Dickon said the roses were wick — alive! He digs and Mary plants seeds every morning. Colin hated going outside, but now he loves the garden. He even decided to stand up.'}]},
+      write:{steps:[{t:'write',area:1,poster:'card',cardTitle:'GARDEN DIARY',cardPic:'i:trowel',doneMsg:'Дневник сада готов! «It’s wick!»',q:'Write a garden diary (35–45 words).',ru:'Что есть в саду и что вы делаете. Нужны: глагол + -ing (I enjoy digging), глагол + to (I want to plant) и there is / there are.',
+               fields:[{ph:'Today in the garden …',need:/\b(enjoy|enjoys|like|likes|love|loves|hate|hates|mind|minds)\s+\w+ing\b/i,why:'Нужно: enjoy / like / love / don’t mind + глагол с -ing (I enjoy digging).',also:[/\b(want|wants|decide|decided|hope|hopes|need|needs)\s+to\s+\w+/i,/\bthere\s+(is|are|’s|'s)\b/i],alsoWhy:'Добавь want / hope / decide + to (I want to plant…) и there is / there are.',min:35,max:45}],
+               model:'Today I went to the secret garden with Dickon. There is a high stone wall and an old wooden door. There are little green points everywhere. I enjoy digging and planting seeds. Tomorrow I want to plant roses near the gate.'}]},
+      speak:{steps:[{t:'whisper',pic:'i:colin',q:'Colin whispers: What do you enjoy doing?',line:'I enjoy drawing and playing football.',sec:7,ru:'«Секрет шёпотом»: Колин спрашивает шёпотом — отвечай тоже ШЁПОТОМ, полным предложением (I enjoy …ing). Микрофон проверяет, что тихо.'},
+               {t:'whisper',pic:'i:colin',q:'What do you want to do next summer?',line:'Next summer I want to learn to swim.',sec:7,ru:'Ответь шёпотом: I want to … / I hope to …'}]}
+    }
+  };
+  var ART={listen:'09_y1_manor',vocab:'09_y2_robin',grammar:'09_y4_friends',read:'09_y3_garden',write:'09_y5_spring',speak:'09_y4_friends'};
+  var ST=[['listen','Listening','Голоса старого дома','Listen'],['vocab','Vocabulary','Малиновка ведёт','Words'],['grammar','Grammar','Посади и вырасти','Grammar'],['read','Reading','Дверь в стене','Read'],['write','Writing','Дневник сада','Write'],['speak','Speaking','Секрет шёпотом','Speak']];
+
+  /* --- «Битва за значок» --- */
+  var CHECK={
+    little:[{t:'mcq',q:'Find the grandma!',pics:1,opts:[['i:grandma',1],['i:rabbit'],['i:bird']]},
+            {t:'mcq',q:'Find the rabbit!',pics:1,opts:[['i:rabbit',1],['i:lamb'],['i:redfox']]},
+            {t:'voice',pic:'i:bird',q:'What is it? Say it!',want:['bird|berd|bed|bud'],line:'It’s a bird.',frame:'It’s a …'},
+            {t:'who2',q:'Who says it right?',good:'She’s my sister.',bad:'He’s my sister.'},
+            {t:'mcq',show:'kite',q:'Read the word. Find the picture!',pics:1,opts:[['w:kite',1],['w:bike'],['w:cake']]}],
+    explorers:[{t:'mcq',q:'Find the key!',pics:1,opts:[['i:oldkey',1],['i:gardendoor'],['i:robin']]},
+               {t:'mcq',q:'Find the robin!',pics:1,opts:[['i:robin',1],['i:blackcrow'],['i:bird']]},
+               {t:'voice',pic:'i:gardendoor',q:'What is it? Say it!',want:['door|dor|do'],line:'It’s a door.',frame:'It’s a …'},
+               {t:'gaps',q:'Fill the gap.',text:'She {0} the key under the ground.',gaps:[[['found','finded','find'],'found']]},
+               {t:'mcq',q:'What did the robin show Mary?',opts:[['an old key',1],['a red door'],['a hundred rooms']]}],
+    experts:[{t:'mcq',q:'A garden house with a glass roof. It’s a …',opts:[['greenhouse',1],['shed'],['gate']]},
+             {t:'mcq',q:'There’s a high ___ wall.',opts:[['stone',1],['stony'],['stones']]},
+             {t:'fix',q:'Fix the mistake.',words:['I','enjoy to dig','in the garden.'],bad:1,opts:[['enjoy digging',1],['enjoy dig'],['enjoying to dig']],ok:'I enjoy digging in the garden.'},
+             {t:'gaps',q:'Fill the gap.',text:'We hope {0} the garden to Colin’s father.',gaps:[[['to show','showing','show'],'to show']]},
+             {t:'mcq',q:'What does “wick” mean?',opts:[['alive',1],['dead'],['old']]}]
+  };
+  var REPORT={
+    little:{words:'mum, dad, brother, sister, grandma, rabbit, bird, garden',grammar:'This is my … · Who’s this? He’s my … / She’s my … (he — он, she — она)',more:'Фоника: Magic E — a-e, i-e (cake, face, wave, plate, kite, bike, smile) + повтор ai, oi, ee (rain, soil, sheep)'},
+    explorers:{words:'lived, moved house, got a pet, learnt, found, planted, garden, key, door, robin',grammar:'was / were · Past Simple (lived, found, got, learnt) · Where did …? Did she …? Yes, she did',more:'Чтение: «Mary’s Story» + порядок событий, пересказ, дневник Мэри; садовая сетка семян'},
+    experts:{words:'wall, gate, path, greenhouse, shed, roof, wooden, stone, metal, glass, brick, dig, plant, grow',grammar:'enjoy / like / hate / don’t mind + -ing · want / decide / hope / need + to · there is / there are',more:'Чтение: «A Letter from Misselthwaite» (A2 Key, 5 вопросов) + пересказ, дневник сада 35–45 слов; шифр «изгородь»'}
+  };
+
+  /* --- шифры и события на поле (повтор) --- */
+  // «Садовая сетка семян»: у каждой буквы своё семечко (форма × цвет), рисуем SVG сами
+  var PACK=(function(){ var out={}, AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var SH=['<circle cx="12" cy="12" r="7.5"/>','<ellipse cx="12" cy="12" rx="5" ry="9.5"/>','<path d="M12 2.5C15.5 8 18.5 12 18.5 15.5a6.5 6.5 0 0 1-13 0C5.5 12 8.5 8 12 2.5z"/>',
+            '<path d="M6 10h12c0 6.5-3 11.5-6 11.5S6 16.5 6 10z"/><path d="M4.5 10.5a7.5 5.5 0 0 1 15 0z" fill="#5a3a1c"/><path d="M12 5V2.5" fill="none"/>',
+            '<path d="M9 3.5c5-1.5 10 1.5 10 7.5s-3.5 10.5-8 10.5S4 18 5 14c.8-3 4-2.5 4-5.5 0-1.5-1.5-2-1-3.5z"/>','<path d="M12 2c4.5 3 6.5 7 6.5 10s-2 8-6.5 10c-4.5-2-6.5-7-6.5-10s2-7 6.5-10z"/><path d="M12 5.5v13" fill="none" stroke-width=".9"/>'],
+        COL=['#8a5a2b','#2f2f2f','#6aa84f','#efe2b8','#c8473a'];
+    AB.split('').forEach(function(l,i){ var c=Math.floor(i/6);
+      out[l]='<svg class="dm sd" viewBox="0 0 24 24" fill="'+COL[c]+'" stroke="#3b2a1a" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true">'+SH[i%6]+(c===1?'<path d="M10 7.5v9M14 7.5v9" fill="none" stroke="#f3e8cf" stroke-width="1.3" stroke-linecap="round"/>':'')+'</svg>'; });
+    return out; })();
+  var MOUSE={
+    little:[[{t:'hop',word:'BIKE',q:'Mouse tracks! Follow the robin on the snow.',ru:'Взрослому: малиновка прыгает по буквам на снегу. Нажимайте туда, куда она села, — получится слово. Последняя e — волшебная!',opts:[['w:bike',1],['w:kite'],['w:cake']]}],
+            [{t:'hop',word:'SMILE',q:'The robin hops again! Tap where it sits.',ru:'Взрослому: ещё одно слово от малиновки.',opts:[['w:smile',1],['w:face'],['w:wave']]}]],
+    explorers:[[{t:'hop',word:'DID SHE FOUND',q:'The robin hops on the mice’s letters! Tap where it sits.',ru:'Малиновка прыгает по буквам, которые написали мыши. Нажимай туда, где она села, — и найди ошибку мышей.'},
+                {t:'fix',q:'The mice made a mistake. Fix it!',ru:'После did — обычная форма глагола.',words:['Did she','found','the key?'],bad:1,opts:[['find',1],['finded'],['founds']],ok:'Did she find the key?'}],
+               [{t:'seedgrid',answer:'SHE WERE SAD',q:'A mouse note in seeds! Use the key.',ru:'Мыши посадили записку семенами. Расшифруй по ключу — и найди ошибку.'},
+                {t:'fix',q:'Find the mistake and fix it!',ru:'she — один человек: was или were?',words:['She','were','sad.'],bad:1,opts:[['was',1],['is'],['be']],ok:'She was sad.'}]],
+    experts:[[{t:'fence',answer:'I WANT PLANTING ROSES',q:'A mouse note on the fence! Read it zigzag.',ru:'Изгородь: буквы записаны зигзагом на двух досках. Расшифруй — и найди ошибку мышей.'},
+              {t:'fix',q:'Find the mistake and fix it!',words:['I','want planting','roses.'],bad:1,opts:[['want to plant',1],['want plant'],['wanting to plant']],ok:'I want to plant roses.'}],
+             [{t:'fence',answer:'WICK',q:'One word on the fence. Read it zigzag.'},
+              {t:'mcq',q:'…and what does it mean in Yorkshire?',opts:[['alive',1],['dead'],['a candle']]}]]
+  };
+  // событие поля — «Времена года»: круг сезонов поворачивается, выбери ответ
+  var SEASON={
+    little:[{t:'seasons',q:'The seasons wheel! What do we see?',ru:'Взрослому: круг времён года поворачивается. Книга спрашивает, что бывает в это время года. Нажмите картинку — она назовёт себя.',win:'Spring is coming!',
+             items:[['winter','In winter we see …',[['w:snow',1],['w:flower'],['w:sun']],1],['spring','In spring we see …',[['w:flower',1],['w:snow'],['i:leaf']],1],['summer','In summer we see …',[['w:sun',1],['w:snow'],['i:leaf']],1],['autumn','In autumn we see …',[['i:leaf',1],['w:flower'],['w:snow']],1]]}],
+    explorers:[{t:'seasons',q:'The seasons wheel! Last winter, last summer…',ru:'Круг времён года. Что было в прошлом году? Выбери верную форму глагола — быстро!',win:'What a year!',
+             items:[['winter','Last winter I {0} in the snow.',[['played',1],['play'],['plaied']]],['spring','Last spring Mary {0} seeds.',[['planted',1],['plant'],['planting']]],['summer','Last summer we {0} to the sea.',[['went',1],['goed'],['go']]],['autumn','Last autumn I {0} a lot of red leaves.',[['saw',1],['seed'],['see']]]]}],
+    experts:[{t:'seasons',q:'The seasons wheel! -ing or to?',ru:'Круг времён года. Выбери форму: to plant или planting?',win:'The garden is ready for spring!',
+             items:[['spring','In spring we hope {0} roses.',[['to plant',1],['planting']]],['summer','In summer I enjoy {0} in the garden.',[['reading',1],['to read']]],['autumn','In autumn Dickon decided {0} a new shed.',[['to build',1],['building']]],['winter','In winter Colin doesn’t mind {0} inside.',[['staying',1],['to stay']]]]}]
+  };
+  var ADULT={
+    little:[{t:'parent',pic:'i:secretgarden',q:'Grown-up, show a family photo. Ask: Who’s this?',ru:'Взрослому: покажите фото семьи и спросите по-английски: Who’s this? Ребёнок отвечает: She’s my mum! / He’s my brother! Потом поменяйтесь: ребёнок спрашивает вас.',line:'Who’s this? She’s my mum!'}],
+    explorers:[{t:'parent',pic:'i:oldkey',q:'Ask a grown-up: Where did you live when you were small? Did you have a pet?',ru:'Спроси взрослого по-английски, где он жил в детстве и был ли у него питомец. Взрослый отвечает (можно по-русски), потом спрашивает тебя.',line:'Where did you live when you were small? Did you have a pet?'}],
+    experts:[{t:'parent',pic:'i:trowel',q:'Interview a grown-up: What do you enjoy doing at the weekend? What do you want to do this year?',ru:'Возьми интервью у взрослого. Он отвечает: I enjoy …ing / I want to … Потом он спрашивает тебя.',line:'What do you enjoy doing at the weekend? What do you want to do this year?'}]
+  };
+
+  /* --- свои задания Мэри --- */
+  var name9=function(v){ var k=String(v).slice(2); return String(WORDS[k]||k).replace(/^an? /,''); };
+  // «Малиновка ведёт» (малыши): малиновка поёт слово и садится на картинку — нажми туда же
+  R.robin=function(body,s,next){
+    head(body,s.q,s.ru); var order=shuffle(s.items), i=0, ready=false;
+    var wrap=mk('div','rgrid',body), box=mk('div','opts pics emo',wrap), bird=mk('span','rbird',wrap,pic('i:robin'));
+    var rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    var btns=s.items.map(function(v){ var b=mk('button','opt',box,pic(v)); b.dataset.ok=0; b.setAttribute('aria-label',name9(v));
+      b.addEventListener('click',function(){ if(!ready) return; if(v!==order[i]) return wrong(b,fb); ready=false; b.dataset.ok=0; b.classList.add('yes'); sayWord(v); SND.fx('ok'); i++;
+        fb.textContent=i<order.length?'Tweet! Ещё '+(order.length-i):'All the words! Малиновка довольна.'; setTimeout(i<order.length?fly:next,1300); }); return b; });
+    function fly(){ var t=btns[s.items.indexOf(order[i])], W=wrap.getBoundingClientRect(), r=t.getBoundingClientRect();
+      bird.style.left=(r.left-W.left+r.width*.72)+'px'; bird.style.top=(r.top-W.top+r.height*.1)+'px'; bird.classList.remove('hop'); void bird.offsetWidth; bird.classList.add('hop'); SND.fx('squeak');
+      setTimeout(function(){ sayWord(order[i]); ready=true; t.dataset.ok=1; },700); }
+    rep.addEventListener('click',function(){ if(i<order.length) sayWord(order[i]); });
+    setTimeout(fly,1200);
+  };
+  // «Семейный альбом»: правда / неправда на слух, фото в рамке альбома
+  R.album=function(body,s,next){ R.tfa(body,s,next); var p=body.querySelector('.ppic'); if(p) p.classList.add('album'); };
+  // Magic E: нажми волшебную e — она будит гласную (kit → kite)
+  R.magice=function(body,s,next){
+    head(body,s.q,s.ru);
+    var w=mk('p','bigword mword',body,s.from.split('').map(function(c){ return '<span'+(c===s.v?' class="v"':'')+'>'+esc(c)+'</span>'; }).join('')+'<b class="me">_</b>');
+    var pp=mk('div','ppic snowy',body,pic(s.pic)), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    var e=mk('button','opt fairy',body,'e'); e.dataset.ok=1; e.setAttribute('aria-label','Волшебная e');
+    setTimeout(function(){ SND.say(s.from); },1400);
+    e.addEventListener('click',function(){ if(e.disabled) return; e.disabled=true; e.classList.add('yes'); SND.fx('spark'); w.querySelector('.me').textContent='e'; w.classList.add('magic');
+      setTimeout(function(){ phs(s.snd); },500);
+      setTimeout(function(){ SND.say(s.to); pp.classList.remove('snowy'); fb.textContent=s.from+' → '+s.to+'! The magic e woke up the '+s.v+'.'; nextBtn(body,'Next',next,600); },1300); });
+  };
+  // семечки-звуки: нажимай по порядку; волшебная e молчит, но будит гласную
+  R.mblend=function(body,s,next){
+    head(body,s.q,s.ru); var k=0, n=s.g.length, row=mk('div','gph seeds',body);
+    s.g.forEach(function(g0,i){ var g=g0.split(':')[0], sn=g0.split(':')[1]||g, mE=s.m>=0&&i===n-1, vow=s.m===i;
+      var b=mk('button','gp'+(g.length>1?' dg':'')+(mE?' magic':'')+(vow?' mv':''),row,esc(g)); b.setAttribute('aria-label',mE?'Волшебная e':'Звук '+g);
+      b.addEventListener('click',function(){ if(i>k) return wrong(b); if(!mE) phs(vow?LONG[g]:sn); if(i<k) return;
+        if(mE){ SND.fx('spark'); row.classList.add('woke'); setTimeout(function(){ phs(LONG[s.g[s.m]]); },350); }
+        k++; b.classList.add('on'); SND.fx('step'); if(k===n) setTimeout(function(){ row.classList.add('joined'); setTimeout(next,900); },800); }); });
+  };
+  // буквы-семечки (письмо малышей): волшебная e светится
+  var _letters=R.letters; R.letters=function(body,s,next){ _letters(body,s,next); if(s.magic) $$('.opts .opt',body).forEach(function(b){ if(b.textContent==='E') b.classList.add('magic'); }); };
+  // садовая сетка семян = знаки с ключом (R.sym) на грядке
+  R.seedgrid=function(body,s,next){ R.sym(body,s,next); var c=body.querySelector('.code.pack'); if(c) c.classList.add('soil'); var k=body.querySelector('.abc.pack'); if(k) k.classList.add('seedkey'); };
+  // «Секрет шёпотом»: микрофон слушает громкость — нужно сказать ТИХО (но не молчать). Без сервера, всё на телефоне
+  var LOUD=.12;
+  R.whisper=function(body,s,next){
+    head(body,s.q,s.ru,s.note); if(s.pic) mk('div','ppic wpic',body,pic(s.pic));
+    var meter=mk('div','hush',body,'<i></i><span>шёпот</span><span>громко</span>'), bar=meter.querySelector('i');
+    var row=mk('div','row2 vrow',body), hear=mk('button','btn btn-ghost',row,'▶ Образец'), rec=mk('button','btn btn-gold rec',row,MIC+'<span>Шепни</span>');
+    var fb=mk('p','fb',body), skip=mk('button','gloss',body,'Без микрофона'); fb.setAttribute('aria-live','polite');
+    hear.addEventListener('click',function(){ SND.say(s.line); });
+    var fin=false, tries=0;
+    function pass(msg){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; SND.fx('ok'); SND.fx('fire'); fb.textContent=msg||'Shh… What a lovely secret! Мэри улыбается.'; setTimeout(next,1600); }
+    function miss(msg,last){ tries++; MISS++; SND.fx('no'); fb.textContent=msg; if(tries>=3) pass(last); }
+    skip.addEventListener('click',function(){ skip.hidden=true; rec.hidden=true; fb.textContent='Шепни вслух — взрослый слушает, тихо ли получилось.'; nextBtn(body,'Шепнул(а) ✓',function(){ pass(); },300); });
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&AC)){ skip.click(); return; }
+    rec.addEventListener('click',function(){ if(rec.dataset.on||fin) return; rec.dataset.on=1;
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+        var ac=new AC(), an=ac.createAnalyser(); an.fftSize=1024; ac.createMediaStreamSource(st).connect(an);
+        var buf=new Float32Array(an.fftSize), peak=0, voiced=0, t0=Date.now();
+        rec.classList.add('on'); rec.querySelector('span').textContent='Слушаю…'; fb.textContent='Шепчи! Тихо-тихо…';
+        var iv=setInterval(function(){ an.getFloatTimeDomainData(buf); var sum=0; for(var j=0;j<buf.length;j++) sum+=buf[j]*buf[j]; var rms=Math.sqrt(sum/buf.length);
+          peak=Math.max(peak,rms); if(rms>.008) voiced++; bar.style.transform='scaleX('+Math.min(1,rms/(LOUD*1.6)).toFixed(3)+')'; meter.classList.toggle('loud',rms>LOUD);
+          if(Date.now()-t0<(s.sec||5)*1000) return;
+          clearInterval(iv); st.getTracks().forEach(function(t){ t.stop(); }); try{ ac.close(); }catch(e){}
+          rec.classList.remove('on'); delete rec.dataset.on; rec.querySelector('span').textContent='Ещё раз'; bar.style.transform='scaleX(0)'; meter.classList.remove('loud');
+          if(voiced<6) return miss('Ничего не слышно. Шепни чуть-чуть громче!','Shh… I heard you!');
+          if(peak>LOUD) return miss('Тсс! Слишком громко — секрет услышат мыши. Ещё раз, шёпотом!','Good! Next time even quieter.');
+          pass(); },80);
+      }).catch(function(){ delete rec.dataset.on; skip.click(); }); });
+  };
+  // «Кто плачет ночью?»: три звука старого дома → угадай
+  var DOORI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 21V5a6 6 0 0 1 12 0v16z"/><circle cx="14.5" cy="13" r="1" fill="currentColor"/><path d="M3 21h18"/></svg>';
+  R.night=function(body,s,next){
+    head(body,s.q,s.ru); var heard=0, asked=false;
+    var row=mk('div','who2 w3 night',body), fb=mk('p','fb',body,'Послушай все три двери.');
+    s.sounds.forEach(function(c,i){ var b=mk('button','wplay',row,'<span class="nd">'+DOORI+'</span><span>▶ Door '+(i+1)+'</span>'); b.setAttribute('aria-label','Звук за дверью '+(i+1));
+      b.addEventListener('click',function(){ play(c); if(!b.classList.contains('heard')){ b.classList.add('heard'); heard++; } if(heard===s.sounds.length&&!asked){ asked=true; fb.textContent=''; setTimeout(function(){ R.mcq(body,{q:s.ask,ru:s.askRu,pics:1,opts:s.opts},next); },c==='boy'?2200:900); } }); });
+    function play(c){ if(c==='wind'){ SND.fx('whoosh'); setTimeout(function(){ SND.fx('whoosh'); },600); }
+      else if(c==='mouse'){ SND.fx('squeak'); SND.fx('patter'); setTimeout(function(){ SND.fx('squeak'); },450); }
+      else SND.say(s.cry); }
+  };
+  // «Посади и вырасти»: каждый верный ответ — растение на грядке растёт; bins — свои «грядки»
+  var SPROUT='<svg viewBox="0 0 30 60" aria-hidden="true"><path class="st" d="M15 58V22" stroke="#4c8a3a" stroke-width="3" stroke-linecap="round" fill="none"/><path class="lf" d="M15 40c-7-1-10-6-10-10 6 0 10 4 10 10zM15 34c6-1 9-5 9-9-5 0-9 4-9 9z" fill="#6aa84f"/><g class="fl"><circle cx="15" cy="16" r="9" fill="#f2b8c6"/><circle cx="15" cy="16" r="4" fill="#f5c842"/></g></svg>';
+  R.grow=function(body,s,next){
+    head(body,s.q,s.ru); var bins=s.bins||[['ok','Right ✓'],['bad','The mice! ✗']], items=shuffle(s.items), i=0;
+    var bed=mk('div','bed',body), plants=items.map(function(){ return mk('span','plant',bed,SPROUT); });
+    var card=mk('p','sortq',body), box=mk('div','opts duo',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    function show(){ box.innerHTML=''; delete box.dataset.lock;
+      if(i>=items.length){ card.textContent=s.win||'The garden is growing!'; card.classList.add('ok'); bed.classList.add('bloom'); SND.fx('spark'); setTimeout(next,1600); return; }
+      var it=items[i]; card.textContent=it[0]; card.classList.remove('popin'); void card.offsetWidth; card.classList.add('popin'); SND.say(it[0]);
+      bins.forEach(function(bn){ var b=mk('button','opt',box,esc(bn[1])); b.dataset.ok=bn[0]===it[1]?1:0;
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(bn[0]!==it[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; plants[i].classList.add('up'); i++; setTimeout(show,800); }); }); }
+    show();
+  };
+  // «Времена года»: круг сезонов поворачивается к нужному времени года
+  var SEAS={winter:['w:snow','#d6e4fa'],spring:['w:flower','#cfe8b8'],summer:['w:sun','#ffe2a0'],autumn:['i:leaf','#f0bd8c']}, SORD=['winter','spring','summer','autumn'];
+  R.seasons=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, rot=0;
+    var wheel=mk('div','swheel',body,'<div class="sw">'+SORD.map(function(k,j){ return '<span class="sq s'+j+'" style="--c:'+SEAS[k][1]+'"><span>'+pic(SEAS[k][0])+'<em>'+k+'</em></span></span>'; }).join('')+'</div><b class="sptr" aria-hidden="true"></b>'), sw=wheel.querySelector('.sw');
+    var line=mk('p','gtext',body), box=mk('div','opts',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    function turn(k){ var j=SORD.indexOf(k), tgt=45-90*j, d=((tgt-rot)%360+360)%360; rot+=d||0; sw.style.setProperty('--r',rot+'deg'); $$('.sq',sw).forEach(function(q,m){ q.classList.toggle('cur',m===j); }); }
+    function show(){ box.innerHTML=''; delete box.dataset.lock;
+      if(i>=s.items.length){ line.textContent=s.win; SND.say(s.win); SND.fx('spark'); setTimeout(next,1700); return; }
+      var it=s.items[i]; turn(it[0]); SND.fx('whoosh');
+      line.innerHTML=it[1].indexOf('{0}')>=0?esc(it[1]).replace('{0}','<span class="gap cur">   </span>'):esc(it[1]);
+      setTimeout(function(){ SND.say(it[1].replace('{0}','…')); },700);
+      box.className='opts'+(it[3]?' pics emo':'');
+      shuffle(it[2]).forEach(function(o){ var pv=pic(o[0]), b=mk('button','opt',box,pv||esc(o[0])); b.dataset.ok=o[1]?1:0; if(pv) b.setAttribute('aria-label',name9(o[0]));
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(pv) sayWord(o[0]); if(!o[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent='';
+          var g=line.querySelector('.gap'); if(g){ g.textContent=o[0]; g.classList.add('ok'); SND.say(it[1].replace('{0}',o[0])); } i++; setTimeout(show,1700); }); }); }
+    show();
+  };
+  // «Малиновка ведёт» по буквам (мышиный след): малиновка прыгает на букву — нажми туда же
+  R.hop=function(body,s,next){
+    head(body,s.q,s.ru); var Ls=s.word.replace(/[^A-Z]/g,'').split(''), uniq=[], k=0, ready=false;
+    Ls.forEach(function(l){ if(uniq.indexOf(l)<0) uniq.push(l); });
+    var extra=shuffle('ABCDEFGHIJKLMNOPRSTUVWY'.split('').filter(function(l){ return uniq.indexOf(l)<0; })).slice(0,Math.max(3,12-uniq.length));
+    var field=mk('div','hopf',body), stones={};
+    shuffle(uniq.concat(extra)).forEach(function(l){ var b=mk('button','opt stone',field,l); b.dataset.ok=0; b.setAttribute('aria-label','Буква '+l); stones[l]=b;
+      b.addEventListener('click',function(){ if(!ready) return; if(l!==Ls[k]) return wrong(b,fb); ready=false; b.dataset.ok=0; phs(l.toLowerCase()); b.classList.remove('hit'); void b.offsetWidth; b.classList.add('hit'); SND.fx('step');
+        sl[k].textContent=l; sl[k].classList.add('on'); k++; if(k>=Ls.length) done(); else setTimeout(fly,550); }); });
+    var bird=mk('span','rbird',field,pic('i:robin'));
+    var slots=mk('p','hslots',body), sl=[]; s.word.split('').forEach(function(c){ if(c===' '){ mk('span','gapw',slots,''); return; } sl.push(mk('span','sl',slots,'')); });
+    var fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    function fly(){ var t=stones[Ls[k]], W=field.getBoundingClientRect(), r=t.getBoundingClientRect();
+      bird.style.left=(r.right-W.left-6)+'px'; bird.style.top=(r.top-W.top+8)+'px'; bird.classList.remove('hop'); void bird.offsetWidth; bird.classList.add('hop'); SND.fx('squeak');
+      setTimeout(function(){ ready=true; t.dataset.ok=1; },450); }
+    function done(){ slots.classList.add('joined'); SND.fx('ok'); fb.textContent=s.word; SND.say(s.word.toLowerCase()); bird.classList.add('away');
+      setTimeout(function(){ if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else next(); },1400); }
+    setTimeout(fly,1200);
+  };
+  // «Изгородь» (rail fence, 2 ряда): буквы стоят зигзагом — сначала все верхние, потом все нижние
+  R.fence=function(body,s,next){
+    head(body,s.q,s.ru); var A=s.answer.replace(/[^A-Z]/g,''), r1='', r2='';
+    A.split('').forEach(function(c,i){ if(i%2) r2+=c; else r1+=c; });
+    var bx=function(t){ return t.split('').map(function(c){ return '<b>'+c+'</b>'; }).join(''); };
+    mk('div','fence',body,'<p class="rail">'+bx(r1)+'</p><p class="rail">'+bx(r2)+'</p>');
+    var zig=mk('div','fence zig',body,'<p class="rail">'+A.split('').map(function(c,i){ return '<b'+(i%2?' class="o"':'')+'>'+(i%2?'':c)+'</b>'; }).join('')+'</p><p class="rail">'+A.split('').map(function(c,i){ return '<b'+(i%2?'':' class="o"')+'>'+(i%2?c:'')+'</b>'; }).join('')+'</p>'); zig.hidden=true;
+    var inp=mk('input','inp',body); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder='Ответ…'; inp.dataset.ans=s.answer; inp.setAttribute('aria-label','Ответ');
+    var fb=mk('p','fb',body), ok=mk('button','btn btn-gold',body,'Проверить'); fb.setAttribute('aria-live','polite');
+    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); };
+    var upto=function(n){ var out='', c=0; for(var i=0;i<s.answer.length&&c<n;i++){ out+=s.answer[i]; if(/[A-Z]/.test(s.answer[i])) c++; } inp.value=out; inp.focus(); };
+    var lad=hintLadder(body,[function(){ zig.hidden=false; return 'Намёк: вот как буквы стояли на изгороди. Читай зигзагом: верх, низ, верх, низ…'; },
+      function(){ upto(Math.ceil(A.length/2)); return 'Половина уже есть. Дальше сам!'; },function(){ upto(A.length); return 'Ответ: '+s.answer; }],fb);
+    ok.addEventListener('click',function(){ if(norm(inp.value)===A){ lad.stop(); ok.disabled=true; inp.disabled=true; zig.hidden=false; SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(next,1500); }
+      else { wrong(ok,fb); fb.textContent='Not yet. Первая буква — с верхней доски, вторая — с нижней…'; } });
+  };
+  // «Сто комнат»: открой дверь — прочитай описание — назови комнату
+  R.rooms=function(body,s,next){
+    head(body,s.q,s.ru); var i=0;
+    var hall=mk('div','hall',body), desc=mk('p','tfq rdesc',body,'Open door 1!'), box=mk('div','opts',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    var doors=s.items.map(function(it,j){ var d=mk('button','opt door',hall,'<span>'+(j+1)+'</span>'); d.dataset.ok=j===0?1:0; d.setAttribute('aria-label','Дверь '+(j+1));
+      d.addEventListener('click',function(){ if(j!==i||hall.dataset.lock){ if(j>i) wrong(d,fb); return; } hall.dataset.lock=1; d.dataset.ok=0; d.classList.add('open'); SND.fx('page'); desc.textContent=it[1]; SND.say(it[1]); ask(it); }); return d; });
+    function ask(it){ box.innerHTML=''; shuffle(s.names).forEach(function(n){ var b=mk('button','opt',box,esc(n)); b.dataset.ok=n===it[0]?1:0;
+      b.addEventListener('click',function(){ if(box.dataset.done) return; if(n!==it[0]) return wrong(b,fb); box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; doors[i].innerHTML='<span>'+esc(n)+'</span>'; doors[i].classList.add('named'); i++;
+        setTimeout(function(){ box.innerHTML=''; delete box.dataset.done; delete hall.dataset.lock;
+          if(i>=s.items.length){ desc.textContent='You found all the rooms!'; SND.say(desc.textContent); setTimeout(next,1300); return; }
+          doors[i].dataset.ok=1; desc.textContent='Open door '+(i+1)+'!'; },1300); }); }); }
+  };
+  // «Малиновка ведёт» (старшие): малиновка поёт, куда идти по саду — выбирай место
+  R.follow=function(body,s,next){
+    head(body,s.q,s.ru); var i=0, spots={};
+    var map=mk('div','gmap',body);
+    s.spots.forEach(function(p){ var b=mk('button','opt gspot',map,(p[3]?pic(p[3]):'')+'<em>'+esc(p[1])+'</em>'); b.style.left=p[2][0]+'%'; b.style.top=p[2][1]+'%'; b.dataset.ok=0; spots[p[0]]=b; b.setAttribute('aria-label',p[1]);
+      b.addEventListener('click',function(){ if(i>=s.stops.length||map.dataset.lock) return; if(p[0]!==s.stops[i][1]) return wrong(b,fb); map.dataset.lock=1; b.dataset.ok=0; b.classList.add('yes'); SND.fx('ok'); fb.textContent='';
+        bird.style.left=p[2][0]+'%'; bird.style.top=(p[2][1]-7)+'%'; bird.classList.remove('hop'); void bird.offsetWidth; bird.classList.add('hop'); i++; setTimeout(function(){ delete map.dataset.lock; show(); },1500); }); });
+    var bird=mk('span','rbird',map,pic('i:robin')); bird.style.left=s.start[0]+'%'; bird.style.top=s.start[1]+'%';
+    var line=mk('p','gtext',body), rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
+    rep.addEventListener('click',function(){ if(i<s.stops.length) SND.say(s.stops[i][0]); });
+    function show(){ if(i>=s.stops.length){ line.textContent=s.win; rep.hidden=true; SND.say(s.win); SND.fx('spark'); setTimeout(next,1800); return; }
+      var st=s.stops[i]; line.textContent='“'+st[0]+'”'; SND.fx('squeak'); setTimeout(function(){ SND.say(st[0]); },300); spots[st[1]].dataset.ok=1; }
+    show();
+  };
+
+  var EVS={0:'spark',2:'mouse',4:'season',6:'adult',8:'mouse',10:'spark'};
+  var STATIONS=[1,3,5,7,9,11];
+  var CELLS=[[56.9,83.6],[66.0,78.3],[61.8,74.7],[60.1,69.6],[53.3,65.2],[61.0,61.3],[70.6,53.0],[64.4,49.3],[70.0,45.2],[74.0,38.2],[80.2,35.1],[85.6,32.6]];
+  var START=[34,86];
+  var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
+  var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
+  var BLOOM='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6.5" r="3.6"/><circle cx="17.2" cy="10.3" r="3.6"/><circle cx="15.2" cy="16.4" r="3.6"/><circle cx="8.8" cy="16.4" r="3.6"/><circle cx="6.8" cy="10.3" r="3.6"/><circle cx="12" cy="12" r="2.6" fill="#f5c842"/></svg>', FLAME=BLOOM;
+  var ICO={spark:SPARK,mouse:PAW,season:BLOOM,adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
+  var PAGE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg>';
+  var MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
+
+  var token=$('#token'), forest=$('#forest'), pos=-1, mice=0, rolling=false, done=0;
+  function place(xy){ token.style.left=xy[0]+'%'; token.style.top=xy[1]+'%'; }
+  place(START);
+  CELLS.forEach(function(c,i){
+    var st=STATIONS.indexOf(i);
+    var d=document.createElement('div');
+    if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
+    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; }
+    else return;
+    d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
+  });
+  var pages=$('#pages');
+  ST.forEach(function(s){ var p=document.createElement('span'); p.className='pg'; p.innerHTML=PAGE+'<em>'+s[3]+'</em>'; p.title=s[1]; pages.appendChild(p); });
+
+  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} };
+  var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,robin:1,album:1,magice:1,mblend:1,seedgrid:1,whisper:1,night:1,grow:1,seasons:1,hop:1,fence:1,rooms:1,follow:1};
+  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+    if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+    R[st.t](body,st,nx); })(); }
+
+  /* --- stations & events on the board --- */
+  var say=$('#boardSay'), ru=$('#boardRu');
+  function station(k){
+    var key=ST[k][0], d=L[T][key], steps=[];
+    if(d.warm) steps=steps.concat(d.warm);
+    if(key==='listen') steps.push({t:'listen',prompt:d.prompt,ru:d.ru,text:d.text,video:d.video});
+    if(d.lock) steps=steps.concat(d.lock);
+    if(key==='read'&&d.text) steps.push({t:'readp',title:d.title,ru:d.ru,text:d.text});
+    steps=steps.concat(d.steps);
+    $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
+    speak(say,'A frozen page! '+ST[k][1]+'. Open it!'); ru.textContent='Замёрзшая страница: '+ST[k][2]+'. Открой её!';
+    return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key]); })
+      .then(function(){ box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
+        try{ localStorage.setItem('sf_s9_done',String(done)); }catch(e){}
+        if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
+        ru.textContent='Страница оттаяла! Бросай кубик дальше.'; return speak(say,'The page is warm again! Roll the dice.'); });
+  }
+  function badge(){
+    $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
+    return taskPage(box,'Битва за значок','В бой!',function(body,finish){ R.check(body,CHECK[T],finish); })
+      .then(function(){ box.hidden=true; ru.textContent='Значок твой! Верни книгу Мэри.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
+  }
+  function event(kind){
+    var box=$('#ev');
+    if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return !x.classList.contains('got');})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
+      ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
+    $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
+    var steps, kick, lbl;
+    if(kind==='mouse'){ steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks in the snow! The mice left a message.'); ru.textContent='Мышиный след на снегу! Мыши что-то оставили.'; }
+    else if(kind==='season'){ kick='Времена года'; lbl='Повернуть круг'; speak(say,'The seasons wheel! Winter, spring, summer, autumn.'); ru.textContent='Круг времён года! Зима, весна, лето, осень — что бывает в каждое время года?'; steps=SEASON[T]; }
+    else { kick='Ход для взрослого'; lbl='Открыть'; speak(say,'A move for a grown-up! Play together.'); ru.textContent='Ход для взрослого: играем вместе!'; steps=ADULT[T]; }
+    return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish); }).then(function(){ box.hidden=true; $('.dierow').hidden=false; return wait(300); });
+  }
+  $('#die').addEventListener('click',function(){
+    if(rolling||done>=6) return; rolling=true; SND.fx('dice');
+    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count');
+    die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll'); $('#dieN').classList.remove('in');
+    wait(900).then(function(){
+      $('#dieN').textContent=n; $('#dieN').classList.add('in'); var left=n;
+      (function step(){
+        if(left<=0||pos>=CELLS.length-1){ rolling=false; ru.textContent='Бросай ещё!'; speak(say,'Roll again!'); return; }
+        pos++; left--; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+        out.textContent=(n-left)+' / '+n;
+        var k=STATIONS.indexOf(pos);
+        wait(480).then(function(){
+          if(k>=0){ out.textContent=''; return station(k).then(function(){ rolling=false; }); }
+          return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(step);
+        });
+      })();
+    });
+  });
+
+  /* --- scenes --- */
+  ENTER.who=function(){};
+  $$('.track').forEach(function(b){ b.addEventListener('click',function(){ setTrack(b.dataset.track); save(); go('arrive'); }); });
+  var avid=$('#avid'), ARRIVE_LINE='Hello! I’m Mary. My secret garden is frozen, and the mice took the pages of my book. Will you help me wake the garden up?';
+  ENTER.arrive=function(){ SND.music(false); };
+  $('#astart').addEventListener('click',function(){ // говорящего видео пока нет — Мэри говорит голосом поверх картинки
+    $('#agate').classList.add('gone'); SND.music(false);
+    var done=false, end=function(){ if(done) return; done=true; SND.music(true); later($('#toBoard'),200); };
+    if(avid){ avid.muted=false; avid.currentTime=0; var pr=avid.play(); if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#herSay'),ARRIVE_LINE,true); },300); }).catch(function(){ speak($('#herSay'),ARRIVE_LINE).then(end); }); avid.addEventListener('ended',end); setTimeout(end,10000); }
+    else speak($('#herSay'),ARRIVE_LINE).then(end);
+  });
+  ENTER.board=function(){ speak(say,'Six frozen pages are hidden in the snowy garden. Jump from stump to stump — roll the dice!'); };
+  ENTER.final=function(p){
+    p.then(function(){ return wait(500); }).then(function(){ return speak($('#finSay'),'Look! The snow is melting, and the roses are waking up. It’s wick — it’s alive! Once I asked, “Might I have a bit of earth?” Now I have a whole garden — and a friend. Thank you! Here is my card for your shelf.'); })
+     .then(function(){ $('#card').classList.add('in'); SND.fx('spark'); return wait(1400); })
+     .then(function(){ return speak($('#finSay'),'But look — under the roses the robin found a piece of an old map. The mice were here… Tomorrow is the last night.'); })
+     .then(function(){ later($('#toEnd'),400); });
+  };
+  ENTER.end=function(){
+    if(state.name) $('#endTitle').textContent=state.name+', история 9 пройдена';
+    try{ localStorage.setItem('sf_s9_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s9_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); box.hidden=false; } }catch(e){}
+  };
+  var START_SCENE=state.track?'arrive':'who';
+  if(state.track) setTrack(state.track);
+
+
+  /* ===== общее для всех историй: поле на весь экран, камера идёт за фишкой ===== */
+  (function(){
+    var sc=$('[data-scene="board"]'), f=$('#forest'); if(!sc||!f) return;
+    var img=f.querySelector('img'), pg=$('#pages'); if(pg) sc.appendChild(pg);
+    var last=START;
+    function ar(){ if(img.naturalWidth) return img.naturalWidth/img.naturalHeight; var m=/([\d.]+)\s*\/\s*([\d.]+)/.exec(f.style.aspectRatio||''); return m?m[1]/m[2]:720/840; }
+    function fit(xy){ if(xy) last=xy; var W=sc.clientWidth, H=sc.clientHeight; if(!W||!H) return;
+      var a=ar(), h=H*1.18, w=h*a; if(w<W){ w=W; h=W/a; }
+      var xs=CELLS.concat([START]).map(function(c){return c[0];});
+      var cx=(Math.min.apply(0,xs)+Math.max.apply(0,xs))/200;
+      var left=Math.min(0,Math.max(W-w,W/2-cx*w));
+      var top=Math.min(0,Math.max(H*.66-h,H*.4-last[1]/100*h)); // фишка — чуть выше середины, над текстом и кубиком
+      f.style.width=w+'px'; f.style.height=h+'px'; f.style.left=left+'px'; f.style.top=top+'px'; f.style.setProperty('--z',(w/W).toFixed(3)); }
+    var _pl=place; place=function(xy){ _pl(xy); fit(xy); };
+    var _eb=ENTER.board; ENTER.board=function(){ fit(); return _eb&&_eb.apply(this,arguments); };
+    if(!img.complete) img.addEventListener('load',function(){ fit(); });
+    window.addEventListener('resize',function(){ fit(); });
+    fit();
+  })();
+  (function(){ var v=$('#avid'); if(!v) return; v.addEventListener('playing',function(){ v.classList.add('on'); }); })();
+
+  /* snow */
+  var c=document.getElementById('snow'); if(reduce||!c.getContext) {go(START_SCENE); return;}
+  var x=c.getContext('2d'), W,H,dpr=Math.min(devicePixelRatio||1,2), F=[];
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.round(Math.min(90,W*H/7000)); F=[];
+    for(var i=0;i<n;i++)F.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.6,s:Math.random()*.5+.25,w:Math.random()*6.28,o:Math.random()*.5+.3});}
+  function tick(){ x.clearRect(0,0,W,H);
+    for(var i=0;i<F.length;i++){var f=F[i]; f.y+=f.s; f.w+=.01; f.x+=Math.sin(f.w)*.35;
+      if(f.y>H+4){f.y=-4;f.x=Math.random()*W;}
+      x.globalAlpha=f.o; x.beginPath(); x.arc(f.x,f.y,f.r,0,6.283); x.fillStyle='#fff'; x.fill();}
+    requestAnimationFrame(tick);}
+  size(); addEventListener('resize',size); requestAnimationFrame(tick);
+  go(START_SCENE);
+})();
+</script>
+</body>
+</html>
