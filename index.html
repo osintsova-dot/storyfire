@@ -400,6 +400,59 @@ footer b{color:var(--ink-2);font-weight:500}
         <a class="btn btn-ghost" href="prolog/">Сначала Пролог</a>
       </div>
       <p class="note">Оплата картой или СБП, чек придёт на почту, код доступа сразу после оплаты. Истории откроются с&nbsp;27&nbsp;декабря, доступ остаётся навсегда.</p>
+      <!--sfform--><!-- форма предзаписи «Костра историй» → бот проекта в MAX (nihao-bot /sf/lead через шлюз Яндекса) -->
+<style>
+.sfform{display:grid;gap:12px;margin-top:6px;padding:22px;border-radius:22px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px rgba(247,238,219,.14)}
+.sfform h3{font-size:clamp(24px,3vw,30px)}
+.sfform p.sub{font-size:15px;color:var(--ink-2)}
+.sfform .row{display:grid;gap:10px}
+@media (min-width:520px){.sfform .row{grid-template-columns:1fr 1fr}}
+.sfform label{display:grid;gap:6px;font-size:14px;color:var(--ink-2)}
+.sfform input[type=text],.sfform input[type=tel],.sfform select{width:100%;min-height:50px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.55);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22);transition:box-shadow .2s}
+.sfform input:focus,.sfform select:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.sfform .ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-3)}
+.sfform .ok input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold);flex:none}
+.sfform .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.sfform .msg{font-size:15px;min-height:1.4em}
+.sfform .msg.good{color:var(--gold)}
+.sfform .msg.bad{color:#ff9b8a}
+.sfform.done .fields{display:none}
+</style>
+<form class="sfform" id="sfform" novalidate>
+  <h3>Записаться заранее</h3>
+  <p class="sub">Пока не готовы оплатить? Подпишитесь в MAX: напомним перед стартом и расскажем о новых квестах. Или оставьте телефон, и мы свяжемся сами.</p>
+  <div class="fields btns"><a class="btn btn-ghost" href="https://max.ru/id245718463277_2_bot?start=remind" target="_blank" rel="noopener">Напомнить в MAX</a></div>
+  <div class="fields row">
+    <label>Ваше имя<input type="text" name="parent" autocomplete="name" required maxlength="60"></label>
+    <label>Телефон<input type="tel" name="phone" autocomplete="tel" inputmode="tel" required maxlength="30" placeholder="+7"></label>
+    <label>Имя ребёнка<input type="text" name="child" maxlength="60"></label>
+    <label>Возраст<select name="age"><option value="">—</option><option>5–7 лет</option><option>8–10 лет</option><option>11–14 лет</option></select></label>
+  </div>
+  <div class="fields"><label class="ok"><input type="checkbox" name="consent" required><span>Согласен(на) на обработку моих данных школой Speak&nbsp;&amp;&nbsp;Smile (ИП Синцова О.&nbsp;В.) для записи на квест. Данные нужны только, чтобы с вами связаться.</span></label></div>
+  <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="fields btns"><button class="btn btn-ghost" type="submit">Оставить телефон</button></div>
+  <p class="msg" id="sfmsg" aria-live="polite"></p>
+</form>
+<script>
+(function(){
+  var SLUG='ss', SRV=['https://d5d6o4mldv5m1nj5hvih.6brbn2wz.apigw.yandexcloud.net/nihao','https://nihao-bot.o-sintsova.workers.dev'];
+  var f=document.getElementById('sfform'), m=document.getElementById('sfmsg');
+  function post(i,body){ if(i>=SRV.length) return Promise.reject(); var c=window.AbortController?new AbortController():null; var t=c&&setTimeout(function(){c.abort();},9000);
+    return fetch(SRV[i]+'/sf/lead',{method:'POST',headers:{'content-type':'application/json'},body:body,signal:c?c.signal:undefined})
+      .then(function(r){ clearTimeout(t); return r.json(); }).then(function(j){ if(!j||(!j.ok&&j.error!=='rate'&&j.error!=='bad')) throw 0; return j; })
+      .catch(function(e){ clearTimeout(t); if(e&&e.ok===false) throw e; return post(i+1,body); }); }
+  f.addEventListener('submit',function(e){ e.preventDefault();
+    var d={school:SLUG,parent:f.parent.value.trim(),phone:f.phone.value.trim(),child:f.child.value.trim(),age:f.age.value,consent:f.consent.checked,hp:f.hp.value};
+    if(d.parent.length<2){ m.className='msg bad'; m.textContent='Напишите, пожалуйста, ваше имя.'; f.parent.focus(); return; }
+    if(d.phone.replace(/\D/g,'').length<10){ m.className='msg bad'; m.textContent='Проверьте телефон — нужен номер полностью.'; f.phone.focus(); return; }
+    if(!d.consent){ m.className='msg bad'; m.textContent='Отметьте согласие — без него не можем записать.'; return; }
+    var b=f.querySelector('button'); b.disabled=true; m.className='msg'; m.textContent='Отправляем…';
+    post(0,JSON.stringify(d)).then(function(j){ if(!j.ok){ throw j; } f.classList.add('done'); m.className='msg good'; m.textContent='Записали! Напомним перед стартом квеста.'; })
+      .catch(function(j){ b.disabled=false; m.className='msg bad'; m.textContent=j&&j.error==='rate'?'Слишком много заявок подряд. Попробуйте через час.':'Не получилось отправить. Попробуйте ещё раз или напишите нам напрямую.'; });
+  });
+})();
+</script>
+<!--/sfform-->
     </div>
     <ul class="incl" id="incl"></ul>
   </div>
