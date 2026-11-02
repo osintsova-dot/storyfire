@@ -521,7 +521,7 @@ textarea.inp{min-height:130px;resize:vertical}
 .book.open .bk-stage>.bk-page:not(.bk-leaf){animation:bkIn .6s cubic-bezier(.2,.8,.2,1) both}
 .bk-head{display:flex;justify-content:space-between;font:italic 500 15px/1.2 var(--display);color:#8a6a45;letter-spacing:.02em}
 .bk-pic{margin:0;flex:1 1 auto;min-height:0;border-radius:10px;overflow:hidden;background:#2a1b10;box-shadow:0 0 0 1px rgba(138,106,69,.55),0 0 0 5px #f6ebd2,0 0 0 6px rgba(138,106,69,.35),inset 0 0 30px rgba(0,0,0,.4)}
-.bk-pic video{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block}
+.bk-pic video{width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block}
 .bk-en{margin:0;font:600 clamp(19px,5.2vw,23px)/1.38 var(--display);color:#3a2a1a;text-wrap:pretty;cursor:pointer}
 .bk-en span{color:#6d5a44;border-radius:4px;transition:color .2s ease,background-color .2s ease}
 .bk-en span.read{color:#2e2014}
@@ -547,6 +547,31 @@ textarea.inp{min-height:130px;resize:vertical}
 .bk-go{visibility:hidden;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
 .bk-go.show{visibility:visible;opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.book.open .bk-stage>.bk-page,.bk-leaf{animation:none}}
+
+/* книга 02.11 вечер: всё управление одной строкой под страницей — картинке больше места; широкий экран — разворот */
+.book{grid-template-rows:1fr auto;gap:10px;padding-top:calc(env(safe-area-inset-top,0px) + 10px)}
+.bk-page{gap:10px;padding:12px 14px 14px 18px}
+.bk-en{font-size:clamp(18px,4.8vw,22px);line-height:1.32}
+.bk-ru{font-size:13px;line-height:1.35}
+.bk-nav{width:min(100%,460px);justify-content:space-between;gap:10px}
+.bk-skip{justify-self:auto;padding:9px 12px}
+.bk-skip.off{visibility:hidden}
+.bk-arrows{display:flex;align-items:center;gap:10px}
+.bk-nav .bk-go{padding:0 16px;height:46px;white-space:nowrap;font-size:15px}
+.bk-go:not(.show){display:none}
+.bk-nav .bk-next[hidden]{display:none}
+@media (min-aspect-ratio:5/4){
+  .bk-stage{width:min(100%,980px)}
+  .bk-nav{width:min(100%,980px)}
+  .bk-page{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr auto;column-gap:28px;padding:20px 28px 22px 24px}
+  .bk-pic{grid-column:1;grid-row:1/4;height:100%;width:auto;align-self:stretch!important;max-width:58vw}
+  .bk-head{grid-column:2;grid-row:1}
+  .bk-en{grid-column:2;grid-row:2;align-self:center;font-size:clamp(20px,2.2vw,28px)}
+  .bk-ru{grid-column:2;grid-row:3;font-size:14px}
+}
+.bk-nav .bk-skip{width:auto;height:auto;border-radius:999px;background:rgba(255,255,255,.08);color:var(--ink-2);box-shadow:none;font:500 14px/1 var(--body);border:1px solid rgba(255,255,255,.14);padding:11px 14px}
+.bk-nav .bk-go{width:auto;border-radius:999px;font:600 15px/1 var(--body);padding:0 18px;color:#2a1a0c}
+@media (min-aspect-ratio:5/4){ .bk-en{font-size:clamp(22px,2.6vw,32px);line-height:1.38} .bk-ru{font-size:16px} .bk-head{font-size:17px} }
 </style>
 </head>
 <body>
@@ -1592,12 +1617,12 @@ var BOOK={title:"Alice in Wonderland",author:"Lewis Carroll",pages:[{"v": "video
         '<p class="bk-ru">'+esc(p.ru)+'</p>'; }
     function build(){
       el=document.createElement('div'); el.className='book'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Книга рассказывает');
-      el.innerHTML='<button class="bk-skip" type="button">Пропустить</button>'+
-        '<div class="bk-stage"><article class="bk-page"></article></div>'+
-        '<div class="bk-nav"><button class="bk-prev" type="button" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+      el.innerHTML='<div class="bk-stage"><article class="bk-page"></article></div>'+
+        '<div class="bk-nav"><button class="bk-skip" type="button">Пропустить</button>'+
         '<div class="bk-dots">'+P.map(function(){ return '<i></i>'; }).join('')+'</div>'+
-        '<button class="bk-next" type="button" aria-label="Дальше"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>'+
-        '<button class="bk-go btn btn-gold" type="button"></button>';
+        '<div class="bk-arrows"><button class="bk-prev" type="button" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+        '<button class="bk-next" type="button" aria-label="Дальше"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+        '<button class="bk-go btn btn-gold" type="button"></button></div></div>';
       document.body.appendChild(el); pageEl=el.querySelector('.bk-page');
       el.querySelector('.bk-skip').addEventListener('click',finish);
       el.querySelector('.bk-go').addEventListener('click',finish);
@@ -1618,12 +1643,12 @@ var BOOK={title:"Alice in Wonderland",author:"Lewis Carroll",pages:[{"v": "video
       if(i<P.length-1) auto=setTimeout(function(){ turn(1); },450); });
     function paint(){ pageEl.innerHTML=pageHTML(i);
       var ds=el.querySelectorAll('.bk-dots i'); for(var k=0;k<ds.length;k++) ds[k].classList.toggle('on',k===i);
-      el.querySelector('.bk-prev').disabled=i===0; el.querySelector('.bk-next').hidden=i===P.length-1;
+      el.querySelector('.bk-prev').disabled=i===0; el.querySelector('.bk-next').hidden=i===P.length-1; el.querySelector('.bk-skip').classList.toggle('off',i===P.length-1);
       el.querySelector('.bk-go').classList.toggle('show',i===P.length-1);
       preload(i+1);
       var v=pageEl.querySelector('video'); if(v){ var pv=v.play(); if(pv&&pv.catch) pv.catch(function(){});
         // широкая сцена — рамка по её пропорциям (видно всех целиком), вертикальная — заполняет место, головы в кадре
-        v.addEventListener('loadedmetadata',function(){ var r=v.videoWidth/v.videoHeight; fitRate(); if(r>=.95){ var f=v.parentNode; f.style.flex='0 0 auto'; f.style.aspectRatio=r.toFixed(3); } }); } }
+        v.addEventListener('loadedmetadata',function(){ var r=v.videoWidth/v.videoHeight; fitRate(); var f=v.parentNode; f.style.aspectRatio=Math.max(r,.72).toFixed(3); if(r>=.95) f.style.flex='0 0 auto'; else { f.style.alignSelf='center'; f.style.maxWidth='100%'; } }); } }
     // сцена страницы идёт один раз и замирает на последнем кадре; если короче голоса — чуть медленнее (не ниже 0,75)
     function fitRate(){ var v=pageEl&&pageEl.querySelector('video'), ad=au.duration;
       if(v&&v.duration&&ad&&isFinite(ad)) v.playbackRate=v.duration<ad+.5?Math.max(.75,v.duration/(ad+.5)):1; }
