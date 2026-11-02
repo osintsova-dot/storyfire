@@ -678,6 +678,79 @@ textarea.inp{min-height:130px;resize:vertical}
 /* «назови вслух»: начало фразы-ответа под картинкой */
 .vframe{margin:2px 0 0;font:600 clamp(26px,7.5vw,34px)/1.1 var(--display);color:var(--paper-ink);letter-spacing:.01em}
 .rec.on{box-shadow:0 0 0 calc(4px + var(--lv,0) * 14px) color-mix(in srgb,var(--gold,#f5c84c) 35%,transparent);transition:box-shadow .08s linear}
+/* мультик на весь экран: на телефоне — заполняет экран; на компьютере/планшете (экран шире 3:4) — целиком, без обрезки головы */
+@media (min-aspect-ratio:3/4){ .lvid.full{object-fit:contain;background:#0d0a1c} }
+.wplay.cut img{object-fit:contain;padding:6px;background:radial-gradient(circle at 50% 60%,rgba(245,200,76,.28),transparent 70%)}
+/* малыши (фоника): латиница — школьным шрифтом Andika, как в Jolly Phonics: однокруглая «a» и «g»; кириллица остаётся Golos */
+@font-face{font-family:"Phon";font-weight:400;font-display:swap;src:url(../../fonts/andika-400.woff2) format("woff2");unicode-range:U+0000-00FF,U+2018-201F,U+2026}
+@font-face{font-family:"Phon";font-weight:500 900;font-display:swap;src:url(../../fonts/andika-700.woff2) format("woff2");unicode-range:U+0000-00FF,U+2018-201F,U+2026}
+.t-little #sheet{--display:"Phon","Cormorant Garamond",Georgia,serif;--body:"Phon","Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+/* голос засчитан — костёр разгорается */
+.flare{position:relative;width:150px;height:150px;margin:-6px auto 0;pointer-events:none}
+.flare img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.flare::before{content:"";position:absolute;inset:18% 12% 4%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,60,.75),rgba(255,120,30,0) 70%);opacity:0;transform:scale(.4)}
+.flare .f1{opacity:0;transform:scale(.7)}
+.flare .f4{opacity:0;transform:scale(.55) translateY(10px);transform-origin:50% 85%}
+.flare.go .f1{animation:flareIn .35s ease-out forwards}
+.flare.go .f4{animation:flareUp .9s cubic-bezier(.2,1.4,.4,1) .3s forwards,flicker 1.2s ease-in-out 1.2s infinite alternate}
+.flare.go::before{animation:flareGlow 1.2s ease-out .3s forwards}
+@keyframes flareIn{to{opacity:1;transform:none}}
+@keyframes flareUp{to{opacity:1;transform:none}}
+@keyframes flareGlow{to{opacity:1;transform:scale(1.25)}}
+@keyframes flicker{from{transform:scale(1)}to{transform:scale(1.04) translateY(-2px)}}
+@media (prefers-reduced-motion:reduce){.flare.go .f1,.flare.go .f4,.flare.go::before{animation:none;opacity:1;transform:none}}
+/* костёр на поле: растёт со страницами */
+.campfire{position:absolute;z-index:6;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 92px);width:92px;height:92px;pointer-events:none}
+.campfire::before{content:"";position:absolute;inset:10% 0 0;border-radius:50%;background:radial-gradient(circle,rgba(255,155,61,.45),rgba(255,155,61,0) 70%);opacity:.6;transition:opacity .8s}
+.campfire img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .9s ease,transform .9s cubic-bezier(.2,1.4,.4,1);transform:scale(.85)}
+.campfire img.on{opacity:1;transform:none}
+.campfire b{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);font:600 12px/1 var(--body);color:var(--gold);background:rgba(14,10,34,.7);padding:4px 8px;border-radius:999px;white-space:nowrap}
+.campfire.grow::before{animation:cfGlow 1.6s ease-out}
+.campfire.grow img.on{animation:cfPop 1.1s cubic-bezier(.2,1.4,.4,1)}
+@keyframes cfGlow{0%{opacity:.6}30%{opacity:1;transform:scale(1.5)}100%{opacity:.6;transform:none}}
+@keyframes cfPop{0%{transform:scale(.8)}50%{transform:scale(1.18)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.campfire.grow::before,.campfire.grow img.on{animation:none}}
+/* «Книга рассказывает»: раскрытая книга на тёмном столе, страница оживает */
+.book{position:fixed;inset:0;z-index:60;display:grid;grid-template-rows:auto 1fr auto auto;justify-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px calc(env(safe-area-inset-bottom,0px) + 16px);
+  background:radial-gradient(120% 70% at 50% 35%,#4a2c17 0%,#24150b 55%,#120a05 100%);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s .45s}
+.book.open{opacity:1;visibility:visible;transition:opacity .45s ease}
+.book::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 30% at 50% 40%,rgba(255,190,110,.18),transparent 70%)}
+.bk-skip{justify-self:end;font:500 14px/1 var(--body);color:var(--ink-2);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:9px 14px;cursor:pointer}
+.bk-skip:active{transform:scale(.97)}
+.bk-stage{position:relative;width:min(100%,460px);perspective:1800px;align-self:stretch;min-height:0}
+.bk-page{position:absolute;inset:0;display:flex;flex-direction:column;gap:12px;padding:16px 18px 18px 22px;color:#3a2a1a;
+  background:linear-gradient(90deg,#d9c39a 0,#efe1c2 4%,#f8eed8 12%,#f6ebd2 85%,#ecdcb9 100%);border-radius:5px 16px 16px 5px;
+  box-shadow:inset 10px 0 18px -10px rgba(80,50,20,.55),2px 0 0 #e6d4ae,4px 1px 0 #dcc79c,6px 2px 0 #d0b98b,0 24px 50px rgba(0,0,0,.55);
+  transform-origin:left center;backface-visibility:hidden}
+.book.open .bk-stage>.bk-page:not(.bk-leaf){animation:bkIn .6s cubic-bezier(.2,.8,.2,1) both}
+.bk-head{display:flex;justify-content:space-between;font:italic 500 15px/1.2 var(--display);color:#8a6a45;letter-spacing:.02em}
+.bk-pic{margin:0;flex:1 1 auto;min-height:0;border-radius:10px;overflow:hidden;background:#2a1b10;box-shadow:0 0 0 1px rgba(138,106,69,.55),0 0 0 5px #f6ebd2,0 0 0 6px rgba(138,106,69,.35),inset 0 0 30px rgba(0,0,0,.4)}
+.bk-pic video{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block}
+.bk-en{margin:0;font:600 clamp(19px,5.2vw,23px)/1.38 var(--display);color:#3a2a1a;text-wrap:pretty;cursor:pointer}
+.bk-en span{color:#6d5a44;border-radius:4px;transition:color .2s ease,background-color .2s ease}
+.bk-en span.read{color:#2e2014}
+.bk-en span.on{color:var(--violet);background:rgba(245,200,66,.38)}
+.bk-ru{margin:0;font:400 13.5px/1.4 var(--body);color:#86704f}
+.bk-leaf{z-index:2;pointer-events:none}
+.bk-leaf.fwd{animation:bkFwd .68s cubic-bezier(.45,.05,.3,1) forwards}
+.bk-leaf.back{animation:bkBack .68s cubic-bezier(.45,.05,.3,1) forwards}
+.bk-leaf::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,rgba(60,35,10,0),rgba(60,35,10,.35));opacity:0;animation:bkShade .68s ease forwards}
+@keyframes bkFwd{to{transform:rotateY(-108deg);opacity:.2}}
+@keyframes bkBack{to{transform:translateX(30%) rotateY(30deg);opacity:0}}
+@keyframes bkShade{to{opacity:1}}
+@keyframes bkIn{from{opacity:0;transform:scale(.96) translateY(8px)}}
+.bk-nav{display:flex;align-items:center;gap:18px}
+.bk-nav button{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#2a1a0c;background:var(--gold);border:0;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.bk-nav button svg{width:22px;height:22px}
+.bk-nav button:disabled{opacity:.3;cursor:default}
+.bk-nav button[hidden]{display:grid;visibility:hidden}
+.bk-nav button:active:not(:disabled){transform:scale(.94)}
+.bk-dots{display:flex;gap:8px}
+.bk-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:background-color .3s,transform .3s}
+.bk-dots i.on{background:var(--gold);transform:scale(1.25)}
+.bk-go{visibility:hidden;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.bk-go.show{visibility:visible;opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.book.open .bk-stage>.bk-page,.bk-leaf{animation:none}}
 </style>
 </head>
 <body>
@@ -1037,12 +1110,14 @@ textarea.inp{min-height:130px;resize:vertical}
     show();
   };
   // Маугли и мышь говорят фразу; кто сказал правильно?
+  // «Кто сказал правильно?»: герои целиком, вырезанные (h_*), а не кусок сцены
+  var CUT={1:'h_alice',2:'h_mowgli',3:'h_gerda',4:'h_sherlock',5:'h_dorothy',6:'h_peter_pan',7:'h_jim_hawkins',8:'h_pinocchio',9:'h_mary_lennox',10:'h_nutcracker'};
   R.who2=function(body,s,next){
     head(body,s.q,s.ru); var heard={};
     var row=el('div','who2'); body.appendChild(row);
     var fb=el('p','fb'); body.appendChild(fb);
     shuffle([[s.hero||HERO[0],s.good,1,HERO[1]],['m:mouse',s.bad,0,'Mouse']]).forEach(function(c){
-      var card=el('div','wcard'); var play=el('button','wplay',pic(c[0])+'<span>▶ '+c[3]+'</span>'); play.setAttribute('aria-label','Послушать: '+c[3]); card.appendChild(play);
+      var card=el('div','wcard'); var cut=c[2]?(s.hero?pic(s.hero):'<img src="../../img/'+CUT[SID]+'.webp" alt="'+c[3]+'">'):'<img src="../../img/07_mouse.webp" alt="mouse">'; var play=el('button','wplay cut',cut+'<span>▶ '+c[3]+'</span>'); play.setAttribute('aria-label','Послушать: '+c[3]); card.appendChild(play);
       var pick=el('button','opt wpick','✓ Right'); pick.dataset.ok=c[2]; pick.disabled=true; card.appendChild(pick); row.appendChild(card);
       play.addEventListener('click',function(){ SND.say(c[1]); heard[c[3]]=1; play.classList.add('heard'); if(Object.keys(heard).length===2) $$('.wpick',row).forEach(function(x){ x.disabled=false; }); else fb.textContent='Теперь послушай второго.'; });
       pick.addEventListener('click',function(){ if(row.dataset.done) return; if(c[2]){ row.dataset.done=1; pick.classList.add('yes'); SND.fx('ok'); fb.textContent='Yes! '+s.good; SND.say(s.good); setTimeout(next,1600); } else wrong(pick,fb); });
@@ -1260,6 +1335,8 @@ textarea.inp{min-height:130px;resize:vertical}
     return A; })();
   // голос: запись → распознавание в браузере (или на сервере, если задан SF_ASR) → проверка слов; иначе «послушай себя» + «Сказал ✓»
   var normT=function(t){ return ' '+String(t).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ')+' '; };
+  // голос засчитан: на месте кнопок разгорается костёр (угли → пламя)
+  function flare(at){ try{ var f=el('div','flare','<img class="f1" src="../../img/04_fire_1.webp" alt=""><img class="f4" src="../../img/04_fire_4.webp" alt="">'); at.parentNode.insertBefore(f,at.nextSibling); setTimeout(function(){ f.classList.add('go'); },20); }catch(e){} }
   R.voice=function(body,s,next){
     var ps=null; if(s.q||s.ru) ps=head(body,s.q,s.ru,s.note);
     if(s.top) body.insertAdjacentHTML('beforeend',s.top);
@@ -1272,7 +1349,7 @@ textarea.inp{min-height:130px;resize:vertical}
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) SND.say(s.line); setTimeout(next,1500); }
+    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) SND.say(s.line); setTimeout(next,1500); }
     function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
@@ -1398,7 +1475,7 @@ textarea.inp{min-height:130px;resize:vertical}
   var POSTERS={little:'08_v13_mary',explorers:'09_y1_manor',experts:'09_y3_garden'};
   function setTrack(t){ T=state.track=t; document.body.className='t-'+t; LISTEN_POSTER=POSTERS[t]||'08_v13_mary'; }
   var ACTW={};
-  var SID=9, HERO=['g:08_v13_mary','Mary','Мэри'], LISTEN_POSTER='08_v13_mary', QUICK_WIN=['It’s wick!','Сад живой!'], SUBS_LITTLE=[];
+  var SID=9, HERO=['g:08_v13_mary','Mary','Мэри'], LISTEN_POSTER='08_v13_mary', QUICK_WIN=['It’s wick!','Сад живой!'], SUBS_LITTLE=[[0.5, 2.3, 'Я Мэри.'], [2.3, 4.06, 'Это мой сад.'], [4.06, 6.35, 'Это мой друг Дикон —'], [6.35, 7.78, 'он мой друг.'], [7.78, 10.04, 'А это его семья!'], [10.04, 11.71, 'Это его мама.'], [11.71, 13.92, 'Это его сестра.'], [13.92, 16.25, 'А это его бабушка.'], [16.25, 17.05, 'Смотри!'], [17.05, 18.14, 'Кролик!'], [18.14, 20.2, 'А это моя птичка —'], [20.2, 22.23, 'малиновка!']];
   WORDS.secretgarden='a garden'; WORDS.oldkey='a key'; WORDS.gardendoor='a door'; WORDS.redfox='a fox'; WORDS.blackcrow='a crow'; WORDS.wateringcan='a watering can'; WORDS.skippingrope='a skipping rope';
   WORDS.rosebush='roses'; WORDS.candleholder='a candle'; WORDS.colin='Colin'; WORDS.stonewall='a stone wall'; WORDS.woodgate='a wooden gate'; WORDS.gardenpath='a path'; WORDS.india='India'; WORDS.flowerpot='a flower pot';
   function mk(tag,cls,parent,html){ var e=el(tag,cls,html); if(parent) parent.appendChild(e); return e; }
@@ -1412,7 +1489,7 @@ textarea.inp{min-height:130px;resize:vertical}
   /* --- content per track: six stations + warm-up; «Битва за значок» в конце --- */
   var L={
     little:{
-      listen:{prompt:'Mary shows her album. Listen!', ru:'Взрослому: нажмите ▶ и слушайте вместе. Мэри показывает альбом: This is my … — это мой / моя …; he — он, she — она.',
+      listen:{video:1,prompt:'Mary shows her album. Listen!', ru:'Взрослому: нажмите ▶ и слушайте вместе. Мэри показывает альбом: This is my … — это мой / моя …; he — он, she — она.',
         text:'I’m Mary. This is my garden. This is my friend Dickon — he’s my friend. And this is his family! This is his mum. This is his sister. And this is his grandma. Look! A rabbit! And this is my bird — the robin!',
         warm:[{t:'voice',pic:'g:h_pinocchio',q:'Have you got long hair?',want:['yes','no','have','got'],line:'Yes, I have!',ru:'Взрослому: повторяем Пиноккио. Ребёнок отвечает голосом: Yes, I have! / No, I haven’t!'},
               {t:'voice',pic:'g:h_pinocchio',q:'Have you got blue eyes?',want:['yes','no','have','got'],line:'No, I haven’t!'},
@@ -1437,7 +1514,7 @@ textarea.inp{min-height:130px;resize:vertical}
                {t:'whisper',pic:'g:08_v13_mary',q:'One more secret! Whisper: This is my brother… or sister!',line:'This is my brother.',sec:5,ru:'Взрослому: ещё один секрет шёпотом — про брата, сестру или бабушку.'}]}
     },
     explorers:{
-      listen:{prompt:'Mary remembers. Listen!', ru:'Мэри вспоминает, как она жила раньше. Слушай глаголы в прошедшем времени: lived, moved, found.',
+      listen:{video:1,prompt:'Mary remembers. Listen!', ru:'Мэри вспоминает, как она жила раньше. Слушай глаголы в прошедшем времени: lived, moved, found.',
         text:'I lived in India. I was very angry and very lonely. Then I moved house — to a big old house in England. There were a hundred rooms! I didn’t have a pet, but I found a friend — a robin. The robin found a key. And I found a door…',
         warm:[{t:'mcq',img:'g:h_pinocchio',q:'The Fairy asks: What should you do with a cold?',ru:'Повтор Пиноккио: советы. Что нужно делать, если простудился?',opts:[['You should drink hot tea.',1],['You should eat ice cream.'],['You should run in the snow.']]},
               {t:'voice',pic:'g:h_pinocchio',q:'And what should you do every day? You should …',want:['should','must'],line:'You should sleep well and eat fruit.',sec:7,ru:'Ответь голосом: You should …'}],
@@ -1472,7 +1549,7 @@ textarea.inp{min-height:130px;resize:vertical}
                {t:'voice',pic:'g:09_y4_friends',q:'Did you have a pet?',want:['yes','no','did','had','didnt'],line:'Yes, I did. I had a little cat.',sec:8,ru:'Краткий ответ + добавка: Yes, I did. I had … / No, I didn’t, but …'}]}
     },
     experts:{
-      listen:{prompt:'The robin sings: follow me to the key!', ru:'',
+      listen:{video:1,prompt:'The robin sings: follow me to the key!', ru:'',
         text:'Follow me, follow me! Go through the wooden gate. Walk along the path to the greenhouse — it has got a glass roof. Turn left at the old shed. The key is near the stone wall, under the ivy. Dig a little — and you will find it!',
         warm:[{t:'voice',pic:'g:h_pinocchio',q:'Pinocchio asks: What do you have to do at home?',want:['have to','has to','must'],line:'I have to make my bed and wash up.',sec:8,ru:'Повтор Пиноккио: have to — надо (обязанность).'},
               {t:'voice',pic:'g:h_pinocchio',q:'And what don’t you have to do?',want:['dont have to','do not have to','dont','not'],line:'I don’t have to cook dinner.',sec:8}],
@@ -1862,6 +1939,7 @@ textarea.inp{min-height:130px;resize:vertical}
   var START_SCENE=state.track?'arrive':'who';
   if(state.track) setTrack(state.track);
 
+var BOOK={"title": "The Secret Garden", "author": "Frances Hodgson Burnett", "pages": [{"v": "video/book_1.mp4", "a": "audio/b9_1.mp3", "en": "Mary Lennox came to live in a big old house on the moor. It had a hundred rooms, but no one to play with.", "ru": "Мэри Леннокс приехала жить в большой старый дом на пустоши. В нём было сто комнат, но не было никого, с кем поиграть.", "t": [0.0, 0.66, 1.33, 1.66, 1.99, 2.32, 2.65, 2.99, 3.32, 3.65, 3.98, 4.31, 4.65, 5.42, 5.73, 6.05, 6.36, 6.99, 7.75, 7.99, 8.22, 8.68, 8.92, 9.15]}, {"v": "video/book_2.mp4", "a": "audio/b9_2.mp3", "en": "One day a little robin showed her something in the earth. It was an old key!", "ru": "Однажды маленькая малиновка показала ей что-то в земле. Это был старый ключ!", "t": [0.0, 0.46, 0.7, 0.93, 1.39, 1.85, 2.32, 2.55, 3.25, 3.48, 3.71, 4.39, 4.71, 5.04, 5.36, 5.69]}, {"v": "video/book_3.mp4", "a": "audio/b9_3.mp3", "en": "Behind the ivy Mary found a hidden door. The key fitted the lock! Now Mary needs your help!", "ru": "За плющом Мэри нашла спрятанную дверь. Ключ подошёл к замку! А теперь Мэри нужна твоя помощь!", "t": [0.0, 0.72, 1.09, 1.81, 2.53, 2.89, 3.26, 3.98, 4.51, 4.85, 5.19, 5.88, 6.22, 7.02, 7.58, 8.69, 9.24, 9.8]}]};
 
   /* ===== общее для всех историй: поле на весь экран, камера идёт за фишкой ===== */
   (function(){
@@ -1883,6 +1961,91 @@ textarea.inp{min-height:130px;resize:vertical}
     fit();
   })();
   (function(){ var v=$('#avid'); if(!v) return; v.addEventListener('playing',function(){ v.classList.add('on'); }); })();
+  // костёр на поле растёт с каждой отогретой страницей: угли → огонёк → костёр → пламя (Оксана 02.11: «по ходу игры не визуализировали»)
+  (function(){ var pages=$('#pages'); if(!pages) return; var sc=pages.closest('[data-scene]'); if(!sc) return;
+    var c=document.createElement('div'); c.className='campfire'; c.setAttribute('aria-hidden','true');
+    c.innerHTML=[1,2,3,4].map(function(n){ return '<img src="../../img/04_fire_'+n+'.webp" alt="">'; }).join('')+'<b></b>';
+    sc.appendChild(c); var imgs=c.querySelectorAll('img'), lvl=-1;
+    function upd(){ var w=pages.querySelectorAll('.pg.warm').length, n=pages.querySelectorAll('.pg').length||6;
+      var L=w===0?0:w>=n?3:w*3/n<1.5?1:2;
+      for(var i=0;i<4;i++) imgs[i].classList.toggle('on',i===L);
+      c.querySelector('b').textContent=w+' / '+n;
+      if(lvl>=0&&L>lvl||(lvl>=0&&w>0&&c.dataset.w!=String(w))){ c.classList.remove('grow'); void c.offsetWidth; c.classList.add('grow'); }
+      lvl=L; c.dataset.w=w; }
+    new MutationObserver(upd).observe(pages,{subtree:true,attributes:true,attributeFilter:['class'],childList:true}); upd();
+  })();
+  /* ===== «Книга рассказывает» (Оксана 02.11): после прихода героя, перед полем — книга с оживающими страницами.
+     Данные: BOOK={title,author,pages:[{v,a,en,ru,t:[начало каждого слова, с]}]} в <N>/book.js. Листать — тап по стрелке или свайп. ===== */
+  (function(){
+    if(typeof BOOK==='undefined'||!BOOK.pages||!BOOK.pages.length) return;
+    var P=BOOK.pages, shown=false, i=0, au=new Audio(), raf=0, auto=0, el, pageEl, busy=false;
+    var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    au.preload='auto';
+    function muted(){ try{ return localStorage.getItem('sf_sound')==='off'; }catch(e){ return false; } }
+    function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+    function pageHTML(k){ var p=P[k];
+      return '<div class="bk-head"><span>'+esc(BOOK.title)+'</span><span>'+(k+1)+' / '+P.length+'</span></div>'+
+        '<figure class="bk-pic"><video src="'+p.v+'" muted playsinline autoplay preload="auto"></video></figure>'+
+        '<p class="bk-en" lang="en">'+p.en.split(' ').map(function(w){ return '<span>'+esc(w)+'</span>'; }).join(' ')+'</p>'+
+        '<p class="bk-ru">'+esc(p.ru)+'</p>'; }
+    function build(){
+      el=document.createElement('div'); el.className='book'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Книга рассказывает');
+      el.innerHTML='<button class="bk-skip" type="button">Пропустить</button>'+
+        '<div class="bk-stage"><article class="bk-page"></article></div>'+
+        '<div class="bk-nav"><button class="bk-prev" type="button" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+        '<div class="bk-dots">'+P.map(function(){ return '<i></i>'; }).join('')+'</div>'+
+        '<button class="bk-next" type="button" aria-label="Дальше"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>'+
+        '<button class="bk-go btn btn-gold" type="button"></button>';
+      document.body.appendChild(el); pageEl=el.querySelector('.bk-page');
+      el.querySelector('.bk-skip').addEventListener('click',finish);
+      el.querySelector('.bk-go').addEventListener('click',finish);
+      el.querySelector('.bk-next').addEventListener('click',function(){ turn(1); });
+      el.querySelector('.bk-prev').addEventListener('click',function(){ turn(-1); });
+      var x0=null; el.addEventListener('touchstart',function(e){ x0=e.touches[0].clientX; },{passive:true});
+      el.addEventListener('touchend',function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)>45) turn(dx<0?1:-1); });
+      pageEl.addEventListener('click',function(e){ if(e.target.closest('.bk-en')) play(); }); // тап по тексту — прочитать ещё раз
+    }
+    function words(){ return pageEl.querySelectorAll('.bk-en span'); }
+    function tick(){ var t=au.currentTime, ts=P[i].t||[], ws=words(), cur=-1;
+      for(var k=0;k<ts.length;k++) if(t>=ts[k]-.06) cur=k;
+      for(k=0;k<ws.length;k++){ ws[k].classList.toggle('on',k===cur); ws[k].classList.toggle('read',k<cur); }
+      if(!au.paused&&!au.ended) raf=requestAnimationFrame(tick); }
+    function play(){ clearTimeout(auto); cancelAnimationFrame(raf); au.src=P[i].a; au.muted=muted(); au.currentTime=0;
+      var pr=au.play(); if(pr&&pr.catch) pr.catch(function(){}); raf=requestAnimationFrame(tick); }
+    au.addEventListener('ended',function(){ cancelAnimationFrame(raf); var ws=words(); for(var k=0;k<ws.length;k++){ ws[k].classList.remove('on'); ws[k].classList.add('read'); }
+      if(i<P.length-1) auto=setTimeout(function(){ turn(1); },450); });
+    function paint(){ pageEl.innerHTML=pageHTML(i);
+      var ds=el.querySelectorAll('.bk-dots i'); for(var k=0;k<ds.length;k++) ds[k].classList.toggle('on',k===i);
+      el.querySelector('.bk-prev').disabled=i===0; el.querySelector('.bk-next').hidden=i===P.length-1;
+      el.querySelector('.bk-go').classList.toggle('show',i===P.length-1);
+      preload(i+1);
+      var v=pageEl.querySelector('video'); if(v){ var pv=v.play(); if(pv&&pv.catch) pv.catch(function(){});
+        // широкая сцена — рамка по её пропорциям (видно всех целиком), вертикальная — заполняет место, головы в кадре
+        v.addEventListener('loadedmetadata',function(){ var r=v.videoWidth/v.videoHeight; fitRate(); if(r>=.95){ var f=v.parentNode; f.style.flex='0 0 auto'; f.style.aspectRatio=r.toFixed(3); } }); } }
+    // сцена страницы идёт один раз и замирает на последнем кадре; если короче голоса — чуть медленнее (не ниже 0,75)
+    function fitRate(){ var v=pageEl&&pageEl.querySelector('video'), ad=au.duration;
+      if(v&&v.duration&&ad&&isFinite(ad)) v.playbackRate=v.duration<ad+.5?Math.max(.75,v.duration/(ad+.5)):1; }
+    au.addEventListener('durationchange',fitRate);
+    // следующая страница грузится заранее — переворот без ожидания видео и голоса
+    var pre={}; function preload(k){ if(k<0||k>=P.length||pre[k]) return; pre[k]=1;
+      var a=new Audio(); a.preload='auto'; a.src=P[k].a;
+      var v=document.createElement('video'); v.muted=true; v.preload='auto'; v.src=P[k].v; v.load(); }
+    function turn(d){ var n=i+d; if(busy||n<0||n>=P.length) return; clearTimeout(auto); au.pause();
+      if(reduce){ i=n; paint(); play(); return; }
+      busy=true; var old=pageEl.cloneNode(true); old.classList.add('bk-leaf',d>0?'fwd':'back');
+      var ov=old.querySelector('video'); if(ov) ov.removeAttribute('autoplay');
+      pageEl.parentNode.appendChild(old); i=n; paint(); play();
+      setTimeout(function(){ old.remove(); busy=false; },700); }
+    function open(){ shown=true; if(!el) build(); i=0;
+      var btn=document.getElementById('toBoard'); el.querySelector('.bk-go').textContent=(btn&&btn.textContent.trim())||'Дальше';
+      el.classList.add('open'); paint(); play(); }
+    function finish(){ clearTimeout(auto); cancelAnimationFrame(raf); au.pause();
+      if(el){ el.classList.remove('open'); var v=pageEl.querySelector('video'); if(v) v.pause(); }
+      go('board'); }
+    // перехватываем «Помочь …» на сцене героя: сначала книга (один раз за заход), потом поле
+    document.addEventListener('click',function(e){ var b=e.target.closest('[data-go="board"]'); if(!b||shown||!b.closest('[data-scene="arrive"]')) return;
+      e.stopPropagation(); e.preventDefault(); open(); },true);
+  })();
 
   /* snow */
   var c=document.getElementById('snow'); if(reduce||!c.getContext) {go(START_SCENE); return;}
