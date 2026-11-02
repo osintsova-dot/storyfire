@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Мои истории · Костёр историй</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d; --violet:#6c3fc5;
+  --line:rgba(247,238,219,.14);
+  --display:"Cormorant Garamond",Georgia,serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100svh;background:radial-gradient(120% 60% at 50% 0%,#2a1a4a 0%,var(--night) 60%);color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+.wrap{max-width:960px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 22px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 40px) max(16px,env(safe-area-inset-left,0px))}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.top a{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font:600 19px var(--display)}
+.top a svg{width:22px;height:22px;color:var(--ember)}
+.top small{font-size:13px;color:var(--ink-3)}
+h1{font:600 clamp(34px,8vw,52px)/1.02 var(--display);margin:0 0 8px;text-wrap:balance}
+.lead{color:var(--ink-2);margin:0 0 22px;max-width:46ch}
+.gate{display:grid;gap:12px;padding:20px;border-radius:20px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line);margin-bottom:26px}
+.gate[hidden]{display:none}
+.gate h2{font:600 26px/1.1 var(--display);margin:0}
+.gate p{margin:0;color:var(--ink-2);font-size:15px}
+.gate form{display:flex;gap:10px;flex-wrap:wrap}
+.gate input{flex:1 1 200px;min-height:52px;padding:0 16px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:600 19px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22)}
+.gate input::placeholder{letter-spacing:.04em;text-transform:none;font-weight:400;color:var(--ink-3)}
+.gate input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:999px;border:0;font:600 16px var(--body);cursor:pointer;text-decoration:none;transition:transform .15s var(--ease-out),background-color .2s}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:var(--gold);color:#241a06}
+.btn-gold:hover{background:var(--gold-2)}
+.btn-ghost{background:rgba(247,238,219,.08);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.msg{min-height:1.3em;font-size:14px;color:var(--ink-2)}
+.msg.bad{color:#ffb39b}
+.alt{display:flex;gap:10px;flex-wrap:wrap;font-size:14px}
+.teach{display:none;margin-bottom:18px;padding:10px 14px;border-radius:12px;background:rgba(108,63,197,.25);font-size:14px}
+.teach.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:900px){.grid{grid-template-columns:repeat(5,1fr)}}
+.card{position:relative;display:block;border-radius:18px;overflow:hidden;aspect-ratio:3/4.2;background:var(--night-2);color:var(--ink);text-decoration:none;box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;transform:translateY(10px);animation:in .6s var(--ease-out) forwards;animation-delay:calc(var(--i)*45ms)}
+@keyframes in{to{opacity:1;transform:none}}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform .5s var(--ease-out),filter .4s}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,10,34,0) 45%,rgba(14,10,34,.92) 100%)}
+.card .t{position:absolute;left:12px;right:12px;bottom:12px;z-index:1;display:grid;gap:4px}
+.card .n{font:500 12px var(--body);color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+.card .h{font:600 22px/1 var(--display)}
+.card .s{justify-self:start;margin-top:4px;padding:5px 10px;border-radius:999px;font:600 12px var(--body);background:var(--gold);color:#241a06}
+.card.lock{pointer-events:none}
+.card.lock img{filter:grayscale(.7) brightness(.55) blur(1px)}
+.card.lock .s{background:rgba(190,220,255,.16);color:#d8ecff;box-shadow:inset 0 0 0 1px rgba(190,220,255,.3)}
+.card.lock::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,rgba(190,225,255,.22),rgba(190,225,255,0) 40%);pointer-events:none}
+.card.today{box-shadow:0 0 0 2px var(--gold),0 10px 30px rgba(0,0,0,.35)}
+@media (hover:hover){.card:not(.lock):hover img{transform:scale(1.04)}}
+.pro{margin-top:26px;font-size:14px;color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){.card{animation:none;opacity:1;transform:none}.card img{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 3.5 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.3 1.6 1 2.5 2 2.7C11 8 10.8 5.5 12 3z"/><path d="M5 20h14"/></svg>Костёр историй</a><small id="who"></small></div>
+  <h1>Твои истории</h1>
+  <p class="lead">Каждый день у костра новый герой. История открывается утром, а пройденные остаются навсегда.</p>
+
+  <section class="gate" id="gate" hidden>
+    <h2>Введите код семьи</h2>
+    <p>Код пришёл после оплаты, вида <b>ABCD-EFGH-JKLM</b>. Он работает на трёх телефонах или планшетах.</p>
+    <form id="f" autocomplete="off"><input id="code" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="Код из 12 знаков" aria-label="Код семьи" maxlength="16"><button class="btn btn-gold" type="submit">Открыть</button></form>
+    <div class="msg" id="msg" role="status"></div>
+    <div class="alt"><a class="btn btn-ghost" href="../oplata/">Купить квест · 3 500 ₽</a><a class="btn btn-ghost" href="../prolog/">Пролог бесплатно</a></div>
+  </section>
+
+  <div class="teach" id="teach">Режим учителя: открыты все истории.</div>
+  <div class="grid" id="grid" aria-label="Истории"></div>
+  <p class="pro">Не открывается? Напишите нам в бот «Holliday English», поможем.</p>
+</div>
+<script src="../sf-access.js"></script>
+<script>
+(function(){
+  var H=[[1,'Alice','03_night01_alice'],[2,'Mowgli','08_v6_mowgli'],[3,'Gerda','08_v7_gerda'],[4,'Sherlock','08_v8_sherlock'],[5,'Dorothy','08_v9_dorothy'],
+         [6,'Peter Pan','08_v10_peter'],[7,'Jim Hawkins','08_v11_jim'],[8,'Pinocchio','08_v12_pinocchio'],[9,'Mary','08_v13_mary'],[10,'Nutcracker','08_v14_nutcracker']];
+  var grid=document.getElementById('grid'), gate=document.getElementById('gate'), msg=document.getElementById('msg');
+  var REASON={not_found:'Такого кода нет. Проверьте буквы и цифры.',devices:'Код уже открыт на трёх устройствах. Напишите нам, если сменили телефон.',blocked:'Код отключён. Напишите нам.',offline:'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.',empty:'Введите код.',rate_limited:'Слишком много попыток. Подождите минуту.'};
+  function draw(unlocked){
+    var today=-1, now=Date.now();
+    H.forEach(function(h){ if(SF.opensAt(h[0]).getTime()<=now) today=h[0]; });
+    grid.innerHTML='';
+    H.forEach(function(h,i){
+      var open=unlocked&&SF.isOpen(h[0]), a=document.createElement(open?'a':'div');
+      a.className='card'+(open?'':' lock')+(open&&h[0]===today?' today':''); a.style.setProperty('--i',i);
+      if(open) a.href='../story/'+h[0]+'/';
+      var img=document.createElement('img'); img.src='../img/'+h[2]+'.webp'; img.alt=''; img.loading='lazy'; a.appendChild(img);
+      var t=document.createElement('div'); t.className='t';
+      var n=document.createElement('span'); n.className='n'; n.textContent='История '+h[0];
+      var nm=document.createElement('span'); nm.className='h'; nm.textContent=h[1];
+      var s=document.createElement('span'); s.className='s'; s.textContent=!unlocked?'по коду':open?(h[0]===today?'Сегодня':'Играть'):SF.dateText(h[0]);
+      t.appendChild(n); t.appendChild(nm); t.appendChild(s); a.appendChild(t);
+      a.setAttribute('aria-label','История '+h[0]+', '+h[1]+(open?'':', откроется '+SF.dateText(h[0])));
+      grid.appendChild(a);
+    });
+  }
+  function ok(j){ gate.hidden=true; document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); }
+  var code=SF.takeFromUrl()||SF.code();
+  if(SF.free()){ draw(true); return; }
+  draw(false);
+  if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=REASON[j.reason]||REASON.offline; document.getElementById('code').value=code; } }); }
+  else gate.hidden=false;
+  document.getElementById('f').addEventListener('submit',function(e){ e.preventDefault();
+    var b=this.querySelector('button'); b.disabled=true; msg.className='msg'; msg.textContent='Проверяем…';
+    SF.check(document.getElementById('code').value).then(function(j){ b.disabled=false;
+      if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=REASON[j.reason]||REASON.offline; } });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Оплата · Костёр историй</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d;
+  --line:rgba(247,238,219,.14);
+  --display:"Cormorant Garamond",Georgia,serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100svh;background:radial-gradient(120% 60% at 50% 0%,#2a1a4a 0%,var(--night) 60%);color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+.wrap{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 22px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 40px) max(16px,env(safe-area-inset-left,0px))}
+.top a{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font:600 19px var(--display);margin-bottom:22px}
+.top svg{width:22px;height:22px;color:var(--ember)}
+h1{font:600 clamp(34px,8vw,48px)/1.02 var(--display);margin:0 0 10px;text-wrap:balance}
+.lead{color:var(--ink-2);margin:0 0 20px}
+.card{display:grid;gap:14px;padding:22px;border-radius:22px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.sum{display:flex;align-items:baseline;gap:10px;font:700 46px/1 var(--display)}
+.sum small{font:500 15px var(--body);color:var(--ink-3)}
+ul.what{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px;color:var(--ink-2)}
+ul.what li{display:flex;gap:10px}
+ul.what li::before{content:"";flex:none;width:7px;height:7px;margin-top:9px;border-radius:50%;background:var(--gold)}
+label{display:grid;gap:6px;font-size:14px;color:var(--ink-2)}
+input[type=email],input[type=text],input[type=tel]{width:100%;min-height:52px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22)}
+input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-3)}
+.ok input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold);flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 24px;border-radius:999px;border:0;font:600 17px var(--body);cursor:pointer;text-decoration:none;transition:transform .15s var(--ease-out),background-color .2s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.6;cursor:default}
+.btn-gold{background:var(--gold);color:#241a06}
+.btn-gold:hover{background:var(--gold-2)}
+.btn-ghost{background:rgba(247,238,219,.08);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.msg{min-height:1.3em;font-size:14px}
+.msg.bad{color:#ffb39b}
+.note{font-size:13px;color:var(--ink-3);margin:0}
+.code{font:700 clamp(28px,8vw,38px)/1 var(--body);letter-spacing:.08em;text-align:center;padding:18px 10px;border-radius:16px;background:rgba(14,10,34,.6);box-shadow:inset 0 0 0 1.5px var(--gold);user-select:all}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row .btn{flex:1 1 200px}
+[hidden]{display:none!important}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(247,238,219,.2);border-top-color:var(--gold);animation:sp 1s linear infinite;justify-self:center}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 3.5 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.3 1.6 1 2.5 2 2.7C11 8 10.8 5.5 12 3z"/><path d="M5 20h14"/></svg>Костёр историй</a></div>
+
+  <!-- 1. форма -->
+  <section id="buy">
+    <h1 id="title">Предзаказ квеста</h1>
+    <p class="lead" id="lead">Оплатите сейчас, и код придёт сразу. Истории откроются по одной с&nbsp;27&nbsp;декабря. А&nbsp;пока можно заглянуть в&nbsp;<a href="../prolog/">бесплатный Пролог</a>.</p>
+    <form class="card" id="f" novalidate>
+      <div class="sum">3 500 ₽<small>все 10 историй, один ребёнок</small></div>
+      <ul class="what">
+        <li>10 историй с героями великих книг, по одной в день</li>
+        <li>задания под возраст: 5–7, 8–10 или 11–14 лет</li>
+        <li>доступ остаётся навсегда, можно переигрывать</li>
+        <li>код работает на трёх устройствах семьи</li>
+      </ul>
+      <label>Почта для чека и кода<input type="email" id="email" required autocomplete="email" inputmode="email" placeholder="name@mail.ru"></label>
+      <label>Имя ребёнка<input type="text" id="child" autocomplete="off" maxlength="40" placeholder="Например, Маша"></label>
+      <label>Телефон, если удобнее связь в мессенджере<input type="tel" id="phone" autocomplete="tel" maxlength="20" placeholder="+7"></label>
+      <label class="ok"><input type="checkbox" id="agree"><span>Согласен(на) на обработку данных для оплаты и связи по квесту. Данные не передаём третьим лицам.</span></label>
+      <button class="btn btn-gold" type="submit" id="pay">Перейти к оплате</button>
+      <div class="msg" id="msg" role="status"></div>
+      <p class="note">Оплата картой или СБП через Т-Банк. Чек придёт на почту.</p>
+    </form>
+  </section>
+
+  <!-- 2. ждём банк -->
+  <section id="wait" hidden>
+    <h1>Проверяем оплату</h1>
+    <div class="card"><div class="spin" aria-hidden="true"></div><p class="lead" id="waitTxt" style="margin:0;text-align:center">Это займёт несколько секунд.</p></div>
+  </section>
+
+  <!-- 3. код -->
+  <section id="done" hidden>
+    <h1>Готово, спасибо!</h1>
+    <p class="lead">Это код вашей семьи. Мы уже сохранили его в этом браузере. Сделайте скриншот на всякий случай.</p>
+    <div class="card">
+      <div class="code" id="code"></div>
+      <div class="row"><a class="btn btn-gold" id="go" href="../play/">Открыть истории</a><button class="btn btn-ghost" type="button" id="copy">Скопировать ссылку</button></div>
+      <p class="note" id="link"></p>
+      <p class="note">На другом телефоне откройте эту ссылку или введите код на странице историй. Код работает на трёх устройствах.</p>
+    </div>
+  </section>
+
+  <!-- 4. не вышло -->
+  <section id="fail" hidden>
+    <h1>Оплата не прошла</h1>
+    <p class="lead">Деньги не списаны. Можно попробовать ещё раз или другой картой.</p>
+    <a class="btn btn-gold" href="./">Попробовать ещё раз</a>
+  </section>
+</div>
+<script src="../sf-access.js"></script>
+<script>
+(function(){
+  var SRV=['https://d5d6o4mldv5m1nj5hvih.6brbn2wz.apigw.yandexcloud.net/zhpay','https://ss-bb.o-sintsova.workers.dev/zhpay'];
+  function $(id){ return document.getElementById(id); }
+  function show(id){ ['buy','wait','done','fail'].forEach(function(s){ $(s).hidden=s!==id; }); }
+  function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+  function post(path,body,i){ i=i||0; if(i>=SRV.length) return Promise.reject(new Error('offline'));
+    var c=window.AbortController?new AbortController():null, t=c&&setTimeout(function(){c.abort();},15000);
+    return fetch(SRV[i]+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:c&&c.signal})
+      .then(function(r){ clearTimeout(t); return r.json(); }).catch(function(){ clearTimeout(t); return post(path,body,i+1); }); }
+  // после 27.12 это уже не предзаказ
+  if(Date.now()>=SF.opensAt(1).getTime()){ $('title').textContent='Купить квест'; $('lead').textContent='Код придёт сразу после оплаты. Все открытые истории можно пройти сегодня.'; }
+
+  var q=new URLSearchParams(location.search);
+  if(q.get('pay')==='fail'){ show('fail'); return; }
+  var order=q.get('order');
+  if(order){ waitPaid(order, 0); return; }
+
+  $('f').addEventListener('submit',function(e){ e.preventDefault();
+    var m=$('msg'), email=$('email').value.trim();
+    m.className='msg bad';
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придёт чек.'; $('email').focus(); return; }
+    if(!$('agree').checked){ m.textContent='Отметьте согласие на обработку данных.'; return; }
+    $('pay').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
+    post('/pay/create',{product:'quest',plan:'family',email:email,child:$('child').value.trim(),phone:$('phone').value.trim()}).then(function(j){
+      if(!j||!j.payment_url) throw j;
+      ls('sf_order',JSON.stringify({id:j.order_id,claim:j.claim}));
+      location.href=j.payment_url;
+    }).catch(function(){ $('pay').disabled=false; m.className='msg bad'; m.textContent='Не получилось открыть оплату. Проверьте интернет и попробуйте ещё раз.'; });
+  });
+
+  function waitPaid(id, n){
+    show('wait');
+    var o={}; try{ o=JSON.parse(ls('sf_order')||'{}'); }catch(e){}
+    if(o.id!==id){ $('waitTxt').textContent='Эту оплату начинали в другом браузере. Код придёт на почту из чека, или напишите нам в бот.'; return; }
+    post('/pay/status',{order_id:id,claim:o.claim}).then(function(j){
+      if(j&&j.paid&&j.key) return done(j.key);
+      if(n<20){ if(n===4) $('waitTxt').textContent='Банк ещё подтверждает оплату, подождите…'; setTimeout(function(){ waitPaid(id,n+1); },3000); }
+      else $('waitTxt').textContent='Банк долго не отвечает. Если деньги списались, код появится здесь чуть позже: обновите страницу или напишите нам в бот.';
+    }).catch(function(){ if(n<20) setTimeout(function(){ waitPaid(id,n+1); },3000); });
+  }
+  function done(code){
+    show('done'); ls('sf_code',code);
+    var link=location.origin+'/play/?k='+code;
+    $('code').textContent=code; $('go').href='../play/?k='+code; $('link').textContent=link;
+    $('copy').addEventListener('click',function(){ var b=this;
+      (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(function(){ b.textContent='Ссылка скопирована'; },function(){ b.textContent='Скопируйте ссылку ниже'; }); });
+  }
+})();
+</script>
+</body>
+</html>
