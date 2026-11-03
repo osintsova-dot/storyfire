@@ -402,6 +402,31 @@ textarea.inp{min-height:130px;resize:vertical}
 @media (prefers-reduced-motion:reduce){.swap{animation:none}}
 [data-scene="board"] .campfire,.campfire{display:none}
 
+/* объяснения в момент встречи + летящие награды (04.11) */
+.tipov{position:fixed;inset:0;z-index:60;background:rgba(14,10,34,.78);display:grid;place-items:end center;padding:0 16px calc(env(safe-area-inset-bottom,0px) + 24px);opacity:0;transition:opacity .25s}
+.tipov.in{opacity:1}
+.tip{width:100%;max-width:420px;background:#100c24;border-radius:20px;padding:20px 18px 16px;box-shadow:inset 0 0 0 1px rgba(245,200,66,.35),0 20px 50px rgba(0,0,0,.5);text-align:center;transform:translateY(16px);transition:transform .3s var(--ease-out)}
+.tipov.in .tip{transform:none}
+.tipov.hole{background:none}
+.tipov.up{place-items:start center;padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+.tip{max-height:calc(100svh - 90px);overflow:auto;-webkit-overflow-scrolling:touch}
+.tip p{margin:0}
+.tip-i{font-size:40px;line-height:1;margin-bottom:8px}
+.tip-t{font-family:var(--display);font-size:24px;color:var(--gold);margin-bottom:8px!important}
+.tip-l{font-size:15px;line-height:1.45;color:var(--ink-2);margin-top:6px!important}
+.tip-ok{margin-top:16px;width:100%}
+.tip-all{text-align:left}
+.tip-all .tip-t{text-align:center}
+.tip-row{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid rgba(247,238,219,.1);font-size:14px;line-height:1.4;color:var(--ink-2)}
+.tip-row span{font-size:22px;flex:0 0 28px}
+.tip-row b{color:var(--ink)}
+.tipspot{position:fixed;z-index:59;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 3px var(--gold),0 0 0 9999px rgba(14,10,34,.78);pointer-events:none;opacity:0;transition:opacity .25s;animation:aimp 1.2s ease-in-out infinite}
+.tipspot.in{opacity:1}
+.snd.help{font:700 18px/1 var(--body);color:var(--gold);margin-right:-4px}
+.fly{position:fixed;z-index:55;transform:translate(-50%,0);font:700 18px/1 var(--body);color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;animation:flyup 1.3s var(--ease-out) forwards}
+@keyframes flyup{0%{opacity:0;transform:translate(-50%,14px) scale(.8)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-34px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.fly,.tipspot{animation:none}}
+
 /* ===== общее для всех историй: поле на весь экран ===== */
 [data-scene="board"]{overflow:hidden}
 [data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
@@ -1556,7 +1581,7 @@ textarea.inp{min-height:130px;resize:vertical}
   });
   var pages=$('#pages');
   ST.forEach(function(s){ var p=document.createElement('span'); p.className='pg'; p.innerHTML=PAGE+'<em>'+s[3]+'</em>'; p.title=s[1]; pages.appendChild(p); });
-  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} if(window.SF_HUD) SF_HUD(); };
+  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} if(window.SF_HUD) SF_HUD(); if(typeof fly==='function') fly('+1 ✦'); };
   var getN=function(k){ try{ return +(localStorage.getItem(k)||0); }catch(e){ return 0; } }, setN=function(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} };
   var hud=$('#hud');
   function paintHud(){ if(!hud) return; var sp=getN('sf_sparks');
@@ -1567,7 +1592,33 @@ textarea.inp{min-height:130px;resize:vertical}
   (function(){ var swap=function(e){ e.classList.remove('swap'); void e.offsetWidth; e.classList.add('swap'); };
     var r=$('#boardRu'), pk=$('#pick'); if(window.MutationObserver){ new MutationObserver(function(){ swap(r); }).observe(r,{childList:true,characterData:true,subtree:true});
       new MutationObserver(function(){ if(!pk.hidden) swap(pk); }).observe(pk,{childList:true}); } })();
-  function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
+  // v2: объяснение в момент первой встречи (один раз, с подсветкой) + летящие награды
+  var TIPS={
+    spark:{i:'✦',t:'Искра',l:['Ты получил искру.','Искра открывает подсказку в шифре или двигает кубик на одну клетку.','Сбережённые искры зажгут огонь против Мышиного короля.']},
+    log:{i:'🪵',t:'Полено',l:['Ты оттаял страницу — в костёр летят поленья.','С первого раза — 3, со второй попытки — 2, дошёл до конца — 1.','Чем больше поленьев, тем ярче костёр в конце истории.']},
+    pick:{i:'🎲',t:'Твой ход',l:['Кубик показал, куда встанет фишка.','Рядом видно соседние клетки. За искру можно шагнуть на одну клетку влево или вправо.','Решай сам: идти как выпало или потратить искру.']},
+    snow:{i:'❄️',t:'Сугроб',l:['Сугроб на тропе.','Растопить его можно словами: назови три слова из истории.','Или отдать искру — тогда сразу идём дальше.']},
+    wind:{i:'🌬',t:'Метель',l:['Метель сносит фишку на шаг назад.','Через оттаявшую страницу она не перенесёт — страница как берег.','Метель видно заранее: её можно обойти искрой.']},
+    star:{i:'⭐',t:'Короткая тропа',l:['Короткая тропа ведёт прямо к следующей странице.','Все клетки по дороге пропускаются.','Повезло — пользуйся!']},
+    mouse:{i:'🐾',t:'Мышиный след',l:['Мыши оставили след.','Это маленькая загадка. Разгадаешь — идём дальше.','Мыши собирают кусочки старой карты… зачем?']},
+    battle:{i:'⚔️',t:'Битва за значок',l:['Пять заданий подряд.','Обычная битва: полено за каждый ответ с первого раза.','Битва героя: по два полена, но за ошибку одно сгорает. Меньше одного не бывает.']},
+    card:{i:'🃏',t:'Карточка героя',l:['Алиса спрашивает, что ей сделать.','Твой выбор решает, какая карточка встанет на полку.','В последней истории каждая карточка умеет своё.']}};
+  function teach(key,target){ var seen; try{ seen=localStorage.getItem('sf_tip_'+key); }catch(e){} if(seen||!TIPS[key]) return Promise.resolve();
+    try{ localStorage.setItem('sf_tip_'+key,'1'); }catch(e){}
+    return new Promise(function(res){ var t=TIPS[key], ov=el('div','tipov');
+      var lines=T==='little'?t.l.slice(0,2):t.l;
+      ov.innerHTML='<div class="tip"><div class="tip-i">'+t.i+'</div><p class="tip-t">'+t.t+'</p>'+lines.map(function(x){ return '<p class="tip-l">'+x+'</p>'; }).join('')+'<button class="btn btn-gold tip-ok">Понятно</button></div>';
+      document.body.appendChild(ov); var sp=null;
+      if(target&&target.getBoundingClientRect){ var r=target.getBoundingClientRect(); if(r.width>0&&r.width<200){ sp=el('div','tipspot'); sp.style.left=(r.left+r.width/2)+'px'; sp.style.top=(r.top+r.height/2)+'px'; sp.style.width=sp.style.height=(Math.max(r.width,r.height)+24)+'px'; ov.classList.add('hole'); document.body.appendChild(sp);
+        if(r.top+r.height/2>window.innerHeight*.5) ov.classList.add('up'); } }
+      requestAnimationFrame(function(){ ov.classList.add('in'); if(sp) sp.classList.add('in'); });
+      ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); if(sp) sp.classList.remove('in'); setTimeout(function(){ ov.remove(); if(sp) sp.remove(); res(); },260); }); }); }
+  function fly(txt){ if(!hud) return; var f=el('span','fly',txt); var r=hud.getBoundingClientRect(); f.style.left=(r.left+r.width/2)+'px'; f.style.top=(r.top+r.height)+'px'; document.body.appendChild(f); setTimeout(function(){ f.remove(); },1400); }
+  (function(){ var sb=$('#sndBtn'); if(!sb) return; var h=el('button','snd help','?'); h.setAttribute('aria-label','Правила'); sb.parentNode.insertBefore(h,sb);
+    h.addEventListener('click',function(){ var ov=el('div','tipov'); var keys=['pick','spark','log','snow','wind','star','mouse','battle','card'];
+      ov.innerHTML='<div class="tip tip-all"><p class="tip-t">Как играть</p>'+keys.map(function(k){ var t=TIPS[k]; return '<div class="tip-row"><span>'+t.i+'</span><div><b>'+t.t+'</b><br>'+t.l.slice(0,2).join(' ')+'</div></div>'; }).join('')+'<button class="btn btn-gold tip-ok">Понятно</button></div>';
+      document.body.appendChild(ov); requestAnimationFrame(function(){ ov.classList.add('in'); }); ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); setTimeout(function(){ ov.remove(); },260); }); }); })();
+  function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); fly('+'+n+' 🪵'); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
   var STARS=[]; try{ STARS=JSON.parse(localStorage.getItem('sf_s1_stars')||'[]'); }catch(e){}
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,mirror:1,pick3:1};
   function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
@@ -1588,17 +1639,18 @@ textarea.inp{min-height:130px;resize:vertical}
     var miss0=MISS, hint0=window.SF_HINTS||0;
     return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key]); })
       .then(function(){ var m=MISS-miss0, hn=(window.SF_HINTS||0)-hint0, got=(m===0&&hn===0)?3:(m<=2?2:1); STARS[k]=got; setN('sf_s1_stars',0); try{ localStorage.setItem('sf_s1_stars',JSON.stringify(STARS)); }catch(e){}
-        addLogs(got); if(m===0&&hn===0) addSpark();
+        addLogs(got); if(m===0&&hn===0) addSpark(); var kept=m>0&&hn===0; if(kept) addSpark(); teach('log',hud.children[1]||hud);  // «не сдался»: ошибся, но дошёл сам, без подсказок — тоже искра
         box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
         try{ localStorage.setItem('sf_s1_done',String(done)); }catch(e){}
         if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
-        var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! В костёр '+(g===3?'3 полена — сам и с первого раза! И ещё искра ✦':g===2?'2 полена — ты справился!':'1 полено — ты дошёл до конца!')+' Бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
+        var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! В костёр '+(g===3?'3 полена — сам и с первого раза! И ещё искра ✦':g===2?'2 полена — ты справился!':'1 полено — ты дошёл до конца!')+(m>0&&hn===0?' Ты не сдался и исправил сам — держи искру ✦':'')+' Бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
   }
   function badge(){
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
     var risk=false;
     return taskPage(box,'Битва за значок','В бой!',function(body,finish){
         if(T==='little'){ risk=false; R.check(body,CHECK[T],finish); return; }
+        teach('battle',null);
         body.appendChild(el('p','say','Choose your battle!'));
         body.appendChild(el('p','ru','Обычная битва: за каждый ответ с первого раза — 1 полено. Битва героя: за каждый — 2 полена, но за ошибку одно из них сгорает (меньше 1 не бывает, заработанное раньше не тронем).'));
         var row=el('div','row2'); body.appendChild(row);
@@ -1614,17 +1666,17 @@ textarea.inp{min-height:130px;resize:vertical}
     var box=$('#ev');
     if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return !x.classList.contains('got');})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
       ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
-    if(kind==='log'){ var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
+    if(kind==='log'){ teach('log',hud.children[1]||hud); var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
       ru.textContent='Полено! Костёр горит ярче.'; return wait(1300); }
-    if(kind==='wind'){ SND.fx('no'); var bk=pos-1; if(T!=='little'&&STATIONS.indexOf(bk)<0&&bk>=0&&STATIONS.indexOf(bk+1)<0){ pos=bk; place(CELLS[pos]); ru.textContent='Метель! Ветер отнёс тебя на шаг назад.'; } else ru.textContent='Метель! Но ты удержался на месте.'; return wait(1500); }
-    if(kind==='star'){ SND.fx('spark'); ru.textContent='Короткая тропа! Прямо к странице.'; return wait(900).then(function(){ var to=STATIONS[done]; while(pos<to){ pos++; } place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); return wait(500).then(function(){ return station(done); }); }); }
+    if(kind==='wind'){ SND.fx('no'); teach('wind',token); var bk=pos-1; if(T!=='little'&&STATIONS.indexOf(bk)<0&&bk>=0&&STATIONS.indexOf(bk+1)<0){ pos=bk; place(CELLS[pos]); ru.textContent='Метель! Ветер отнёс тебя на шаг назад.'; } else ru.textContent='Метель! Но ты удержался на месте.'; return wait(1500); }
+    if(kind==='star'){ SND.fx('spark'); teach('star',token); ru.textContent='Короткая тропа! Прямо к странице.'; return wait(900).then(function(){ var to=STATIONS[done]; while(pos<to){ pos++; } place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); return wait(500).then(function(){ return station(done); }); }); }
     $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
     var steps, kick, lbl;
-    if(kind==='mouse'){ steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a message.'); ru.textContent='Мышиный след! Мыши что-то оставили.'; }
+    if(kind==='mouse'){ teach('mouse',token); steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a message.'); ru.textContent='Мышиный след! Мыши что-то оставили.'; }
     else if(kind==='snow'&&T!=='little'&&getN('sf_sparks')>0&&!window._snowAsk){ window._snowAsk=1; box.hidden=false; box.innerHTML='';
-      return new Promise(function(res){ var w=el('div','pick'); w.innerHTML='<p class="pk-t">Сугроб на тропе! Растопить: назвать 3 слова — или отдать 1 искру?</p><div class="pk-row"><button class="btn btn-gold s3">Назову 3 слова</button><button class="gloss s1">Отдать ✦</button></div>'; box.appendChild(w);
+      return teach('snow',token).then(function(){ return new Promise(function(res){ var w=el('div','pick'); w.innerHTML='<p class="pk-t">Сугроб на тропе! Растопить: назвать 3 слова — или отдать 1 искру?</p><div class="pk-row"><button class="btn btn-gold s3">Назову 3 слова</button><button class="gloss s1">Отдать ✦</button></div>'; box.appendChild(w);
         w.querySelector('.s1').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); SND.fx('fire'); box.hidden=true; $('.dierow').hidden=false; ru.textContent='Искра растопила сугроб!'; window._snowAsk=0; res(); };
-        w.querySelector('.s3').onclick=function(){ box.innerHTML=''; event('snow').then(function(){ window._snowAsk=0; res(); }); }; }); }
+        w.querySelector('.s3').onclick=function(){ box.innerHTML=''; event('snow').then(function(){ window._snowAsk=0; res(); }); }; }); }); }
     else if(kind==='snow'){ kick='Сугроб'; lbl='Что делать?'; speak(say,'Oh! A big snowdrift. Find three things from the story to melt it!'); ru.textContent='Сугроб! Найди три слова из истории, чтобы его растопить.'; steps=[SNOW[T]]; }
     else { kick='Ход для взрослого'; lbl='Открыть'; speak(say,'A move for a grown-up! Play together.'); ru.textContent='Ход для взрослого: играем вместе!'; steps=ADULT[T]; }
     return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish); }).then(function(){ box.hidden=true; $('.dierow').hidden=false; return wait(300); });
@@ -1643,11 +1695,11 @@ textarea.inp{min-height:130px;resize:vertical}
       var aimR=window._aimR||(window._aimR=(function(){ var x=document.createElement('div'); x.className='aim alt'; forest.insertBefore(x,token); return x; })());
       function putAlt(a,c){ if(c>pos&&c<=stop&&!used&&getN('sf_sparks')>0){ a.hidden=false; a.style.left=CELLS[c][0]+'%'; a.style.top=CELLS[c][1]+'%'; } else a.hidden=true; }
       if(T==='little'){ var alt=(EVS[to+1]&&to+1<=stop)?to+1:(to-1>pos?to-1:-1);
-        return (function lshow(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimR,alt); aimL.hidden=true; pick.hidden=false;
+        return teach('pick',$('#die')).then(function lshow(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimR,alt); aimL.hidden=true; pick.hidden=false;
           var can=alt>=0&&getN('sf_sparks')>0;
           pick.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>. Фишка встанет: <b>'+(EVNAME[kindAt(to)]||'пустая клетка')+'</b></p>'+(can?'<p class="pk-n">А за искру — сюда: <b>'+(EVNAME[kindAt(alt)]||'пустая клетка')+'</b> (светится). Тратим искру?</p><div class="pk-row"><button class="gloss pk-y">Да, ✦</button><button class="btn btn-gold pk-go">Нет, идём</button></div>':'<div class="pk-row"><button class="btn btn-gold pk-go">Идём!</button></div>');
           var y=pick.querySelector('.pk-y'); if(y) y.onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); to=alt; used=true; SND.fx('spark'); aimR.hidden=true; walk(); };
-          pick.querySelector('.pk-go').onclick=function(){ aimR.hidden=true; walk(); }; })(); }
+          pick.querySelector('.pk-go').onclick=function(){ aimR.hidden=true; walk(); }; }); }
       function show(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimL,to-1); putAlt(aimR,to+1); var k=kindAt(to), sp=getN('sf_sparks');
         pick.hidden=false;
         pick.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>'+(pos+n>stop?' — но дальше страницы не пройти':'')+'. Встанешь на: <b>'+(EVNAME[k]||'пустую клетку')+'</b></p>'+
@@ -1664,7 +1716,7 @@ textarea.inp{min-height:130px;resize:vertical}
             return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(function(){ rolling=false; if(done<6){ ru.textContent=ru.textContent||'Бросай ещё!'; } }); }
           pos++; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
           wait(380).then(step); })(); }
-      show();
+      teach('pick',$('#die')).then(show);
     });
   });
 
@@ -1683,10 +1735,11 @@ textarea.inp{min-height:130px;resize:vertical}
     avid.addEventListener('ended',end); setTimeout(end,9000);
   });
   ENTER.board=function(){ speak(say,'Six frozen pages are hidden in the forest. Roll the dice!');
-    if(!getN('sf_s1_gift')){ setN('sf_s1_gift',1); setN('sf_sparks',getN('sf_sparks')+2); paintHud(); ru.textContent='Книга дарит тебе 2 искры ✦✦. Трать на подсказки и на кубик — а сбережённые зажгут огонь против Мышиного короля в последней истории.'; } };
+    if(!getN('sf_s1_gift')){ setN('sf_s1_gift',1); setN('sf_sparks',getN('sf_sparks')+2); paintHud(); ru.textContent='Книга дарит тебе 2 искры ✦✦.'; fly('+2 ✦'); setTimeout(function(){ teach('spark',hud.firstElementChild); },900); } };
   // решение героя (v2): от выбора зависит, какая карточка Алисы встанет на полку — и её сила в финале
   function heroChoice(){ return new Promise(function(res){
     var v=$('#finAlice').parentNode, q=el('div','hchoice','<p class="say">Look! A tiny door. What shall I do?</p><p class="ru">Алиса: «Смотри, крошечная дверца! Что мне сделать?» Выбор за тобой — от него зависит, какая карточка Алисы встанет на полку.</p>');
+    teach('card',null);
     var row=el('div','row2'); q.appendChild(row);
     var a1=el('button','btn btn-gold','Open it now!'), a2=el('button','btn btn-ghost','Look through the keyhole first');
     row.appendChild(a1); row.appendChild(a2); v.insertBefore(q,$('#card'));
