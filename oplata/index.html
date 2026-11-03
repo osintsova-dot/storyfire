@@ -75,7 +75,7 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
         <li>код работает на трёх устройствах семьи</li>
       </ul>
       <label>Почта для чека и кода<input type="email" id="email" required autocomplete="email" inputmode="email" placeholder="name@mail.ru"></label>
-      <label>Фамилия и имя ребёнка<input type="text" id="child" required autocomplete="off" maxlength="60" placeholder="Например, Иванова Маша"></label>
+      <label>Дети: фамилия и имя (если несколько — через запятую)<input type="text" id="child" required autocomplete="off" maxlength="150" placeholder="Например, Иванова Маша, Иванов Петя"></label>
       <label>ФИО родителя<input type="text" id="parent" required autocomplete="name" maxlength="80" placeholder="Например, Иванова Анна Петровна"></label>
       <label>Телефон, если удобнее связь в мессенджере<input type="tel" id="phone" autocomplete="tel" maxlength="20" placeholder="+7"></label>
       <label class="ok"><input type="checkbox" id="agree"><span>Согласен(на) на обработку данных для оплаты и связи по квесту. Данные не передаём третьим лицам.</span></label>
@@ -133,7 +133,7 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
     var m=$('msg'), email=$('email').value.trim();
     m.className='msg bad';
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придёт чек.'; $('email').focus(); return; }
-    if($('child').value.trim().split(/\s+/).length<2){ m.textContent='Напишите фамилию и имя ребёнка.'; $('child').focus(); return; }
+    if($('child').value.trim().split(/\s+/).length<2){ m.textContent='Напишите фамилию и имя ребёнка (или детей через запятую).'; $('child').focus(); return; }
     if($('parent').value.trim().split(/\s+/).length<2){ m.textContent='Напишите ФИО родителя.'; $('parent').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие на обработку данных.'; return; }
     $('pay').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
