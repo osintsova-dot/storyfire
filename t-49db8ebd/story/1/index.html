@@ -367,6 +367,30 @@ textarea.inp{min-height:130px;resize:vertical}
 .fuse.low svg{animation:shake .5s infinite}
 .fuse.win svg{transform:scale(1.4);color:var(--gold)}
 
+/* v2 прототип 04.11 */
+.forest .cell-ico{width:6.6%}
+.cell-ico.ico-log{background:#4a2c12;color:#e8b070;box-shadow:0 0 0 2px #e8b070,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-star{background:#123a2a;color:#9df0c4;box-shadow:0 0 0 2px #9df0c4,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-wind{background:#2a3550;color:#c9d6f5;box-shadow:0 0 0 2px #c9d6f5,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.got{opacity:.35}
+.forest .aim{position:absolute;width:10%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 3px var(--gold),0 0 22px 6px rgba(245,200,66,.65);animation:aimp 1s ease-in-out infinite;pointer-events:none;z-index:4}
+@keyframes aimp{50%{transform:translate(-50%,-50%) scale(1.18)}}
+.hud{display:flex;justify-content:center;gap:18px;margin:0;font-size:15px;color:var(--ink-2)}
+.hud b{color:var(--gold);font-size:17px}
+.hud.pop{animation:hpop .5s ease}
+@keyframes hpop{40%{transform:scale(1.15)}}
+.pick{display:grid;gap:8px;justify-items:center;text-align:center}
+.pick p{margin:0}
+.pk-t{font-size:15px;color:var(--ink)}
+.pk-n{font-size:13px;color:var(--ink-3)}
+.pk-row{display:flex;gap:8px;align-items:center}
+.pk-row .gloss[disabled]{opacity:.35}
+.hchoice{display:grid;gap:10px;margin:10px 0}
+.hchoice .row2{display:grid;gap:8px}
+@media (prefers-reduced-motion:reduce){.forest .aim,.hud.pop{animation:none}}
+.forest .aim.alt{box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 14px 3px rgba(255,255,255,.35);animation:none;width:8%}
+.hud .jar{letter-spacing:2px;color:var(--gold)}
+
 /* ===== общее для всех историй: поле на весь экран ===== */
 [data-scene="board"]{overflow:hidden}
 [data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
@@ -640,6 +664,8 @@ textarea.inp{min-height:130px;resize:vertical}
       <div class="pages" id="pages" aria-label="Страницы книги Алисы"></div>
       <p class="say" data-say id="boardSay"></p>
       <p class="ru" id="boardRu">В лесу спрятаны шесть замёрзших страниц. Бросай кубик!</p>
+      <p class="hud" id="hud" aria-live="polite"></p>
+      <div class="pick" id="pick" hidden></div>
       <div class="dierow">
         <button class="die" id="die" aria-label="Бросить кубик"><img src="../../img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
         <p class="count" id="count" aria-live="polite"></p>
@@ -888,7 +914,7 @@ textarea.inp{min-height:130px;resize:vertical}
   /* --- step renderers (inside the book page) --- */
   function head(body,q,ru,note){ var ps=document.createElement('p'); ps.className='say'; body.appendChild(ps);
     if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label','Послушать ещё раз'); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); ruBtns(body); return ps; }
-  function wrong(b,fb){ MISS++; SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent='Not quite. Try again!'; }
+  function wrong(b,fb){ MISS++; if(!(window.SF_V2&&T==='little')) SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent=window.SF_V2?'Почти! Посмотри ещё раз.':'Not quite. Try again!'; }
   function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
   function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
   function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
@@ -969,7 +995,23 @@ textarea.inp{min-height:130px;resize:vertical}
   // расшифровка с вводом ответа: atbash / shift / rev
   // лесенка подсказок (как в квест-играх): сначала время подумать, потом намёк → буква → ответ; искра открывает ступеньку сразу
   var THINK={little:30,explorers:45,experts:60};
+  // v2 (прототип 04.11, история 1): сначала только символы; подсказки — только за искры (1 искра = 1 ступенька).
+  // Нет искр: через 2 мин (малышам 1 мин) Книга подскажет сама — чтобы никто не застрял.
+  function hintLadder2(body,steps,fb){
+    var row=el('div','hladder'); body.appendChild(row); var k=0, done=false, waited=0, FREE=T==='little'?75:120, m0=MISS;
+    var btn=el('button','gloss hspark'); row.appendChild(btn); var note=el('p','hwait'); row.appendChild(note);
+    var sparks=function(){ try{ return +(localStorage.getItem('sf_sparks')||0); }catch(e){ return 0; } };
+    function paint(){ if(done) return; var n=sparks(), tried=MISS>m0||k>0; btn.disabled=n<1||!tried; if(!tried){ btn.innerHTML='✦ Подсказка · 1 искра'; note.textContent='Сначала попробуй сам — подсказка откроется после первой попытки.'; return; }
+      btn.innerHTML='✦ Подсказка '+(k+1)+' из '+steps.length+' · 1 искра <small>(у тебя: '+n+')</small>';
+      note.textContent=n<1?(T==='little'?'Искр нет. Позови взрослого — а через '+Math.max(0,FREE-waited)+' с Книга подскажет сама.':'Искр нет. Думай! Через '+Math.max(0,FREE-waited)+' с Книга сжалится и подскажет.'):'Сначала попробуй сам.'; }
+    function use(free){ if(done) return; var t=steps[k](); if(fb&&t) fb.textContent=(free?'Книга сжалилась. ':'')+t; k++; waited=0; window.SF_HINTS=(window.SF_HINTS||0)+1;
+      if(k>=steps.length){ done=true; row.hidden=true; clearInterval(iv); } else paint(); if(window.SF_HUD) SF_HUD(); }
+    btn.addEventListener('click',function(){ var n=sparks(); if(n<1) return; try{ localStorage.setItem('sf_sparks',String(n-1)); }catch(e){} SND.fx('spark'); use(false); });
+    var iv=setInterval(function(){ if(done) return; if(sparks()<1){ waited++; if(waited>=FREE) use(true); } paint(); },1000);
+    paint(); return {stop:function(){ done=true; clearInterval(iv); row.hidden=true; }};
+  }
   function hintLadder(body,steps,fb){
+    if(window.SF_V2) return hintLadder2(body,steps,fb);
     var row=el('div','hladder'); body.appendChild(row); var k=0, left=THINK[T]||45, iv=null, done=false;
     var wait=el('p','hwait'); row.appendChild(wait);
     var btn=el('button','gloss hbtn'); btn.hidden=true; row.appendChild(btn);
@@ -1310,6 +1352,7 @@ textarea.inp{min-height:130px;resize:vertical}
 
   /* uses engine */
   /* ===== История 1 · Alice — урок повторения (план: вкладка «История 1 · Алиса») ===== */
+  window.SF_V2=true;  // прототип 04.11: честное поле, поленья, искры за подсказки и кубик, выбор героя
   var T=state.track||'explorers';
   function setTrack(t){ T=state.track=t; document.body.className='t-'+t; }
   var ACTW={};
@@ -1456,13 +1499,18 @@ textarea.inp{min-height:130px;resize:vertical}
     explorers:[{t:'parent',pic:'i:teacup',q:'Café game! The grown-up is the waiter: What would you like?',ru:'Игра в кафе: взрослый — официант, спрашивает What would you like? Ты отвечаешь I’d like some … / I’d like a … Потом поменяйтесь.',line:'What would you like? I’d like some cheese, please.'}],
     experts:[{t:'parent',pic:'i:teacup',q:'Interview a grown-up: How much tea do you drink? How many …?',ru:'Возьми интервью у взрослого: три вопроса How much … / How many …? Взрослый отвечает с a lot of / a little / a few.',line:'How much tea do you drink every day?'}]
   };
-  var EVS={0:'spark',2:'mouse',4:'snow',6:'adult',8:'mouse',10:'spark'};
-  var STATIONS=[1,3,5,7,9,11];
-  var CELLS=[[41.3,74],[56.3,70.8],[70.4,67.6],[78.3,61.1],[73.6,53.1],[64.7,46.2],[53.2,41.2],[41.7,36.5],[33.1,30],[38.3,22.9],[49,18.6],[60.6,15.5]];
-  var START=[40,86];
+  // v2: 24 клетки (между страницами по 3), страницы — обязательные остановки; события срабатывают, только если на клетку ВСТАЛ
+  var START=[40,86], C0=[[41.3,74],[56.3,70.8],[70.4,67.6],[78.3,61.1],[73.6,53.1],[64.7,46.2],[53.2,41.2],[41.7,36.5],[33.1,30],[38.3,22.9],[49,18.6],[60.6,15.5]];
+  var CELLS=[]; (function(){ var pv=START; C0.forEach(function(c){ CELLS.push([(pv[0]+c[0])/2,(pv[1]+c[1])/2]); CELLS.push(c); pv=c; }); })();
+  var STATIONS=[3,7,11,15,19,23];
+  var EVS={0:'spark',1:'mouse',2:'log',4:'wind',5:'snow',6:'spark',8:'star',9:'adult',10:'log',12:'mouse',13:'spark',14:'wind',16:'log',17:'star',18:'spark',20:'spark',21:'adult',22:'log'};
+  var EVNAME={spark:'искра ✦',mouse:'мышиный след',log:'полено 🪵',wind:'метель (шаг назад)',snow:'сугроб',adult:'ход для взрослого',star:'короткая тропа ⭐',page:'замёрзшая страница'};
   var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
   var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
-  var ICO={spark:SPARK,mouse:PAW,snow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg>',adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
+  var LOG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="9" width="18" height="7" rx="3.5"/><circle cx="18" cy="12.5" r="2" fill="#7a4a1c"/></svg>';
+  var STAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18l6-6 3 3 7-7M15 8h5v5"/></svg>';
+  var WIND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3"/></svg>';
+  var ICO={log:LOG,star:STAR,wind:WIND,spark:SPARK,mouse:PAW,snow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg>',adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
   var PAGE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg>';
   var MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
 
@@ -1491,13 +1539,21 @@ textarea.inp{min-height:130px;resize:vertical}
     var st=STATIONS.indexOf(i);
     var d=document.createElement('div');
     if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
-    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; }
+    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
     else return;
     d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
   });
   var pages=$('#pages');
   ST.forEach(function(s){ var p=document.createElement('span'); p.className='pg'; p.innerHTML=PAGE+'<em>'+s[3]+'</em>'; p.title=s[1]; pages.appendChild(p); });
-  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} };
+  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} if(window.SF_HUD) SF_HUD(); };
+  var getN=function(k){ try{ return +(localStorage.getItem(k)||0); }catch(e){ return 0; } }, setN=function(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} };
+  var hud=$('#hud');
+  function paintHud(){ if(!hud) return; var sp=getN('sf_sparks');
+    hud.innerHTML=T==='little'?'<span class="jar" title="Банка искр">'+(sp?'✦'.repeat(Math.min(sp,8)):'пусто')+'</span><span class="fire">🔥</span>'
+      :'<span title="Искры: подсказки и сдвиг кубика. Сбережённые зажгут огонь против Мышиного короля">✦ <b>'+sp+'</b></span><span title="Поленья в костре">🪵 <b>'+getN('sf_logs')+'</b></span>'; }
+  window.SF_HUD=paintHud; paintHud();
+  function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
+  var STARS=[]; try{ STARS=JSON.parse(localStorage.getItem('sf_s1_stars')||'[]'); }catch(e){}
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,mirror:1,pick3:1};
   function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
@@ -1514,44 +1570,86 @@ textarea.inp{min-height:130px;resize:vertical}
     steps=steps.concat(d.steps);
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
     speak(say,'A frozen page! '+ST[k][1]+'. Open it!'); ru.textContent='Замёрзшая страница: '+ST[k][2]+'. Открой её!';
+    var miss0=MISS, hint0=window.SF_HINTS||0;
     return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key]); })
-      .then(function(){ box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
+      .then(function(){ var m=MISS-miss0, hn=(window.SF_HINTS||0)-hint0, got=(m===0&&hn===0)?3:(m<=2?2:1); STARS[k]=got; setN('sf_s1_stars',0); try{ localStorage.setItem('sf_s1_stars',JSON.stringify(STARS)); }catch(e){}
+        addLogs(got); if(m===0&&hn===0) addSpark();
+        box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
         try{ localStorage.setItem('sf_s1_done',String(done)); }catch(e){}
         if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
-        ru.textContent='Страница оттаяла! Бросай кубик дальше.'; return speak(say,'The page is warm again! Roll the dice.'); });
+        var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! В костёр '+(g===3?'3 полена — сам и с первого раза! И ещё искра ✦':g===2?'2 полена — ты справился!':'1 полено — ты дошёл до конца!')+' Бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
   }
   function badge(){
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
-    return taskPage(box,'Битва за значок','В бой!',function(body,finish){ R.check(body,CHECK[T],finish); })
-      .then(function(){ box.hidden=true; ru.textContent='Значок твой! Верни книгу Алисе.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
+    var risk=false;
+    return taskPage(box,'Битва за значок','В бой!',function(body,finish){
+        if(T==='little'){ risk=false; R.check(body,CHECK[T],finish); return; }
+        body.appendChild(el('p','say','Choose your battle!'));
+        body.appendChild(el('p','ru','Обычная битва: за каждый ответ с первого раза — 1 полено. Битва героя: за каждый — 2 полена, но за ошибку одно из них сгорает (меньше 1 не бывает, заработанное раньше не тронем).'));
+        var row=el('div','row2'); body.appendChild(row);
+        var b1=el('button','btn btn-gold','Обычная'), b2=el('button','btn btn-ghost','Битва героя ×2'); row.appendChild(b1); row.appendChild(b2);
+        function go(r){ risk=r; body.innerHTML=''; R.check(body,CHECK[T],finish); }
+        b1.addEventListener('click',function(){ go(false); }); b2.addEventListener('click',function(){ SND.fx('fire'); go(true); }); })
+      .then(function(){ var r={}; try{ r=JSON.parse(localStorage.getItem('sf_s1_report')||'{}'); }catch(e){}
+        var sc=r.score||0, of=r.of||5, gain=risk?Math.max(1,2*sc-(of-sc)):sc; addLogs(gain);
+        try{ r.logs=getN('sf_logs'); r.stars=STARS; r.risk=risk; r.gain=gain; localStorage.setItem('sf_s1_report',JSON.stringify(r)); }catch(e){}
+        box.hidden=true; ru.textContent='Значок твой! Верни книгу Алисе.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
   }
   function event(kind){
     var box=$('#ev');
     if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return !x.classList.contains('got');})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
       ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
+    if(kind==='log'){ var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
+      ru.textContent='Полено! Костёр горит ярче.'; return wait(1300); }
+    if(kind==='wind'){ SND.fx('no'); var bk=pos-1; if(T!=='little'&&STATIONS.indexOf(bk)<0&&bk>=0&&STATIONS.indexOf(bk+1)<0){ pos=bk; place(CELLS[pos]); ru.textContent='Метель! Ветер отнёс тебя на шаг назад.'; } else ru.textContent='Метель! Но ты удержался на месте.'; return wait(1500); }
+    if(kind==='star'){ SND.fx('spark'); ru.textContent='Короткая тропа! Прямо к странице.'; return wait(900).then(function(){ var to=STATIONS[done]; while(pos<to){ pos++; } place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); return wait(500).then(function(){ return station(done); }); }); }
     $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
     var steps, kick, lbl;
     if(kind==='mouse'){ steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a message.'); ru.textContent='Мышиный след! Мыши что-то оставили.'; }
+    else if(kind==='snow'&&T!=='little'&&getN('sf_sparks')>0&&!window._snowAsk){ window._snowAsk=1; box.hidden=false; box.innerHTML='';
+      return new Promise(function(res){ var w=el('div','pick'); w.innerHTML='<p class="pk-t">Сугроб на тропе! Растопить: назвать 3 слова — или отдать 1 искру?</p><div class="pk-row"><button class="btn btn-gold s3">Назову 3 слова</button><button class="gloss s1">Отдать ✦</button></div>'; box.appendChild(w);
+        w.querySelector('.s1').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); SND.fx('fire'); box.hidden=true; $('.dierow').hidden=false; ru.textContent='Искра растопила сугроб!'; window._snowAsk=0; res(); };
+        w.querySelector('.s3').onclick=function(){ box.innerHTML=''; event('snow').then(function(){ window._snowAsk=0; res(); }); }; }); }
     else if(kind==='snow'){ kick='Сугроб'; lbl='Что делать?'; speak(say,'Oh! A big snowdrift. Find three things from the story to melt it!'); ru.textContent='Сугроб! Найди три слова из истории, чтобы его растопить.'; steps=[SNOW[T]]; }
     else { kick='Ход для взрослого'; lbl='Открыть'; speak(say,'A move for a grown-up! Play together.'); ru.textContent='Ход для взрослого: играем вместе!'; steps=ADULT[T]; }
     return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish); }).then(function(){ box.hidden=true; $('.dierow').hidden=false; return wait(300); });
   }
+  var aim=document.createElement('div'); aim.className='aim'; aim.hidden=true; forest.insertBefore(aim,token);
+  function kindAt(c){ return STATIONS.indexOf(c)>=0?'page':(EVS[c]||''); }
   $('#die').addEventListener('click',function(){
     if(rolling||done>=6) return; rolling=true; SND.fx('dice');
-    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count');
+    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count'), stop=STATIONS[done];
     die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll'); $('#dieN').classList.remove('in');
     wait(900).then(function(){
-      $('#dieN').textContent=n; $('#dieN').classList.add('in'); var left=n;
-      (function step(){
-        if(left<=0||pos>=CELLS.length-1){ rolling=false; ru.textContent='Бросай ещё!'; speak(say,'Roll again!'); return; }
-        pos++; left--; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
-        out.textContent=(n-left)+' / '+n;
-        var k=STATIONS.indexOf(pos);
-        wait(480).then(function(){
-          if(k>=0){ out.textContent=''; return station(k).then(function(){ rolling=false; }); }
-          return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(step);
-        });
-      })();
+      $('#dieN').textContent=n; $('#dieN').classList.add('in');
+      var to=Math.min(pos+n,stop), used=false;
+      var pick=$('#pick'); 
+      var aimL=window._aimL||(window._aimL=(function(){ var x=document.createElement('div'); x.className='aim alt'; forest.insertBefore(x,token); return x; })());
+      var aimR=window._aimR||(window._aimR=(function(){ var x=document.createElement('div'); x.className='aim alt'; forest.insertBefore(x,token); return x; })());
+      function putAlt(a,c){ if(c>pos&&c<=stop&&!used&&getN('sf_sparks')>0){ a.hidden=false; a.style.left=CELLS[c][0]+'%'; a.style.top=CELLS[c][1]+'%'; } else a.hidden=true; }
+      if(T==='little'){ var alt=(EVS[to+1]&&to+1<=stop)?to+1:(to-1>pos?to-1:-1);
+        return (function lshow(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimR,alt); aimL.hidden=true; pick.hidden=false;
+          var can=alt>=0&&getN('sf_sparks')>0;
+          pick.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>. Фишка встанет: <b>'+(EVNAME[kindAt(to)]||'пустая клетка')+'</b></p>'+(can?'<p class="pk-n">А за искру — сюда: <b>'+(EVNAME[kindAt(alt)]||'пустая клетка')+'</b> (светится). Тратим искру?</p><div class="pk-row"><button class="gloss pk-y">Да, ✦</button><button class="btn btn-gold pk-go">Нет, идём</button></div>':'<div class="pk-row"><button class="btn btn-gold pk-go">Идём!</button></div>');
+          var y=pick.querySelector('.pk-y'); if(y) y.onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); to=alt; used=true; SND.fx('spark'); aimR.hidden=true; walk(); };
+          pick.querySelector('.pk-go').onclick=function(){ aimR.hidden=true; walk(); }; })(); }
+      function show(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimL,to-1); putAlt(aimR,to+1); var k=kindAt(to), sp=getN('sf_sparks');
+        pick.hidden=false;
+        pick.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>'+(pos+n>stop?' — но дальше страницы не пройти':'')+'. Встанешь на: <b>'+(EVNAME[k]||'пустую клетку')+'</b></p>'+
+          (!used&&sp>0?'<p class="pk-n">Рядом: ←&nbsp;<b>'+(to-1>pos?(EVNAME[kindAt(to-1)]||'пусто'):'—')+'</b> · <b>'+(to+1<=stop?(EVNAME[kindAt(to+1)]||'пусто'):'—')+'</b>&nbsp;→</p>':'')+
+          '<div class="pk-row"><button class="gloss pk-m"'+(used||sp<1||to-1<=pos?' disabled':'')+'>✦ −1</button><button class="btn btn-gold pk-go">Идти</button><button class="gloss pk-p"'+(used||sp<1||to+1>stop?' disabled':'')+'>✦ +1</button></div>'+
+          '<p class="pk-n">'+(used?'Искра потрачена.':sp<1?'Искр нет — идём как выпало.':'За 1 искру можно сдвинуть шаг на одну клетку.')+'</p>';
+        pick.querySelector('.pk-m').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); used=true; to--; SND.fx('spark'); show(); };
+        pick.querySelector('.pk-p').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); used=true; to++; SND.fx('spark'); show(); };
+        pick.querySelector('.pk-go').onclick=walk; }
+      function walk(){ pick.hidden=true; aim.hidden=true; aimL.hidden=true; aimR.hidden=true;
+        (function step(){
+          if(pos>=to){ out.textContent=''; var k=STATIONS.indexOf(pos);
+            if(k>=0) return station(k).then(function(){ rolling=false; });
+            return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(function(){ rolling=false; if(done<6){ ru.textContent=ru.textContent||'Бросай ещё!'; } }); }
+          pos++; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+          wait(380).then(step); })(); }
+      show();
     });
   });
 
@@ -1569,16 +1667,28 @@ textarea.inp{min-height:130px;resize:vertical}
     if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#aliceSay'),'I followed a rabbit. Now my book is frozen! Will you help me?',true); },300); }).catch(fallback);
     avid.addEventListener('ended',end); setTimeout(end,9000);
   });
-  ENTER.board=function(){ speak(say,'Six frozen pages are hidden in the forest. Roll the dice!'); };
-  ENTER.final=function(p){
+  ENTER.board=function(){ speak(say,'Six frozen pages are hidden in the forest. Roll the dice!');
+    if(!getN('sf_s1_gift')){ setN('sf_s1_gift',1); setN('sf_sparks',getN('sf_sparks')+2); paintHud(); ru.textContent='Книга дарит тебе 2 искры ✦✦. Трать на подсказки и на кубик — а сбережённые зажгут огонь против Мышиного короля в последней истории.'; } };
+  // решение героя (v2): от выбора зависит, какая карточка Алисы встанет на полку — и её сила в финале
+  function heroChoice(){ return new Promise(function(res){
+    var v=$('#finAlice').parentNode, q=el('div','hchoice','<p class="say">Look! A tiny door. What shall I do?</p><p class="ru">Алиса: «Смотри, крошечная дверца! Что мне сделать?» Выбор за тобой — от него зависит, какая карточка Алисы встанет на полку.</p>');
+    var row=el('div','row2'); q.appendChild(row);
+    var a1=el('button','btn btn-gold','Open it now!'), a2=el('button','btn btn-ghost','Look through the keyhole first');
+    row.appendChild(a1); row.appendChild(a2); v.insertBefore(q,$('#card'));
+    function pickC(c){ try{ localStorage.setItem('sf_s1_choice',c); }catch(e){}
+      var b=$('#card b'), sp=$('#card span'); if(c==='curious'){ sp.innerHTML='<b>Curious Alice</b>Любопытная Алиса · в финале открывает тайные проходы'; } else { sp.innerHTML='<b>Careful Alice</b>Осторожная Алиса · в финале замечает ловушки мышей'; }
+      q.innerHTML='<p class="ru">'+(c==='curious'?'Алиса распахнула дверцу — и шагнула в сад! Карточка «Любопытная Алиса».':'Алиса заглянула в замочную скважину — и увидела там мышь! Карточка «Осторожная Алиса».')+'</p>'; SND.fx('spark'); setTimeout(res,1600); }
+    a1.addEventListener('click',function(){ pickC('curious'); }); a2.addEventListener('click',function(){ pickC('careful'); }); }); }
+  ENTER.final=function(p){ try{ var g=Math.min(1,.3+getN('sf_logs')/30); $('[data-scene="final"] .camp').style.setProperty('--glow',g.toFixed(2)); }catch(e){}
     p.then(function(){ return wait(500); }).then(function(){ return speak($('#finAlice'),'Curiouser and curiouser! Thank you! Here is my card for your shelf.'); })
+     .then(function(){ return heroChoice(); })
      .then(function(){ $('#card').classList.add('in'); SND.fx('spark'); return wait(1400); })
      .then(function(){ return speak($('#finAlice'),'…and then I met a cat. It disappeared, and only its smile stayed in the air.'); })
      .then(function(){ later($('#toEnd'),400); });
   };
   ENTER.end=function(){
     if(state.name) $('#endTitle').textContent=state.name+', история 1 пройдена';
-    try{ localStorage.setItem('sf_s1_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s1_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); box.hidden=false; } }catch(e){}
+    try{ localStorage.setItem('sf_s1_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s1_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); if(r.stars) box.appendChild(el('p','note','Поленья по страницам: '+r.stars.map(function(x){ return '🪵'.repeat(x||1); }).join(' · ')+'. Всего в костре: '+(r.logs||0)+'.')); box.hidden=false; } }catch(e){}
   };
   var START_SCENE=state.track?'arrive':'who';
   if(state.track) setTrack(state.track);
