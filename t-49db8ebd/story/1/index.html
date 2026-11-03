@@ -572,6 +572,16 @@ textarea.inp{min-height:130px;resize:vertical}
 .bk-nav .bk-skip{width:auto;height:auto;border-radius:999px;background:rgba(255,255,255,.08);color:var(--ink-2);box-shadow:none;font:500 14px/1 var(--body);border:1px solid rgba(255,255,255,.14);padding:11px 14px}
 .bk-nav .bk-go{width:auto;border-radius:999px;font:600 15px/1 var(--body);padding:0 18px;color:#2a1a0c}
 @media (min-aspect-ratio:5/4){ .bk-en{font-size:clamp(22px,2.6vw,32px);line-height:1.38} .bk-ru{font-size:16px} .bk-head{font-size:17px} }
+/* автор книги (04.11.2026) */
+.iauth{margin:-4px 0 0;font:500 13px/1.3 var(--body);color:var(--ink-2);letter-spacing:.01em}
+.bookref{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(245,200,66,.28)}
+.bookref img{flex:0 0 76px;width:76px;height:96px;object-fit:cover;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.bookref p{margin:0}
+.bookref .br-k{font:600 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.bookref .br-t{font-family:var(--display);font-size:22px;line-height:1.15;color:var(--ink)}
+.bookref .br-a{font-size:14px;color:var(--ink-2);margin-top:4px}
+.bookref .br-en{font-size:13px;color:var(--ink-3);font-style:italic;margin-top:2px}
+.bookref .br-f{font-size:14px;line-height:1.45;color:var(--ink-2);margin-top:10px}
 </style>
 </head>
 <body>
@@ -607,6 +617,7 @@ textarea.inp{min-height:130px;resize:vertical}
     <div class="shade"></div>
     <div class="istart" id="agate">
       <p class="ikick">История 1 · Alice</p>
+      <p class="iauth">Льюис Кэрролл · «Алиса в Стране чудес»</p>
       <p class="say">Look! Someone is coming to your fire…</p>
       <button class="iplay" id="astart" aria-label="Начать историю со звуком"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
       <p class="inote">Включите звук</p>
@@ -654,6 +665,7 @@ textarea.inp{min-height:130px;resize:vertical}
     <div class="end">
       <img class="seal" src="../../img/04_frozen_book_2.webp" alt="Книга Алисы оттаяла">
       <h1 id="endTitle">История 1 пройдена</h1>
+      <aside class="bookref" aria-label="Книжная справка"><img src="../../img/authors/1.webp" alt="Льюис Кэрролл"><div><p class="br-k">Книжная справка</p><p class="br-t">«Алиса в Стране чудес»</p><p class="br-a">Льюис Кэрролл · Англия, 1865</p><p class="br-en">Alice&#x27;s Adventures in Wonderland by Lewis Carroll</p><p class="br-f">На самом деле его звали Чарльз Доджсон, и он преподавал математику в Оксфорде. Сказку он придумал во время прогулки на лодке — для настоящей девочки по имени Алиса.</p></div></aside>
       <p>Шесть страниц книги Алисы оттаяли. Карточка Алисы и значок «Любопытство» уже на полке.</p>
       <ul>
         <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Listening, Vocabulary, Grammar</li>
