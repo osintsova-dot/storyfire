@@ -946,7 +946,11 @@ textarea.inp{min-height:130px;resize:vertical}
     ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ unlock(); if(ctx&&ctx.state==='suspended') ctx.resume(); },{passive:true}); });
     var musicOn=true;
     function musicSet(v){ musicOn=v; if(!musicGain) return; musicGain.gain.setTargetAtTime(v?.22:0,ctx.currentTime,.4); if(v&&music) music.play().catch(function(){}); }
-    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint};
+    // iPhone: пока микрофон включён, Safari переводит звук в «режим звонка» и громкость прыгает. Явно держим «playback», на запись — «play-and-record», музыку на время записи глушим.
+    function sess(t){ try{ if(navigator.audioSession) navigator.audioSession.type=t; }catch(e){} }
+    sess('playback');
+    function mic(onm){ sess(onm?'play-and-record':'playback'); if(cur&&onm){ try{cur.stop();}catch(e){} } if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(onm?0:.22,ctx.currentTime,.15); if(ctx&&!onm&&ctx.state!=='running') ctx.resume(); }
+    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
   })();
   $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
   var cur='who';
@@ -1281,12 +1285,12 @@ textarea.inp{min-height:130px;resize:vertical}
       }).then(function(p){ A.asr=p; done(true); }).catch(function(){ done(false); }); };
     A.ready=function(cb){ if(A.state==='ready'||A.state==='fail') return cb(A.state==='ready'); A.wait.push(cb); A.load(); };
     A.wake=function(){ if(!A.ctx) A.ctx=new AC(); if(A.ctx.state!=='running') A.ctx.resume(); return A.ctx; };
-    A.start=function(ctx,lvl){ return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+    A.start=function(ctx,lvl){ if(typeof SND!=='undefined'&&SND.mic) SND.mic(true); return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:true}}).then(function(st){
       if(ctx.state!=='running') ctx.resume();
       var src=ctx.createMediaStreamSource(st), pr=ctx.createScriptProcessor(4096,1,1), ch=[], peak=0;
       pr.onaudioprocess=function(e){ var d=e.inputBuffer.getChannelData(0); ch.push(new Float32Array(d)); var m=0; for(var i=0;i<d.length;i+=8) m=Math.max(m,Math.abs(d[i])); peak=Math.max(peak,m); if(lvl) lvl(m); };
       src.connect(pr); pr.connect(ctx.destination); A._keep=[src,pr];
-      return {stop:function(){ pr.disconnect(); src.disconnect(); st.getTracks().forEach(function(t){ t.stop(); });
+      return {stop:function(){ pr.disconnect(); src.disconnect(); st.getTracks().forEach(function(t){ t.stop(); }); if(typeof SND!=='undefined'&&SND.mic) SND.mic(false);
         var len=0; ch.forEach(function(c){ len+=c.length; }); var all=new Float32Array(len), o=0; ch.forEach(function(c){ all.set(c,o); o+=c.length; });
         var r=ctx.sampleRate/16000, n=Math.floor(len/r), out=new Float32Array(n);
         for(var i=0;i<n;i++){ var a=Math.floor(i*r), b=Math.min(len,Math.floor((i+1)*r)), sum=0; for(var k=a;k<b;k++) sum+=all[k]; out[i]=b>a?sum/(b-a):0; }
@@ -1338,22 +1342,23 @@ textarea.inp{min-height:130px;resize:vertical}
       LASR.start(ctx,function(m){ rec.style.setProperty('--lv',Math.min(1,m*3).toFixed(2)); }).then(function(r){ lr=r;
         rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
         lt=setTimeout(function(){ if(lr) local(); },(s.sec||6)*1000);
-      }).catch(function(){ rec.hidden=true; skip.click(); });
+      }).catch(function(){ if(typeof SND!=='undefined'&&SND.mic) SND.mic(false); rec.hidden=true; skip.click(); });
     }
     function selfOk(){ fb.textContent='Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
     rec.addEventListener('click',function(){
       if(!ASR&&LASR.state!=='fail') return local();
       if(mr&&mr.state==='recording'){ mr.stop(); return; }
+      if(typeof SND!=='undefined'&&SND.mic) SND.mic(true);
       navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
         var chunks=[]; mr=new MediaRecorder(st); mr.ondataavailable=function(e){ chunks.push(e.data); };
-        mr.onstop=function(){ st.getTracks().forEach(function(t){t.stop();}); rec.classList.remove('on'); rec.querySelector('span').textContent='Скажи';
+        mr.onstop=function(){ st.getTracks().forEach(function(t){t.stop();}); if(typeof SND!=='undefined'&&SND.mic) SND.mic(false); rec.classList.remove('on'); rec.querySelector('span').textContent='Скажи';
           var blob=new Blob(chunks,{type:mr.mimeType||'audio/webm'}); if(blob.size<1500) return retry('Ничего не слышно. Нажми и говори громче!');
           if(!ASR) return self(blob);
           fb.textContent='Книга слушает…';
           fetch(ASR,{method:'POST',body:blob,headers:{'X-Track':T}}).then(function(r){ return r.json(); }).then(function(j){ if(judge(j.text||'')) pass(); else retry(); }).catch(function(){ self(blob); }); };
         mr.start(); rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
         setTimeout(function(){ if(mr&&mr.state==='recording') mr.stop(); },(s.sec||6)*1000);
-      }).catch(function(){ rec.hidden=true; skip.click(); });
+      }).catch(function(){ if(typeof SND!=='undefined'&&SND.mic) SND.mic(false); rec.hidden=true; skip.click(); });
     });
   };
   // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
