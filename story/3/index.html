@@ -1820,7 +1820,31 @@ var SF = (function () {
     try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])k=[^&]*&?/, '$1').replace(/[?&]$/, '') + location.hash); } catch (e) {}
     return code;
   }
-  return { check: check, isOpen: isOpen, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
+  // «Кто играет?»: несколько детей на одном устройстве. Прогресс ребёнка — все ключи sf_* кроме служебных;
+  // при смене игрока прячем их в sfp_<id> и достаём сохранённые ключи другого. Пока игрок один, ничего не меняется.
+  var SYS = { sf_code: 1, sf_ok: 1, sf_teacher: 1, sf_dev: 1, sf_sound: 1, sf_order: 1, sf_players: 1, sf_cur: 1 };
+  function own() { var o = {}; try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf('sf_') === 0 && !SYS[k]) o[k] = localStorage.getItem(k); } } catch (e) {} return o; }
+  function kidName() { try { return (JSON.parse(ls('sf_prolog') || '{}').name || '').trim(); } catch (e) { return ''; } }
+  function players() { var p; try { p = JSON.parse(ls('sf_players') || '[]'); } catch (e) { p = []; } return p; }
+  function cur() { return ls('sf_cur') || ''; }
+  function stash() { var c = cur(); if (c) ls('sfp_' + c, JSON.stringify(own())); }
+  function load(id) {
+    var o = own(); for (var k in o) ls(k, null);
+    var d; try { d = JSON.parse(ls('sfp_' + id) || '{}'); } catch (e) { d = {}; }
+    for (var j in d) ls(j, d[j]);
+    ls('sf_cur', id);
+  }
+  function addPlayer(name) {
+    name = String(name || '').trim().slice(0, 24); if (!name) return;
+    var p = players();
+    if (!p.length) { p.push({ id: 'p1', name: kidName() || 'Игрок 1' }); ls('sf_cur', 'p1'); }
+    var id = 'p' + (Date.now() % 1e8).toString(36);
+    p.push({ id: id, name: name }); ls('sf_players', JSON.stringify(p));
+    stash(); load(id); ls('sf_prolog', JSON.stringify({ name: name }));
+  }
+  function switchTo(id) { if (id === cur()) return; stash(); load(id); }
+
+  return { check: check, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();
 
