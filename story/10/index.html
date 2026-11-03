@@ -859,6 +859,16 @@ textarea.inp{min-height:130px;resize:vertical}
 .bk-nav .bk-skip{width:auto;height:auto;border-radius:999px;background:rgba(255,255,255,.08);color:var(--ink-2);box-shadow:none;font:500 14px/1 var(--body);border:1px solid rgba(255,255,255,.14);padding:11px 14px}
 .bk-nav .bk-go{width:auto;border-radius:999px;font:600 15px/1 var(--body);padding:0 18px;color:#2a1a0c}
 @media (min-aspect-ratio:5/4){ .bk-en{font-size:clamp(22px,2.6vw,32px);line-height:1.38} .bk-ru{font-size:16px} .bk-head{font-size:17px} }
+/* автор книги (04.11.2026) */
+.iauth{margin:-4px 0 0;font:500 13px/1.3 var(--body);color:var(--ink-2);letter-spacing:.01em}
+.bookref{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(245,200,66,.28)}
+.bookref img{flex:0 0 76px;width:76px;height:96px;object-fit:cover;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.bookref p{margin:0}
+.bookref .br-k{font:600 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.bookref .br-t{font-family:var(--display);font-size:22px;line-height:1.15;color:var(--ink)}
+.bookref .br-a{font-size:14px;color:var(--ink-2);margin-top:4px}
+.bookref .br-en{font-size:13px;color:var(--ink-3);font-style:italic;margin-top:2px}
+.bookref .br-f{font-size:14px;line-height:1.45;color:var(--ink-2);margin-top:10px}
 </style>
 </head>
 <body>
@@ -893,6 +903,7 @@ textarea.inp{min-height:130px;resize:vertical}
     <div class="shade"></div>
     <div class="istart" id="agate">
       <p class="ikick">История 10 · The Nutcracker · финал</p>
+      <p class="iauth">Эрнст Теодор Амадей Гофман · «Щелкунчик и Мышиный король»</p>
       <p class="say">Listen! The clock is striking twelve…</p>
       <button class="iplay" id="astart" aria-label="Начать историю со звуком"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
       <p class="inote">Включите звук</p>
@@ -942,6 +953,7 @@ textarea.inp{min-height:130px;resize:vertical}
         <img src="../../img/h_alice.webp" alt="Alice"><img src="../../img/h_mowgli.webp" alt="Mowgli"><img src="../../img/h_gerda.webp" alt="Gerda"><img src="../../img/h_sherlock.webp" alt="Sherlock"><img src="../../img/h_dorothy.webp" alt="Dorothy"><img src="../../img/h_peter_pan.webp" alt="Peter Pan"><img src="../../img/h_jim_hawkins.webp" alt="Jim"><img src="../../img/h_pinocchio.webp" alt="Pinocchio"><img src="../../img/h_mary_lennox.webp" alt="Mary"><img src="../../img/h_nutcracker.webp" alt="The Nutcracker">
       </div>
       <h1 id="endTitle">Костёр историй спасён!</h1>
+      <aside class="bookref" aria-label="Книжная справка"><img src="../../img/authors/10.webp" alt="Эрнст Теодор Амадей Гофман"><div><p class="br-k">Книжная справка</p><p class="br-t">«Щелкунчик и Мышиный король»</p><p class="br-a">Эрнст Теодор Амадей Гофман · Германия, 1816</p><p class="br-en">The Nutcracker and the Mouse King by E. T. A. Hoffmann</p><p class="br-f">Гофман был ещё и композитором. Сказку он написал для детей своего друга — их звали Мари и Фриц. Через 76 лет по ней Чайковский сочинил балет.</p></div></aside>
       <p>Десять историй, десять героев на полке. Мышиный король сбежал, книги оттаяли — Костёр горит ярче, чем в первый вечер.</p>
       <ul>
         <li><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Шесть страниц книги Щелкунчика</li>
@@ -1027,7 +1039,7 @@ textarea.inp{min-height:130px;resize:vertical}
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    fetch('audio/voice.json?v=1793609914').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    fetch('audio/voice.json?v=1793730826').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1245,7 +1257,23 @@ textarea.inp{min-height:130px;resize:vertical}
   // расшифровка с вводом ответа: atbash / shift / rev
   // лесенка подсказок (как в квест-играх): сначала время подумать, потом намёк → буква → ответ; искра открывает ступеньку сразу
   var THINK={little:30,explorers:45,experts:60};
+  // v2 (прототип 04.11, история 1): сначала только символы; подсказки — только за искры (1 искра = 1 ступенька).
+  // Нет искр: через 2 мин (малышам 1 мин) Книга подскажет сама — чтобы никто не застрял.
+  function hintLadder2(body,steps,fb){
+    var row=el('div','hladder'); body.appendChild(row); var k=0, done=false, waited=0, FREE=T==='little'?60:120;
+    var btn=el('button','gloss hspark'); row.appendChild(btn); var note=el('p','hwait'); row.appendChild(note);
+    var sparks=function(){ try{ return +(localStorage.getItem('sf_sparks')||0); }catch(e){ return 0; } };
+    function paint(){ if(done) return; var n=sparks(); btn.disabled=n<1;
+      btn.innerHTML='✦ Подсказка '+(k+1)+' из '+steps.length+' · 1 искра <small>(у тебя: '+n+')</small>';
+      note.textContent=n<1?(T==='little'?'Искр нет. Позови взрослого — а через '+Math.max(0,FREE-waited)+' с Книга подскажет сама.':'Искр нет. Думай! Через '+Math.max(0,FREE-waited)+' с Книга сжалится и подскажет.'):'Сначала попробуй сам.'; }
+    function use(free){ if(done) return; var t=steps[k](); if(fb&&t) fb.textContent=(free?'Книга сжалилась. ':'')+t; k++; waited=0;
+      if(k>=steps.length){ done=true; row.hidden=true; clearInterval(iv); } else paint(); if(window.SF_HUD) SF_HUD(); }
+    btn.addEventListener('click',function(){ var n=sparks(); if(n<1) return; try{ localStorage.setItem('sf_sparks',String(n-1)); }catch(e){} SND.fx('spark'); use(false); });
+    var iv=setInterval(function(){ if(done) return; if(sparks()<1){ waited++; if(waited>=FREE) use(true); } paint(); },1000);
+    paint(); return {stop:function(){ done=true; clearInterval(iv); row.hidden=true; }};
+  }
   function hintLadder(body,steps,fb){
+    if(window.SF_V2) return hintLadder2(body,steps,fb);
     var row=el('div','hladder'); body.appendChild(row); var k=0, left=THINK[T]||45, iv=null, done=false;
     var wait=el('p','hwait'); row.appendChild(wait);
     var btn=el('button','gloss hbtn'); btn.hidden=true; row.appendChild(btn);
