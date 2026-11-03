@@ -392,6 +392,16 @@ textarea.inp{min-height:130px;resize:vertical}
 .hud .jar{letter-spacing:2px;color:var(--gold)}
 .forest .cell-dot{position:absolute;width:3.2%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:rgba(247,238,219,.85);box-shadow:0 0 0 2px rgba(90,60,30,.6),0 2px 6px rgba(0,0,0,.4);z-index:2}
 
+/* плашки под кубиком (04.11) */
+[data-scene="board"] .pick,[data-scene="board"] .plaque{background:#100c24;box-shadow:inset 0 0 0 1px rgba(245,200,66,.28),0 8px 24px rgba(0,0,0,.45);border-radius:16px;padding:14px 16px;color:var(--ink);text-align:center;margin:6px 0 0}
+[data-scene="board"] .plaque{font-size:15px;line-height:1.45}
+[data-scene="board"] .pick .pk-t{font-size:16px}
+[data-scene="board"] .pick .pk-n{color:var(--ink-2);font-size:14px}
+.swap{animation:plq .35s ease}
+@keyframes plq{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.swap{animation:none}}
+[data-scene="board"] .campfire,.campfire{display:none}
+
 /* ===== общее для всех историй: поле на весь экран ===== */
 [data-scene="board"]{overflow:hidden}
 [data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
@@ -664,13 +674,13 @@ textarea.inp{min-height:130px;resize:vertical}
     <div class="voice">
       <div class="pages" id="pages" aria-label="Страницы книги Алисы"></div>
       <p class="say" data-say id="boardSay"></p>
-      <p class="ru" id="boardRu">В лесу спрятаны шесть замёрзших страниц. Бросай кубик!</p>
       <p class="hud" id="hud" aria-live="polite"></p>
-      <div class="pick" id="pick" hidden></div>
       <div class="dierow">
         <button class="die" id="die" aria-label="Бросить кубик"><img src="../../img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
         <p class="count" id="count" aria-live="polite"></p>
       </div>
+      <div class="pick" id="pick" hidden></div>
+      <p class="plaque" id="boardRu" aria-live="polite">В лесу спрятаны шесть замёрзших страниц. Бросай кубик!</p>
       <div id="ev" hidden></div>
       <button class="btn btn-gold later" id="toFinal" data-go="final">Вернуть книгу Алисе</button>
     </div>
@@ -1553,6 +1563,10 @@ textarea.inp{min-height:130px;resize:vertical}
     hud.innerHTML=T==='little'?'<span class="jar" title="Банка искр">'+(sp?'✦'.repeat(Math.min(sp,8)):'пусто')+'</span><span class="hfire">🔥</span>'
       :'<span title="Искры: подсказки и сдвиг кубика. Сбережённые зажгут огонь против Мышиного короля">✦ <b>'+sp+'</b></span><span title="Поленья в костре">🪵 <b>'+getN('sf_logs')+'</b></span>'; }
   window.SF_HUD=paintHud; paintHud();
+  // плашки под кубиком: при смене текста — мягкая смена (v2)
+  (function(){ var swap=function(e){ e.classList.remove('swap'); void e.offsetWidth; e.classList.add('swap'); };
+    var r=$('#boardRu'), pk=$('#pick'); if(window.MutationObserver){ new MutationObserver(function(){ swap(r); }).observe(r,{childList:true,characterData:true,subtree:true});
+      new MutationObserver(function(){ if(!pk.hidden) swap(pk); }).observe(pk,{childList:true}); } })();
   function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
   var STARS=[]; try{ STARS=JSON.parse(localStorage.getItem('sf_s1_stars')||'[]'); }catch(e){}
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,mirror:1,pick3:1};
