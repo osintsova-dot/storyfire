@@ -390,6 +390,7 @@ textarea.inp{min-height:130px;resize:vertical}
 @media (prefers-reduced-motion:reduce){.forest .aim,.hud.pop{animation:none}}
 .forest .aim.alt{box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 14px 3px rgba(255,255,255,.35);animation:none;width:8%}
 .hud .jar{letter-spacing:2px;color:var(--gold)}
+.forest .cell-dot{position:absolute;width:3.2%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:rgba(247,238,219,.85);box-shadow:0 0 0 2px rgba(90,60,30,.6),0 2px 6px rgba(0,0,0,.4);z-index:2}
 
 /* ===== общее для всех историй: поле на весь экран ===== */
 [data-scene="board"]{overflow:hidden}
@@ -1540,7 +1541,7 @@ textarea.inp{min-height:130px;resize:vertical}
     var d=document.createElement('div');
     if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
     else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
-    else return;
+    else { d.className='cell-dot'; }
     d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
   });
   var pages=$('#pages');
@@ -1549,7 +1550,7 @@ textarea.inp{min-height:130px;resize:vertical}
   var getN=function(k){ try{ return +(localStorage.getItem(k)||0); }catch(e){ return 0; } }, setN=function(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} };
   var hud=$('#hud');
   function paintHud(){ if(!hud) return; var sp=getN('sf_sparks');
-    hud.innerHTML=T==='little'?'<span class="jar" title="Банка искр">'+(sp?'✦'.repeat(Math.min(sp,8)):'пусто')+'</span><span class="fire">🔥</span>'
+    hud.innerHTML=T==='little'?'<span class="jar" title="Банка искр">'+(sp?'✦'.repeat(Math.min(sp,8)):'пусто')+'</span><span class="hfire">🔥</span>'
       :'<span title="Искры: подсказки и сдвиг кубика. Сбережённые зажгут огонь против Мышиного короля">✦ <b>'+sp+'</b></span><span title="Поленья в костре">🪵 <b>'+getN('sf_logs')+'</b></span>'; }
   window.SF_HUD=paintHud; paintHud();
   function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
