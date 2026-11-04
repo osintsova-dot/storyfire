@@ -108,7 +108,7 @@ h1{font:600 clamp(34px,8vw,52px)/1.02 var(--display);margin:0 0 8px;text-wrap:ba
   var H=[[1,'Alice','03_night01_alice'],[2,'Mowgli','08_v6_mowgli'],[3,'Gerda','08_v7_gerda'],[4,'Sherlock','08_v8_sherlock'],[5,'Dorothy','08_v9_dorothy'],
          [6,'Peter Pan','08_v10_peter'],[7,'Jim Hawkins','08_v11_jim'],[8,'Pinocchio','08_v12_pinocchio'],[9,'Mary','08_v13_mary'],[10,'Nutcracker','08_v14_nutcracker']];
   var grid=document.getElementById('grid'), gate=document.getElementById('gate'), msg=document.getElementById('msg');
-  var REASON={not_found:'Такого кода нет. Проверьте буквы и цифры.',devices:'Код уже открыт на трёх устройствах. Напишите нам, если сменили телефон.',blocked:'Код отключён. Напишите нам.',offline:'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.',empty:'Введите код.',rate_limited:'Слишком много попыток. Подождите минуту.'};
+  var REASON={not_found:'Такого кода нет. Проверьте буквы и цифры.',expired:'Срок этого кода-просмотра закончился. Напишите нам, пришлём новый.',devices:'Код уже открыт на трёх устройствах. Напишите нам, если сменили телефон.',blocked:'Код отключён. Напишите нам.',offline:'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.',empty:'Введите код.',rate_limited:'Слишком много попыток. Подождите минуту.'};
   function draw(unlocked){
     var today=-1, now=Date.now();
     H.forEach(function(h){ if(SF.opensAt(h[0]).getTime()<=now) today=h[0]; });
