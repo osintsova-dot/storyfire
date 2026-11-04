@@ -50,6 +50,9 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
 .msg.bad{color:#ffb39b}
 .note{font-size:13px;color:var(--ink-3);margin:0}
 .code{font:700 clamp(22px,6.6vw,38px)/1 var(--body);letter-spacing:.06em;white-space:nowrap;text-align:center;padding:18px 10px;border-radius:16px;background:rgba(14,10,34,.6);box-shadow:inset 0 0 0 1.5px var(--gold);user-select:all}
+.btn-card{margin-top:10px}
+.sbp-logo{width:22px;height:22px;flex:0 0 22px;border-radius:5px;background:conic-gradient(from 180deg,#5b57a2 0 25%,#d90751 0 50%,#fab718 0 75%,#1a9f3f 0);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 4l6 4v8l-6 4zM21 4l-6 4v8l6 4zM9 8l3 2 3-2v8l-3-2-3 2z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 4l6 4v8l-6 4zM21 4l-6 4v8l6 4zM9 8l3 2 3-2v8l-3-2-3 2z'/%3E%3C/svg%3E") center/contain no-repeat}
+.sbp{margin-top:14px;text-align:center}.sbp .btn{width:100%}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row .btn{flex:1 1 200px}
 [hidden]{display:none!important}
@@ -80,9 +83,10 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
       <label>ФИО родителя<input type="text" id="parent" required autocomplete="name" maxlength="80" placeholder="Например, Иванова Анна Петровна"></label>
       <label>Телефон, если удобнее связь в мессенджере<input type="tel" id="phone" autocomplete="tel" maxlength="20" placeholder="+7"></label>
       <label class="ok"><input type="checkbox" id="agree"><span>Согласен(на) на обработку данных для оплаты и связи по квесту. Данные не передаём третьим лицам.</span></label>
-      <button class="btn btn-gold" type="submit" id="pay">Перейти к оплате</button>
+      <button class="btn btn-gold btn-sbp" type="submit" id="pay"><span class="sbp-logo" aria-hidden="true"></span>Оплатить через СБП</button>
+      <button class="btn btn-ghost btn-card" type="button" id="payCard">Оплатить картой</button>
       <div class="msg" id="msg" role="status"></div>
-      <p class="note">Оплата картой или СБП через Т-Банк. Чек придёт на почту.</p>
+      <p class="note">СБП — это оплата из приложения вашего банка без ввода карты. Оба способа через Т-Банк, чек придёт на почту.</p>
     </form>
   </section>
 
@@ -90,6 +94,11 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
   <section id="wait" hidden>
     <h1>Проверяем оплату</h1>
     <div class="card"><div class="spin" aria-hidden="true"></div><p class="lead" id="waitTxt" style="margin:0;text-align:center">Это займёт несколько секунд.</p></div>
+    <div class="card sbp" id="sbpBox" hidden>
+      <p class="lead" style="margin:0 0 12px">Нажмите кнопку, выберите свой банк и подтвердите оплату <b>3 500 ₽</b>. Потом вернитесь сюда: код появится на этой странице.</p>
+      <a class="btn btn-gold btn-sbp" id="sbpGo" href="#" target="_blank" rel="noopener"><span class="sbp-logo" aria-hidden="true"></span>Открыть банк и оплатить</a>
+      <p class="note" style="margin-top:12px">Не получается через СБП? <a id="sbpCard" href="#">Оплатить картой</a></p>
+    </div>
   </section>
 
   <!-- 3. код -->
@@ -136,6 +145,9 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
   var order=q.get('order');
   if(order){ waitPaid(order, 0); return; }
 
+  var METHOD='sbp';
+  $('payCard').addEventListener('click',function(){ METHOD='card'; if($('f').requestSubmit) $('f').requestSubmit(); else $('pay').click(); });
+  $('pay').addEventListener('click',function(){ METHOD='sbp'; });
   $('f').addEventListener('submit',function(e){ e.preventDefault();
     var m=$('msg'), email=$('email').value.trim();
     m.className='msg bad';
@@ -143,13 +155,20 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
     if($('child').value.trim().split(/\s+/).length<2){ m.textContent='Напишите фамилию и имя ребёнка (или детей через запятую).'; $('child').focus(); return; }
     if($('parent').value.trim().split(/\s+/).length<2){ m.textContent='Напишите ФИО родителя.'; $('parent').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие на обработку данных.'; return; }
-    $('pay').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
-    post('/pay/create',{product:'quest',plan:'family',email:email,child:$('child').value.trim(),parent:$('parent').value.trim(),phone:$('phone').value.trim()}).then(function(j){
+    $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
+    post('/pay/create',{product:'quest',plan:'family',method:METHOD,email:email,child:$('child').value.trim(),parent:$('parent').value.trim(),phone:$('phone').value.trim()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_order',JSON.stringify({id:j.order_id,claim:j.claim}));
+      if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }   // СБП: банк открывается в новой вкладке, код появится здесь
       location.href=j.payment_url;
-    }).catch(function(){ $('pay').disabled=false; m.className='msg bad'; m.textContent='Не получилось открыть оплату. Проверьте интернет и попробуйте ещё раз.'; });
+    }).catch(function(){ $('pay').disabled=false; $('payCard').disabled=false; m.className='msg bad'; m.textContent='Не получилось открыть оплату. Проверьте интернет и попробуйте ещё раз.'; });
   });
+  // СБП: своя страница ожидания — ссылка НСПК (на телефоне выбор банка, на компьютере QR), опрос статуса до 5 минут
+  function sbpWait(j){
+    show('wait'); $('waitTxt').textContent='Ждём подтверждение от банка…'; $('sbpBox').hidden=false;
+    $('sbpGo').href=j.sbp_url; $('sbpCard').href=j.payment_url;
+    waitPaid(j.order_id, -80);
+  }
 
   function waitPaid(id, n){
     show('wait');
@@ -157,7 +176,7 @@ input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
     if(o.id!==id){ $('waitTxt').textContent='Эту оплату начинали в другом браузере. Код придёт на почту из чека, или напишите нам в бот.'; return; }
     post('/pay/status',{order_id:id,claim:o.claim}).then(function(j){
       if(j&&j.paid&&j.key) return done(j.key);
-      if(n<20){ if(n===4) $('waitTxt').textContent='Банк ещё подтверждает оплату, подождите…'; setTimeout(function(){ waitPaid(id,n+1); },3000); }
+      if(n<20){ if(n===4) $('waitTxt').textContent='Банк ещё подтверждает оплату, подождите…'; setTimeout(function(){ waitPaid(id,n+1); },3000); }   // при СБП старт с −80 → ~5 минут опроса
       else $('waitTxt').textContent='Банк долго не отвечает. Если деньги списались, код появится здесь чуть позже: обновите страницу или напишите нам в бот.';
     }).catch(function(){ if(n<20) setTimeout(function(){ waitPaid(id,n+1); },3000); });
   }
