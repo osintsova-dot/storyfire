@@ -1664,7 +1664,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
      CHOICE (решение героя в финале: {say,ru,opts:[{btn,key,card,ru},…]}), NOART2 (типы заданий без картинки-арта). ===== */
   window.SF_V2=true;
   var TNAME={little:'5–7 · Little',explorers:'8–10 · Explorers',experts:'11–14 · Experts'};
-  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; paintLvl(); }
+  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; if(typeof POSTERS!=='undefined'&&POSTERS[t]) LISTEN_POSTER=POSTERS[t]; paintLvl(); }   // POSTERS: постер «Послушай» по уровню (истории 7–10)
   // подпись уровня в шапке: родитель видит, на каком уровне идёт история; тап — правила и смена уровня
   function paintLvl(){ var top=document.querySelector('header.top'); if(!top) return; var b=top.querySelector('.tlvl'); if(!b){ b=document.createElement('button'); b.className='tlvl'; b.type='button'; b.setAttribute('aria-label','Уровень'); top.insertBefore(b,top.querySelector('.topr')); b.addEventListener('click',function(){ var h=document.querySelector('.snd.help'); if(h) h.click(); }); } b.textContent=TNAME[T]||T; }
   var HAS_OWN=typeof OWN!=='undefined'&&!!OWN, HAS_SNOW=typeof SNOW!=='undefined'&&!!SNOW;
