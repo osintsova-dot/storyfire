@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Пролог · Костёр историй</title>
+<meta name="description" content="Бесплатный Пролог зимнего квеста «Костёр историй»: кубик, зимний лес, костёр и первая загадка на английском.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0a22'/%3E%3Cpath d='M32 10c4 9 14 14 14 27a14 14 0 0 1-28 0c0-7 4-11 7-15 1 5 3 7 5 8 0-7-1-13 2-20z' fill='%23f5c842'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="/img/06_t1_library.webp">
+<link rel="prefetch" href="/img/07_page.webp">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --night-3:#221849;
+  --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d; --violet:#6c3fc5;
+  --line:rgba(247,238,219,.16);
+  --paper:#f3e8cf; --paper-2:#dfcca6; --paper-ink:#2b2140; --paper-ink-2:#5b4d63;
+  --display:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--night);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow:hidden;height:100svh}
+::selection{background:var(--gold);color:var(--night)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+
+/* backdrop for wide screens: the vertical stage sits on a blurred copy of its scene */
+.backdrop{position:fixed;inset:-40px;background:center/cover no-repeat;filter:blur(38px) brightness(.38) saturate(1.2);transform:scale(1.1);transition:background-image .8s}
+.stage{position:relative;height:100svh;max-width:520px;margin:0 auto;overflow:hidden;background:var(--night);isolation:isolate}
+@media (min-width:560px){.stage{box-shadow:0 30px 120px -20px rgba(0,0,0,.85),0 0 0 1px var(--line)}}
+
+.top{position:absolute;z-index:20;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));font-size:14px;color:var(--ink-2)}
+.top a{color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.top a b{font-family:var(--display);font-size:19px;font-weight:600;color:var(--ink)}
+.dots{display:flex;gap:6px}
+.topr{display:flex;align-items:center;gap:10px}
+.snd{width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--ink-2);display:grid;place-items:center;cursor:pointer;border-radius:50%}
+.snd svg{width:22px;height:22px}
+.snd .i-off,.snd[aria-pressed="false"] .i-on{display:none}
+.snd[aria-pressed="false"] .i-off{display:block}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(247,238,219,.25);transition:background-color .4s,transform .4s var(--ease-out)}
+.dots i.on{background:var(--gold);transform:scale(1.25)}
+
+#snow{position:absolute;inset:0;z-index:5;pointer-events:none;width:100%;height:100%}
+
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;opacity:0;visibility:hidden;transition:opacity .9s var(--ease-out),visibility 0s .9s}
+.scene.on{opacity:1;visibility:visible;transition:opacity .9s var(--ease-out),visibility 0s}
+.scene>.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.scene>.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55) 0%,rgba(14,10,34,0) 20%,rgba(14,10,34,0) 45%,rgba(14,10,34,.85) 70%,var(--night) 100%)}
+.scene.on>.bg{animation:drift 14s var(--ease-out) both}
+@keyframes drift{from{transform:scale(1.08)}to{transform:scale(1)}}
+
+/* the Book's voice */
+.voice{margin-top:auto;position:relative;z-index:10;padding:0 max(18px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px}
+.say{font-family:var(--display);font-weight:600;font-size:clamp(21px,5.6vw,25px);line-height:1.25;color:var(--ink);text-align:center;text-wrap:balance;text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 16px rgba(14,10,34,.95);max-width:30ch;justify-self:center}
+.say .w{opacity:0;display:inline-block;transform:translateY(.25em);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
+.say .w.in{opacity:1;transform:none}
+.ru{font-size:14px;line-height:1.4;color:var(--ink-2);max-width:40ch;text-align:center;justify-self:center;text-shadow:0 1px 12px rgba(14,10,34,.9)}
+.who{font:500 13px/1 var(--body);letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:8px}
+.who svg{width:16px;height:16px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--body);text-decoration:none;cursor:pointer;border:0;transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),background-color .2s,opacity .4s}
+.btn-gold{background:var(--gold);color:#1b1206;box-shadow:0 10px 24px -10px rgba(0,0,0,.7),inset 0 -2px 0 rgba(0,0,0,.12)}
+.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}
+.btn-gold:active{transform:scale(.97)}
+.btn-ghost{background:rgba(14,10,34,.5);color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.4)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.later{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.later.in{opacity:1;transform:none;pointer-events:auto}
+
+/* 1 library */
+.glowbook{position:absolute;left:52%;top:9%;width:30%;aspect-ratio:1;border-radius:50%;border:0;background:radial-gradient(circle,rgba(255,217,104,.45),rgba(255,155,61,0) 65%);cursor:pointer;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.65}}
+
+/* 2 name + track */
+.field{display:grid;gap:8px}
+.field label{font-size:14px;color:var(--ink-2)}
+.field input{height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);color:var(--ink);padding:0 18px;font:500 18px/1 var(--body);caret-color:var(--gold)}
+.field input::placeholder{color:var(--ink-3)}
+.field input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.tracks{display:grid;gap:8px}
+.track{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 14px;text-align:left;padding:12px 16px;border-radius:14px;border:0;background:rgba(14,10,34,.65);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.22);cursor:pointer;transition:box-shadow .25s,background-color .25s}
+.track b{grid-row:span 2;font-family:var(--display);font-size:28px;font-weight:600;line-height:1;font-variant-numeric:lining-nums;min-width:2.6em}
+.track span{font-weight:600;font-size:15px}
+.track small{font-size:13px;color:var(--ink-3);line-height:1.3}
+.track[aria-pressed="true"]{background:rgba(245,200,66,.14);box-shadow:inset 0 0 0 2px var(--gold)}
+.track[aria-pressed="true"] b{color:var(--gold)}
+
+/* 3 board */
+.forest{position:relative;margin:calc(env(safe-area-inset-top,0px) + 62px) 12px 4px;aspect-ratio:420/500;flex:1 1 auto;min-height:0;max-width:calc(100% - 24px);align-self:center;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px var(--line)}
+.forest>img{width:100%;height:100%;object-fit:cover}
+.cell-mark{position:absolute;width:15%;aspect-ratio:1.5;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--gold),0 6px 12px rgba(0,0,0,.5);background:rgba(245,200,66,.22);opacity:0;transition:opacity .3s}
+.cell-mark.in{opacity:1}
+.token{position:absolute;width:27%;left:0;top:0;transform:translate(-50%,-86%);transition:left .38s var(--ease-out),top .38s var(--ease-out);filter:drop-shadow(0 8px 8px rgba(0,0,0,.55));z-index:2}
+.token.hop img{animation:hop .38s var(--ease-out)}
+@keyframes hop{40%{transform:translateY(-22%)}}
+.dierow{display:flex;align-items:center;gap:16px}
+.die{width:84px;height:84px;padding:0;border:0;background:none;cursor:pointer;flex:none;position:relative}
+.die img{width:100%;height:100%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))}
+.die.roll img{animation:roll .9s cubic-bezier(.3,.7,.2,1)}
+@keyframes roll{0%{transform:rotate(0) scale(1)}30%{transform:rotate(-200deg) scale(1.15) translateY(-14px)}70%{transform:rotate(340deg) scale(.95)}100%{transform:rotate(360deg) scale(1)}}
+.die .n{position:absolute;right:-6px;top:-6px;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1b1206;font:700 18px/34px var(--body);text-align:center;transform:scale(0);transition:transform .4s var(--ease-out)}
+.die .n.in{transform:scale(1)}
+.cell-ico{position:absolute;width:11%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;z-index:1;box-shadow:0 4px 10px rgba(0,0,0,.55)}
+.cell-ico svg{width:62%;height:62%}
+.cell-ico.ico-spark{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 4px 10px rgba(0,0,0,.55)}
+.cell-ico.ico-spark.got{animation:got .9s var(--ease-out) forwards}
+@keyframes got{40%{transform:translate(-50%,-50%) scale(1.6)}to{transform:translate(-50%,-160%) scale(.4);opacity:0}}
+.cell-ico.ico-mouse{background:#1a1338;color:#cbbfe8;box-shadow:0 0 0 2px #cbbfe8,0 4px 10px rgba(0,0,0,.55)}
+.mice{display:flex;justify-content:center;gap:14px}
+.mouse{width:84px;height:60px;border:0;background:rgba(14,10,34,.6);border-radius:16px;box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);cursor:pointer;padding:8px;transition:transform .5s var(--ease-out),opacity .5s}
+.mouse.run{transform:translateX(120px);opacity:0}
+.opts.letters{grid-template-columns:repeat(3,1fr)}
+.opts.letters .opt{font:700 26px/1 var(--body)}
+.count{font-family:var(--display);font-size:22px;color:var(--gold);min-height:1.2em}
+
+/* 4 fire */
+.camp{position:absolute;inset:0;z-index:-1;background:radial-gradient(70% 45% at 50% 52%,rgba(255,155,61,var(--glow,.08)),rgba(14,10,34,0) 70%),linear-gradient(180deg,#120c2c 0%,#1b1342 45%,#2a2150 58%,#7d74ac 63%,#5d5490 76%,#3a3168 100%);transition:--glow 1s}
+.camp::after{content:"";position:absolute;left:0;right:0;top:60%;bottom:0;background:linear-gradient(180deg,rgba(14,10,34,.15),rgba(14,10,34,.75) 75%,var(--night))}
+.trees{position:absolute;left:0;right:0;top:32%;height:29%;z-index:-1;color:#0b0820}
+.fire{position:absolute;left:50%;top:calc(14% + 20px);width:min(86%,46svh);max-width:400px;transform:translateX(-50%);border:0;padding:0;background:none;cursor:pointer;aspect-ratio:1}
+.fire img{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .7s var(--ease-out)}
+.fire img.on{opacity:1}
+.fire::before{content:"";position:absolute;inset:-25%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,70,var(--glow,0)),rgba(255,120,40,0) 60%);transition:background .9s;z-index:-1}
+.pop{position:absolute;left:50%;top:20%;font-family:var(--display);font-weight:700;font-size:44px;color:var(--gold-2);pointer-events:none;animation:popup 1.2s var(--ease-out) forwards;text-shadow:0 4px 20px rgba(0,0,0,.6)}
+@keyframes popup{from{opacity:0;transform:translate(-50%,10px) scale(.7)}25%{opacity:1;transform:translate(-50%,-10px) scale(1)}to{opacity:0;transform:translate(-50%,-60px) scale(1)}}
+.paws{position:absolute;inset:0;pointer-events:none}
+.paw{position:absolute;width:36px;opacity:0;color:#140e30;transition:opacity .5s,transform .5s var(--ease-out)}
+.paw.in{opacity:1}
+
+/* 5 riddle */
+.opts{display:grid;gap:10px}
+.opts.pics{grid-template-columns:repeat(3,1fr)}
+.opt{min-height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);font:600 18px/1.2 var(--body);cursor:pointer;padding:10px 16px;transition:box-shadow .2s,background-color .2s}
+.opt:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.opts.pics .opt{aspect-ratio:1;padding:10px;display:grid;place-items:center}
+.opts.pics .opt img{width:100%;height:100%;object-fit:contain}
+.opt.no{animation:shake .45s;box-shadow:inset 0 0 0 1.5px #c9718a}
+.opt.yes{background:rgba(245,200,66,.2);box-shadow:inset 0 0 0 2px var(--gold)}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.gloss{justify-self:center;border:0;background:none;color:var(--gold);font:500 14px/1.3 var(--body);text-decoration:underline dotted;text-underline-offset:.25em;cursor:pointer;padding:6px 0;min-height:44px}
+.gloss[aria-expanded="true"]::after{content:" — " attr(data-tr);color:var(--ink-2);text-decoration:none}
+.fb{min-height:1.4em;font-size:15px;color:var(--ink-2)}
+
+.rfire{flex:none;align-self:center;height:clamp(120px,30svh,280px);width:auto;margin-top:calc(env(safe-area-inset-top,0px) + 58px)}
+.t-experts .ru,.t-explorers .ru{display:none}
+.t-explorers .ru.show{display:block}
+.rubtn{display:none;justify-self:center;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);padding:0 14px;min-height:36px;border-radius:999px;cursor:pointer}
+.t-explorers .rubtn{display:inline-flex;align-items:center}
+.t-explorers .rubtn[hidden]{display:none}
+
+/* book page: a task opens as a full-screen page over the scene */
+.pagecard{justify-self:center;display:grid;justify-items:center;gap:8px;border:0;background:none;padding:4px;cursor:pointer;color:var(--ink-2);font:500 14px/1.2 var(--body)}
+.pagecard i{display:block;width:70px;height:92px;border-radius:3px 8px 8px 3px;background:url(/img/07_page_s.webp) center/100% 100%,linear-gradient(160deg,var(--paper),var(--paper-2));box-shadow:0 10px 24px -8px rgba(0,0,0,.8),inset 0 0 0 1px rgba(91,77,99,.25),inset 6px 0 10px -6px rgba(91,77,99,.5);position:relative;transform:rotate(-5deg);animation:flutter 2.6s ease-in-out infinite}
+.pagecard i::before{content:"";position:absolute;inset:22px 16px auto;height:30px;background:repeating-linear-gradient(180deg,rgba(43,33,64,.3) 0 2px,transparent 2px 8px)}
+.pagecard i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(220,235,255,.75),rgba(220,235,255,0) 45%,rgba(220,235,255,0) 70%,rgba(220,235,255,.6))}
+.pagecard.thaw i{animation:thaw .7s var(--ease-out) forwards}
+@keyframes flutter{50%{transform:rotate(3deg) translateY(-4px)}}
+@keyframes thaw{to{transform:scale(1.25) rotate(0);opacity:0;filter:brightness(1.6)}}
+.sheet{position:absolute;inset:0;z-index:60;transform-origin:0 0;transition:transform .55s var(--ease-out),border-radius .55s var(--ease-out);border-radius:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;color:var(--paper-ink);
+  background:url(/img/07_page.webp) center/100% 100% no-repeat,var(--paper)}
+.sheet.small{border-radius:10px}
+.sheet:focus{outline:none}
+.sheet-in{min-height:100%;display:grid;align-content:center;gap:16px;justify-items:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 70px) max(44px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 60px) max(44px,env(safe-area-inset-left,0px));opacity:0;transition:opacity .3s}
+.sheet.open .sheet-in{opacity:1;transition:opacity .4s .3s}
+.sheet-k{margin:0;font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-ink-2)}
+.sheet .say{color:var(--paper-ink);text-shadow:none;font-size:clamp(25px,7vw,32px);max-width:20ch}
+.sheet .ru{color:var(--paper-ink-2);text-shadow:none;font-size:15px}
+.sheet .opts{width:min(100%,360px)}
+.sheet .opt,.sheet .mouse{background:rgba(255,250,238,.75);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
+.sheet .opt:hover{box-shadow:inset 0 0 0 2px var(--violet)}
+.sheet .opt.yes{background:rgba(245,200,66,.45);box-shadow:inset 0 0 0 2px #b8901c}
+.sheet .opt.no{box-shadow:inset 0 0 0 2px #b0485f}
+.sheet .mice{gap:6px}
+.gtext{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(20px,5.4vw,24px);line-height:1.6;text-align:left;max-width:30ch;color:var(--paper-ink)}
+.gap{display:inline-block;min-width:3.2em;border-bottom:2px dotted rgba(43,33,64,.45);line-height:1.15;text-align:center;transition:border-color .3s,background-color .3s}
+.gap.cur{border-bottom:2px solid var(--violet);background:rgba(108,63,197,.1);border-radius:4px 4px 0 0}
+.gap.ok{min-width:0;border-bottom-color:transparent;font-weight:700;color:#5a3a9c;animation:fillin .45s var(--ease-out)}
+@keyframes fillin{from{opacity:0;transform:translateY(-6px)}}
+.base{font-family:var(--body);font-size:.62em;color:var(--paper-ink-2);margin-left:.15em}
+.gap.ok+.base{display:none}
+.gopts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:54px}
+.gopts .opt{min-height:48px;padding:8px 16px}
+.sheet .mouse{background:none;box-shadow:none;width:min(88px,27vw);height:68px;padding:0}
+.sheet .mouse img{width:100%;height:100%;object-fit:contain;animation:sniff .9s ease-in-out infinite alternate}
+.sheet .mouse:nth-child(2) img{animation-delay:-.3s}.sheet .mouse:nth-child(3) img{animation-delay:-.6s}
+@keyframes sniff{to{transform:translateY(-3px) rotate(-3deg)}}
+.thief{width:min(56%,210px);transition:transform .8s cubic-bezier(.5,0,.75,0),opacity .8s;animation:sniff 1s ease-in-out infinite alternate}
+.thief.run{transform:translateX(170%);opacity:0;animation:none}
+.sheet .fb{color:var(--paper-ink-2)}
+.sheet .gloss{color:var(--violet)}
+.sheet .gloss[aria-expanded="true"]::after{color:var(--paper-ink-2)}
+.sheet .rubtn{background:rgba(43,33,64,.08);box-shadow:inset 0 0 0 1px rgba(43,33,64,.3);color:var(--paper-ink-2)}
+.sheet-x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 34px);right:max(36px,env(safe-area-inset-right,0px));z-index:2;border:0;background:none;color:var(--paper-ink-2);font:500 14px/1 var(--body);min-height:44px;padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+
+/* 0 intro cartoon */
+.ivid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;background:var(--night)}
+.ishade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,10,34,.55),rgba(14,10,34,0) 18%,rgba(14,10,34,0) 58%,rgba(14,10,34,.85) 82%,var(--night));transition:opacity .6s}
+.istart{margin:auto;display:grid;justify-items:center;gap:14px;text-align:center;padding:0 24px;transition:opacity .5s,transform .5s var(--ease-out)}
+.istart.gone{opacity:0;transform:scale(.96);pointer-events:none}
+.ikick{margin:0;font:600 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.ititle{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(32px,9vw,44px);line-height:1.08;text-wrap:balance;text-shadow:0 2px 24px rgba(14,10,34,.9)}
+.iplay{width:88px;height:88px;border-radius:50%;border:0;background:var(--gold);color:#1b1206;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 10px rgba(245,200,66,.18),0 18px 40px -12px rgba(0,0,0,.8);transition:transform .25s var(--ease-out)}
+.iplay svg{width:38px;height:38px;margin-left:5px}
+.iplay:active{transform:scale(.95)}
+@media (prefers-reduced-motion:no-preference){.iplay{animation:breathe 2.6s ease-in-out infinite}}
+@keyframes breathe{50%{box-shadow:0 0 0 18px rgba(245,200,66,.08),0 18px 40px -12px rgba(0,0,0,.8)}}
+.inote{margin:0;font-size:14px;color:var(--ink-2)}
+.icap .say{min-height:2.6em}
+.icap .say.alice{color:var(--gold-2)}
+.icap .ru{display:none}
+.icap.ru-on .ru{display:block}
+.ibar{position:absolute;z-index:11;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 60px);display:flex;justify-content:space-between;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.ibtn{pointer-events:auto;border:0;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1px rgba(247,238,219,.3);color:var(--ink-2);font:500 14px/1 var(--body);min-height:40px;padding:0 14px;border-radius:999px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ibtn[aria-pressed="true"]{color:var(--gold-2);box-shadow:inset 0 0 0 1px var(--gold)}
+
+/* 6 shelf */
+.shelf{margin:calc(env(safe-area-inset-top,0px) + 62px) 16px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px 8px}
+.slot{position:relative;border:0;padding:0 0 6px;background:linear-gradient(180deg,rgba(34,24,73,.0),rgba(34,24,73,.85));border-bottom:3px solid #5a3a22;border-radius:10px 10px 2px 2px;cursor:pointer;display:grid;justify-items:center;gap:4px;opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.slot.in{opacity:1;transform:none}
+.slot img{height:clamp(80px,16svh,150px);width:auto;max-width:100%;object-fit:contain;filter:brightness(0) drop-shadow(0 0 1px rgba(200,190,255,.6));opacity:.85}
+.slot small{font:500 11px/1 var(--body);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.slot.first img{filter:brightness(0) drop-shadow(0 0 6px rgba(245,200,66,.9))}
+.slot.first small{color:var(--gold)}
+.slot[aria-pressed="true"]{background:linear-gradient(180deg,rgba(245,200,66,0),rgba(245,200,66,.18))}
+.hint{min-height:2.6em;text-align:center;font-size:15px;color:var(--ink-2)}
+.hint b{font-family:var(--display);font-size:21px;color:var(--ink);font-weight:600}
+
+/* 8 end */
+.end{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 76px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 28px) max(20px,env(safe-area-inset-left,0px));display:grid;align-content:start;gap:18px;background:radial-gradient(90% 50% at 50% 0%,rgba(108,63,197,.35),rgba(14,10,34,0) 70%),var(--night)}
+.end h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,10vw,48px);line-height:1.02;margin:0;text-wrap:balance}
+.end p{margin:0;color:var(--ink-2)}
+.end ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+.end li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:15px;color:var(--ink-2)}
+.end li svg{width:18px;height:18px;color:var(--gold);margin-top:3px;fill:none}
+#sparkLi svg{fill:currentColor}
+.end .cta{display:grid;gap:10px;margin-top:4px}
+.end .note{font-size:13px;color:var(--ink-3)}
+.end .seal{width:120px;justify-self:center;filter:drop-shadow(0 14px 22px rgba(0,0,0,.6))}
+
+@media (max-height:700px){.say{font-size:20px}.ru{font-size:13px}.voice{gap:8px}.slot img{height:13svh}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+<style data-prolog>
+/* ===== Пролог: поле v2 как в историях (05.11.2026). build.py этот блок в истории НЕ копирует ===== */
+[data-scene="board"]{overflow:hidden}
+[data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
+[data-scene="board"] .forest .token{width:calc(25% / var(--z,1))}
+[data-scene="board"] .forest .cell-ico{width:calc(7.5% / var(--z,1))}
+[data-scene="board"] .pages{position:absolute;z-index:6;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 58px);padding:8px 0 18px;background:linear-gradient(180deg,rgba(14,10,34,.7),rgba(14,10,34,0))}
+[data-scene="board"] .voice{position:absolute;left:0;right:0;bottom:0;z-index:5;margin:0;padding-top:56px;gap:6px;background:linear-gradient(180deg,rgba(14,10,34,0) 0,rgba(14,10,34,.78) 52px,rgba(14,10,34,.9) 100%)}
+[data-scene="board"] .voice .say{font-size:clamp(19px,5vw,22px)}
+[data-scene="board"] .dierow{justify-content:center}
+[data-scene="board"] .die{width:76px;height:76px}
+.pages{display:flex;justify-content:center;gap:6px}
+.pg{display:grid;justify-items:center;gap:2px;width:50px;color:#9fb8e6;opacity:.85;transition:color .5s,opacity .5s}
+.pg svg{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(159,184,230,.5))}
+.pg em{font:500 11px/1 var(--body);font-style:normal;letter-spacing:.02em;color:var(--ink-3);white-space:nowrap}
+.pg.warm{color:var(--gold);opacity:1}
+.pg.warm svg{filter:drop-shadow(0 0 8px rgba(245,200,66,.7))}
+.cell-ico.ico-page{background:#1c2a4a;color:#cfe0ff;box-shadow:0 0 0 2px #cfe0ff,0 0 14px rgba(159,184,230,.7)}
+.cell-ico.ico-page.got{background:#2a1d0c;color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 0 14px rgba(245,200,66,.7)}
+.cell-ico.ico-snow{background:#eaf2ff;color:#5d7bb5;box-shadow:0 0 0 2px #fff,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-adult{background:#3a1d4a;color:#f3c7ff;box-shadow:0 0 0 2px #f3c7ff,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-log{background:#4a2c12;color:#e8b070;box-shadow:0 0 0 2px #e8b070,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-star{background:#123a2a;color:#9df0c4;box-shadow:0 0 0 2px #9df0c4,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-wind{background:#2a3550;color:#c9d6f5;box-shadow:0 0 0 2px #c9d6f5,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-spark.got,.cell-ico.ico-page.got{animation:none}
+.cell-ico.got{opacity:.35}
+.forest .aim{position:absolute;width:10%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 3px var(--gold),0 0 22px 6px rgba(245,200,66,.65);animation:aimp 1s ease-in-out infinite;pointer-events:none;z-index:4}
+.forest .aim.alt{box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 14px 3px rgba(255,255,255,.35);animation:none;width:8%}
+@keyframes aimp{50%{transform:translate(-50%,-50%) scale(1.18)}}
+.hud{display:flex;justify-content:center;gap:18px;margin:0;font-size:15px;color:var(--ink-2)}
+.hud b{color:var(--gold);font-size:17px}
+.hud .jar{letter-spacing:2px;color:var(--gold)}
+.hud.hudpop{animation:hpop .5s ease}
+@keyframes hpop{40%{transform:scale(1.15)}}
+.pick{display:grid;gap:8px;justify-items:center;text-align:center}
+.pick p{margin:0}
+.pk-t{font-size:15px;color:var(--ink)}
+.pk-n{font-size:13px;color:var(--ink-3)}
+.pk-row{display:flex;gap:8px;align-items:center}
+.pk-row .gloss[disabled]{opacity:.35}
+[data-scene="board"] .pick,[data-scene="board"] .plaque{background:#100c24;box-shadow:inset 0 0 0 1px rgba(245,200,66,.28),0 8px 24px rgba(0,0,0,.45);border-radius:16px;padding:14px 16px;color:var(--ink);text-align:center;margin:6px 0 0}
+[data-scene="board"] .plaque{font-size:15px;line-height:1.45}
+[data-scene="board"] .pick .pk-t{font-size:16px}
+[data-scene="board"] .pick .pk-n{color:var(--ink-2);font-size:14px}
+.swap{animation:plq .35s ease}
+@keyframes plq{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tipov{position:fixed;inset:0;z-index:60;background:rgba(14,10,34,.78);display:grid;place-items:end center;padding:0 16px calc(env(safe-area-inset-bottom,0px) + 24px);opacity:0;transition:opacity .25s}
+.tipov.in{opacity:1}
+.tip{width:100%;max-width:420px;max-height:calc(100svh - 90px);overflow:auto;-webkit-overflow-scrolling:touch;background:#100c24;border-radius:20px;padding:20px 18px 16px;box-shadow:inset 0 0 0 1px rgba(245,200,66,.35),0 20px 50px rgba(0,0,0,.5);text-align:center;transform:translateY(16px);transition:transform .3s var(--ease-out)}
+.tipov.in .tip{transform:none}
+.tipov.hole{background:none}
+.tipov.up{place-items:start center;padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+.tip p{margin:0}
+.tip-i{font-size:40px;line-height:1;margin-bottom:8px}
+.tip-t{font-family:var(--display);font-size:24px;color:var(--gold);margin-bottom:8px!important}
+.tip-l{font-size:15px;line-height:1.45;color:var(--ink-2);margin-top:6px!important}
+.tip-ok{margin-top:16px;width:100%}
+.tip-all{text-align:left}
+.tip-all .tip-t{text-align:center}
+.tip-row{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid rgba(247,238,219,.1);font-size:14px;line-height:1.4;color:var(--ink-2)}
+.tip-row span{font-size:22px;flex:0 0 28px}
+.tip-row b{color:var(--ink)}
+.tipspot{position:fixed;z-index:59;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 3px var(--gold),0 0 0 9999px rgba(14,10,34,.78);pointer-events:none;opacity:0;transition:opacity .25s;animation:aimp 1.2s ease-in-out infinite}
+.tipspot.in{opacity:1}
+.snd.help{font:700 18px/1 var(--body);color:var(--gold);margin-right:-4px}
+.fly{position:fixed;z-index:55;transform:translate(-50%,0);font:700 18px/1 var(--body);color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;animation:flyup 1.3s var(--ease-out) forwards}
+@keyframes flyup{0%{opacity:0;transform:translate(-50%,14px) scale(.8)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-34px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.forest .aim,.hud.hudpop,.swap,.fly,.tipspot{animation:none}}
+</style>
+
+<!-- Top.Mail.Ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+if (d.getElementById(id)) return;
+var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+ts.src = "https://top-fwz1.mail.ru/js/code.js";
+var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+<noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3811632;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
+<!-- /Top.Mail.Ru counter -->
+</head>
+<body>
+<div class="backdrop" id="backdrop" style="background-image:url(/img/06_t1_library.webp)"></div>
+
+<main class="stage" id="stage">
+  <canvas id="snow" aria-hidden="true"></canvas>
+
+  <header class="top">
+    <a href="../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <div class="topr"><div class="dots" id="dots" aria-label="Шаги Пролога"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
+  </header>
+
+  <!-- 0 · intro cartoon -->
+  <section class="scene" data-scene="intro" aria-label="Мультфильм: что случилось с книгами">
+    <video class="ivid" id="ivid" src="/prolog/video/intro.mp4" poster="/prolog/video/intro_poster.webp" playsinline preload="metadata"></video>
+    <div class="ishade"></div>
+    <div class="istart" id="istart">
+      <p class="ikick">Пролог · бесплатно</p>
+      <h1 class="ititle">Что случилось с&nbsp;книгами?</h1>
+      <button class="iplay" id="iplay" aria-label="Смотреть мультфильм со звуком"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
+      <p class="inote">45 секунд, со звуком</p>
+    </div>
+    <div class="voice icap" id="icap" hidden>
+      <p class="say" id="icapEn" aria-live="polite"></p>
+      <p class="ru" id="icapRu"></p>
+    </div>
+    <div class="ibar">
+      <button class="ibtn" id="iru" aria-pressed="false">По-русски</button>
+      <button class="ibtn" id="iskip" data-go="library">Пропустить</button>
+    </div>
+  </section>
+
+  <!-- 1 · library -->
+  <section class="scene on" data-scene="library" aria-label="Библиотека">
+    <img class="bg" src="/img/06_t1_library.webp" alt="Девочка в зимней шапке стоит у полок старой библиотеки, на верхней полке светится книга">
+    <div class="shade"></div>
+    <button class="glowbook" data-go="open" aria-label="Подойти к светящейся книге"></button>
+    <div class="voice">
+      <div class="who"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg>Голос Книги</div>
+      <p class="say" data-say>Shh… Is somebody there? Come closer.</p>
+      <p class="ru">Тсс… Здесь кто-то есть? Подойди ближе.</p>
+      <button class="btn btn-gold later" data-go="open">Открыть книгу</button>
+    </div>
+  </section>
+
+  <!-- 2 · the book opens: name + track -->
+  <section class="scene" data-scene="open" aria-label="Книга открылась">
+    <img class="bg" src="/img/06_t2_open.webp" alt="Девочка открыла книгу, из страниц летят золотые искры" style="object-position:50% 0">
+    <div class="shade" style="background:linear-gradient(180deg,rgba(14,10,34,.5) 0%,rgba(14,10,34,0) 14%,rgba(14,10,34,.35) 26%,rgba(14,10,34,.9) 42%,var(--night) 60%)"></div>
+    <div class="voice">
+      <p class="say" data-say>Hello! I am The Story Fire. What's your name?</p>
+      <p class="ru">Привет! Я Костёр историй. Как тебя зовут?</p>
+      <div class="field">
+        <label for="name">Имя (можно по-английски)</label>
+        <input id="name" autocomplete="given-name" maxlength="20" placeholder="Masha" enterkeyhint="done">
+      </div>
+      <div class="tracks" role="group" aria-label="Сколько тебе лет">
+        <button class="track" data-track="little" aria-pressed="false"><b>5–7</b><span>Little Explorers</span><small>играем вместе со взрослым</small></button>
+        <button class="track" data-track="explorers" aria-pressed="false"><b>8–10</b><span>Explorers</span><small>короткие тексты и загадки</small></button>
+        <button class="track" data-track="experts" aria-pressed="false"><b>11–14</b><span>Experts</span><small>отрывки из книг и детектив</small></button>
+      </div>
+      <button class="btn btn-gold" id="toBoard" disabled>Дальше</button>
+    </div>
+  </section>
+
+  <!-- 3 · board -->
+  <section class="scene" data-scene="board" aria-label="Зимний лес">
+    <div class="forest" id="forest" style="aspect-ratio:720/840">
+      <img src="/img/10_board24_s1.webp" alt="Тропа из 24 пеньков от костра мимо кроличьей норы в зимний лес">
+      <div class="token" id="token"><img src="/img/04_token.webp" alt="Твоя фишка"></div>
+    </div>
+    <div class="voice">
+      <div class="pages" id="pages" aria-label="Страницы книги"></div>
+      <p class="say" data-say id="boardSay">Nice to meet you! Six frozen pages are hidden in my forest. Roll the dice!</p>
+      <p class="hud" id="hud" aria-live="polite"></p>
+      <div class="dierow">
+        <button class="die" id="die" aria-label="Бросить кубик"><img src="/img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+      <div class="pick" id="pick" hidden></div>
+      <p class="plaque" id="boardRu" aria-live="polite">В лесу спрятаны шесть замёрзших страниц. Бросай кубик!</p>
+      <div id="ev" hidden></div>
+      <button class="btn btn-gold later" id="toFire" data-go="fire">К костру</button>
+    </div>
+  </section>
+
+  <!-- 4 · fire -->
+  <section class="scene" data-scene="fire" aria-label="Костёр">
+    <div class="camp" id="camp"></div>
+    <svg class="trees" viewBox="0 0 400 120" preserveAspectRatio="none" fill="currentColor" aria-hidden="true"><path d="M0 120V70l14-30 14 30 10-46 16 46 12-26 12 26 14-52 16 52 10-34 12 34 16-40 14 40 10-24 12 24 16-56 14 56 12-30 12 30 14-44 16 44 10-28 12 28 16-48 14 48 12-22 12 22 14-40 14 40 12-30 10 30v50z"/></svg>
+    <button class="fire" id="fire" aria-label="Подбросить дров">
+      <img src="/img/04_fire_1.webp" alt="" class="on">
+      <img src="/img/04_fire_2.webp" alt="">
+      <img src="/img/04_fire_3.webp" alt="">
+      <img src="/img/04_fire_4.webp" alt="">
+    </button>
+    <div class="paws" id="paws" aria-hidden="true"></div>
+    <div class="voice">
+      <p class="say" data-say id="fireSay">Brr! It's cold. The fire is going out. Tap the fire: one, two, three!</p>
+      <p class="ru" id="fireRu">Бр-р! Холодно. Костёр гаснет. Нажми на огонь три раза и считай вслух: one, two, three!</p>
+      <button class="btn btn-gold later" id="toShelf" data-go="shelf">Кто придёт к костру?</button>
+    </div>
+  </section>
+
+  <!-- 6 · shelf -->
+  <section class="scene" data-scene="shelf" aria-label="Полка гостей">
+    <img class="bg" src="/img/05_bookshelf.webp" alt="" style="opacity:.28">
+    <div class="shade"></div>
+    <div class="shelf" id="shelf"></div>
+    <div class="voice">
+      <p class="say" data-say>Ten guests are lost in my forest. Who are they? Tap a shadow!</p>
+      <p class="ru">В моём лесу потерялись десять гостей. Кто они? Нажми на силуэт.</p>
+      <p class="hint" id="hint" aria-live="polite"></p>
+      <button class="btn btn-gold later" id="toCliff" data-go="cliff">Что это за шорох?</button>
+    </div>
+  </section>
+
+  <!-- 7 · cliffhanger -->
+  <section class="scene" data-scene="cliff" aria-label="Следы на снегу">
+    <div class="camp" id="camp2" style="--glow:.32"></div>
+    <svg class="trees" viewBox="0 0 400 120" preserveAspectRatio="none" fill="currentColor" aria-hidden="true"><path d="M0 120V70l14-30 14 30 10-46 16 46 12-26 12 26 14-52 16 52 10-34 12 34 16-40 14 40 10-24 12 24 16-56 14 56 12-30 12 30 14-44 16 44 10-28 12 28 16-48 14 48 12-22 12 22 14-40 14 40 12-30 10 30v50z"/></svg>
+    <div class="fire" id="fire2" style="cursor:default">
+      <img src="/img/04_fire_1.webp" alt="">
+      <img src="/img/04_fire_2.webp" alt="">
+      <img src="/img/04_fire_3.webp" alt="">
+      <img src="/img/04_fire_4.webp" alt="" class="on">
+    </div>
+    <div class="paws" id="paws2" aria-hidden="true"></div>
+    <div class="voice">
+      <p class="say" data-say id="cliffSay">Oh no… The fire is going out. Look! Tiny footprints in the snow…</p>
+      <p class="ru" id="cliffRu">Ой… Костёр гаснет. Смотри! На снегу крошечные следы…</p>
+      <button class="btn btn-gold later" id="toEnd" data-go="end">Come back on the 27th</button>
+    </div>
+  </section>
+
+  <!-- 8 · end -->
+  <section class="scene" data-scene="end" aria-label="Пролог пройден">
+    <div class="end">
+      <img class="seal" src="/img/04_frozen_book_2.webp" alt="Книга во льду начинает оттаивать">
+      <h1 id="endTitle">Пролог пройден</h1>
+      <p>Книга будет ждать 27 декабря. В первой истории к костру придёт Алиса, и станет понятно, чьи это следы.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>10 историй с 27.12 по 10.01, по 10–25 минут в вечер</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>В каждой истории новый герой из мировой классики и загадки на английском</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Дошедшим до финала настоящая книга в подарок</li>
+      </ul>
+      <div class="cta">
+        <a class="btn btn-gold" href="../#price">Открыть 10 историй · 3 500 ₽</a>
+        <a class="btn btn-ghost" href="../storyfire.ics">Напомнить 26 декабря</a>
+      </div>
+      <p class="note">Для родителей: Пролог бесплатный и проходится сколько угодно раз. <button class="gloss" id="again" style="text-decoration:underline;color:var(--ink-2)">Пройти ещё раз</button></p>
+    </div>
+  </section>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
+    <button class="sheet-x" id="sheetX">Свернуть <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="sheet-in"><p class="sheet-k" id="sheetK"></p><div id="sheetBody" style="display:grid;gap:14px;justify-items:center;width:100%"></div></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(s,r){return (r||document).querySelector(s);}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
+  var ORDER=['library','open','board','fire','shelf','cliff','end'];
+  var BG={intro:'06_t1_library',library:'06_t1_library',open:'06_t2_open',board:'10_board24_s1',fire:'04_fire_4',shelf:'05_bookshelf',cliff:'04_fire_1',end:'05_card_back'};
+  var state={name:'',track:''};
+  try{var s=JSON.parse(localStorage.getItem('sf_prolog')||'{}'); state.name=s.name||''; state.track=s.track||'';}catch(e){}
+  function save(){try{localStorage.setItem('sf_prolog',JSON.stringify(state));}catch(e){}}
+  var wait=function(ms){return new Promise(function(r){setTimeout(r,reduce?Math.min(ms,60):ms);});};
+
+  var dots=$('#dots'); ORDER.forEach(function(){dots.appendChild(document.createElement('i'));});
+
+  /* word-by-word reveal of the Book's line */
+  function speak(el,text,silent){
+    if(text!=null) el.textContent=text;
+    var v=(!silent&&typeof SND!=='undefined')?SND.say(el.textContent):Promise.resolve();
+    var words=el.textContent.split(/\s+/); el.textContent='';
+    words.forEach(function(w,i){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; el.appendChild(sp); el.appendChild(document.createTextNode(' '));
+      setTimeout(function(){sp.classList.add('in');}, reduce?0:120+i*110);});
+    return Promise.all([wait(220+words.length*110),v]);
+  }
+  function later(el,ms){ if(!el) return; setTimeout(function(){el.classList.add('in');}, reduce?0:ms); }
+
+  function ruBtns(root){$$('.voice .ru, #sheetBody .ru',root).forEach(function(ru){ if(ru.previousElementSibling&&ru.previousElementSibling.classList.contains('rubtn')) return;
+    var b=document.createElement('button'); b.className='rubtn'; b.textContent='Не понятно? По-русски'; ru.parentNode.insertBefore(b,ru);
+    b.addEventListener('click',function(){ru.classList.add('show'); b.hidden=true;});});}
+  ruBtns(document);
+
+  /* a task is a frozen book page: tap the small page, it opens over the whole screen */
+  var sheet=$('#sheet'), sheetCard=null, sheetOwner=null;
+  function fromCard(card){var s=$('.stage').getBoundingClientRect(), c=card.getBoundingClientRect();
+    return 'translate('+(c.left-s.left)+'px,'+(c.top-s.top)+'px) scale('+(c.width/s.width)+','+(c.height/s.height)+')';}
+  function openSheet(card){
+    SND.fx('page');
+    sheetCard=card; sheet.hidden=false; sheet.classList.remove('open');
+    if(!reduce){sheet.style.transition='none'; sheet.style.transform=fromCard(card); sheet.classList.add('small'); void sheet.offsetWidth; sheet.style.transition='';}
+    requestAnimationFrame(function(){sheet.style.transform='none'; sheet.classList.remove('small'); sheet.classList.add('open'); sheet.focus({preventScroll:true});});
+  }
+  function closeSheet(){
+    return new Promise(function(res){
+      sheet.classList.remove('open'); SND.fx('page');
+      if(reduce||!sheetCard||!sheetCard.isConnected){sheet.hidden=true; return res();}
+      setTimeout(function(){sheet.classList.add('small'); sheet.style.transform=fromCard(sheetCard.querySelector('i')||sheetCard);},150);
+      setTimeout(function(){sheet.hidden=true; sheet.style.transform=''; res();},720);
+    });
+  }
+  $('#sheetX').addEventListener('click',function(){closeSheet(); if(sheetCard) sheetCard.focus({preventScroll:true});});
+  /* taskPage(holder,kicker,render): render(body,finish) fills the page once; finish() closes it and thaws the card */
+  function taskPage(holder,kicker,label,render){
+    return new Promise(function(done){
+      var card=document.createElement('button'); card.className='pagecard'; card.innerHTML='<i></i><span>'+label+'</span>';
+      holder.appendChild(card); var id=Math.random().toString(36).slice(2);
+      var fin=false; // задание решено: страница оттаивает, повторный тап её уже не открывает
+      card.addEventListener('click',function(){
+        if(fin) return;
+        if(sheetOwner!==id){sheetOwner=id; $('#sheetK').textContent=kicker; var body=$('#sheetBody'); body.innerHTML='';
+          render(body,function(){ if(fin) return; fin=true; card.disabled=true; closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
+          ruBtns(body);}
+        openSheet(card.querySelector('i'));
+      });
+    });
+  }
+
+  /* ---------- sound: voice of the Book, music, effects (all start after the first tap) ---------- */
+  var SND=(function(){
+    var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
+    var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
+    fetch('audio/voice.json?v=57').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
+    function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
+    function unlock(){
+      if(ctx) return; var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      ctx=new AC(); master=ctx.createGain(); master.gain.value=on?1:0; master.connect(ctx.destination);
+      musicGain=ctx.createGain(); musicGain.gain.value=.22; musicGain.connect(master);
+      sfxGain=ctx.createGain(); sfxGain.gain.value=.7; sfxGain.connect(master);
+      voiceGain=ctx.createGain(); voiceGain.gain.value=1; voiceGain.connect(master);
+      music=new Audio('audio/music.mp3'); music.loop=true; music.preload='auto';
+      try{ ctx.createMediaElementSource(music).connect(musicGain); }catch(e){}
+      if(musicOn) music.play().catch(function(){}); else musicGain.gain.value=0;
+      /* wind: brown noise through a slowly moving band-pass */
+      var n=ctx.createBufferSource(); n.buffer=noise(4); n.loop=true; var f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=500; f.Q.value=.7;
+      var lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=.09; lg.gain.value=260; lfo.connect(lg); lg.connect(f.frequency); lfo.start();
+      wind=ctx.createGain(); wind.gain.value=.05; n.connect(f); f.connect(wind); wind.connect(master); n.start();
+      /* fire crackle: low rumble + random clicks, volume set per scene */
+      crackle=ctx.createGain(); crackle.gain.value=0; crackle.connect(sfxGain);
+      var r=ctx.createBufferSource(); r.buffer=noise(3); r.loop=true; var rf=ctx.createBiquadFilter(); rf.type='lowpass'; rf.frequency.value=380; var rg=ctx.createGain(); rg.gain.value=.5; r.connect(rf); rf.connect(rg); rg.connect(crackle); r.start();
+      (function pop(){ if(crackle.gain.value>.01) click(.4+Math.random()*.6); setTimeout(pop,60+Math.random()*260); })();
+      if(pending){ var t=pending; pending=null; say(t); }
+      setScene(curScene);
+    }
+    function env(g,t,a,d,v){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);}
+    function click(v){ var t=ctx.currentTime, b=ctx.createBufferSource(); b.buffer=noise(.05); var f=ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=1800+Math.random()*2500; var g=ctx.createGain(); env(g,t,.001,.03+Math.random()*.04,.25*v); b.connect(f); f.connect(g); g.connect(crackle); b.start(t); b.stop(t+.12); }
+    function tone(freq,t,dur,v,type,dest){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type||'sine'; o.frequency.setValueAtTime(freq,t); env(g,t,.008,dur,v); o.connect(g); g.connect(dest||sfxGain); o.start(t); o.stop(t+dur+.05); return o; }
+    function hiss(t,dur,v,from,to,type){ var b=ctx.createBufferSource(); b.buffer=noise(dur+.1); var f=ctx.createBiquadFilter(); f.type=type||'bandpass'; f.Q.value=1.2; f.frequency.setValueAtTime(from,t); f.frequency.exponentialRampToValueAtTime(to,t+dur); var g=ctx.createGain(); env(g,t,dur*.25,dur*.75,v); b.connect(f); f.connect(g); g.connect(sfxGain); b.start(t); b.stop(t+dur+.1); }
+    var FX={
+      page:function(t){ hiss(t,.32,.5,900,3800); hiss(t+.1,.22,.3,2600,1200); },
+      whoosh:function(t){ hiss(t,.7,.35,300,1400,'lowpass'); },
+      dice:function(t){ for(var i=0;i<9;i++){ var k=t+i*.07+Math.random()*.03; tone(700+Math.random()*900,k,.05,.18,'triangle'); hiss(k,.04,.25,3000,2500);} },
+      step:function(t){ tone(220,t,.12,.25,'triangle'); tone(330,t+.01,.08,.12); },
+      spark:function(t){ [1319,1568,2093,2637].forEach(function(f,i){tone(f,t+i*.07,.5,.12);}); },
+      ok:function(t){ tone(784,t,.35,.18); tone(1175,t+.09,.55,.16); },
+      no:function(t){ tone(196,t,.22,.22,'triangle'); tone(185,t+.08,.25,.16,'triangle'); },
+      squeak:function(t){ var o=tone(2400,t,.12,.08,'sine'); o.frequency.exponentialRampToValueAtTime(3600,t+.06); o.frequency.exponentialRampToValueAtTime(2800,t+.12); },
+      fire:function(t){ hiss(t,.9,.6,200,1600,'lowpass'); for(var i=0;i<6;i++) setTimeout(function(){click(1);},i*70); },
+      patter:function(t){ for(var i=0;i<4;i++) tone(900+Math.random()*300,t+i*.09,.04,.06,'triangle'); }
+    };
+    function fx(name){ if(!ctx||!on) return; try{ FX[name](ctx.currentTime+.01); }catch(e){} }
+    function duck(v){ if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(v,ctx.currentTime,.25); }
+    function tts(text){
+      return new Promise(function(fin){
+        try{ var s=window.speechSynthesis; if(!s||!text) return fin();
+          s.cancel(); var u=new SpeechSynthesisUtterance(String(text).replace(/…|\.\.\./g,', ')); u.lang='en-GB'; u.rate=.9;
+          var v=s.getVoices().filter(function(x){ return /^en(-|_)GB/i.test(x.lang); })[0] || s.getVoices().filter(function(x){ return /^en/i.test(x.lang); })[0]; if(v) u.voice=v;
+          u.onend=u.onerror=function(){ fin(); }; setTimeout(fin,12000); s.speak(u);
+        }catch(e){ fin(); } });
+    }
+    function say(text){
+      var id=VOICE[key(text)]; if(!on) return Promise.resolve();
+      if(!id) return tts(text);  // фразы ещё без записи — голос телефона, чтобы кнопка не молчала
+      if(!ctx){ pending=text; return Promise.resolve(); }
+      return new Promise(function(fin){
+      var ok=false, done=function(){ if(!ok){ok=true; fin();} }; setTimeout(done,15000);
+      var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
+      var play=function(b){ if(!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ src.start(ctx.currentTime+.06); setTimeout(done,b.duration*1000+900); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
+      if(buf[id]) return play(buf[id]);
+      fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+        .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
+      });
+    }
+    var lastKey='', curScene='library', seq=0;
+    function setScene(id){ curScene=id; if(!crackle) return; var v={fire:.5,riddle:.45,cliff:.35}[id]||0; crackle.gain.setTargetAtTime(v,ctx.currentTime,.6); }
+    function toggle(){ on=!on; try{localStorage.setItem('sf_sound',on?'on':'off');}catch(e){} unlock(); if(master) master.gain.setTargetAtTime(on?1:0,ctx.currentTime,.05); if(on&&music) music.play().catch(function(){}); if(!on&&cur){try{cur.stop();}catch(e){}} paint(); }
+    function paint(){ var b=$('#sndBtn'); if(!b) return; b.setAttribute('aria-pressed',on?'true':'false'); b.setAttribute('aria-label',on?'Выключить звук':'Включить звук'); }
+    ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ unlock(); if(ctx&&ctx.state==='suspended') ctx.resume(); },{passive:true}); });
+    var musicOn=true;
+    function musicSet(v){ musicOn=v; if(!musicGain) return; musicGain.gain.setTargetAtTime(v?.22:0,ctx.currentTime,.4); if(v&&music) music.play().catch(function(){}); }
+    // iPhone: пока микрофон включён, Safari переводит звук в «режим звонка» и громкость прыгает. Явно держим «playback», на запись — «play-and-record», музыку на время записи глушим.
+    function sess(t){ try{ if(navigator.audioSession) navigator.audioSession.type=t; }catch(e){} }
+    sess('playback');
+    function mic(onm){ sess(onm?'play-and-record':'playback'); if(cur&&onm){ try{cur.stop();}catch(e){} } if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(onm?0:.22,ctx.currentTime,.15); if(ctx&&!onm&&ctx.state!=='running') ctx.resume(); }
+    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
+  })();
+  $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
+  var cur='library';
+  function go(id){
+    var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
+    from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
+    $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
+    $('#backdrop').style.backgroundImage='url(/img/'+BG[id]+'.webp)';
+    $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
+    var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
+    (ENTER[id]||function(){})(p);
+  }
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-go]'); if(b&&!b.disabled) go(b.getAttribute('data-go'));});
+
+  var ENTER={};
+
+  /* intro cartoon: plays with sound after a tap, English captions, Russian on request */
+  var CUES=[[0.6,6.6,'Every book is alive… while somebody reads it.','Каждая книга жива… пока её кто-то читает.'],
+    [7.0,14.1,'But this winter, nobody opened me. My stories began to freeze.','Но этой зимой меня никто не открыл. Мои истории начали замерзать.'],
+    [14.2,22.9,'Then the Mouse King’s army came. The mice ate my words!','Потом пришло войско Мышиного короля. Мыши съели мои слова!'],
+    [23.0,30.9,'The characters fell out of their books… and got lost in the winter forest.','Герои выпали из своих книг… и потерялись в зимнем лесу.'],
+    [31.5,39.1,'Hello! I’m Alice. I followed a white rabbit… and now I’m lost. Will you help me?','Привет! Я Алиса. Я побежала за белым кроликом… и теперь потерялась. Ты мне поможешь?',1],
+    [39.35,44.8,'Light the fire. Bring them home.','Разожги костёр. Верни их домой.']];
+  var ivid=$('#ivid'), icap=$('#icap'), lastCue=-1;
+  $('#iplay').addEventListener('click',function(){
+    SND.music(false); ivid.muted=false; var pr=ivid.play(); if(pr&&pr.catch) pr.catch(function(){ go('library'); });
+    $('#istart').classList.add('gone'); icap.hidden=false; $('.ishade').style.opacity='.6';
+  });
+  ivid.addEventListener('timeupdate',function(){
+    var t=ivid.currentTime, k=-1; CUES.forEach(function(c,i){ if(t>=c[0]&&t<c[1]) k=i; });
+    if(k===lastCue) return; lastCue=k; var en=$('#icapEn');
+    if(k<0){ en.textContent=''; $('#icapRu').textContent=''; return; }
+    en.classList.toggle('alice',!!CUES[k][4]); speak(en,CUES[k][2],true); $('#icapRu').textContent=CUES[k][3];
+  });
+  ivid.addEventListener('ended',function(){ go('library'); });
+  $('#iru').addEventListener('click',function(){ var on=icap.classList.toggle('ru-on'); this.setAttribute('aria-pressed',on?'true':'false'); });
+  ENTER.intro=function(){ SND.music(false); };
+  ENTER.library=function(p){ try{ivid.pause();}catch(e){} SND.music(true); p.then(function(){later($('[data-scene="library"] .later'),300);});};
+
+
+  /* name + track */
+  var name=$('#name'), toBoard=$('#toBoard');
+  name.value=state.name;
+  function pick(t){state.track=t; document.body.className='t-'+t; $$('.track').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.track===t);}); toBoard.disabled=!t;}
+  $$('.track').forEach(function(b){b.addEventListener('click',function(){pick(b.dataset.track);});});
+  if(state.track) pick(state.track);
+  toBoard.addEventListener('click',function(){state.name=name.value.trim().slice(0,20); save(); go('board');});
+
+  /* board v2 (05.11.2026): то же поле, что в историях — 24 пенька, страницы, искры, поленья, выбор клетки, правила.
+     Обучалка: два броска (первый всегда 2 — мышиный след, рядом искра и полено на выбор за искру; второй доводит до страницы 1 — загадка). */
+  var el=function(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; };
+  var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
+  var MOUSESVG='<img src="/img/07_mouse.webp" alt="">';
+  var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
+  var LOG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="9" width="18" height="7" rx="3.5"/><circle cx="18" cy="12.5" r="2" fill="#7a4a1c"/></svg>';
+  var STAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18l6-6 3 3 7-7M15 8h5v5"/></svg>';
+  var WIND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3"/></svg>';
+  var PAGE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg>';
+  var ICO={log:LOG,star:STAR,wind:WIND,spark:SPARK,mouse:PAW,snow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg>',adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
+  // поле истории 1 (board24_s1): от костра к замку
+  var START=[41,86];
+  var CELLS=[[33.9,73.9],[40.7,72.5],[47.6,71.8],[54.6,70.8],[61.4,69.5],[68.1,67.6],[73.8,64.8],[77.5,60.8],[76.9,55.8],[74.0,51.1],[63.8,44.4],[57.5,41.8],[44.6,37.7],[38.5,35.6],[28.3,29.4],[30.6,25.0],[40.7,19.0],[47.2,17.4],[53.6,15.7],[66.4,12.9],[72.8,11.2],[78.9,9.4],[84.0,6.2],[89.3,3.6]];
+  var STATIONS=[3,7,11,15,19,23];
+  var EVS={0:'spark',1:'mouse',2:'log',4:'wind',5:'snow',6:'spark',8:'star',9:'adult',10:'log',12:'mouse',13:'spark',14:'wind',16:'log',17:'star',18:'spark',20:'spark',21:'adult',22:'log'};
+  var EVNAME={spark:'искра ✦',mouse:'мышиный след',log:'полено 🪵',wind:'метель (шаг назад)',snow:'сугроб',adult:'ход для взрослого',star:'короткая тропа ⭐',page:'замёрзшая страница'};
+  var PG=[['Listen','Послушай'],['Words','Слова'],['Grammar','Грамматика'],['Read','Читай'],['Write','Пиши'],['Speak','Говори']];
+  var token=$('#token'), forest=$('#forest'), say=$('#boardSay'), ru=$('#boardRu'), hud=$('#hud'), pkb=$('#pick'), pages=$('#pages');
+  var pos=-1, rolling=false, done=0, rolls=0, T=function(){ return state.track||'explorers'; };
+  function place(xy){ token.style.left=xy[0]+'%'; token.style.top=xy[1]+'%'; fit(xy); }
+  /* поле на весь экран, камера идёт за фишкой (как в историях) */
+  var sc=$('[data-scene="board"]'), bimg=forest.querySelector('img'), last=START; sc.appendChild(pages);
+  function ar(){ return bimg.naturalWidth?bimg.naturalWidth/bimg.naturalHeight:720/840; }
+  function fit(xy){ if(xy) last=xy; var W=sc.clientWidth, H=sc.clientHeight; if(!W||!H) return;
+    var a=ar(), h=H*1.18, w=h*a; if(w<W){ w=W; h=W/a; }
+    var xs=CELLS.concat([START]).map(function(c){return c[0];}), cx=(Math.min.apply(0,xs)+Math.max.apply(0,xs))/200;
+    var left=Math.min(0,Math.max(W-w,W/2-cx*w)), top=Math.min(0,Math.max(H*.66-h,H*.4-last[1]/100*h));
+    forest.style.width=w+'px'; forest.style.height=h+'px'; forest.style.left=left+'px'; forest.style.top=top+'px'; forest.style.setProperty('--z',(w/W).toFixed(3)); }
+  if(!bimg.complete) bimg.addEventListener('load',function(){ fit(); });
+  window.addEventListener('resize',function(){ fit(); });
+  token.style.left=START[0]+'%'; token.style.top=START[1]+'%';
+  CELLS.forEach(function(c,i){ var st=STATIONS.indexOf(i), d=document.createElement('div');
+    if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=PG[st][1]; }
+    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
+    else return;
+    d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token); });
+  PG.forEach(function(p){ var s=el('span','pg',PAGE+'<em>'+p[0]+'</em>'); s.title=p[1]; pages.appendChild(s); });
+  /* искры и поленья: общие с историями (sf_sparks / sf_logs), но по-настоящему начисляются только в первое прохождение Пролога */
+  var getN=function(k){ try{ return +(localStorage.getItem(k)||0); }catch(e){ return 0; } }, setN=function(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} };
+  var REAL=!getN('sf_p_rew'), cnt={sp:REAL?getN('sf_sparks'):0,lg:REAL?getN('sf_logs'):0};
+  function sync(){ if(REAL){ setN('sf_sparks',cnt.sp); setN('sf_logs',cnt.lg); } paintHud(); }
+  function paintHud(){ hud.innerHTML=T()==='little'?'<span class="jar" title="Банка искр">'+(cnt.sp?'✦'.repeat(Math.min(cnt.sp,8)):'пусто')+'</span><span class="hfire">🔥</span>'
+    :'<span title="Искры: подсказки и сдвиг кубика">✦ <b>'+cnt.sp+'</b></span><span title="Поленья в костре">🪵 <b>'+cnt.lg+'</b></span>'; }
+  function fly(txt){ var f=el('span','fly',txt), r=hud.getBoundingClientRect(); f.style.left=(r.left+r.width/2)+'px'; f.style.top=(r.top+r.height)+'px'; document.body.appendChild(f); setTimeout(function(){ f.remove(); },1400); }
+  function addSpark(){ cnt.sp++; state.spark=true; sync(); fly('+1 ✦'); }
+  function addLogs(n){ cnt.lg+=n; sync(); fly('+'+n+' 🪵'); hud.classList.remove('hudpop'); void hud.offsetWidth; hud.classList.add('hudpop'); }
+  (function(){ var swap=function(e){ e.classList.remove('swap'); void e.offsetWidth; e.classList.add('swap'); };
+    if(window.MutationObserver){ new MutationObserver(function(){ swap(ru); }).observe(ru,{childList:true,characterData:true,subtree:true}); new MutationObserver(function(){ if(!pkb.hidden) swap(pkb); }).observe(pkb,{childList:true}); } })();
+  /* объяснения при первой встрече и карточка правил — те же тексты, что в историях (ключи свои: в истории 1 Книга напомнит ещё раз) */
+  var TIPS={
+    spark:{i:'✦',t:'Искра',l:['Трать искру на подсказку в шифре или на шаг кубика.','Получаешь за страницу без ошибок и за клетки ✦ на тропе.','Сбережённые искры зажгут огонь против Мышиного короля в последней истории.']},
+    log:{i:'🪵',t:'Полено',l:['Полено летит в костёр: чем больше поленьев, тем ярче костёр в конце истории.','За страницу с первого раза 3, со второй попытки 2, дошёл до конца 1.','Поленья не тратятся, это твой счёт.']},
+    pick:{i:'🎲',t:'Твой ход',l:['Кубик показал клетку. Иди туда или за искру шагни на одну клетку левее или правее.','Смотри, что лежит рядом: полено, искра, короткая тропа или метель.','Решай сам: идти как выпало или потратить искру.']},
+    snow:{i:'❄️',t:'Сугроб',l:['Сугроб. Назови три слова из истории, и он растает.','Или отдай искру и иди дальше сразу.','Слова дешевле: искры пригодятся для подсказок.']},
+    wind:{i:'🌬',t:'Метель',l:['Метель сносит фишку на шаг назад.','Если видишь её впереди, обойди за искру.','Через оттаявшую страницу метель не перенесёт.']},
+    star:{i:'⭐',t:'Короткая тропа',l:['Короткая тропа: фишка летит прямо к следующей странице.','Все клетки по дороге пропускаются.','Повезло, пользуйся!']},
+    mouse:{i:'🐾',t:'Мышиный след',l:['Мышиный след: маленькая загадка. Разгадай, и идём дальше.','Мыши собирают кусочки старой карты… зачем?']},
+    page:{i:'📄',t:'Замёрзшая страница',l:['Шесть страниц книги замёрзли в лесу. Кубик ведёт к ним по порядку.','Открой страницу и реши задание: она оттает, а в костёр полетят поленья.','С первого раза и без подсказок — ещё и искра.']}};
+  var RULES=[['✦','Искры','Получаешь за страницу без ошибок и за клетки ✦. Трать на подсказку в шифре или на шаг кубика. Сбереги для финала.'],
+    ['🪵','Поленья','Это твой костёр. За каждую оттаявшую страницу: 3 с первого раза, 2 со второй, 1 если дошёл до конца. Их не тратят.'],
+    ['📄','Страницы и кубик','Шесть замёрзших страниц лежат на тропе. Кубик ведёт к ним, открывай по порядку. По дороге: искры, поленья, сугроб, метель, короткая тропа.']];
+  function rulesHtml(){ return '<p class="tip-t">Как играть</p>'+RULES.map(function(r){ return '<div class="tip-row"><span>'+r[0]+'</span><div><b>'+r[1]+'</b><br>'+r[2]+'</div></div>'; }).join(''); }
+  function overlay(html,cb){ var ov=el('div','tipov',html); document.body.appendChild(ov); requestAnimationFrame(function(){ ov.classList.add('in'); });
+    ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); setTimeout(function(){ ov.remove(); if(cb) cb(); },260); }); return ov; }
+  function showRules(){ var seen; try{ seen=localStorage.getItem('sf_ptip_rules'); }catch(e){} if(seen) return Promise.resolve(); try{ localStorage.setItem('sf_ptip_rules','1'); localStorage.setItem('sf_ptip_spark','1'); }catch(e){}
+    return new Promise(function(res){ overlay('<div class="tip tip-all">'+rulesHtml()+'<button class="btn btn-gold tip-ok">Понятно, бросаю кубик</button></div>',res); }); }
+  function teach(key,target){ var seen; try{ seen=localStorage.getItem('sf_ptip_'+key); }catch(e){} if(seen||!TIPS[key]) return Promise.resolve(); try{ localStorage.setItem('sf_ptip_'+key,'1'); }catch(e){}
+    return new Promise(function(res){ var t=TIPS[key], lines=T()==='little'?t.l.slice(0,2):t.l, sp=null;
+      var ov=overlay('<div class="tip"><div class="tip-i">'+t.i+'</div><p class="tip-t">'+t.t+'</p>'+lines.map(function(x){ return '<p class="tip-l">'+x+'</p>'; }).join('')+'<button class="btn btn-gold tip-ok">Понятно</button></div>',function(){ if(sp) sp.remove(); res(); });
+      if(target&&target.getBoundingClientRect){ var r=target.getBoundingClientRect(); if(r.width>0&&r.width<200){ sp=el('div','tipspot'); sp.style.left=(r.left+r.width/2)+'px'; sp.style.top=(r.top+r.height/2)+'px'; sp.style.width=sp.style.height=(Math.max(r.width,r.height)+24)+'px'; ov.classList.add('hole'); document.body.appendChild(sp); requestAnimationFrame(function(){ sp.classList.add('in'); }); if(r.top+r.height/2>window.innerHeight*.5) ov.classList.add('up'); } } }); }
+  (function(){ var sb=$('#sndBtn'), h=el('button','snd help','?'); h.setAttribute('aria-label','Правила'); h.hidden=true; sb.parentNode.insertBefore(h,sb); window._helpBtn=h;
+    h.addEventListener('click',function(){ var keys=['pick','page','spark','log','snow','wind','star','mouse'];
+      overlay('<div class="tip tip-all">'+rulesHtml()+'<p class="tip-t" style="margin-top:14px">Что бывает на тропе</p>'+keys.map(function(k){ var t=TIPS[k]; return '<div class="tip-row"><span>'+t.i+'</span><div><b>'+t.t+'</b><br>'+t.l.slice(0,2).join(' ')+'</div></div>'; }).join('')+'<button class="btn btn-gold tip-ok">Понятно</button></div>'); }); })();
+  function kindAt(c){ return STATIONS.indexOf(c)>=0?'page':(EVS[c]||''); }
+  ENTER.board=function(){ fit(); window._helpBtn.hidden=false; paintHud();
+    var hi=state.name?('Nice to meet you, '+state.name+'! '):'Nice to meet you! ';
+    speak(say,hi+'Six frozen pages are hidden in my forest. Roll the dice!');
+    showRules().then(function(){ if(!getN('sf_p_gift')&&cnt.sp<2){ if(REAL) setN('sf_p_gift',1); cnt.sp+=2; sync(); ru.textContent='Книга дарит тебе 2 искры ✦✦. Трать их на подсказки или на шаг кубика.'; fly('+2 ✦'); } }); };
+  /* мышиный след: по-прежнему своё задание Пролога на каждый уровень */
+  var MOUSE={
+    little:{say:'Oh! Mice! Shoo them away: one, two, three!',ru:'Ой, мыши! Прогони их: нажми на каждую и считай вслух.'},
+    explorers:{say:'Mice ate words from my page! Put them back.',ru:'Мыши съели слова с моей страницы. Верни их на место!',
+      text:'I {0} a magic book. Children {1} me by the fire, and my stories {2} alive.',
+      gaps:[[['is','am','are'],'am'],[['reads','read','reading'],'read'],[['is','am','are'],'are']]},
+    experts:{say:'Mice ate the verbs from my page! Put them back.',ru:'',gloss:['froze','замёрзли'],
+      text:'Long ago, children {0} (sit) by the fire every night, and the Book {1} (tell) them stories. Then people {2} (forget) about books, and the stories froze.',
+      gaps:[[['sitted','sat','sit'],'sat'],[['told','telled','tells'],'told'],[['forgetted','forget','forgot'],'forgot']]}
+  };
+  function mouseTask(box){
+    var m=MOUSE[T()]||MOUSE.explorers; speak(say,m.say); ru.textContent=m.ru||'Мышиный след! Мыши что-то оставили.';
+    return taskPage(box,'Мышиный след',T()==='little'?'Нажми на страницу':'Open the page',function(body,finish){
+      body.innerHTML=(m.gaps?'<img class="thief" src="/img/07_mouse.webp" alt="Мышь с кусочком страницы в зубах">':'')+'<p class="say"></p>'+(m.ru?'<p class="ru">'+m.ru+'</p>':'');
+      var ps=$('.say',body); speak(ps,m.say);
+      if(!m.gaps){
+        var left=3; body.insertAdjacentHTML('beforeend','<div class="mice">'+[0,1,2].map(function(){return '<button class="mouse" aria-label="Мышь">'+MOUSESVG+'</button>';}).join('')+'</div>');
+        $$('.mouse',body).forEach(function(b){b.addEventListener('click',function(){ if(b.disabled) return; b.disabled=true; b.classList.add('run'); left--; SND.fx('squeak'); var pv=SND.say(['One!','Two!','Three!'][2-left]);
+          ps.textContent=['One!','Two!','Three!'][2-left];
+          if(!left) Promise.all([pv,wait(700)]).then(finish); });});
+      } else {
+        var g=0, txt=m.text.replace(/\{(\d)\}/g,function(_,i){return '<span class="gap" data-i="'+i+'">   </span>';}).replace(/\((\w+)\)/g,'<small class="base">($1)</small>');
+        body.insertAdjacentHTML('beforeend','<p class="gtext">'+txt+'</p>'+(m.gloss?'<button class="gloss" aria-expanded="false" data-tr="'+m.gloss[1]+'">Что значит '+m.gloss[0]+'?</button>':'')+'<div class="opts gopts"></div><p class="fb" aria-live="polite"></p>');
+        var gl=$('.gloss',body); if(gl) gl.addEventListener('click',function(){gl.setAttribute('aria-expanded',gl.getAttribute('aria-expanded')!=='true');});
+        (function next(){
+          $$('.gap',body).forEach(function(x){x.classList.toggle('cur',+x.dataset.i===g);});
+          if(g>=m.gaps.length){ speak(ps,'Yes! My page is whole again.').then(function(){return wait(300);}).then(function(){SND.say(m.text.replace(/\{(\d)\}/g,function(_,i){return m.gaps[i][1];}).replace(/ \(\w+\)/g,''));}); $('.thief',body).classList.add('run'); SND.fx('squeak'); $('.gopts',body).innerHTML='<button class="btn btn-gold later">Go on</button>'; var gb=$('.gopts .btn',body); later(gb,1500); gb.addEventListener('click',function(){gb.disabled=true; finish();}); return; }
+          var gp=m.gaps[g], o=$('.gopts',body);
+          o.innerHTML=gp[0].map(function(w){return '<button class="opt">'+w+'</button>';}).join('');
+          $$('.opt',o).forEach(function(b){b.addEventListener('click',function(){
+            if(b.textContent===gp[1]){ var sp=$('.gap[data-i="'+g+'"]',body); sp.textContent=gp[1]; sp.classList.add('ok'); SND.fx('ok'); $('.fb',body).textContent=''; g++; setTimeout(next,450);}
+            else{ SND.fx('no'); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('.fb',body).textContent='Not quite. Try again!';}
+          });});
+        })();
+      }
+    }).then(function(){
+      var p=m.gaps?speak(say,'The words are back! The mice ran away.'):speak(say,'Well done! Roll again!');
+      ru.textContent=m.gaps?'Слова вернулись! Мыши убежали. Бросай кубик ещё раз.':'Молодец! Бросай кубик ещё раз!';
+      return Promise.all([p,wait(1300)]);
+    });
+  }
+  /* загадка: первая замёрзшая страница (по уровню) */
+  var RID={
+    little:{say:'Where is the book? Show me!',ru:'Где книга? Покажи! (Взрослому: прочитайте вопрос вслух, малыш выбирает картинку. Потом скажите вместе: It’s a book!)',
+      pics:[['04_die','a dice'],['04_frozen_book_1','a book',1],['04_token','a girl']],
+      yes:'Yes! It’s a book! Say it with me: It’s a book!',yesRu:'Да! Это книга! Скажите вместе: It’s a book!'},
+    explorers:{say:'I’ve got a lot of pages. I haven’t got legs, but I can take you far, far away. What am I?',ru:'Загадка: у меня много страниц, ног нет, но я могу унести тебя далеко-далеко. Кто я?',
+      opts:[['a fish'],['a book',1],['a tree']],
+      yes:'Yes! I am a book. And you can read me!',yesRu:'Да! Я книга. И меня можно читать!'},
+    experts:{say:'The more you take, the more you leave behind. What are they?',ru:'Чем больше берёшь, тем больше оставляешь позади. Что это?',gloss:1,
+      opts:[['books'],['footsteps',1],['memories']],
+      yes:'Footsteps! Remember that word. You will need it soon…',yesRu:'Следы! Запомни это слово. Оно скоро тебе понадобится…'}
+  };
+  function station(box){
+    var r=RID[T()]||RID.explorers, miss=0;
+    speak(say,'A frozen page! Listen… a riddle. Open it!'); ru.textContent='Замёрзшая страница: загадка. Открой её!';
+    return teach('page',$$('.cell-ico.ico-page')[0]).then(function(){ return taskPage(box,'Страница 1 из 6 · Загадка',T()==='little'?'Нажми на страницу':'Открыть страницу',function(body,finish){
+      var html='<p class="say"></p><p class="ru">'+r.ru+'</p>';
+      if(r.gloss) html+='<button class="gloss" aria-expanded="false" data-tr="оставлять позади">Что значит leave behind?</button>';
+      if(r.pics){html+='<div class="opts pics">'+r.pics.map(function(o){return '<button class="opt" data-ok="'+(o[2]?1:0)+'" aria-label="'+o[1]+'"><img src="/img/'+o[0]+'.webp" alt=""></button>';}).join('')+'</div>';}
+      else{html+='<div class="opts">'+r.opts.map(function(o){return '<button class="opt" data-ok="'+(o[1]?1:0)+'">'+o[0]+'</button>';}).join('')+'</div>';}
+      body.innerHTML=html+'<p class="fb" aria-live="polite"></p>';
+      var ps=$('.say',body); speak(ps,r.say);
+      var gl=$('.gloss',body); if(gl) gl.addEventListener('click',function(){gl.setAttribute('aria-expanded',gl.getAttribute('aria-expanded')!=='true');});
+      var ok=false;
+      $$('.opt',body).forEach(function(b){b.addEventListener('click',function(){
+        if(ok) return;
+        if(b.dataset.ok==='1'){ok=true; SND.fx('ok'); b.classList.add('yes'); $('.fb',body).textContent=''; speak(ps,r.yes); $('.ru',body).textContent=r.yesRu; setTimeout(finish,2600);}
+        else{miss++; SND.fx('no'); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('.fb',body).textContent='Not quite. Try again! (Почти! Попробуй ещё.)';}
+      });});
+    }); }).then(function(){
+      var got=miss===0?3:(miss<=2?2:1); addLogs(got); if(miss===0) addSpark();
+      $$('.pg',pages)[0].classList.add('warm'); $$('.cell-ico.ico-page')[0].classList.add('got'); SND.fx('spark'); done=1;
+      if(REAL) setN('sf_p_rew',1);
+      return teach('log',hud).then(function(){
+        ru.textContent=T()==='little'?'Страница оттаяла! Костёр горит ярче 🔥':'Страница оттаяла! '+(got===3?'С первого раза — в костёр 3 полена 🪵 и искра ✦.':got===2?'Ты справился — в костёр 2 полена 🪵.':'Ты дошёл до конца — в костёр 1 полено 🪵.')+' В историях таких страниц шесть.';
+        later($('#toFire'),900); return speak(say,'The page is warm again! Brr… it is cold here. Let’s make a fire!'); });
+    });
+  }
+  function event(kind,box){
+    if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return x.dataset.c==pos;})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
+      ru.textContent='Искра! Её можно потратить на подсказку. Бросай кубик ещё раз.'; return Promise.all([speak(say,'A spark! Keep it for a hint. Roll again!'),wait(1600)]).then(function(){ return teach('spark',hud); }); }
+    if(kind==='log'){ var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
+      ru.textContent='Полено! Костёр горит ярче. Бросай кубик ещё раз.'; return Promise.all([speak(say,'A log for the fire! Roll again!'),wait(1300)]).then(function(){ return teach('log',hud); }); }
+    return mouseTask(box);
+  }
+  var aim=el('div','aim'); aim.hidden=true; forest.insertBefore(aim,token);
+  var aimL=el('div','aim alt'), aimR=el('div','aim alt'); aimL.hidden=aimR.hidden=true; forest.insertBefore(aimL,token); forest.insertBefore(aimR,token);
+  $('#die').addEventListener('click',function(){
+    if(rolling||done>=1) return; rolling=true; SND.fx('dice');
+    var die=this, n=rolls===0?2:2+Math.floor(Math.random()*5), out=$('#count'), stop=STATIONS[0]; rolls++;
+    die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll'); $('#dieN').classList.remove('in');
+    wait(900).then(function(){
+      $('#dieN').textContent=n; $('#dieN').classList.add('in');
+      var to=Math.min(pos+n,stop), used=false;
+      function spend(){ cnt.sp--; used=true; sync(); SND.fx('spark'); }
+      function putAlt(a,c){ if(c>pos&&c<=stop&&!used&&cnt.sp>0){ a.hidden=false; a.style.left=CELLS[c][0]+'%'; a.style.top=CELLS[c][1]+'%'; } else a.hidden=true; }
+      if(T()==='little'){ var alt=(EVS[to+1]&&to+1<=stop)?to+1:(to-1>pos?to-1:-1);
+        return teach('pick',$('#die')).then(function(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimR,alt); aimL.hidden=true; pkb.hidden=false;
+          var can=alt>=0&&cnt.sp>0;
+          pkb.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>. Фишка встанет: <b>'+(EVNAME[kindAt(to)]||'пустая клетка')+'</b></p>'+(can?'<p class="pk-n">А за искру — сюда: <b>'+(EVNAME[kindAt(alt)]||'пустая клетка')+'</b> (светится). Тратим искру?</p><div class="pk-row"><button class="gloss pk-y">Да, ✦</button><button class="btn btn-gold pk-go">Нет, идём</button></div>':'<div class="pk-row"><button class="btn btn-gold pk-go">Идём!</button></div>');
+          var y=pkb.querySelector('.pk-y'); if(y) y.onclick=function(){ spend(); to=alt; aimR.hidden=true; walk(); };
+          pkb.querySelector('.pk-go').onclick=function(){ aimR.hidden=true; walk(); }; }); }
+      function show(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimL,to-1); putAlt(aimR,to+1); var k=kindAt(to), sp=cnt.sp;
+        pkb.hidden=false;
+        pkb.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>'+(pos+n>stop?' — но дальше страницы не пройти':'')+'. Встанешь на: <b>'+(EVNAME[k]||'пустую клетку')+'</b></p>'+
+          (!used&&sp>0?'<p class="pk-n">Рядом: ←&nbsp;<b>'+(to-1>pos?(EVNAME[kindAt(to-1)]||'пусто'):'—')+'</b> · <b>'+(to+1<=stop?(EVNAME[kindAt(to+1)]||'пусто'):'—')+'</b>&nbsp;→</p>':'')+
+          '<div class="pk-row"><button class="gloss pk-m"'+(used||sp<1||to-1<=pos?' disabled':'')+'>✦ −1</button><button class="btn btn-gold pk-go">Идти</button><button class="gloss pk-p"'+(used||sp<1||to+1>stop?' disabled':'')+'>✦ +1</button></div>'+
+          '<p class="pk-n">'+(used?'Искра потрачена.':sp<1?'Искр нет — идём как выпало.':'За 1 искру можно сдвинуть шаг на одну клетку.')+'</p>';
+        pkb.querySelector('.pk-m').onclick=function(){ spend(); to--; show(); };
+        pkb.querySelector('.pk-p').onclick=function(){ spend(); to++; show(); };
+        pkb.querySelector('.pk-go').onclick=walk; }
+      var walked=false;
+      function walk(){ if(walked) return; walked=true; pkb.hidden=true; pkb.innerHTML=''; aim.hidden=true; aimL.hidden=true; aimR.hidden=true;
+        (function step(){
+          if(pos>=to){ out.textContent=''; var box=$('#ev');
+            if(STATIONS.indexOf(pos)>=0){ $('.dierow').hidden=true; box.hidden=false; box.innerHTML=''; return station(box).then(function(){ box.hidden=true; rolling=false; }); }
+            if(EVS[pos]==='mouse'){ $('.dierow').hidden=true; box.hidden=false; box.innerHTML=''; }
+            return (EVS[pos]?event(EVS[pos],box):Promise.resolve()).then(function(){ box.hidden=true; $('.dierow').hidden=false; rolling=false; }); }
+          pos++; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+          wait(380).then(step); })(); }
+      teach('pick',$('#die')).then(show);
+    });
+  });
+
+  /* fire: three taps */
+  var taps=0, fireImgs=$$('#fire img'), camp=$('#camp');
+  function stage(k,imgs){imgs.forEach(function(im,i){im.classList.toggle('on',i===k);});}
+  $('#fire').addEventListener('click',function(){
+    if(taps>=3) return; taps++; SND.fx('fire'); var pv=SND.say(['One!','Two!','Three!'][taps-1]);
+    stage(taps,fireImgs);
+    camp.style.setProperty('--glow',(.08+taps*.08).toFixed(2));
+    this.style.setProperty('--glow',(taps*.14).toFixed(2));
+    var pop=document.createElement('div'); pop.className='pop'; pop.textContent=['One!','Two!','Three!'][taps-1];
+    $('[data-scene="fire"]').appendChild(pop); setTimeout(function(){pop.remove();},1300);
+    if(taps===3){
+      Promise.all([pv,wait(700)]).then(function(){
+        speak($('#fireSay'),'Thank you! Now the stories can wake up. But who is lost in my forest?');
+        $('#fireRu').textContent='Спасибо! Теперь истории смогут проснуться. Но кто же потерялся в лесу?';
+        later($('#toShelf'),1200);
+      });
+    }
+  });
+
+  /* shelf of silhouettes */
+  var G=[['alice','27.12','Девочка, которая упала в кроличью нору','Curiouser and curiouser…','The girl who fell down a rabbit hole','The girl who falls down a rabbit hole'],
+    ['mowgli','28.12','Мальчик, которого вырастили волки','','The boy who grew up with wolves','The boy who lives with wolves'],
+    ['gerda','29.12','Девочка, которая пошла босиком через всю зиму','','The girl who walked across the winter to find her friend','The girl who walks across the winter to find her friend'],
+    ['sherlock','30.12','Сыщик, который видит то, чего не видят другие','','The detective who sees what other people don\u2019t','The detective who sees everything'],
+    ['dorothy','02.01','Девочка, чей дом унёс ураган','','The girl who flew to a magic land in her house','The girl who flies to a magic land in her house'],
+    ['peter_pan','03.01','Мальчик, который никогда не вырастет','','The boy who never grows up','The boy who never grows up'],
+    ['jim_hawkins','04.01','Мальчик с картой сокровищ','','The boy with a treasure map','The boy with a treasure map'],
+    ['pinocchio','05.01','Деревянный мальчик, у которого растёт нос','','The wooden boy with a growing nose','The wooden boy with a long nose'],
+    ['mary_lennox','06.01','Девочка, нашедшая ключ от тайного сада','','The girl who found the key to a secret garden','The girl who has got a key to a secret garden'],
+    ['nutcracker','07.01','Тот, кто сражается с Мышиным королём','','The one who fights the Mouse King','The one who fights the Mouse King']];
+  var shelf=$('#shelf');
+  G.forEach(function(g,i){var b=document.createElement('button'); b.className='slot'+(i===0?' first':''); b.setAttribute('aria-pressed','false');
+    b.setAttribute('aria-label','Гость истории '+(i+1)+', '+g[1]);
+    b.innerHTML='<img src="/img/h_'+g[0]+'.webp" alt=""><small>'+g[1]+'</small>';
+    b.addEventListener('click',function(){
+      $$('.slot',shelf).forEach(function(x){x.setAttribute('aria-pressed','false');}); b.setAttribute('aria-pressed','true');
+      var ruTxt='<b>История '+(i+1)+' · '+g[1]+'</b><br>'+g[2]+'. '+(g[3]?'<i>«'+g[3]+'»</i>':'Кто это? Узнаешь в его истории.');
+      if(state.track==='experts'||state.track==='explorers'){
+        var exp=state.track==='experts';
+        $('#hint').innerHTML='<b>Story '+(i+1)+' · '+g[1]+'</b><br>'+(exp?g[4]:g[5])+'. '+(g[3]?'<i>\u201c'+g[3]+'\u201d</i>':'Who is it? You will find out in Story '+(i+1)+'.')
+          +(exp?'':'<br><button class="rubtn" id="hintRu" style="margin-top:8px">Не понятно? По-русски</button><span class="ru" id="hintRuT" style="display:none">'+g[2]+'.</span>');
+        var hb=$('#hintRu'); if(hb) hb.addEventListener('click',function(){hb.hidden=true; $('#hintRuT').style.display='block';});
+      } else $('#hint').innerHTML=ruTxt;
+      SND.say(state.track==='experts'?g[4]+'.':g[5]+'.');
+      later($('#toCliff'),400);
+    });
+    shelf.appendChild(b);});
+  ENTER.shelf=function(){$$('.slot',shelf).forEach(function(s,i){setTimeout(function(){s.classList.add('in');},reduce?0:200+i*90);}); later($('#toCliff'),4000);};
+
+  /* cliffhanger: fire dies, paw prints cross the snow */
+  ENTER.cliff=function(p){
+    var imgs=$$('#fire2 img'), c2=$('#camp2'), paws=$('#paws2'); paws.innerHTML='';
+    var k=3; (function dim(){ if(k<=0) return; setTimeout(function(){k--; stage(k,imgs); c2.style.setProperty('--glow',(.08+k*.08).toFixed(2)); dim();}, reduce?20:1100);})();
+    for(var i=0;i<9;i++){(function(i){
+      var d=document.createElement('div'); d.className='paw'; d.innerHTML=PAW;
+      d.style.left=(4+i*9)+'%'; d.style.top=(66+(i%2?4:0)-i*.9)+'%'; d.style.transform='rotate('+(78+(i%2?10:-6))+'deg)';
+      paws.appendChild(d); setTimeout(function(){d.classList.add('in'); if(i%3===0) SND.fx('patter');}, reduce?0:2600+i*260);
+    })(i);}
+    Promise.all([p,wait(5400)]).then(function(){return wait(400);}).then(function(){
+      speak($('#cliffSay'),'Come back on the 27th of December. I’ll be waiting…');
+      $('#cliffRu').textContent='Возвращайся 27 декабря. Я буду ждать…';
+      later($('#toEnd'),1600);
+    });
+  };
+  ENTER.end=function(){ if(state.name) $('#endTitle').textContent=state.name+', Пролог пройден';
+    if(state.spark&&!$('#sparkLi')){var li=document.createElement('li'); li.id='sparkLi'; li.innerHTML=SPARK+'Первая находка уже в коллекции: искра из зимнего леса'; $('.end ul').appendChild(li);} };
+
+  $('#again').addEventListener('click',function(){location.reload();});
+
+  /* snow */
+  var c=document.getElementById('snow'); if(reduce||!c.getContext) {go('intro'); return;}
+  var x=c.getContext('2d'), W,H,dpr=Math.min(devicePixelRatio||1,2), F=[];
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+    var n=Math.round(Math.min(90,W*H/7000)); F=[];
+    for(var i=0;i<n;i++)F.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.6,s:Math.random()*.5+.25,w:Math.random()*6.28,o:Math.random()*.5+.3});}
+  function tick(){ x.clearRect(0,0,W,H);
+    for(var i=0;i<F.length;i++){var f=F[i]; f.y+=f.s; f.w+=.01; f.x+=Math.sin(f.w)*.35;
+      if(f.y>H+4){f.y=-4;f.x=Math.random()*W;}
+      x.globalAlpha=f.o; x.beginPath(); x.arc(f.x,f.y,f.r,0,6.283); x.fillStyle='#fff'; x.fill();}
+    requestAnimationFrame(tick);}
+  size(); addEventListener('resize',size); requestAnimationFrame(tick);
+  go('intro');
+})();
+</script>
+</body>
+</html>

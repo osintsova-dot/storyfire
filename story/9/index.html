@@ -581,7 +581,7 @@ textarea.inp{min-height:130px;resize:vertical}
 @keyframes aimp{50%{transform:translate(-50%,-50%) scale(1.18)}}
 .hud{display:flex;justify-content:center;gap:18px;margin:0;font-size:15px;color:var(--ink-2)}
 .hud b{color:var(--gold);font-size:17px}
-.hud.pop{animation:hpop .5s ease}
+.hud.hudpop{animation:hpop .5s ease}
 @keyframes hpop{40%{transform:scale(1.15)}}
 .pick{display:grid;gap:8px;justify-items:center;text-align:center}
 .pick p{margin:0}
@@ -591,7 +591,7 @@ textarea.inp{min-height:130px;resize:vertical}
 .pk-row .gloss[disabled]{opacity:.35}
 .hchoice{display:grid;gap:10px;margin:10px 0}
 .hchoice .row2{display:grid;gap:8px}
-@media (prefers-reduced-motion:reduce){.forest .aim,.hud.pop{animation:none}}
+@media (prefers-reduced-motion:reduce){.forest .aim,.hud.hudpop{animation:none}}
 .forest .aim.alt{box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 14px 3px rgba(255,255,255,.35);animation:none;width:8%}
 .hud .jar{letter-spacing:2px;color:var(--gold)}
 
@@ -2116,7 +2116,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       ov.innerHTML='<div class="tip tip-all">'+rulesHtml()+'<p class="tip-t" style="margin-top:14px">Что бывает на тропе</p>'+keys.map(function(k){ var t=TIPS[k]; return '<div class="tip-row"><span>'+t.i+'</span><div><b>'+t.t+'</b><br>'+t.l.slice(0,2).join(' ')+'</div></div>'; }).join('')+'<p class="tip-lvl">Уровень: <b>'+(TNAME[T]||T)+'</b> <button type="button" class="gloss tip-sw">Сменить уровень</button></p><button class="btn btn-gold tip-ok">Понятно</button></div>';
       ov.querySelector('.tip-sw').addEventListener('click',function(){ if(!confirm('Сменить уровень? История начнётся заново на новом уровне.')) return; state.track=''; save(); try{ localStorage.removeItem('sf_s'+SID+'_stars'); }catch(e){} location.reload(); });
       document.body.appendChild(ov); requestAnimationFrame(function(){ ov.classList.add('in'); }); ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); setTimeout(function(){ ov.remove(); },260); }); }); })();
-  function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); fly('+'+n+' 🪵'); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
+  function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); fly('+'+n+' 🪵'); if(hud){ hud.classList.remove('hudpop'); void hud.offsetWidth; hud.classList.add('hudpop'); } }
   var STARS=[]; try{ STARS=JSON.parse(localStorage.getItem('sf_s'+SID+'_stars')||'[]'); }catch(e){}
   NOART.pick3=1; if(typeof NOART2!=='undefined') NOART2.forEach(function(k){ NOART[k]=1; });   // свои типы заданий истории без картинки-арта
 
