@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="robots" content="noindex,nofollow">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 9 · Mary · Костёр историй</title>
@@ -954,7 +954,7 @@ textarea.inp{min-height:130px;resize:vertical}
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    fetch('audio/voice.json?v=1793728604').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    fetch('audio/voice.json?v=1793771319').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1091,7 +1091,7 @@ textarea.inp{min-height:130px;resize:vertical}
   /* --- step renderers (inside the book page) --- */
   function head(body,q,ru,note){ var ps=document.createElement('p'); ps.className='say'; body.appendChild(ps);
     if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label','Послушать ещё раз'); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); ruBtns(body); return ps; }
-  function wrong(b,fb){ MISS++; SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent='Not quite. Try again!'; }
+  function wrong(b,fb){ MISS++; if(!(window.SF_V2&&T==='little')) SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent=window.SF_V2?'Почти! Посмотри ещё раз.':'Not quite. Try again!'; }
   function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
   function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
   function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
@@ -1175,13 +1175,13 @@ textarea.inp{min-height:130px;resize:vertical}
   // v2 (прототип 04.11, история 1): сначала только символы; подсказки — только за искры (1 искра = 1 ступенька).
   // Нет искр: через 2 мин (малышам 1 мин) Книга подскажет сама — чтобы никто не застрял.
   function hintLadder2(body,steps,fb){
-    var row=el('div','hladder'); body.appendChild(row); var k=0, done=false, waited=0, FREE=T==='little'?60:120;
+    var row=el('div','hladder'); body.appendChild(row); var k=0, done=false, waited=0, FREE=T==='little'?75:120, m0=MISS;
     var btn=el('button','gloss hspark'); row.appendChild(btn); var note=el('p','hwait'); row.appendChild(note);
     var sparks=function(){ try{ return +(localStorage.getItem('sf_sparks')||0); }catch(e){ return 0; } };
-    function paint(){ if(done) return; var n=sparks(); btn.disabled=n<1;
+    function paint(){ if(done) return; var n=sparks(), tried=MISS>m0||k>0; btn.disabled=n<1||!tried; if(!tried){ btn.innerHTML='✦ Подсказка · 1 искра'; note.textContent='Сначала попробуй сам — подсказка откроется после первой попытки.'; return; }
       btn.innerHTML='✦ Подсказка '+(k+1)+' из '+steps.length+' · 1 искра <small>(у тебя: '+n+')</small>';
       note.textContent=n<1?(T==='little'?'Искр нет. Позови взрослого — а через '+Math.max(0,FREE-waited)+' с Книга подскажет сама.':'Искр нет. Думай! Через '+Math.max(0,FREE-waited)+' с Книга сжалится и подскажет.'):'Сначала попробуй сам.'; }
-    function use(free){ if(done) return; var t=steps[k](); if(fb&&t) fb.textContent=(free?'Книга сжалилась. ':'')+t; k++; waited=0;
+    function use(free){ if(done) return; var t=steps[k](); if(fb&&t) fb.textContent=(free?'Книга сжалилась. ':'')+t; k++; waited=0; window.SF_HINTS=(window.SF_HINTS||0)+1;
       if(k>=steps.length){ done=true; row.hidden=true; clearInterval(iv); } else paint(); if(window.SF_HUD) SF_HUD(); }
     btn.addEventListener('click',function(){ var n=sparks(); if(n<1) return; try{ localStorage.setItem('sf_sparks',String(n-1)); }catch(e){} SND.fx('spark'); use(false); });
     var iv=setInterval(function(){ if(done) return; if(sparks()<1){ waited++; if(waited>=FREE) use(true); } paint(); },1000);
