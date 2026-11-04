@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="robots" content="noindex,nofollow">
+<head>
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 1 · Alice · Костёр историй</title>
@@ -390,7 +391,6 @@ textarea.inp{min-height:130px;resize:vertical}
 @media (prefers-reduced-motion:reduce){.forest .aim,.hud.pop{animation:none}}
 .forest .aim.alt{box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 14px 3px rgba(255,255,255,.35);animation:none;width:8%}
 .hud .jar{letter-spacing:2px;color:var(--gold)}
-.forest .cell-dot{position:absolute;width:3.2%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:rgba(247,238,219,.85);box-shadow:0 0 0 2px rgba(90,60,30,.6),0 2px 6px rgba(0,0,0,.4);z-index:2}
 
 /* плашки под кубиком (04.11) */
 [data-scene="board"] .pick,[data-scene="board"] .plaque{background:#100c24;box-shadow:inset 0 0 0 1px rgba(245,200,66,.28),0 8px 24px rgba(0,0,0,.45);border-radius:16px;padding:14px 16px;color:var(--ink);text-align:center;margin:6px 0 0}
@@ -693,7 +693,7 @@ textarea.inp{min-height:130px;resize:vertical}
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Зимний лес">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="../../img/10_board_s1.webp" alt="Тропа из клеток от костра мимо кроличьей норы в зимний лес">
+      <img src="../../img/10_board24_s1.webp" alt="Тропа из клеток от костра мимо кроличьей норы в зимний лес">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -1536,8 +1536,8 @@ textarea.inp{min-height:130px;resize:vertical}
     experts:[{t:'parent',pic:'i:teacup',q:'Interview a grown-up: How much tea do you drink? How many …?',ru:'Возьми интервью у взрослого: три вопроса How much … / How many …? Взрослый отвечает с a lot of / a little / a few.',line:'How much tea do you drink every day?'}]
   };
   // v2: 24 клетки (между страницами по 3), страницы — обязательные остановки; события срабатывают, только если на клетку ВСТАЛ
-  var START=[40,86], C0=[[41.3,74],[56.3,70.8],[70.4,67.6],[78.3,61.1],[73.6,53.1],[64.7,46.2],[53.2,41.2],[41.7,36.5],[33.1,30],[38.3,22.9],[49,18.6],[60.6,15.5]];
-  var CELLS=[]; (function(){ var pv=START; C0.forEach(function(c){ CELLS.push([(pv[0]+c[0])/2,(pv[1]+c[1])/2]); CELLS.push(c); pv=c; }); })();
+  var START=[41,86];
+  var CELLS=[[33.9,73.9],[40.7,72.5],[47.6,71.8],[54.6,70.8],[61.4,69.5],[68.1,67.6],[73.8,64.8],[77.5,60.8],[76.9,55.8],[74.0,51.1],[63.8,44.4],[57.5,41.8],[44.6,37.7],[38.5,35.6],[28.3,29.4],[30.6,25.0],[40.7,19.0],[47.2,17.4],[53.6,15.7],[66.4,12.9],[72.8,11.2],[78.9,9.4],[84.0,6.2],[89.3,3.6]]; // 24 пенька на поле board24_s1, от костра к замку
   var STATIONS=[3,7,11,15,19,23];
   var EVS={0:'spark',1:'mouse',2:'log',4:'wind',5:'snow',6:'spark',8:'star',9:'adult',10:'log',12:'mouse',13:'spark',14:'wind',16:'log',17:'star',18:'spark',20:'spark',21:'adult',22:'log'};
   var EVNAME={spark:'искра ✦',mouse:'мышиный след',log:'полено 🪵',wind:'метель (шаг назад)',snow:'сугроб',adult:'ход для взрослого',star:'короткая тропа ⭐',page:'замёрзшая страница'};
@@ -1576,7 +1576,7 @@ textarea.inp{min-height:130px;resize:vertical}
     var d=document.createElement('div');
     if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
     else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
-    else { d.className='cell-dot'; }
+    else return;
     d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
   });
   var pages=$('#pages');
@@ -1643,7 +1643,7 @@ textarea.inp{min-height:130px;resize:vertical}
         box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
         try{ localStorage.setItem('sf_s1_done',String(done)); }catch(e){}
         if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
-        var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! В костёр '+(g===3?'3 полена — сам и с первого раза! И ещё искра ✦':g===2?'2 полена — ты справился!':'1 полено — ты дошёл до конца!')+(m>0&&hn===0?' Ты не сдался и исправил сам — держи искру ✦':'')+' Бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
+        var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! '+(g===3?'Сам и с первого раза — ты положил в костёр 3 полена 🪵 и получил искру ✦.':g===2?'Ты справился — положил в костёр 2 полена 🪵.':'Ты дошёл до конца — положил в костёр 1 полено 🪵.')+(m>0&&hn===0?' Ошибся, но исправил сам — держи искру ✦.':'')+' Теперь бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
   }
   function badge(){
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
