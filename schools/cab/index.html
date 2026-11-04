@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кабинет школы · Костёр историй</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0e0a22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d; --ok:#8fd694;
+  --line:rgba(247,238,219,.14);
+  --display:"Cormorant Garamond",Georgia,serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100svh;background:radial-gradient(120% 60% at 50% 0%,#2a1a4a 0%,var(--night) 60%);color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+.wrap{max-width:980px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 22px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 40px) max(16px,env(safe-area-inset-left,0px))}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top a{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font:600 19px var(--display)}
+.top svg{width:22px;height:22px;color:var(--ember)}
+h1{font:600 clamp(30px,6vw,44px)/1.02 var(--display);margin:0 0 6px;text-wrap:balance}
+.lead{color:var(--ink-2);margin:0 0 18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 18px}
+.stat{padding:14px 16px;border-radius:16px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.stat b{display:block;font:700 30px/1 var(--display);color:var(--gold)}
+.stat span{font-size:13px;color:var(--ink-3)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:0;font:600 15px var(--body);cursor:pointer;text-decoration:none;background:rgba(247,238,219,.08);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:var(--gold);color:#241a06;box-shadow:none}
+input.f{min-height:44px;padding:0 14px;border-radius:12px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 15px var(--body);box-shadow:inset 0 0 0 1.5px var(--line);flex:1 1 220px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+th{font-weight:500;color:var(--ink-3);font-size:12px;letter-spacing:.06em;text-transform:uppercase;position:sticky;top:0;background:var(--night)}
+td.code{font:600 14px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;white-space:nowrap}
+td input{width:100%;min-width:120px;min-height:38px;padding:0 10px;border-radius:10px;border:0;background:rgba(14,10,34,.5);color:var(--ink);font:500 14px var(--body);box-shadow:inset 0 0 0 1px var(--line)}
+td input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:14px;height:14px;border-radius:50%;background:rgba(247,238,219,.12);box-shadow:inset 0 0 0 1px var(--line);display:inline-block}
+.dots i.on{background:var(--gold);box-shadow:none}
+.dots i.lo{background:var(--ember)}
+.muted{color:var(--ink-3)}
+.pl{font-size:12px;color:var(--ink-3)}
+.msg{color:#ffb39b;min-height:1.3em}
+.note{font-size:13px;color:var(--ink-3)}
+.scroll{overflow:auto;border-radius:16px;box-shadow:inset 0 0 0 1px var(--line);background:rgba(247,238,219,.03)}
+[hidden]{display:none!important}
+@media print{body{background:#fff;color:#000}.bar,.top a:last-child,.note{display:none}.stat b{color:#000}th{background:#fff;color:#000}.dots i.on{background:#000}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c2 4 6 6 6 11a6 6 0 0 1-12 0c0-3 1.5-5 2.5-7 .8 2.5 1.8 3.5 3.5 3.5-.8-2.5-.8-5 0-7.5z"/></svg>Костёр историй · для школ</a><a class="btn" href="https://max.ru/id245718463277_3_bot" target="_blank" rel="noopener">Бот в MAX</a></div>
+  <h1 id="title">Кабинет школы</h1>
+  <p class="lead" id="lead">Загружаем…</p>
+  <p class="msg" id="msg" aria-live="polite"></p>
+
+  <div id="body" hidden>
+    <div class="stats">
+      <div class="stat"><b id="sCodes">0</b><span>кодов куплено</span></div>
+      <div class="stat"><b id="sAct">0</b><span>активировано</span></div>
+      <div class="stat"><b id="sPlay">0</b><span>детей играет</span></div>
+      <div class="stat"><b id="sDone">0</b><span>историй пройдено</span></div>
+    </div>
+    <div class="bar">
+      <input class="f" type="search" id="q" placeholder="Найти по коду или подписи">
+      <button class="btn" type="button" id="refresh">Обновить</button>
+      <button class="btn" type="button" id="csv">Скачать таблицу</button>
+      <button class="btn" type="button" onclick="window.print()">Печать</button>
+    </div>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>№</th><th>Код</th><th>Кому выдан</th><th>Активирован</th><th>Истории 1–10</th><th>Последняя</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    </div>
+    <p class="note">Подписи «кому выдан» хранятся только в этом браузере, на сервер не уходят: мы не собираем имена детей. Точка истории золотая, когда ребёнок прошёл её до конца; оранжевая, если в битве за значок меньше четырёх из пяти. Если по одному коду играют двое детей, строк будет две.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){ return document.getElementById(id); };
+  var SRV=['https://d5d6o4mldv5m1nj5hvih.6brbn2wz.apigw.yandexcloud.net/zhpay','https://ss-bb.o-sintsova.workers.dev/zhpay'];
+  function post(path,body,i){ i=i||0; if(i>=SRV.length) return Promise.reject(new Error('offline'));
+    var c=window.AbortController?new AbortController():null, t=c&&setTimeout(function(){c.abort();},15000);
+    return fetch(SRV[i]+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:c&&c.signal})
+      .then(function(r){ clearTimeout(t); return r.json(); }).catch(function(){ clearTimeout(t); return post(path,body,i+1); }); }
+  var t=(new URLSearchParams(location.search).get('t')||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  var NK='sfcab_names_'+t, names={}; try{ names=JSON.parse(localStorage.getItem(NK)||'{}'); }catch(e){}
+  function saveNames(){ try{ localStorage.setItem(NK,JSON.stringify(names)); }catch(e){} }
+  var MONTHS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  function dt(ms){ if(!ms) return ''; var d=new Date(ms); return d.getDate()+' '+MONTHS[d.getMonth()]; }
+  var DATA=null;
+  if(!t){ $('lead').textContent='В ссылке нет кода кабинета. Возьмите ссылку из письма после оплаты или из бота.'; return; }
+
+  function load(){
+    $('msg').textContent=''; $('lead').textContent='Загружаем…';
+    post('/pay/status',{cab:t}).then(function(j){
+      if(!j||!j.ok){ $('lead').textContent='Кабинет не найден. Проверьте ссылку или напишите в бот.'; return; }
+      DATA=j; render();
+    }).catch(function(){ $('lead').textContent='Нет связи с сервером. Попробуйте позже.'; });
+  }
+  function flat(){ // строки: код × игрок
+    var out=[]; (DATA.rows||[]).forEach(function(r,i){
+      var pids=Object.keys(r.prog||{}); if(!pids.length) pids=[null];
+      pids.forEach(function(pid,k){ var pr=pid?r.prog[pid]:{}; var last=0; Object.keys(pr).forEach(function(n){ last=Math.max(last,pr[n].at||0); });
+        out.push({i:i+1,code:r.code,pid:pid,k:k,n:pids.length,act:r.activatedAt,dev:r.devices,prog:pr,last:last,done:Object.keys(pr).filter(function(n){ return +n>0; }).length}); }); });
+    return out;
+  }
+  function render(){
+    $('title').textContent=DATA.school||'Кабинет школы';
+    var rows=DATA.rows||[], act=rows.filter(function(r){ return r.devices; }).length, F=flat();
+    var play=F.filter(function(x){ return x.pid; }).length, done=F.reduce(function(s,x){ return s+x.done; },0);
+    $('sCodes').textContent=rows.length; $('sAct').textContent=act; $('sPlay').textContent=play; $('sDone').textContent=done;
+    $('lead').textContent='Истории открываются с 27 декабря по одной в день. Кабинет обновляется, когда ребёнок проходит историю до конца.';
+    var q=($('q').value||'').trim().toLowerCase(), tb=$('rows'); tb.innerHTML='';
+    F.forEach(function(x){
+      var label=names[x.code]||'';
+      if(q&&x.code.toLowerCase().indexOf(q)<0&&label.toLowerCase().indexOf(q)<0) return;
+      var tr=document.createElement('tr');
+      var td1=document.createElement('td'); td1.textContent=x.k?'':String(x.i); tr.appendChild(td1);
+      var td2=document.createElement('td'); td2.className='code'; td2.textContent=x.k?'':x.code; if(x.n>1&&x.pid){ var s=document.createElement('div'); s.className='pl'; s.textContent='игрок '+(x.k+1); td2.appendChild(s); } tr.appendChild(td2);
+      var td3=document.createElement('td'); if(!x.k){ var inp=document.createElement('input'); inp.value=label; inp.placeholder='например, Миша, 3 класс'; inp.setAttribute('aria-label','Кому выдан код '+x.code);
+        inp.addEventListener('change',function(){ if(inp.value.trim()) names[x.code]=inp.value.trim(); else delete names[x.code]; saveNames(); }); td3.appendChild(inp); } tr.appendChild(td3);
+      var td4=document.createElement('td'); td4.textContent=x.act?dt(x.act)+(x.dev>1?' · '+x.dev+' устр.':''):'—'; if(!x.act) td4.className='muted'; tr.appendChild(td4);
+      var td5=document.createElement('td'); var d=document.createElement('span'); d.className='dots';
+      for(var n=1;n<=10;n++){ var i=document.createElement('i'); var p=x.prog[n]; if(p){ i.className='on'+((p.of&&p.score<4)?' lo':''); i.title='История '+n+': '+dt(p.at)+(p.of?', '+p.score+' из '+p.of:''); } else i.title='История '+n; d.appendChild(i); }
+      td5.appendChild(d); tr.appendChild(td5);
+      var td6=document.createElement('td'); td6.textContent=x.last?dt(x.last):''; td6.className='muted'; tr.appendChild(td6);
+      tb.appendChild(tr);
+    });
+    $('body').hidden=false;
+  }
+  $('q').addEventListener('input',render);
+  $('refresh').addEventListener('click',load);
+  $('csv').addEventListener('click',function(){
+    var F=flat(), lines=['код;кому выдан;активирован;пройдено историй;последняя'];
+    F.forEach(function(x){ lines.push([x.code,(names[x.code]||'').replace(/;/g,','),x.act?dt(x.act):'',x.done,x.last?dt(x.last):''].join(';')); });
+    var a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(lines.join('\n')); a.download='koster-istoriy-kabinet.csv'; document.body.appendChild(a); a.click(); a.remove();
+  });
+  load();
+})();
+</script>
+</body>
+</html>

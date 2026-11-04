@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Коды для школы · Костёр историй</title>
+<meta name="description" content="Пакет кодов онлайн-квеста «Костёр историй» для языковой школы: любое количество от 10, коды и кабинет школы сразу после оплаты.">
+<meta name="theme-color" content="#0e0a22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{
+  --night:#0e0a22; --night-2:#171035; --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
+  --gold:#f5c842; --gold-2:#ffd968; --ember:#ff9b3d;
+  --line:rgba(247,238,219,.14);
+  --display:"Cormorant Garamond",Georgia,serif;
+  --body:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100svh;background:radial-gradient(120% 60% at 50% 0%,#2a1a4a 0%,var(--night) 60%);color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+.wrap{max-width:620px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 22px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 40px) max(16px,env(safe-area-inset-left,0px))}
+.top a{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font:600 19px var(--display);margin-bottom:22px}
+.top svg{width:22px;height:22px;color:var(--ember)}
+h1{font:600 clamp(34px,8vw,48px)/1.02 var(--display);margin:0 0 10px;text-wrap:balance}
+h2{font:600 clamp(24px,5vw,30px)/1.1 var(--display);margin:34px 0 10px}
+.lead{color:var(--ink-2);margin:0 0 20px}
+.card{display:grid;gap:14px;padding:22px;border-radius:22px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:rgba(247,238,219,.08);color:var(--ink);font:600 15px var(--body);cursor:pointer;box-shadow:inset 0 0 0 1px var(--line)}
+.chip[aria-pressed=true]{background:var(--gold);color:#241a06}
+.qty{display:flex;align-items:center;gap:12px}
+.qty input{width:110px;text-align:center;font-size:20px}
+.sum{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font:700 40px/1 var(--display)}
+.sum small{font:500 15px var(--body);color:var(--ink-3)}
+.per{font-size:15px;color:var(--ink-2);margin:0}
+.early{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(245,200,66,.14);color:var(--gold);font:600 13px var(--body)}
+ul.what{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px;color:var(--ink-2)}
+ul.what li{display:flex;gap:10px}
+ul.what li::before{content:"";flex:none;width:7px;height:7px;margin-top:9px;border-radius:50%;background:var(--gold)}
+label{display:grid;gap:6px;font-size:14px;color:var(--ink-2)}
+input[type=email],input[type=text],input[type=tel],input[type=number]{width:100%;min-height:52px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px var(--line)}
+input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+.two{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media (max-width:480px){.two{grid-template-columns:1fr}}
+.ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-3)}
+.ok input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold);flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 24px;border-radius:999px;border:0;font:600 17px var(--body);cursor:pointer;text-decoration:none;transition:transform .12s ease,background .15s ease}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.6;cursor:default}
+.btn-gold{background:var(--gold);color:#241a06}
+.btn-gold:hover{background:var(--gold-2)}
+.btn-ghost{background:rgba(247,238,219,.08);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row .btn{flex:1 1 200px}
+.msg{min-height:1.3em;font-size:14px}
+.msg.bad{color:#ffb39b}
+.note{font-size:13px;color:var(--ink-3);margin:0}
+.codes{font:600 16px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;white-space:pre;overflow:auto;padding:16px;border-radius:16px;background:rgba(14,10,34,.6);box-shadow:inset 0 0 0 1.5px var(--gold);max-height:320px}
+textarea{width:100%;min-height:150px;padding:14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:400 15px/1.5 var(--body);box-shadow:inset 0 0 0 1.5px var(--line);resize:vertical}
+.sbp-logo{width:22px;height:22px;flex:0 0 22px;border-radius:5px;background:conic-gradient(from 180deg,#5b57a2 0 25%,#d90751 0 50%,#fab718 0 75%,#1a9f3f 0)}
+[hidden]{display:none!important}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(247,238,219,.2);border-top-color:var(--gold);animation:sp 1s linear infinite;justify-self:center}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+.offer{font-size:14px;color:var(--ink-2)}
+.offer p{margin:0 0 8px}
+details summary{cursor:pointer;color:var(--gold);font-weight:600}
+.steps{display:grid;gap:10px;margin:0;padding-left:20px;color:var(--ink-2)}
+</style>
+<!-- Top.Mail.Ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+  if (d.getElementById(id)) return;
+  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+  ts.src = "https://top-fwz1.mail.ru/js/code.js";
+  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c2 4 6 6 6 11a6 6 0 0 1-12 0c0-3 1.5-5 2.5-7 .8 2.5 1.8 3.5 3.5 3.5-.8-2.5-.8-5 0-7.5z"/></svg>Костёр историй · для школ</a></div>
+
+  <section id="form">
+    <h1 id="h1">Коды для вашей школы</h1>
+    <p class="lead" id="lead">Любое количество от десяти. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.</p>
+    <div class="chips" role="tablist" aria-label="Что покупаем" style="margin-bottom:14px">
+      <button type="button" class="chip" id="tabCodes" role="tab" aria-pressed="true">Коды онлайн-квеста</button>
+      <button type="button" class="chip" id="tabCamp" role="tab" aria-pressed="false">Лагерь на 5 дней</button>
+    </div>
+    <form class="card" id="f" novalidate>
+      <div id="pCodes">
+        <div class="chips" role="group" aria-label="Сколько кодов" style="margin-bottom:14px">
+          <button type="button" class="chip" data-n="10">10</button>
+          <button type="button" class="chip" data-n="30" aria-pressed="true">30</button>
+          <button type="button" class="chip" data-n="60">60</button>
+          <button type="button" class="chip" data-n="100">100</button>
+        </div>
+        <div class="qty"><label for="n">Сколько кодов</label><input type="number" id="n" min="10" max="500" step="1" value="30" inputmode="numeric"></div>
+      </div>
+      <div id="pCamp" hidden class="chips" role="radiogroup" aria-label="Тариф лагеря">
+        <button type="button" class="chip" data-plan="camp" aria-pressed="true">Лагерь</button>
+        <button type="button" class="chip" data-plan="camp_plus" aria-pressed="false">Лагерь + онлайн, 5 кодов</button>
+      </div>
+      <div class="sum"><span id="total">51 000 ₽</span><small id="perTxt">по 1 700 ₽ за код</small></div>
+      <p class="per"><span class="early" id="early">До 15 декабря −15 % уже учтено</span></p>
+      <ul class="what" id="whatCodes">
+        <li>1 код = 1 ребёнок, все десять историй, до трёх устройств, доступ навсегда</li>
+        <li>Кабинет школы: кто активировал код, сколько историй прошёл, по какому уровню</li>
+        <li>Коды продаёте родителям по своей цене или дарите ученикам</li>
+        <li>Готовые тексты для родителей, печатные конверты и карточки героев</li>
+      </ul>
+      <ul class="what" id="whatCamp" hidden>
+        <li>Готовая смена на пять дней и три уровня: планы по минутам, видео героев, печать, реквизит</li>
+        <li>Праздник для родителей, набор для продажи смены, сертификаты детям</li>
+        <li>Пакет приходит на почту до 10 декабря; проводите в любые каникулы, сколько угодно раз</li>
+        <li id="whatPlus" hidden>Пять кодов онлайн-квеста: вечером дома тот же герой, после смены ещё пять историй</li>
+      </ul>
+      <label>Школа или центр<input type="text" id="school" autocomplete="organization" placeholder="Lingua Kids"></label>
+      <div class="two">
+        <label>Город<input type="text" id="city" autocomplete="address-level2" placeholder="Тверь"></label>
+        <label>Контактное лицо<input type="text" id="contact" autocomplete="name" placeholder="Анна Петрова"></label>
+      </div>
+      <div class="two">
+        <label>Почта для чека и кодов<input type="email" id="email" autocomplete="email" inputmode="email" placeholder="school@example.com"></label>
+        <label>Телефон<input type="tel" id="phone" autocomplete="tel" inputmode="tel" placeholder="+7 ..."></label>
+      </div>
+      <label class="ok"><input type="checkbox" id="agree"><span>Принимаю <a href="#offer">условия для школ</a> и даю согласие на обработку указанных данных.</span></label>
+      <div class="row">
+        <button class="btn btn-gold" type="submit" id="pay"><span class="sbp-logo" aria-hidden="true"></span>Оплатить по СБП</button>
+        <button class="btn btn-ghost" type="button" id="payCard">Оплатить картой</button>
+      </div>
+      <p class="msg" id="msg" aria-live="polite"></p>
+      <p class="note">Комиссия по СБП ниже, поэтому эта кнопка первая. Оплата проходит в Т-Банке, данные карты мы не видим. Нужен счёт на организацию — <a href="#invoice">ниже</a>.</p>
+    </form>
+  </section>
+
+  <section id="wait" hidden>
+    <h1>Ждём оплату</h1>
+    <div class="card">
+      <div class="spin" aria-hidden="true"></div>
+      <p class="lead" id="waitTxt" style="margin:0;text-align:center">Ждём подтверждение от банка…</p>
+      <div id="sbpBox" hidden class="row">
+        <a class="btn btn-gold" id="sbpGo" href="#" target="_blank" rel="noopener">Открыть банк для оплаты</a>
+        <a class="btn btn-ghost" id="sbpCard" href="#">Лучше картой</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="done" hidden>
+    <h1>Оплачено</h1>
+    <p class="lead" id="doneLead">Коды ниже. Сохраните их: эта страница не хранится.</p>
+    <div class="card">
+      <div class="codes" id="codes"></div>
+      <div class="row">
+        <button class="btn btn-ghost" type="button" id="copy">Скопировать все</button>
+        <a class="btn btn-ghost" id="dl" download="kody-koster-istoriy.txt" href="#">Скачать файлом</a>
+      </div>
+      <h2 style="margin:10px 0 0">Что дальше</h2>
+      <ol class="steps">
+        <li><b>Подключите бот в MAX.</b> Туда придут эти же коды, заявки родителей и сводка: сколько детей играет. Там же можно задать вопрос.</li>
+        <li><b>Откройте кабинет школы.</b> Подпишите, кому какой код отдали, и смотрите прогресс по историям. Ссылка личная, не публикуйте её.</li>
+        <li><b>Раздайте коды.</b> Лучше в конверте «Открыть в первый день каникул». Текст для родителей ниже.</li>
+      </ol>
+      <div class="row">
+        <a class="btn btn-gold" id="bot" href="#" target="_blank" rel="noopener">Подключить бот в MAX</a>
+        <a class="btn btn-ghost" id="cab" href="#">Кабинет школы</a>
+      </div>
+      <label>Текст для родительского чата<textarea id="parentTxt" readonly></textarea></label>
+      <p class="note">Чек придёт на почту из заказа. Коды сохраните сейчас: они же придут в бот после подключения, а в кабинете школы будут всегда.</p>
+    </div>
+  </section>
+
+  <section id="fail" hidden>
+    <h1>Оплата не прошла</h1>
+    <div class="card">
+      <p class="lead" style="margin:0">Деньги не списаны. Попробуйте ещё раз или другой способ.</p>
+      <a class="btn btn-gold" href="./">Вернуться к оплате</a>
+    </div>
+  </section>
+
+  <section id="invoice">
+    <h2>Нужен счёт на организацию</h2>
+    <p class="lead">Оставьте реквизиты, пришлём счёт в течение рабочего дня. Коды и кабинет выдадим после оплаты по счёту.</p>
+    <form class="card" id="fi" novalidate>
+      <div class="two">
+        <label>Школа или центр<input type="text" id="iSchool" placeholder="ООО «Лингва»"></label>
+        <label>ИНН<input type="text" id="iInn" inputmode="numeric" placeholder="10 или 12 цифр"></label>
+      </div>
+      <div class="two">
+        <label>Что нужно<select id="iProduct" style="min-height:52px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px var(--line)"><option value="codes">Коды онлайн-квеста</option><option value="camp">Лагерь на 5 дней</option><option value="camp_plus">Лагерь + онлайн, 5 кодов</option></select></label>
+        <label>Сколько кодов<input type="number" id="iN" min="10" max="500" value="30" inputmode="numeric"></label>
+        <label>Контактное лицо<input type="text" id="iContact" placeholder="Анна Петрова"></label>
+      </div>
+      <div class="two">
+        <label>Почта<input type="email" id="iEmail" inputmode="email" placeholder="school@example.com"></label>
+        <label>Телефон<input type="tel" id="iPhone" inputmode="tel" placeholder="+7 ..."></label>
+      </div>
+      <input type="text" id="hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button class="btn btn-ghost" type="submit" id="iSend">Запросить счёт</button>
+      <p class="msg" id="iMsg" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section id="offer" class="offer">
+    <h2>Условия для школ</h2>
+    <details>
+      <summary>Коротко о главном</summary>
+      <p>Продавец: ИП Синцова Оксана Михайловна (школа английского Speak &amp; Smile, Норильск). Реквизиты и политика обработки данных: <a href="../../oplata/">storyfire.ru/oplata</a>.</p>
+      <p>Предмет: коды доступа к онлайн-квесту «Костёр историй». Один код открывает одному ребёнку все десять историй на трёх устройствах без ограничения срока.</p>
+      <p>Школа вправе передавать коды своим ученикам бесплатно или продавать родителям по своей цене. Продукт остаётся «Костром историй», переименовывать его и выдавать за свой нельзя.</p>
+      <p>Коды выдаются сразу после оплаты на этой странице и в боте. Неактивированные коды можно вернуть в течение 14 дней с момента покупки, деньги за них возвращаются на тот же счёт.</p>
+      <p>Персональные данные детей мы не собираем: ребёнок играет по коду. Имена, которые школа подписывает в кабинете, хранятся только в браузере школы.</p>
+      <p>Вопросы: o.sintsova@gmail.com, +7 913 530-93-27, бот «Speak&amp;Smile для школ» в MAX.</p>
+    </details>
+  </section>
+</div>
+
+<script>
+(function(){
+  var $=function(id){ return document.getElementById(id); };
+  function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+  // те же серверы, что у оплаты семьи: сначала российский шлюз Яндекса, потом workers.dev
+  var SRV=['https://d5d6o4mldv5m1nj5hvih.6brbn2wz.apigw.yandexcloud.net/zhpay','https://ss-bb.o-sintsova.workers.dev/zhpay'];
+  var BOT=['https://d5d6o4mldv5m1nj5hvih.6brbn2wz.apigw.yandexcloud.net/nihao','https://nihao-bot.o-sintsova.workers.dev'];
+  var BOT_LINK='https://max.ru/id245718463277_3_bot';
+  function post(list,path,body,i){ i=i||0; if(i>=list.length) return Promise.reject(new Error('offline'));
+    var c=window.AbortController?new AbortController():null, t=c&&setTimeout(function(){c.abort();},15000);
+    return fetch(list[i]+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:c&&c.signal})
+      .then(function(r){ clearTimeout(t); return r.json(); }).catch(function(){ clearTimeout(t); return post(list,path,body,i+1); }); }
+  function show(id){ ['form','wait','done','fail'].forEach(function(s){ $(s).hidden=s!==id; }); if(id!=='form'){ $('invoice').hidden=true; $('offer').hidden=true; } window.scrollTo(0,0); }
+  function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' ₽'; }
+
+  // цена: та же лестница, что на сервере (ss-pay sfPack): 10+ 2000, 30+ 1800, 60+ 1600, 100+ 1400; до 15.12 −15 %
+  var EARLY=Date.now()<Date.parse('2026-12-15T23:59:59+07:00');
+  function price(n){ n=Math.max(10,Math.min(500,parseInt(n,10)||10)); var per=2000; if(n>=100) per=1400; else if(n>=60) per=1600; else if(n>=30) per=1800; if(EARLY) per=Math.round(per*0.85); return {n:n,per:per,total:per*n}; }
+  // лагерь: те же тарифы, что в ss-pay CAMP_PLANS; ранняя цена до 30.11
+  var CAMP_EARLY=Date.now()<Date.parse('2026-11-30T23:59:59+07:00');
+  var CAMP={camp:{early:11900,late:14900,name:'Лагерь'},camp_plus:{early:15900,late:19900,name:'Лагерь + онлайн'}};
+  var PRODUCT='codes', PLAN='camp';
+  function redraw(){
+    var codes=PRODUCT==='codes';
+    $('pCodes').hidden=!codes; $('pCamp').hidden=codes; $('whatCodes').hidden=!codes; $('whatCamp').hidden=codes;
+    $('tabCodes').setAttribute('aria-pressed',codes?'true':'false'); $('tabCamp').setAttribute('aria-pressed',codes?'false':'true');
+    $('h1').textContent=codes?'Коды для вашей школы':'Лагерь на 5 дней для вашей школы';
+    $('lead').textContent=codes?'Любое количество от десяти. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.'
+      :'Готовая офлайн-смена: мультики героев, поле, станции, финал для родителей. Пакет материалов придёт на почту до 10 декабря. Чек приходит на почту.';
+    if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent='по '+fmt(p.per)+' за код'; $('early').textContent='До 15 декабря −15 % уже учтено'; $('early').hidden=!EARLY;
+      [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.setAttribute('aria-pressed', +b.dataset.n===p.n?'true':'false'); }); }
+    else { var c=CAMP[PLAN]; $('total').textContent=fmt(CAMP_EARLY?c.early:c.late); $('perTxt').textContent=CAMP_EARLY?'потом '+fmt(c.late):'пакет на одну школу'; $('early').textContent='Ранняя цена до 30 ноября'; $('early').hidden=!CAMP_EARLY;
+      $('whatPlus').hidden=PLAN!=='camp_plus';
+      [].forEach.call(document.querySelectorAll('#pCamp .chip'),function(b){ b.setAttribute('aria-pressed', b.dataset.plan===PLAN?'true':'false'); }); }
+  }
+  [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.addEventListener('click',function(){ $('n').value=b.dataset.n; redraw(); }); });
+  [].forEach.call(document.querySelectorAll('#pCamp .chip'),function(b){ b.addEventListener('click',function(){ PLAN=b.dataset.plan; redraw(); }); });
+  $('tabCodes').addEventListener('click',function(){ PRODUCT='codes'; redraw(); });
+  $('tabCamp').addEventListener('click',function(){ PRODUCT='camp'; redraw(); });
+  $('n').addEventListener('input',redraw);
+  var q=new URLSearchParams(location.search);
+  if(q.get('n')) $('n').value=q.get('n');
+  if(q.get('p')==='camp'||q.get('p')==='camp_plus'){ PRODUCT='camp'; PLAN=q.get('p'); $('iProduct').value=PLAN; }
+  redraw();
+
+  if(q.get('pay')==='fail'){ show('fail'); return; }
+  var order=q.get('order');
+  if(order){ waitPaid(order,0); return; }
+
+  var METHOD='sbp';
+  $('payCard').addEventListener('click',function(){ METHOD='card'; if($('f').requestSubmit) $('f').requestSubmit(); else $('pay').click(); });
+  $('pay').addEventListener('click',function(){ METHOD='sbp'; });
+  $('f').addEventListener('submit',function(e){ e.preventDefault();
+    var m=$('msg'), email=$('email').value.trim(), p=price($('n').value), plan=PRODUCT==='codes'?'school':PLAN;
+    m.className='msg bad';
+    if($('school').value.trim().length<2){ m.textContent='Напишите название школы.'; $('school').focus(); return; }
+    if($('contact').value.trim().length<2){ m.textContent='Напишите, к кому обращаться.'; $('contact').focus(); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и коды.'; $('email').focus(); return; }
+    if(!$('agree').checked){ m.textContent='Отметьте согласие с условиями.'; return; }
+    $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
+    post(SRV,'/pay/create',{product:'quest',plan:plan,n:p.n,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim()}).then(function(j){
+      if(!j||!j.payment_url) throw j;
+      ls('sf_sorder',JSON.stringify({id:j.order_id,claim:j.claim}));
+      if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }
+      location.href=j.payment_url;
+    }).catch(function(){ $('pay').disabled=false; $('payCard').disabled=false; m.className='msg bad'; m.textContent='Не получилось открыть оплату. Проверьте интернет и попробуйте ещё раз, или запросите счёт ниже.'; $('invoice').hidden=false; });
+  });
+  function sbpWait(j){ show('wait'); $('sbpBox').hidden=false; $('sbpGo').href=j.sbp_url; $('sbpCard').href=j.payment_url; waitPaid(j.order_id,-80); }
+  function waitPaid(id,n){
+    show('wait');
+    var o={}; try{ o=JSON.parse(ls('sf_sorder')||'{}'); }catch(e){}
+    if(o.id!==id){ $('waitTxt').textContent='Эту оплату начинали в другом браузере. Коды придут на почту из чека и в бот после подключения, или напишите нам в бот.'; return; }
+    post(SRV,'/pay/status',{order_id:id,claim:o.claim}).then(function(j){
+      if(j&&j.paid&&(j.plan==='camp'||(j.codes&&j.codes.length))) return done(j);
+      if(n<20){ if(n===4) $('waitTxt').textContent='Банк ещё подтверждает оплату, подождите…'; setTimeout(function(){ waitPaid(id,n+1); },3000); }
+      else $('waitTxt').textContent='Банк долго не отвечает. Если деньги списались, коды появятся здесь чуть позже: обновите страницу или напишите нам в бот.';
+    }).catch(function(){ if(n<20) setTimeout(function(){ waitPaid(id,n+1); },3000); });
+  }
+  function done(j){
+    show('done');
+    try{ (window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'purchase',value:j.amount||0}); }catch(e){}
+    var camp=j.plan==='camp'||j.plan==='camp_plus', codes=j.codes||[];
+    if(camp){ $('doneLead').textContent='Школа «'+(j.school||'')+'»: '+(j.plan==='camp_plus'?'лагерь + онлайн':'лагерь')+'. Пакет материалов придёт на почту '+'из заказа до 10 декабря.'+(codes.length?' Коды онлайн-квеста ниже, сохраните их.':'');
+      if(!codes.length){ $('codes').hidden=true; $('copy').hidden=true; $('dl').hidden=true; $('cab').hidden=true; $('parentTxt').parentNode.hidden=true; } }
+    else $('doneLead').textContent='Школа «'+(j.school||'')+'»: '+codes.length+' кодов. Сохраните их: эта страница не хранится.';
+    var txt=codes.join('\n'); $('codes').textContent=txt;
+    $('dl').href='data:text/plain;charset=utf-8,'+encodeURIComponent('Коды онлайн-квеста «Костёр историй» · '+(j.school||'')+'\n1 код = 1 ребёнок, storyfire.ru/play\n\n'+txt+'\n');
+    $('copy').addEventListener('click',function(){ var b=this; (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){ b.textContent='Скопировано'; },function(){ b.textContent='Выделите и скопируйте вручную'; }); });
+    $('bot').href=BOT_LINK+'?start='+(j.bind||'');
+    $('cab').href='../cab/?t='+(j.bind||'');
+    $('parentTxt').value='На каникулах школа «'+(j.school||'')+'» дарит детям зимний квест на английском «Костёр историй»: десять историй по великим книгам, по одной в день, 12–25 минут, всё озвучено, три уровня (5–7, 8–10, 11–14).\n\nВаш код: ____ . Откройте storyfire.ru/play, введите код, и 27 декабря к костру придёт первый герой. Пролог можно пройти уже сейчас.';
+  }
+
+  // счёт на организацию → Оксане в бот
+  $('fi').addEventListener('submit',function(e){ e.preventDefault();
+    var m=$('iMsg'); m.className='msg bad';
+    if($('iSchool').value.trim().length<2){ m.textContent='Напишите название организации.'; return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('iEmail').value.trim())&&$('iPhone').value.replace(/\D/g,'').length<10){ m.textContent='Нужна почта или телефон, куда прислать счёт.'; return; }
+    var ip=$('iProduct').value, p=price($('iN').value), sum=ip==='codes'?p.total:(CAMP_EARLY?CAMP[ip].early:CAMP[ip].late);
+    $('iSend').disabled=true; m.className='msg'; m.textContent='Отправляем…';
+    post(BOT,'/ssb/invoice',{school:$('iSchool').value.trim(),inn:$('iInn').value.trim(),product:ip==='codes'?'коды':CAMP[ip].name,n:ip==='codes'?p.n:(ip==='camp_plus'?5:0),sum:String(sum),contact:$('iContact').value.trim(),email:$('iEmail').value.trim(),phone:$('iPhone').value.trim(),hp:$('hp').value}).then(function(j){
+      if(!j||!j.ok) throw j; m.textContent='Заявка у Оксаны. Счёт придёт в течение рабочего дня.';
+    }).catch(function(){ $('iSend').disabled=false; m.className='msg bad'; m.textContent='Не отправилось. Напишите на o.sintsova@gmail.com или в бот.'; });
+  });
+})();
+</script>
+</body>
+</html>

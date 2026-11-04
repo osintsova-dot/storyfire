@@ -71,6 +71,23 @@ var SF = (function () {
   }
   function switchTo(id) { if (id === cur()) return; stash(); load(id); }
 
-  return { check: check, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
+  // История пройдена (битва за значок): сообщаем серверу код, игрока и счёт — для кабинета школы и отчёта родителям.
+  // Имён не шлём. Без связи — кладём в очередь sf_q и досылаем при следующем вызове.
+  function flushQ() {
+    var q; try { q = JSON.parse(ls('sf_q') || '[]'); } catch (e) { q = []; }
+    if (!q.length) return;
+    var it = q.shift(); ls('sf_q', JSON.stringify(q));
+    post(0, JSON.stringify(it)).then(function (j) { if (!j || (!j.ok && j.reason !== 'not_found' && j.reason !== 'bad')) { q.unshift(it); ls('sf_q', JSON.stringify(q)); } else if (q.length) flushQ(); },
+      function () { q.unshift(it); ls('sf_q', JSON.stringify(q)); });
+  }
+  function done(n, rep) {
+    var code = ls('sf_code'); if (!code || free()) return;
+    var it = { sf_code: code, device: device(), sf_done: +n || 0, pid: cur() || 'p1', score: rep && rep.score || 0, of: rep && rep.of || 0 };
+    var q; try { q = JSON.parse(ls('sf_q') || '[]'); } catch (e) { q = []; }
+    q.push(it); ls('sf_q', JSON.stringify(q.slice(-30)));
+    flushQ();
+  }
+
+  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();
