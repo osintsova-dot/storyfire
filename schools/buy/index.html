@@ -134,7 +134,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
         <li>Готовые тексты для родителей, печатные конверты и карточки героев</li>
       </ul>
       <ul class="what" id="whatTrainer" hidden>
-        <li>За ученика на учебный год, до 30 июня 2027: 1–9 по 4 900 ₽, от 10 по 2 500 ₽, от 30 по 2 200 ₽. ОГЭ и ЕГЭ считаются вместе</li>
+        <li>За ученика на учебный год, до 30 июня 2027: 1–4 по 4 900 ₽, от 5 по 3 500 ₽, от 10 по 2 900 ₽, от 30 по 2 500 ₽. ОГЭ и ЕГЭ считаются вместе</li>
         <li>Ключ именной: своя история ошибок у каждого ученика. ИИ проверяет письмо и говорение по критериям ФИПИ</li>
         <li>Учителям группы доступ бесплатно: кабинет, 72 урока, журнал, печать и проверка бланков по фото</li>
         <li>Продление той же группе на следующий год по 2 000 ₽, в том числе переход с ОГЭ на ЕГЭ: напишите в бот</li>
@@ -267,8 +267,8 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
   var CAMP_EARLY=Date.now()<Date.parse('2026-11-30T23:59:59+07:00');
   var CAMP={camp:{early:11900,late:14900,name:'Лагерь'},camp_plus:{early:15900,late:19900,name:'Лагерь + онлайн'}};
   var PRODUCT='codes', PLAN='camp', PREV_T=0;
-  // тренажёр: та же лестница, что в ss-pay trPack: 1–9 по 4 900, 10+ 2 500, 30+ 2 200; порог по общему числу учеников (ОГЭ + ЕГЭ + уже купленные)
-  function trPrice(n){ var t=n+PREV_T, per=t>=30?2200:t>=10?2500:4900; return {n:n,per:per,total:per*n}; }
+  // тренажёр: та же лестница, что в ss-pay trPack: 1–4 по 4 900, 5+ 3 500, 10+ 2 900, 30+ 2 500; порог по общему числу учеников (ОГЭ + ЕГЭ + уже купленные)
+  function trPrice(n){ var t=n+PREV_T, per=t>=30?2500:t>=10?2900:t>=5?3500:4900; return {n:n,per:per,total:per*n}; }
   function trN(){ return {oge:Math.max(0,Math.min(500,parseInt($('nOge').value,10)||0)),ege:Math.max(0,Math.min(500,parseInt($('nEge').value,10)||0))}; }
   function redraw(){
     var codes=PRODUCT==='codes', tr=PRODUCT==='trainer', camp=PRODUCT==='camp';
@@ -278,7 +278,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
     $('lead').textContent=codes?'Хоть один код, хоть сто: чем больше, тем дешевле каждый. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.'
       :tr?'Ключи ученикам на учебный год и бесплатные ключи учителям сразу после оплаты. Письмо и говорение проверяет ИИ по критериям ФИПИ. Чек приходит на почту.'
       :'Готовая офлайн-смена: мультики героев, поле, станции, финал для родителей. Пакет материалов придёт на почту до 10 декабря. Чек приходит на почту.';
-    if(tr){ var k=trN(), tp=trPrice(k.oge+k.ege); $('total').textContent=fmt(tp.total); $('perTxt').textContent='по '+fmt(tp.per)+' за ученика в год'; $('early').textContent='От 10 учеников дешевле, от 30 ещё дешевле'; $('early').hidden=k.oge+k.ege+PREV_T>=30; }
+    if(tr){ var k=trN(), tp=trPrice(k.oge+k.ege); $('total').textContent=fmt(tp.total); $('perTxt').textContent='по '+fmt(tp.per)+' за ученика в год'; $('early').textContent='От 5 учеников дешевле, от 10 и от 30 ещё дешевле'; $('early').hidden=k.oge+k.ege+PREV_T>=30; }
     else if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n===1?'один код по розничной цене':'по '+fmt(p.per)+' за код'; $('early').textContent='От 5 кодов дешевле, от 10 ещё дешевле'; $('early').hidden=p.n+PREV>=10;
       [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.setAttribute('aria-pressed', +b.dataset.n===p.n?'true':'false'); }); }
     else { var c=CAMP[PLAN]; $('total').textContent=fmt(CAMP_EARLY?c.early:c.late); $('perTxt').textContent=CAMP_EARLY?'потом '+fmt(c.late):'пакет на одну школу'; $('early').textContent='Ранняя цена до 30 ноября'; $('early').hidden=!CAMP_EARLY;
