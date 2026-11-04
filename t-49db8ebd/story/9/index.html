@@ -570,6 +570,71 @@ textarea.inp{min-height:130px;resize:vertical}
 .who2.w3 .wplay span{font-size:13px}
 
 .sheet .opts.pics .opt:not(:has(img)){font:600 17px/1.15 var(--body)}
+/* ===== поле v2 (04.11.2026): 24 пенька, искры, поленья, выбор клетки, подсказки, правила. Общий для историй с пометкой «uses board2» ===== */
+.forest .cell-ico{width:6.6%}
+.cell-ico.ico-log{background:#4a2c12;color:#e8b070;box-shadow:0 0 0 2px #e8b070,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-star{background:#123a2a;color:#9df0c4;box-shadow:0 0 0 2px #9df0c4,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-wind{background:#2a3550;color:#c9d6f5;box-shadow:0 0 0 2px #c9d6f5,0 4px 10px rgba(0,0,0,.45)}
+.cell-ico.ico-own{background:#3a1206;color:#ff9b3d;box-shadow:0 0 0 2px #ff9b3d,0 0 14px rgba(255,155,61,.7)}   /* своё событие истории */
+.cell-ico.got{opacity:.35}
+.forest .aim{position:absolute;width:10%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 3px var(--gold),0 0 22px 6px rgba(245,200,66,.65);animation:aimp 1s ease-in-out infinite;pointer-events:none;z-index:4}
+@keyframes aimp{50%{transform:translate(-50%,-50%) scale(1.18)}}
+.hud{display:flex;justify-content:center;gap:18px;margin:0;font-size:15px;color:var(--ink-2)}
+.hud b{color:var(--gold);font-size:17px}
+.hud.pop{animation:hpop .5s ease}
+@keyframes hpop{40%{transform:scale(1.15)}}
+.pick{display:grid;gap:8px;justify-items:center;text-align:center}
+.pick p{margin:0}
+.pk-t{font-size:15px;color:var(--ink)}
+.pk-n{font-size:13px;color:var(--ink-3)}
+.pk-row{display:flex;gap:8px;align-items:center}
+.pk-row .gloss[disabled]{opacity:.35}
+.hchoice{display:grid;gap:10px;margin:10px 0}
+.hchoice .row2{display:grid;gap:8px}
+@media (prefers-reduced-motion:reduce){.forest .aim,.hud.pop{animation:none}}
+.forest .aim.alt{box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 14px 3px rgba(255,255,255,.35);animation:none;width:8%}
+.hud .jar{letter-spacing:2px;color:var(--gold)}
+
+/* плашки под кубиком (04.11) */
+[data-scene="board"] .pick,[data-scene="board"] .plaque{background:#100c24;box-shadow:inset 0 0 0 1px rgba(245,200,66,.28),0 8px 24px rgba(0,0,0,.45);border-radius:16px;padding:14px 16px;color:var(--ink);text-align:center;margin:6px 0 0}
+[data-scene="board"] .plaque{font-size:15px;line-height:1.45}
+[data-scene="board"] .pick .pk-t{font-size:16px}
+[data-scene="board"] .pick .pk-n{color:var(--ink-2);font-size:14px}
+.swap{animation:plq .35s ease}
+@keyframes plq{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.swap{animation:none}}
+[data-scene="board"] .campfire,.campfire{display:none}
+
+/* объяснения в момент встречи + летящие награды (04.11) */
+.tipov{position:fixed;inset:0;z-index:60;background:rgba(14,10,34,.78);display:grid;place-items:end center;padding:0 16px calc(env(safe-area-inset-bottom,0px) + 24px);opacity:0;transition:opacity .25s}
+.tipov.in{opacity:1}
+.tip{width:100%;max-width:420px;background:#100c24;border-radius:20px;padding:20px 18px 16px;box-shadow:inset 0 0 0 1px rgba(245,200,66,.35),0 20px 50px rgba(0,0,0,.5);text-align:center;transform:translateY(16px);transition:transform .3s var(--ease-out)}
+.tipov.in .tip{transform:none}
+.tipov.hole{background:none}
+.tipov.up{place-items:start center;padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+.tip{max-height:calc(100svh - 90px);overflow:auto;-webkit-overflow-scrolling:touch}
+.tip p{margin:0}
+.tip-i{font-size:40px;line-height:1;margin-bottom:8px}
+.tip-t{font-family:var(--display);font-size:24px;color:var(--gold);margin-bottom:8px!important}
+.tip-l{font-size:15px;line-height:1.45;color:var(--ink-2);margin-top:6px!important}
+.tip-ok{margin-top:16px;width:100%}
+.tip-all{text-align:left}
+.tip-all .tip-t{text-align:center}
+.tip-row{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid rgba(247,238,219,.1);font-size:14px;line-height:1.4;color:var(--ink-2)}
+.tip-row span{font-size:22px;flex:0 0 28px}
+.tip-row b{color:var(--ink)}
+.tipspot{position:fixed;z-index:59;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 3px var(--gold),0 0 0 9999px rgba(14,10,34,.78);pointer-events:none;opacity:0;transition:opacity .25s;animation:aimp 1.2s ease-in-out infinite}
+.tipspot.in{opacity:1}
+.snd.help{font:700 18px/1 var(--body);color:var(--gold);margin-right:-4px}
+.fly{position:fixed;z-index:55;transform:translate(-50%,0);font:700 18px/1 var(--body);color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;animation:flyup 1.3s var(--ease-out) forwards}
+@keyframes flyup{0%{opacity:0;transform:translate(-50%,14px) scale(.8)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-34px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.fly,.tipspot{animation:none}}
+
+/* уровень в шапке + смена уровня в карточке «?» */
+header.top .tlvl{margin-left:auto;margin-right:8px;padding:4px 10px;border-radius:999px;border:1px solid rgba(247,238,219,.25);background:rgba(247,238,219,.08);color:var(--ink);font:600 12px/1 var(--body);letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+header.top .topr{margin-left:0}
+.tip-lvl{margin:12px 0 4px;text-align:center;font-size:14px;color:var(--ink)}.tip-lvl .tip-sw{margin-left:8px}
+@media (max-width:480px){ header.top a b{display:none} header.top .tlvl{margin-left:0} }   /* на телефоне: стрелка назад + уровень, название не влезает */
 
 /* ===== общее для всех историй: поле на весь экран ===== */
 [data-scene="board"]{overflow:hidden}
@@ -837,17 +902,19 @@ textarea.inp{min-height:130px;resize:vertical}
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Заснеженный сад у старого дома">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="../../img/10_board_s9.webp" alt="Пеньки по снегу от костра к двери в стене тайного сада">
+      <img src="../../img/10_board24_s9.webp" alt="Пеньки по снегу от костра к двери в стене тайного сада">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
       <div class="pages" id="pages" aria-label="Страницы книги Мэри"></div>
       <p class="say" data-say id="boardSay"></p>
-      <p class="ru" id="boardRu">В заснеженном саду спрятаны шесть замёрзших страниц. Прыгай по пенькам — бросай кубик!</p>
+      <p class="hud" id="hud" aria-live="polite"></p>
       <div class="dierow">
         <button class="die" id="die" aria-label="Бросить кубик"><img src="../../img/04_die.webp" alt=""><span class="n" id="dieN"></span></button>
         <p class="count" id="count" aria-live="polite"></p>
       </div>
+      <div class="pick" id="pick" hidden></div>
+      <p class="plaque" id="boardRu" aria-live="polite">В заснеженном саду спрятаны шесть замёрзших страниц. Прыгай по пенькам — бросай кубик!</p>
       <div id="ev" hidden></div>
       <button class="btn btn-gold later" id="toFinal" data-go="final">Вернуть книгу Мэри</button>
     </div>
@@ -1532,9 +1599,9 @@ textarea.inp{min-height:130px;resize:vertical}
 
   /* uses engine */
   /* ===== История 9 · Mary Lennox — «Тайный сад замёрз» (план: docs/plans/story-09.md) ===== */
+  /* uses board2 */
   var T=state.track||'explorers';
   var POSTERS={little:'08_v13_mary',explorers:'09_y1_manor',experts:'09_y3_garden'};
-  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; LISTEN_POSTER=POSTERS[t]||'08_v13_mary'; }
   var ACTW={};
   var SID=9, HERO=['g:08_v13_mary','Mary','Мэри'], LISTEN_POSTER='08_v13_mary', QUICK_WIN=['It’s wick!','Сад живой!'], SUBS_LITTLE=[[0.5, 2.3, 'Я Мэри.'], [2.3, 4.06, 'Это мой сад.'], [4.06, 6.35, 'Это мой друг Дикон —'], [6.35, 7.78, 'он мой друг.'], [7.78, 10.04, 'А это его семья!'], [10.04, 11.71, 'Это его мама.'], [11.71, 13.92, 'Это его сестра.'], [13.92, 16.25, 'А это его бабушка.'], [16.25, 17.05, 'Смотри!'], [17.05, 18.14, 'Кролик!'], [18.14, 20.2, 'А это моя птичка —'], [20.2, 22.23, 'малиновка!']];
   WORDS.secretgarden='a garden'; WORDS.oldkey='a key'; WORDS.gardendoor='a door'; WORDS.redfox='a fox'; WORDS.blackcrow='a crow'; WORDS.wateringcan='a watering can'; WORDS.skippingrope='a skipping rope';
@@ -1892,17 +1959,87 @@ textarea.inp{min-height:130px;resize:vertical}
     show();
   };
 
-  var EVS={0:'spark',2:'mouse',4:'season',6:'adult',8:'mouse',10:'spark'};
-  var STATIONS=[1,3,5,7,9,11];
-  var CELLS=[[56.9,83.6],[66.0,78.3],[61.8,74.7],[60.1,69.6],[53.3,65.2],[61.0,61.3],[70.6,53.0],[64.4,49.3],[70.0,45.2],[74.0,38.2],[80.2,35.1],[85.6,32.6]];
-  var START=[34,86];
+  // v2: 24 пенька на поле board24_s9 (координаты сняты с картинки 04.11.2026), страницы на 3/7/…/23
+  var START=[30,90];
+  var CELLS=[[47.9,87.3],[52.6,84.8],[57.6,82.1],[61.6,79.1],[62.4,75.8],[59.1,72.9],[54.7,70.4],[53.7,67.3],[57.8,64.8],[62.7,62.6],[66.6,60.4],[66.3,57.5],[62.5,55.3],[60.7,52.5],[64.3,50.3],[69.4,48.1],[72.3,45.6],[71.3,43.0],[68.6,40.5],[71.3,38.2],[75.3,36.4],[79.6,34.7],[83.3,32.9],[85.9,30.9]];
+  // своё событие истории на тропе (клетки 5 и 20): «Времена года»
   var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
   var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
   var BLOOM='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6.5" r="3.6"/><circle cx="17.2" cy="10.3" r="3.6"/><circle cx="15.2" cy="16.4" r="3.6"/><circle cx="8.8" cy="16.4" r="3.6"/><circle cx="6.8" cy="10.3" r="3.6"/><circle cx="12" cy="12" r="2.6" fill="#f5c842"/></svg>', FLAME=BLOOM;
-  var ICO={spark:SPARK,mouse:PAW,season:BLOOM,adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
+  var PAGE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg>';
+  var MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
+  var OWN={name:'Времена года',ico:BLOOM,kick:'Времена года',lbl:'Повернуть круг',say:'The seasons wheel! Winter, spring, summer, autumn.',ru:'Круг времён года! Зима, весна, лето, осень — что бывает в каждое время года?',steps:function(t){ return SEASON[t]; }};
+  // сугроб (v2): три слова из истории Мэри + три лишних
+  var SNOW={
+    little:{t:'pick3',q:'Find three friends from Mary’s garden!',note:'Сугроб! Чтобы растопить его, найди 3 друзей из сада Мэри и назови каждое вслух. Взрослому: помогите и повторите слова вместе.',items:[['i:robin',1,'robin'],['i:rabbit',1,'rabbit'],['i:mum',1,'mum'],['i:rocket',0,'rocket'],['i:cake',0,'cake'],['i:boat',0,'boat']]},
+    explorers:{t:'pick3',words:1,q:'Find three things from the secret garden!',note:'Сугроб! Чтобы растопить его, найди 3 вещи из тайного сада Мэри и скажи каждое вслух.',items:[['key',1],['door',1],['robin',1],['comet'],['compass'],['biscuit']]},
+    experts:{t:'pick3',words:1,q:'Find three parts of the garden!',note:'Сугроб! Найди 3 слова про сад из истории Мэри и скажи каждое вслух.',items:[['greenhouse',1],['wall',1],['gate',1],['harbour'],['timetable'],['moustache']]}
+  };
+  // решение героя (v2): какая карточка встанет на полку
+  var CHOICE={say:'I found the key to the secret garden. Shall I keep it a secret, or show the garden to Colin and Dickon?',ru:'Мэри: «Я нашла ключ от тайного сада. Хранить секрет или показать сад Колину и Дикону?» Выбор за тобой — от него зависит, какая карточка Мэри встанет на полку.',
+    opts:[{btn:'Show them the garden',key:'friendly',card:'<b>Friendly Mary</b>Дружная Мэри · в финале Колин и Дикон приходят на помощь',ru:'Мэри открыла дверь друзьям — и сад ожил втроём быстрее! Карточка «Дружная Мэри».'},
+          {btn:'Keep the secret',key:'quiet',card:'<b>Quiet Mary</b>Тихая Мэри · в финале проходит мимо мышей незамеченной',ru:'Мэри спрятала ключ под камнем — пока сад не расцветёт. Карточка «Тихая Мэри».'}]};
+  var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,robin:1,album:1,magice:1,mblend:1,seedgrid:1,whisper:1,night:1,grow:1,seasons:1,hop:1,fence:1,rooms:1,follow:1};
+  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+    if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+    R[st.t](body,st,nx); })(); }
+
+
+  /* --- scenes --- */
+  var avid=$('#avid'), ARRIVE_LINE='Hello! I’m Mary. My secret garden is frozen, and the mice took the pages of my book. Will you help me wake the garden up?';
+  ENTER.arrive=function(){ SND.music(false); };
+  $('#astart').addEventListener('click',function(){ // говорящего видео пока нет — Мэри говорит голосом поверх картинки
+    $('#agate').classList.add('gone'); SND.music(false);
+    var done=false, end=function(){ if(done) return; done=true; SND.music(true); later($('#toBoard'),200); };
+    if(avid){ avid.muted=false; avid.currentTime=0; var pr=avid.play(); if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#herSay'),ARRIVE_LINE,true); },300); }).catch(function(){ speak($('#herSay'),ARRIVE_LINE).then(end); }); avid.addEventListener('ended',end); setTimeout(end,10000); }
+    else speak($('#herSay'),ARRIVE_LINE).then(end);
+  });
+  var BOARD_SAY='Six frozen pages are hidden in the snowy garden. Jump from stump to stump — roll the dice!', BADGE_RU='Значок твой! Верни книгу Мэри.';
+  ENTER.final=function(p){ finalGlow();
+    p.then(function(){ return wait(500); }).then(function(){ return speak($('#finSay'),'Look! The snow is melting, and the roses are waking up. It’s wick — it’s alive! Once I asked, “Might I have a bit of earth?” Now I have a whole garden — and a friend. Thank you! Here is my card for your shelf.'); })
+     .then(function(){ return heroChoice(); })
+     .then(function(){ $('#card').classList.add('in'); SND.fx('spark'); return wait(1400); })
+     .then(function(){ return speak($('#finSay'),'But look — under the roses the robin found a piece of an old map. The mice were here… Tomorrow is the last night.'); })
+     .then(function(){ later($('#toEnd'),400); });
+  };
+  ENTER.end=function(){ if(state.name) $('#endTitle').textContent=state.name+', история 9 пройдена'; endReport(); };
+
+  /* ===== поле v2 (04.11.2026): 24 пенька, искры, поленья, выбор клетки, подсказки, правила, выбор героя.
+     Общий модуль для историй с пометкой «uses board2». История задаёт ДО него: SID, HERO, ST, ART, L, CHECK, MOUSE, ADULT,
+     CELLS, START, BOARD_SAY, BADGE_RU; по желанию SNOW (сугроб: 3 слова из истории), OWN (своё событие истории: {name,ico,kick,lbl,say,ru,steps(T)}),
+     CHOICE (решение героя в финале: {say,ru,opts:[{btn,key,card,ru},…]}), NOART2 (типы заданий без картинки-арта). ===== */
+  window.SF_V2=true;
+  var TNAME={little:'5–7 · Little',explorers:'8–10 · Explorers',experts:'11–14 · Experts'};
+  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; if(typeof POSTERS!=='undefined'&&POSTERS[t]) LISTEN_POSTER=POSTERS[t]; paintLvl(); }   // POSTERS: постер «Послушай» по уровню (истории 7–10)
+  // подпись уровня в шапке: родитель видит, на каком уровне идёт история; тап — правила и смена уровня
+  function paintLvl(){ var top=document.querySelector('header.top'); if(!top) return; var b=top.querySelector('.tlvl'); if(!b){ b=document.createElement('button'); b.className='tlvl'; b.type='button'; b.setAttribute('aria-label','Уровень'); top.insertBefore(b,top.querySelector('.topr')); b.addEventListener('click',function(){ var h=document.querySelector('.snd.help'); if(h) h.click(); }); } b.textContent=TNAME[T]||T; }
+  var HAS_OWN=typeof OWN!=='undefined'&&!!OWN, HAS_SNOW=typeof SNOW!=='undefined'&&!!SNOW;
+  var STATIONS=[3,7,11,15,19,23];   // страницы — обязательные остановки, между ними по 3 клетки
+  // события на клетках: у истории со своим событием оно стоит на 5 и 20; без сугроба — искра
+  var EVS={0:'spark',1:'mouse',2:'log',4:'wind',5:HAS_OWN?'own':'snow',6:'spark',8:'star',9:'adult',10:'log',12:'mouse',13:'spark',14:'wind',16:'log',17:'star',18:'spark',20:HAS_OWN?'own':'spark',21:'adult',22:'log'};
+  if(HAS_OWN&&HAS_SNOW) EVS[14]='snow';
+  if(!HAS_SNOW) Object.keys(EVS).forEach(function(k){ if(EVS[k]==='snow') EVS[k]='spark'; });
+  var EVNAME={spark:'искра ✦',mouse:'мышиный след',log:'полено 🪵',wind:'метель (шаг назад)',snow:'сугроб',adult:'ход для взрослого',star:'короткая тропа ⭐',page:'замёрзшая страница',own:HAS_OWN?OWN.name:''};
+  var SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 9.5l-5.3 4.2L17.6 21 12 17.1 6.4 21l1.9-7.3L3 9.5l6.8-.9z"/></svg>';
+  var PAW='<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><circle cx="5.5" cy="9.5" r="2.1"/><circle cx="9.6" cy="6" r="2.1"/><circle cx="14.4" cy="6" r="2.1"/><circle cx="18.5" cy="9.5" r="2.1"/></svg>';
+  var LOG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="9" width="18" height="7" rx="3.5"/><circle cx="18" cy="12.5" r="2" fill="#7a4a1c"/></svg>';
+  var STAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18l6-6 3 3 7-7M15 8h5v5"/></svg>';
+  var WIND='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9h11a3 3 0 1 0-3-3M3 15h15a3 3 0 1 1-3 3"/></svg>';
+  var ICO={log:LOG,star:STAR,wind:WIND,spark:SPARK,mouse:PAW,snow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg>',own:HAS_OWN?OWN.ico:'',adult:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M2.5 20c.4-4 2.6-6.5 5.5-6.5s5.1 2.5 5.5 6.5zM13.8 20c.3-3 1.6-5 3.2-5s2.9 2 3.2 5z"/></svg>'};
   var PAGE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/></svg>';
   var MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
 
+
+  // сугроб: найди три слова из истории (общее задание v2)
+  R.pick3=function(body,s,next){
+    head(body,s.q,null,s.note); var left=3, box=document.createElement('div'); box.className='opts pics'+(s.words?' words':''); body.appendChild(box);
+    var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
+    shuffle(s.items).forEach(function(it){ var b=document.createElement('button'); b.className='opt'; var pv=pic(it[0]); if(pv) b.innerHTML=pv; else b.textContent=it[0]; b.setAttribute('aria-label',it[2]||it[0]); b.dataset.ok=it[1]?1:0; box.appendChild(b);
+      b.addEventListener('click',function(){ if(b.classList.contains('yes')||!left) return; var w=it[2]||it[0];
+        if(it[1]){ b.classList.add('yes'); SND.fx('ok'); SND.say(w); left--; fb.textContent=w+'! Скажи вслух: '+w+'.'+(left?' Ещё '+left+'.':'');
+          if(!left){ fb.textContent='Сугроб растаял! Скажи все три слова вслух.'; SND.fx('fire'); nextBtn(body,'Дальше',next,900); } }
+        else { wrong(b); fb.textContent='Этого не было в истории. Ищи дальше!'; } }); });
+  };
   var token=$('#token'), forest=$('#forest'), pos=-1, mice=0, rolling=false, done=0;
   function place(xy){ token.style.left=xy[0]+'%'; token.style.top=xy[1]+'%'; }
   place(START);
@@ -1910,18 +2047,63 @@ textarea.inp{min-height:130px;resize:vertical}
     var st=STATIONS.indexOf(i);
     var d=document.createElement('div');
     if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
-    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; }
+    else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
     else return;
     d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
   });
   var pages=$('#pages');
   ST.forEach(function(s){ var p=document.createElement('span'); p.className='pg'; p.innerHTML=PAGE+'<em>'+s[3]+'</em>'; p.title=s[1]; pages.appendChild(p); });
-
-  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} };
-  var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,robin:1,album:1,magice:1,mblend:1,seedgrid:1,whisper:1,night:1,grow:1,seasons:1,hop:1,fence:1,rooms:1,follow:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
-    if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    R[st.t](body,st,nx); })(); }
+  var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} if(window.SF_HUD) SF_HUD(); if(typeof fly==='function') fly('+1 ✦'); };
+  var getN=function(k){ try{ return +(localStorage.getItem(k)||0); }catch(e){ return 0; } }, setN=function(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} };
+  var hud=$('#hud');
+  function paintHud(){ if(!hud) return; var sp=getN('sf_sparks');
+    hud.innerHTML=T==='little'?'<span class="jar" title="Банка искр">'+(sp?'✦'.repeat(Math.min(sp,8)):'пусто')+'</span><span class="hfire">🔥</span>'
+      :'<span title="Искры: подсказки и сдвиг кубика. Сбережённые зажгут огонь против Мышиного короля">✦ <b>'+sp+'</b></span><span title="Поленья в костре">🪵 <b>'+getN('sf_logs')+'</b></span>'; }
+  window.SF_HUD=paintHud; paintHud();
+  // плашки под кубиком: при смене текста — мягкая смена (v2)
+  (function(){ var swap=function(e){ e.classList.remove('swap'); void e.offsetWidth; e.classList.add('swap'); };
+    var r=$('#boardRu'), pk=$('#pick'); if(window.MutationObserver){ new MutationObserver(function(){ swap(r); }).observe(r,{childList:true,characterData:true,subtree:true});
+      new MutationObserver(function(){ if(!pk.hidden) swap(pk); }).observe(pk,{childList:true}); } })();
+  // v2: объяснение в момент первой встречи (один раз, с подсветкой) + летящие награды
+  var TIPS={
+    spark:{i:'✦',t:'Искра',l:['Трать искру на подсказку в шифре или на шаг кубика.','Получаешь за страницу без ошибок и за клетки ✦ на тропе.','Сбережённые искры зажгут огонь против Мышиного короля в последней истории.']},
+    log:{i:'🪵',t:'Полено',l:['Полено летит в костёр: чем больше поленьев, тем ярче костёр в конце истории.','За страницу с первого раза 3, со второй попытки 2, дошёл до конца 1.','Поленья не тратятся, это твой счёт.']},
+    pick:{i:'🎲',t:'Твой ход',l:['Кубик показал клетку. Иди туда или за искру шагни на одну клетку левее или правее.','Смотри, что лежит рядом: полено, искра, короткая тропа или метель.','Решай сам: идти как выпало или потратить искру.']},
+    snow:{i:'❄️',t:'Сугроб',l:['Сугроб. Назови три слова из истории, и он растает.','Или отдай искру и иди дальше сразу.','Слова дешевле: искры пригодятся для подсказок.']},
+    wind:{i:'🌬',t:'Метель',l:['Метель сносит фишку на шаг назад.','Если видишь её впереди, обойди за искру.','Через оттаявшую страницу метель не перенесёт.']},
+    star:{i:'⭐',t:'Короткая тропа',l:['Короткая тропа: фишка летит прямо к следующей странице.','Все клетки по дороге пропускаются.','Повезло, пользуйся!']},
+    mouse:{i:'🐾',t:'Мышиный след',l:['Мышиный след: маленькая загадка. Разгадай, и идём дальше.','Мыши собирают кусочки старой карты… зачем?']},
+    battle:{i:'⚔️',t:'Битва за значок',l:['Пять заданий подряд, за каждый ответ с первого раза полено.','Битва героя: по два полена, но за ошибку одно сгорает. Меньше одного не бывает.','Обычная битва надёжнее, битва героя щедрее. Выбирай.']},
+    card:{i:'🃏',t:'Карточка героя',l:[HERO[1]+' спрашивает, что делать. Выбирай.','Твой выбор решает, какая карточка героя встанет на полку.','В последней истории каждая карточка умеет своё.']}};
+  // карточка правил: одна на всю историю, перед первым броском (и по кнопке «?»)
+  var RULES=[['✦','Искры','Получаешь за страницу без ошибок и за клетки ✦. Трать на подсказку в шифре или на шаг кубика. Сбереги для финала.'],
+    ['🪵','Поленья','Это твой костёр. За каждую оттаявшую страницу: 3 с первого раза, 2 со второй, 1 если дошёл до конца. Их не тратят.'],
+    ['📄','Страницы и кубик','Шесть замёрзших страниц лежат на тропе. Кубик ведёт к ним, открывай по порядку. По дороге: искры, поленья, сугроб, метель, короткая тропа.']];
+  function rulesHtml(){ return '<p class="tip-t">Как играть</p>'+RULES.map(function(r){ return '<div class="tip-row"><span>'+r[0]+'</span><div><b>'+r[1]+'</b><br>'+r[2]+'</div></div>'; }).join(''); }
+  function showRules(once){ var seen; try{ seen=localStorage.getItem('sf_tip_rules'); }catch(e){} if(once&&seen) return Promise.resolve();
+    try{ localStorage.setItem('sf_tip_rules','1'); localStorage.setItem('sf_tip_spark','1'); }catch(e){}
+    return new Promise(function(res){ var ov=el('div','tipov'); ov.innerHTML='<div class="tip tip-all">'+rulesHtml()+'<button class="btn btn-gold tip-ok">Понятно, бросаю кубик</button></div>';
+      document.body.appendChild(ov); requestAnimationFrame(function(){ ov.classList.add('in'); });
+      ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); setTimeout(function(){ ov.remove(); res(); },260); }); }); }
+  function teach(key,target){ var seen; try{ seen=localStorage.getItem('sf_tip_'+key); }catch(e){} if(seen||!TIPS[key]) return Promise.resolve();
+    try{ localStorage.setItem('sf_tip_'+key,'1'); }catch(e){}
+    return new Promise(function(res){ var t=TIPS[key], ov=el('div','tipov');
+      var lines=T==='little'?t.l.slice(0,2):t.l;
+      ov.innerHTML='<div class="tip"><div class="tip-i">'+t.i+'</div><p class="tip-t">'+t.t+'</p>'+lines.map(function(x){ return '<p class="tip-l">'+x+'</p>'; }).join('')+'<button class="btn btn-gold tip-ok">Понятно</button></div>';
+      document.body.appendChild(ov); var sp=null;
+      if(target&&target.getBoundingClientRect){ var r=target.getBoundingClientRect(); if(r.width>0&&r.width<200){ sp=el('div','tipspot'); sp.style.left=(r.left+r.width/2)+'px'; sp.style.top=(r.top+r.height/2)+'px'; sp.style.width=sp.style.height=(Math.max(r.width,r.height)+24)+'px'; ov.classList.add('hole'); document.body.appendChild(sp);
+        if(r.top+r.height/2>window.innerHeight*.5) ov.classList.add('up'); } }
+      requestAnimationFrame(function(){ ov.classList.add('in'); if(sp) sp.classList.add('in'); });
+      ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); if(sp) sp.classList.remove('in'); setTimeout(function(){ ov.remove(); if(sp) sp.remove(); res(); },260); }); }); }
+  function fly(txt){ if(!hud) return; var f=el('span','fly',txt); var r=hud.getBoundingClientRect(); f.style.left=(r.left+r.width/2)+'px'; f.style.top=(r.top+r.height)+'px'; document.body.appendChild(f); setTimeout(function(){ f.remove(); },1400); }
+  (function(){ var sb=$('#sndBtn'); if(!sb) return; var h=el('button','snd help','?'); h.setAttribute('aria-label','Правила'); sb.parentNode.insertBefore(h,sb);
+    h.addEventListener('click',function(){ var ov=el('div','tipov'); var keys=['pick','spark','log','snow','wind','star','mouse','battle','card'];
+      ov.innerHTML='<div class="tip tip-all">'+rulesHtml()+'<p class="tip-t" style="margin-top:14px">Что бывает на тропе</p>'+keys.map(function(k){ var t=TIPS[k]; return '<div class="tip-row"><span>'+t.i+'</span><div><b>'+t.t+'</b><br>'+t.l.slice(0,2).join(' ')+'</div></div>'; }).join('')+'<p class="tip-lvl">Уровень: <b>'+(TNAME[T]||T)+'</b> <button type="button" class="gloss tip-sw">Сменить уровень</button></p><button class="btn btn-gold tip-ok">Понятно</button></div>';
+      ov.querySelector('.tip-sw').addEventListener('click',function(){ if(!confirm('Сменить уровень? История начнётся заново на новом уровне.')) return; state.track=''; save(); try{ localStorage.removeItem('sf_s'+SID+'_stars'); }catch(e){} location.reload(); });
+      document.body.appendChild(ov); requestAnimationFrame(function(){ ov.classList.add('in'); }); ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); setTimeout(function(){ ov.remove(); },260); }); }); })();
+  function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); fly('+'+n+' 🪵'); if(hud){ hud.classList.remove('pop'); void hud.offsetWidth; hud.classList.add('pop'); } }
+  var STARS=[]; try{ STARS=JSON.parse(localStorage.getItem('sf_s'+SID+'_stars')||'[]'); }catch(e){}
+  NOART.pick3=1; if(typeof NOART2!=='undefined') NOART2.forEach(function(k){ NOART[k]=1; });   // свои типы заданий истории без картинки-арта
 
   /* --- stations & events on the board --- */
   var say=$('#boardSay'), ru=$('#boardRu');
@@ -1934,69 +2116,108 @@ textarea.inp{min-height:130px;resize:vertical}
     steps=steps.concat(d.steps);
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
     speak(say,'A frozen page! '+ST[k][1]+'. Open it!'); ru.textContent='Замёрзшая страница: '+ST[k][2]+'. Открой её!';
+    var miss0=MISS, hint0=window.SF_HINTS||0;
     return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key]); })
-      .then(function(){ box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
-        try{ localStorage.setItem('sf_s9_done',String(done)); }catch(e){}
+      .then(function(){ var m=MISS-miss0, hn=(window.SF_HINTS||0)-hint0, got=(m===0&&hn===0)?3:(m<=2?2:1); STARS[k]=got; setN('sf_s'+SID+'_stars',0); try{ localStorage.setItem('sf_s'+SID+'_stars',JSON.stringify(STARS)); }catch(e){}
+        addLogs(got); if(m===0&&hn===0) addSpark(); var kept=m>0&&hn===0; if(kept) addSpark(); teach('log',hud.children[1]||hud);  // «не сдался»: ошибся, но дошёл сам, без подсказок — тоже искра
+        box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
+        try{ localStorage.setItem('sf_s'+SID+'_done',String(done)); }catch(e){}
         if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
-        ru.textContent='Страница оттаяла! Бросай кубик дальше.'; return speak(say,'The page is warm again! Roll the dice.'); });
+        var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! '+(g===3?'Сам и с первого раза — ты положил в костёр 3 полена 🪵 и получил искру ✦.':g===2?'Ты справился — положил в костёр 2 полена 🪵.':'Ты дошёл до конца — положил в костёр 1 полено 🪵.')+(m>0&&hn===0?' Ошибся, но исправил сам — держи искру ✦.':'')+' Теперь бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
   }
   function badge(){
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
-    return taskPage(box,'Битва за значок','В бой!',function(body,finish){ R.check(body,CHECK[T],finish); })
-      .then(function(){ box.hidden=true; ru.textContent='Значок твой! Верни книгу Мэри.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
+    var risk=false;
+    return taskPage(box,'Битва за значок','В бой!',function(body,finish){
+        if(T==='little'){ risk=false; R.check(body,CHECK[T],finish); return; }
+        teach('battle',null);
+        body.appendChild(el('p','say','Choose your battle!'));
+        body.appendChild(el('p','ru','Обычная битва: за каждый ответ с первого раза — 1 полено. Битва героя: за каждый — 2 полена, но за ошибку одно из них сгорает (меньше 1 не бывает, заработанное раньше не тронем).'));
+        var row=el('div','row2'); body.appendChild(row);
+        var b1=el('button','btn btn-gold','Обычная'), b2=el('button','btn btn-ghost','Битва героя ×2'); row.appendChild(b1); row.appendChild(b2);
+        function go(r){ risk=r; body.innerHTML=''; R.check(body,CHECK[T],finish); }
+        b1.addEventListener('click',function(){ go(false); }); b2.addEventListener('click',function(){ SND.fx('fire'); go(true); }); })
+      .then(function(){ var r={}; try{ r=JSON.parse(localStorage.getItem('sf_s'+SID+'_report')||'{}'); }catch(e){}
+        var sc=r.score||0, of=r.of||5, gain=risk?Math.max(1,2*sc-(of-sc)):sc; addLogs(gain);
+        try{ r.logs=getN('sf_logs'); r.stars=STARS; r.risk=risk; r.gain=gain; localStorage.setItem('sf_s'+SID+'_report',JSON.stringify(r)); }catch(e){}
+        box.hidden=true; ru.textContent=typeof BADGE_RU!=='undefined'?BADGE_RU:'Значок твой! Верни книгу герою.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
   }
   function event(kind){
     var box=$('#ev');
     if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return !x.classList.contains('got');})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
       ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
+    if(kind==='log'){ teach('log',hud.children[1]||hud); var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
+      ru.textContent='Полено! Костёр горит ярче.'; return wait(1300); }
+    if(kind==='wind'){ SND.fx('no'); teach('wind',token); var bk=pos-1; if(T!=='little'&&STATIONS.indexOf(bk)<0&&bk>=0&&STATIONS.indexOf(bk+1)<0){ pos=bk; place(CELLS[pos]); ru.textContent='Метель! Ветер отнёс тебя на шаг назад.'; } else ru.textContent='Метель! Но ты удержался на месте.'; return wait(1500); }
+    if(kind==='star'){ SND.fx('spark'); teach('star',token); ru.textContent='Короткая тропа! Прямо к странице.'; return wait(900).then(function(){ var to=STATIONS[done]; while(pos<to){ pos++; } place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); return wait(500).then(function(){ return station(done); }); }); }
     $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
     var steps, kick, lbl;
-    if(kind==='mouse'){ steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks in the snow! The mice left a message.'); ru.textContent='Мышиный след на снегу! Мыши что-то оставили.'; }
-    else if(kind==='season'){ kick='Времена года'; lbl='Повернуть круг'; speak(say,'The seasons wheel! Winter, spring, summer, autumn.'); ru.textContent='Круг времён года! Зима, весна, лето, осень — что бывает в каждое время года?'; steps=SEASON[T]; }
+    if(kind==='mouse'){ teach('mouse',token); steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a message.'); ru.textContent='Мышиный след! Мыши что-то оставили.'; }
+    else if(kind==='snow'&&T!=='little'&&getN('sf_sparks')>0&&!window._snowAsk){ window._snowAsk=1; box.hidden=false; box.innerHTML='';
+      return teach('snow',token).then(function(){ return new Promise(function(res){ var w=el('div','pick'); w.innerHTML='<p class="pk-t">Сугроб на тропе! Растопить: назвать 3 слова — или отдать 1 искру?</p><div class="pk-row"><button class="btn btn-gold s3">Назову 3 слова</button><button class="gloss s1">Отдать ✦</button></div>'; box.appendChild(w);
+        w.querySelector('.s1').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); SND.fx('fire'); box.hidden=true; $('.dierow').hidden=false; ru.textContent='Искра растопила сугроб!'; window._snowAsk=0; res(); };
+        w.querySelector('.s3').onclick=function(){ box.innerHTML=''; event('snow').then(function(){ window._snowAsk=0; res(); }); }; }); }); }
+    else if(kind==='snow'){ kick='Сугроб'; lbl='Что делать?'; speak(say,'Oh! A big snowdrift. Find three things from the story to melt it!'); ru.textContent='Сугроб! Найди три слова из истории, чтобы его растопить.'; steps=[SNOW[T]]; }
+    else if(kind==='own'){ kick=OWN.kick; lbl=OWN.lbl; speak(say,OWN.say); ru.textContent=OWN.ru; steps=OWN.steps(T); }
     else { kick='Ход для взрослого'; lbl='Открыть'; speak(say,'A move for a grown-up! Play together.'); ru.textContent='Ход для взрослого: играем вместе!'; steps=ADULT[T]; }
     return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish); }).then(function(){ box.hidden=true; $('.dierow').hidden=false; return wait(300); });
   }
+  var aim=document.createElement('div'); aim.className='aim'; aim.hidden=true; forest.insertBefore(aim,token);
+  function kindAt(c){ return STATIONS.indexOf(c)>=0?'page':(EVS[c]||''); }
   $('#die').addEventListener('click',function(){
     if(rolling||done>=6) return; rolling=true; SND.fx('dice');
-    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count');
+    var die=this, n=1+Math.floor(Math.random()*6), out=$('#count'), stop=STATIONS[done];
     die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll'); $('#dieN').classList.remove('in');
     wait(900).then(function(){
-      $('#dieN').textContent=n; $('#dieN').classList.add('in'); var left=n;
-      (function step(){
-        if(left<=0||pos>=CELLS.length-1){ rolling=false; ru.textContent='Бросай ещё!'; speak(say,'Roll again!'); return; }
-        pos++; left--; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
-        out.textContent=(n-left)+' / '+n;
-        var k=STATIONS.indexOf(pos);
-        wait(480).then(function(){
-          if(k>=0){ out.textContent=''; return station(k).then(function(){ rolling=false; }); }
-          return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(step);
-        });
-      })();
+      $('#dieN').textContent=n; $('#dieN').classList.add('in');
+      var to=Math.min(pos+n,stop), used=false;
+      var pick=$('#pick'); 
+      var aimL=window._aimL||(window._aimL=(function(){ var x=document.createElement('div'); x.className='aim alt'; forest.insertBefore(x,token); return x; })());
+      var aimR=window._aimR||(window._aimR=(function(){ var x=document.createElement('div'); x.className='aim alt'; forest.insertBefore(x,token); return x; })());
+      function putAlt(a,c){ if(c>pos&&c<=stop&&!used&&getN('sf_sparks')>0){ a.hidden=false; a.style.left=CELLS[c][0]+'%'; a.style.top=CELLS[c][1]+'%'; } else a.hidden=true; }
+      if(T==='little'){ var alt=(EVS[to+1]&&to+1<=stop)?to+1:(to-1>pos?to-1:-1);
+        return teach('pick',$('#die')).then(function lshow(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimR,alt); aimL.hidden=true; pick.hidden=false;
+          var can=alt>=0&&getN('sf_sparks')>0;
+          pick.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>. Фишка встанет: <b>'+(EVNAME[kindAt(to)]||'пустая клетка')+'</b></p>'+(can?'<p class="pk-n">А за искру — сюда: <b>'+(EVNAME[kindAt(alt)]||'пустая клетка')+'</b> (светится). Тратим искру?</p><div class="pk-row"><button class="gloss pk-y">Да, ✦</button><button class="btn btn-gold pk-go">Нет, идём</button></div>':'<div class="pk-row"><button class="btn btn-gold pk-go">Идём!</button></div>');
+          var y=pick.querySelector('.pk-y'); if(y) y.onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); to=alt; used=true; SND.fx('spark'); aimR.hidden=true; walk(); };
+          pick.querySelector('.pk-go').onclick=function(){ aimR.hidden=true; walk(); }; }); }
+      function show(){ aim.hidden=false; aim.style.left=CELLS[to][0]+'%'; aim.style.top=CELLS[to][1]+'%'; putAlt(aimL,to-1); putAlt(aimR,to+1); var k=kindAt(to), sp=getN('sf_sparks');
+        pick.hidden=false;
+        pick.innerHTML='<p class="pk-t">Выпало <b>'+n+'</b>'+(pos+n>stop?' — но дальше страницы не пройти':'')+'. Встанешь на: <b>'+(EVNAME[k]||'пустую клетку')+'</b></p>'+
+          (!used&&sp>0?'<p class="pk-n">Рядом: ←&nbsp;<b>'+(to-1>pos?(EVNAME[kindAt(to-1)]||'пусто'):'—')+'</b> · <b>'+(to+1<=stop?(EVNAME[kindAt(to+1)]||'пусто'):'—')+'</b>&nbsp;→</p>':'')+
+          '<div class="pk-row"><button class="gloss pk-m"'+(used||sp<1||to-1<=pos?' disabled':'')+'>✦ −1</button><button class="btn btn-gold pk-go">Идти</button><button class="gloss pk-p"'+(used||sp<1||to+1>stop?' disabled':'')+'>✦ +1</button></div>'+
+          '<p class="pk-n">'+(used?'Искра потрачена.':sp<1?'Искр нет — идём как выпало.':'За 1 искру можно сдвинуть шаг на одну клетку.')+'</p>';
+        pick.querySelector('.pk-m').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); used=true; to--; SND.fx('spark'); show(); };
+        pick.querySelector('.pk-p').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); used=true; to++; SND.fx('spark'); show(); };
+        pick.querySelector('.pk-go').onclick=walk; }
+      function walk(){ pick.hidden=true; aim.hidden=true; aimL.hidden=true; aimR.hidden=true;
+        (function step(){
+          if(pos>=to){ out.textContent=''; var k=STATIONS.indexOf(pos);
+            if(k>=0) return station(k).then(function(){ rolling=false; });
+            return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(function(){ rolling=false; if(done<6){ ru.textContent=ru.textContent||'Бросай ещё!'; } }); }
+          pos++; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+          wait(380).then(step); })(); }
+      teach('pick',$('#die')).then(show);
     });
   });
 
-  /* --- scenes --- */
+  /* --- сцены: общие для v2 --- */
   ENTER.who=function(){};
   $$('.track').forEach(function(b){ b.addEventListener('click',function(){ setTrack(b.dataset.track); save(); go('arrive'); }); });
-  var avid=$('#avid'), ARRIVE_LINE='Hello! I’m Mary. My secret garden is frozen, and the mice took the pages of my book. Will you help me wake the garden up?';
-  ENTER.arrive=function(){ SND.music(false); };
-  $('#astart').addEventListener('click',function(){ // говорящего видео пока нет — Мэри говорит голосом поверх картинки
-    $('#agate').classList.add('gone'); SND.music(false);
-    var done=false, end=function(){ if(done) return; done=true; SND.music(true); later($('#toBoard'),200); };
-    if(avid){ avid.muted=false; avid.currentTime=0; var pr=avid.play(); if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#herSay'),ARRIVE_LINE,true); },300); }).catch(function(){ speak($('#herSay'),ARRIVE_LINE).then(end); }); avid.addEventListener('ended',end); setTimeout(end,10000); }
-    else speak($('#herSay'),ARRIVE_LINE).then(end);
-  });
-  ENTER.board=function(){ speak(say,'Six frozen pages are hidden in the snowy garden. Jump from stump to stump — roll the dice!'); };
-  ENTER.final=function(p){
-    p.then(function(){ return wait(500); }).then(function(){ return speak($('#finSay'),'Look! The snow is melting, and the roses are waking up. It’s wick — it’s alive! Once I asked, “Might I have a bit of earth?” Now I have a whole garden — and a friend. Thank you! Here is my card for your shelf.'); })
-     .then(function(){ $('#card').classList.add('in'); SND.fx('spark'); return wait(1400); })
-     .then(function(){ return speak($('#finSay'),'But look — under the roses the robin found a piece of an old map. The mice were here… Tomorrow is the last night.'); })
-     .then(function(){ later($('#toEnd'),400); });
-  };
-  ENTER.end=function(){
-    if(state.name) $('#endTitle').textContent=state.name+', история 9 пройдена';
-    try{ localStorage.setItem('sf_s9_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s9_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); box.hidden=false; } }catch(e){}
-  };
+  ENTER.board=function(){ speak(say,BOARD_SAY);
+    showRules(true).then(function(){ if(!getN('sf_s'+SID+'_gift')&&getN('sf_sparks')<2){ setN('sf_s'+SID+'_gift',1); setN('sf_sparks',getN('sf_sparks')+2); paintHud(); ru.textContent='Книга дарит тебе 2 искры ✦✦. Трать их на подсказки или на шаг кубика.'; fly('+2 ✦'); } }); };
+  // костёр в финале горит по числу поленьев
+  function finalGlow(){ try{ var g=Math.min(1,.3+getN('sf_logs')/30); $('[data-scene="final"] .camp').style.setProperty('--glow',g.toFixed(2)); }catch(e){} }
+  // решение героя (v2): от выбора зависит, какая карточка героя встанет на полку — и её сила в финале
+  function heroChoice(){ if(typeof CHOICE==='undefined'||!CHOICE) return Promise.resolve(); return new Promise(function(res){
+    var fin=$('#finSay')||$('#finAlice'), v=fin.parentNode, q=el('div','hchoice','<p class="say">'+CHOICE.say+'</p><p class="ru">'+CHOICE.ru+'</p>');
+    teach('card',null);
+    var row=el('div','row2'); q.appendChild(row);
+    CHOICE.opts.forEach(function(o,i){ var bt=el('button',i?'btn btn-ghost':'btn btn-gold',o.btn); row.appendChild(bt);
+      bt.addEventListener('click',function(){ try{ localStorage.setItem('sf_s'+SID+'_choice',o.key); }catch(e){} var sp=$('#card span'); if(sp) sp.innerHTML=o.card; q.innerHTML='<p class="ru">'+o.ru+'</p>'; SND.fx('spark'); setTimeout(res,1600); }); });
+    v.insertBefore(q,$('#card')); }); }
+  // итог истории: отчёт родителю + поленья по страницам
+  function endReport(){ try{ localStorage.setItem('sf_s'+SID+'_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s'+SID+'_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); if(r.stars) box.appendChild(el('p','note','Поленья по страницам: '+r.stars.map(function(x){ return '🪵'.repeat(x||1); }).join(' · ')+'. Всего в костре: '+(r.logs||0)+'.')); box.hidden=false; } }catch(e){} }
   var START_SCENE=state.track?'arrive':'who';
   if(state.track) setTrack(state.track);
 
