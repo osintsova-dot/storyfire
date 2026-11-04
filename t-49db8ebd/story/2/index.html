@@ -736,7 +736,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Зимний лес">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="../../img/10_board_s2.webp" alt="Тропа из клеток от костра через заснеженные джунгли к Скале Совета">
+      <img src="../../img/10_board24_s2.webp" alt="Тропа из клеток от костра через заснеженные джунгли к Скале Совета">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -1584,10 +1584,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     explorers:[{t:'parent',pic:'i:wolf',q:'Ask your grown-up: Are you good at cooking? Do you like dancing?',ru:'Задай взрослому два вопроса по-английски. Пусть ответит коротко: Yes, I am / No, I’m not.',line:'Are you good at cooking?'}],
     experts:[{t:'parent',pic:'i:panther',q:'Interview a grown-up: How often do you …?',ru:'Возьми интервью у взрослого: три вопроса How often do you …? Взрослый отвечает с always / usually / sometimes / never.',line:'How often do you go swimming?'}]
   };
-  // v2: 24 клетки, страницы на 3/7/…/23. ВРЕМЕННО координаты пеньков истории 1 — ждём board24_s2 от GPT (Drive «Промты: Поля на 24 клетки»), потом снять координаты с картинки
-  var START=[41,86];
-  var CELLS_OLD=[[48.6,83.3],[62.2,78.6],[66.7,68],[56.1,62.5],[44.2,57.9],[50.8,47.1],[62.6,43.3],[71.1,36],[62.5,32.1],[55.1,28.7],[62.5,25.4],[71.4,23]];
-  var CELLS=[[33.9,73.9],[40.7,72.5],[47.6,71.8],[54.6,70.8],[61.4,69.5],[68.1,67.6],[73.8,64.8],[77.5,60.8],[76.9,55.8],[74.0,51.1],[63.8,44.4],[57.5,41.8],[44.6,37.7],[38.5,35.6],[28.3,29.4],[30.6,25.0],[40.7,19.0],[47.2,17.4],[53.6,15.7],[66.4,12.9],[72.8,11.2],[78.9,9.4],[84.0,6.2],[89.3,3.6]];
+  // v2: 24 пенька на поле board24_s2 (координаты сняты с картинки 04.11.2026), страницы на 3/7/…/23
+  var START=[30,88];
+  var CELLS=[[47.9,82.7],[54.2,80.4],[60.1,77.7],[65.6,74.5],[69.9,71.0],[67.5,67.1],[63.1,64.0],[50.0,59.6],[44.3,57.1],[41.1,53.5],[44.9,50.1],[49.0,47.1],[55.1,44.8],[61.1,42.9],[71.0,37.9],[69.4,35.0],[64.9,33.1],[58.9,31.7],[54.2,30.1],[54.2,27.7],[58.2,25.8],[62.6,24.3],[67.4,23.2],[71.9,22.1]];
   // своё событие Маугли на тропе: «Глаза в темноте» (Красный Цветок) — клетки 5 и 20
   var FLAME='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2.5 1.3-4 2.5-5.2.2 1.7 1 2.8 2.2 3.2C11 8.5 11.3 5 12 2z"/></svg>';
   var OWN={name:'Красный Цветок 🔥',ico:FLAME,kick:'Глаза в темноте',lbl:'Зажечь огонь!',say:'Eyes in the dark! It is Shere Khan. Quick — the Red Flower!',ru:'Глаза в темноте! Это Шерхан. Быстрее — Красный Цветок!',steps:function(t){ return [FLOWER[t]]; }};
@@ -1633,7 +1632,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
      CHOICE (решение героя в финале: {say,ru,opts:[{btn,key,card,ru},…]}), NOART2 (типы заданий без картинки-арта). ===== */
   window.SF_V2=true;
   var TNAME={little:'5–7 · Little',explorers:'8–10 · Explorers',experts:'11–14 · Experts'};
-  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; paintLvl(); }
+  function setTrack(t){ T=state.track=t; document.body.className='t-'+t; if(typeof POSTERS!=='undefined'&&POSTERS[t]) LISTEN_POSTER=POSTERS[t]; paintLvl(); }   // POSTERS: постер «Послушай» по уровню (истории 7–10)
   // подпись уровня в шапке: родитель видит, на каком уровне идёт история; тап — правила и смена уровня
   function paintLvl(){ var top=document.querySelector('header.top'); if(!top) return; var b=top.querySelector('.tlvl'); if(!b){ b=document.createElement('button'); b.className='tlvl'; b.type='button'; b.setAttribute('aria-label','Уровень'); top.insertBefore(b,top.querySelector('.topr')); b.addEventListener('click',function(){ var h=document.querySelector('.snd.help'); if(h) h.click(); }); } b.textContent=TNAME[T]||T; }
   var HAS_OWN=typeof OWN!=='undefined'&&!!OWN, HAS_SNOW=typeof SNOW!=='undefined'&&!!SNOW;
@@ -2039,20 +2038,6 @@ var SF = (function () {
     SF.check(code).then(function(j){ if(!j.ok||!SF.isOpen(n)) out(); else document.documentElement.style.visibility=''; });
   })();
 
-  /* snow */
-  var c=document.getElementById('snow'); if(reduce||!c.getContext) {go(START_SCENE); return;}
-  var x=c.getContext('2d'), W,H,dpr=Math.min(devicePixelRatio||1,2), F=[];
-  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
-    var n=Math.round(Math.min(90,W*H/7000)); F=[];
-    for(var i=0;i<n;i++)F.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.6,s:Math.random()*.5+.25,w:Math.random()*6.28,o:Math.random()*.5+.3});}
-  function tick(){ x.clearRect(0,0,W,H);
-    for(var i=0;i<F.length;i++){var f=F[i]; f.y+=f.s; f.w+=.01; f.x+=Math.sin(f.w)*.35;
-      if(f.y>H+4){f.y=-4;f.x=Math.random()*W;}
-      x.globalAlpha=f.o; x.beginPath(); x.arc(f.x,f.y,f.r,0,6.283); x.fillStyle='#fff'; x.fill();}
-    requestAnimationFrame(tick);}
-  size(); addEventListener('resize',size); requestAnimationFrame(tick);
-  go(START_SCENE);
-})();
 </script>
 </body>
 </html>
