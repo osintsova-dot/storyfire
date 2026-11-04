@@ -93,7 +93,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
 
   <section id="form">
     <h1 id="h1">Коды для вашей школы</h1>
-    <p class="lead" id="lead">Любое количество от десяти. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.</p>
+    <p class="lead" id="lead">Хоть один код, хоть сто: чем больше, тем дешевле каждый. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.</p>
     <div class="chips" role="tablist" aria-label="Что покупаем" style="margin-bottom:14px">
       <button type="button" class="chip" id="tabCodes" role="tab" aria-pressed="true">Коды онлайн-квеста</button>
       <button type="button" class="chip" id="tabCamp" role="tab" aria-pressed="false">Лагерь на 5 дней</button>
@@ -101,20 +101,24 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
     <form class="card" id="f" novalidate>
       <div id="pCodes">
         <div class="chips" role="group" aria-label="Сколько кодов" style="margin-bottom:14px">
-          <button type="button" class="chip" data-n="10">10</button>
-          <button type="button" class="chip" data-n="30" aria-pressed="true">30</button>
+          <button type="button" class="chip" data-n="1">1</button>
+          <button type="button" class="chip" data-n="5">5</button>
+          <button type="button" class="chip" data-n="10" aria-pressed="true">10</button>
+          <button type="button" class="chip" data-n="30">30</button>
           <button type="button" class="chip" data-n="60">60</button>
           <button type="button" class="chip" data-n="100">100</button>
         </div>
-        <div class="qty"><label for="n">Сколько кодов</label><input type="number" id="n" min="10" max="500" step="1" value="30" inputmode="numeric"></div>
+        <div class="qty"><label for="n">Сколько кодов</label><input type="number" id="n" min="1" max="500" step="1" value="10" inputmode="numeric"></div>
+        <p class="note" id="moreNote" hidden style="margin-top:10px"></p>
       </div>
       <div id="pCamp" hidden class="chips" role="radiogroup" aria-label="Тариф лагеря">
         <button type="button" class="chip" data-plan="camp" aria-pressed="true">Лагерь</button>
         <button type="button" class="chip" data-plan="camp_plus" aria-pressed="false">Лагерь + онлайн, 5 кодов</button>
       </div>
       <div class="sum"><span id="total">51 000 ₽</span><small id="perTxt">по 1 700 ₽ за код</small></div>
-      <p class="per"><span class="early" id="early">До 15 декабря −15 % уже учтено</span></p>
+      <p class="per"><span class="early" id="early">До 1 декабря −15 % уже учтено</span></p>
       <ul class="what" id="whatCodes">
+        <li>Цена за код: 1–4 по 3 500 ₽, от 5 по 2 200 ₽, от 10 по 2 000 ₽, от 30 по 1 800 ₽, от 60 по 1 600 ₽, от 100 по 1 400 ₽</li>
         <li>1 код = 1 ребёнок, все десять историй, до трёх устройств, доступ навсегда</li>
         <li>Кабинет школы: кто активировал код, сколько историй прошёл, по какому уровню</li>
         <li>Коды продаёте родителям по своей цене или дарите ученикам</li>
@@ -199,7 +203,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
       </div>
       <div class="two">
         <label>Что нужно<select id="iProduct" style="min-height:52px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px var(--line)"><option value="codes">Коды онлайн-квеста</option><option value="camp">Лагерь на 5 дней</option><option value="camp_plus">Лагерь + онлайн, 5 кодов</option></select></label>
-        <label>Сколько кодов<input type="number" id="iN" min="10" max="500" value="30" inputmode="numeric"></label>
+        <label>Сколько кодов<input type="number" id="iN" min="1" max="500" value="10" inputmode="numeric"></label>
         <label>Контактное лицо<input type="text" id="iContact" placeholder="Анна Петрова"></label>
       </div>
       <div class="two">
@@ -219,7 +223,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
       <p>Продавец: ИП Синцова Оксана Михайловна (школа английского Speak &amp; Smile, Норильск). Реквизиты и политика обработки данных: <a href="../../oplata/">storyfire.ru/oplata</a>.</p>
       <p>Предмет: коды доступа к онлайн-квесту «Костёр историй». Один код открывает одному ребёнку все десять историй на трёх устройствах без ограничения срока.</p>
       <p>Школа вправе передавать коды своим ученикам бесплатно или продавать родителям по своей цене. Продукт остаётся «Костром историй», переименовывать его и выдавать за свой нельзя.</p>
-      <p>Коды выдаются сразу после оплаты на этой странице и в боте. Срок действия кодов не ограничен.</p>
+      <p>Коды выдаются сразу после оплаты на этой странице и в боте. Срок действия кодов не ограничен. Можно начать хоть с одного кода и докупать по мере записи детей: из кабинета школы, кнопкой «Докупить», новые коды попадают в тот же кабинет, а цена за код считается по общему количеству с учётом уже купленных.</p>
       <p>Персональные данные детей мы не собираем: ребёнок играет по коду. Имена, которые школа подписывает в кабинете, хранятся только в браузере школы.</p>
       <p>Вопросы: o.sintsova@gmail.com, +7 913 530-93-27, бот «Speak&amp;Smile для школ» в MAX.</p>
     </details>
@@ -241,9 +245,10 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
   function show(id){ ['form','wait','done','fail'].forEach(function(s){ $(s).hidden=s!==id; }); if(id!=='form'){ $('invoice').hidden=true; $('offer').hidden=true; } window.scrollTo(0,0); }
   function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' ₽'; }
 
-  // цена: та же лестница, что на сервере (ss-pay sfPack): 10+ 2000, 30+ 1800, 60+ 1600, 100+ 1400; до 15.12 −15 %
-  var EARLY=Date.now()<Date.parse('2026-12-15T23:59:59+07:00');
-  function price(n){ n=Math.max(10,Math.min(500,parseInt(n,10)||10)); var per=2000; if(n>=100) per=1400; else if(n>=60) per=1600; else if(n>=30) per=1800; if(EARLY) per=Math.round(per*0.85); return {n:n,per:per,total:per*n}; }
+  // цена: та же лестница, что на сервере (ss-pay sfPack): 10+ 2000, 30+ 1800, 60+ 1600, 100+ 1400; до 01.12 −15 %
+  var EARLY=Date.now()<Date.parse('2026-12-01T23:59:59+07:00');
+  var BIND='', PREV=0;   // докупка из кабинета: ?t=<код привязки>, порог цены по общему количеству
+  function price(n){ n=Math.max(1,Math.min(500,parseInt(n,10)||1)); var t=n+PREV, per=3500; if(t>=100) per=1400; else if(t>=60) per=1600; else if(t>=30) per=1800; else if(t>=10) per=2000; else if(t>=5) per=2200; if(EARLY&&t>=5) per=Math.round(per*0.85); return {n:n,per:per,total:per*n,early:EARLY&&t>=5}; }
   // лагерь: те же тарифы, что в ss-pay CAMP_PLANS; ранняя цена до 30.11
   var CAMP_EARLY=Date.now()<Date.parse('2026-11-30T23:59:59+07:00');
   var CAMP={camp:{early:11900,late:14900,name:'Лагерь'},camp_plus:{early:15900,late:19900,name:'Лагерь + онлайн'}};
@@ -253,9 +258,9 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
     $('pCodes').hidden=!codes; $('pCamp').hidden=codes; $('whatCodes').hidden=!codes; $('whatCamp').hidden=codes;
     $('tabCodes').setAttribute('aria-pressed',codes?'true':'false'); $('tabCamp').setAttribute('aria-pressed',codes?'false':'true');
     $('h1').textContent=codes?'Коды для вашей школы':'Лагерь на 5 дней для вашей школы';
-    $('lead').textContent=codes?'Любое количество от десяти. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.'
+    $('lead').textContent=codes?'Хоть один код, хоть сто: чем больше, тем дешевле каждый. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.'
       :'Готовая офлайн-смена: мультики героев, поле, станции, финал для родителей. Пакет материалов придёт на почту до 10 декабря. Чек приходит на почту.';
-    if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent='по '+fmt(p.per)+' за код'; $('early').textContent='До 15 декабря −15 % уже учтено'; $('early').hidden=!EARLY;
+    if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n===1?'один код по розничной цене':'по '+fmt(p.per)+' за код'; $('early').textContent=p.early?'До 1 декабря −15 % уже учтено':'От 5 кодов дешевле, до 1 декабря ещё −15 %'; $('early').hidden=!(p.early||p.n<5);
       [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.setAttribute('aria-pressed', +b.dataset.n===p.n?'true':'false'); }); }
     else { var c=CAMP[PLAN]; $('total').textContent=fmt(CAMP_EARLY?c.early:c.late); $('perTxt').textContent=CAMP_EARLY?'потом '+fmt(c.late):'пакет на одну школу'; $('early').textContent='Ранняя цена до 30 ноября'; $('early').hidden=!CAMP_EARLY;
       $('whatPlus').hidden=PLAN!=='camp_plus';
@@ -270,6 +275,9 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
   if(q.get('n')) $('n').value=q.get('n');
   if(q.get('p')==='camp'||q.get('p')==='camp_plus'){ PRODUCT='camp'; PLAN=q.get('p'); $('iProduct').value=PLAN; }
   redraw();
+  var tq=(q.get('t')||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(tq){ post(SRV,'/pay/status',{cab:tq}).then(function(j){ if(!j||!j.ok) return; BIND=tq; PREV=(j.rows||[]).length; if(j.school&&!$('school').value) $('school').value=j.school;
+    $('moreNote').hidden=false; $('moreNote').textContent='Докупка для школы «'+j.school+'»: уже куплено '+PREV+', новые коды попадут в тот же кабинет, цена за код с учётом общего количества.'; if(!q.get('n')) $('n').value=5; redraw(); }).catch(function(){}); }
 
   if(q.get('pay')==='fail'){ show('fail'); return; }
   var order=q.get('order');
@@ -286,7 +294,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и коды.'; $('email').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие с условиями.'; return; }
     $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
-    post(SRV,'/pay/create',{product:'quest',plan:plan,n:p.n,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim()}).then(function(j){
+    post(SRV,'/pay/create',{product:'quest',plan:plan,n:p.n,bind:BIND,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_sorder',JSON.stringify({id:j.order_id,claim:j.claim}));
       if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }
