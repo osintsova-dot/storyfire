@@ -84,6 +84,17 @@ td input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
       <tbody id="rows"></tbody>
     </table>
     </div>
+    <div id="trBox" hidden>
+      <h2 style="font:600 clamp(24px,5vw,30px)/1.1 var(--display);margin:30px 0 6px">Тренажёр ОГЭ/ЕГЭ</h2>
+      <p class="lead" id="trLead"></p>
+      <div class="scroll">
+      <table>
+        <thead><tr><th>№</th><th>Ключ</th><th>Экзамен</th><th>Кому выдан</th><th>Вход</th></tr></thead>
+        <tbody id="trRows"></tbody>
+      </table>
+      </div>
+      <p class="note">Ключ учителя открывает кабинет: уроки, журнал класса, печать и проверка бланков. Журнал хранится на устройстве учителя. Активации ключей тренажёра здесь не видны.</p>
+    </div>
     <p class="note">Подписи «кому выдан» хранятся только в этом браузере, на сервер не уходят: мы не собираем имена детей. Точка истории золотая, когда ребёнок прошёл её до конца; оранжевая, если в битве за значок меньше четырёх из пяти. Если по одному коду играют двое детей, строк будет две.</p>
   </div>
 </div>
@@ -140,7 +151,22 @@ td input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
       var td6=document.createElement('td'); td6.textContent=x.last?dt(x.last):''; td6.className='muted'; tr.appendChild(td6);
       tb.appendChild(tr);
     });
+    renderTrainer();
     $('body').hidden=false;
+  }
+  function renderTrainer(){
+    var T=DATA.trainer||{}, list=[]; (T.oge||[]).forEach(function(k){ list.push([k,'ОГЭ','oge']); }); (T.ege||[]).forEach(function(k){ list.push([k,'ЕГЭ','ege']); }); (T.teachers||[]).forEach(function(k){ list.push([k,'учитель','oge']); });
+    if(!list.length){ $('trBox').hidden=true; return; }
+    $('trBox').hidden=false; $('trLead').textContent='Ключи до 30 июня 2027: ОГЭ '+(T.oge||[]).length+', ЕГЭ '+(T.ege||[]).length+', учителей '+(T.teachers||[]).length+'.';
+    var tb=$('trRows'); tb.innerHTML='';
+    list.forEach(function(x,i){ var tr=document.createElement('tr');
+      var td1=document.createElement('td'); td1.textContent=String(i+1); tr.appendChild(td1);
+      var td2=document.createElement('td'); td2.className='code'; td2.textContent=x[0]; tr.appendChild(td2);
+      var td3=document.createElement('td'); td3.textContent=x[1]; tr.appendChild(td3);
+      var td4=document.createElement('td'); var inp=document.createElement('input'); inp.value=names[x[0]]||''; inp.placeholder=x[1]==='учитель'?'имя учителя':'например, Маша, 9 класс'; inp.setAttribute('aria-label','Кому выдан ключ '+x[0]);
+        inp.addEventListener('change',function(){ if(inp.value.trim()) names[x[0]]=inp.value.trim(); else delete names[x[0]]; saveNames(); }); td4.appendChild(inp); tr.appendChild(td4);
+      var td5=document.createElement('td'); var a=document.createElement('a'); a.href='https://speakandsmile.online/'+x[2]+'.html?key='+x[0]; a.target='_blank'; a.rel='noopener'; a.textContent='открыть'; td5.appendChild(a); tr.appendChild(td5);
+      tb.appendChild(tr); });
   }
   $('more').href='../buy/?t='+t+'&n=5';
   $('q').addEventListener('input',render);
