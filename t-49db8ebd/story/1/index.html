@@ -953,6 +953,8 @@ textarea.inp{min-height:130px;resize:vertical}
   function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
   function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
   function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+  // сказать фразу и идти дальше, когда она ДОЗВУЧАЛА (не раньше ms): иначе следующий экран обрывал образец на полуслове (04.11)
+  function sayThen(t,ms,cb){ var t0=Date.now(); var p=null; try{ p=SND.say(t); }catch(e){} (p&&p.then?p:Promise.resolve()).then(function(){ setTimeout(cb,Math.max(0,ms-(Date.now()-t0))); },function(){ cb(); }); }
   var R={};
   R.mcq=function(body,s,next){
     head(body,s.q,s.ru,s.note);
@@ -1072,7 +1074,7 @@ textarea.inp{min-height:130px;resize:vertical}
     var upto=function(n){ var out='', c2=0; for(var i=0;i<s.answer.length&&c2<n;i++){ out+=s.answer[i]; if(/[A-Z]/.test(s.answer[i])) c2++; } inp.value=out; inp.focus(); };
     var nudge={rev:'Намёк: читай с конца — справа налево.',mirror:'Намёк: буквы отражены. Поднеси к зеркалу или переверни в уме.',num:'Намёк: '+s.code.split(/[^0-9]+/)[0]+' — это '+ans[0]+'. Считай по алфавиту.',shift:'Намёк: '+s.code.replace(/[^A-Z]/g,'')[0]+' → '+ans[0]+'. Каждую букву — на '+s.shift+' назад.',atbash:'Намёк: A ↔ Z, B ↔ Y… первая буква — '+ans[0]+'.'}[s.kind]||('Первая буква — '+ans[0]+'.');
     var lad=hintLadder(body,[function(){ return nudge; },function(){ upto(Math.ceil(ans.length/2)); return 'Половина уже есть. Дальше сам!'; },function(){ upto(ans.length); return 'Ответ: '+s.answer; }],fb);
-    ok.addEventListener('click',function(){ if(norm(inp.value)===ans){ lad.stop(); ok.disabled=true; inp.disabled=true; SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(next,1400); } else { wrong(ok,fb); fb.textContent='Not yet. Проверь буквы ещё раз.'; } });
+    ok.addEventListener('click',function(){ if(norm(inp.value)===ans){ lad.stop(); ok.disabled=true; inp.disabled=true; SND.fx('ok'); fb.textContent=s.answer; sayThen(s.answer.toLowerCase(),1400,next); } else { wrong(ok,fb); fb.textContent='Not yet. Проверь буквы ещё раз.'; } });
   };
   // знаки Стаи / снежинки: ключ «знак → буква». Малыши нажимают буквы прямо в ключе, старшие пишут ответ
   R.sym=function(body,s,next){
@@ -1087,7 +1089,7 @@ textarea.inp{min-height:130px;resize:vertical}
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); var pos=0, lad;
     var fill=function(n){ while(pos<n&&pos<slots.length){ slots[pos].classList.add('on'); slots[pos].querySelector('i').textContent=slots[pos].dataset.l; pos++; } };
     var cur=function(){ slots.forEach(function(x,i){ x.classList.toggle('cur',tap&&i===pos); }); };
-    var fin=function(){ lad.stop(); SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(function(){ if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else next(); },1400); };
+    var fin=function(){ lad.stop(); SND.fx('ok'); fb.textContent=s.answer; sayThen(s.answer.toLowerCase(),1400,function(){ if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else next(); }); };
     var steps=[function(){ var l=slots[pos].dataset.l; $$('.lit',k).forEach(function(x){ x.classList.remove('lit'); }); cells[l].classList.add('lit'); return s.crib?'Намёк: этот знак уже есть в подписанной строке — он светится.':'Намёк: найди в ключе такой же знак, как первый неразгаданный — он светится.'; },
                function(){ fill(pos+1); cur(); if(pos>=slots.length) fin(); return 'Одна буква уже есть. Дальше сам!'; },
                function(){ fill(slots.length); cur(); if(tap) fin(); else inp.value=s.answer; return 'Ответ: '+s.answer; }];
@@ -1264,7 +1266,7 @@ textarea.inp{min-height:130px;resize:vertical}
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) SND.say(s.line); setTimeout(next,1500); }
+    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
     function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
