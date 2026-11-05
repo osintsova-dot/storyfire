@@ -551,13 +551,15 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return new Promise(function(done){
       var card=document.createElement('button'); card.className='pagecard'; card.innerHTML='<i></i><span>'+label+'</span>';
       holder.appendChild(card); var id=Math.random().toString(36).slice(2);
-      var fin=false; // задание решено: страница оттаивает, повторный тап её уже не открывает
+      var fin=false, opening=false; // задание решено: страница оттаивает, повторный тап её уже не открывает
       card.addEventListener('click',function(){
-        if(fin) return;
+        if(fin||opening) return; opening=true; card.disabled=true;
+        SND.whenIdle().then(function(){
         if(sheetOwner!==id){sheetOwner=id; $('#sheetK').textContent=kicker; var body=$('#sheetBody'); body.innerHTML='';
-          render(body,function(){ if(fin) return; fin=true; card.disabled=true; closeSheet().then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
+          render(body,function(){ if(fin) return; fin=true; card.disabled=true; SND.whenIdle().then(closeSheet).then(function(){card.classList.add('thaw'); setTimeout(function(){card.remove(); done();},reduce?0:650);});});
           ruBtns(body);}
-        openSheet(card.querySelector('i'));
+        openSheet(card.querySelector('i')); opening=false; card.disabled=fin;
+        });
       });
     });
   }
@@ -586,7 +588,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       crackle=ctx.createGain(); crackle.gain.value=0; crackle.connect(sfxGain);
       var r=ctx.createBufferSource(); r.buffer=noise(3); r.loop=true; var rf=ctx.createBiquadFilter(); rf.type='lowpass'; rf.frequency.value=380; var rg=ctx.createGain(); rg.gain.value=.5; r.connect(rf); rf.connect(rg); rg.connect(crackle); r.start();
       (function pop(){ if(crackle.gain.value>.01) click(.4+Math.random()*.6); setTimeout(pop,60+Math.random()*260); })();
-      if(pending){ var t=pending; pending=null; say(t); }
+      if(pending){ var t=pending; pending=null; voiceIdle=say(t); }
       setScene(curScene);
     }
     function env(g,t,a,d,v){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);}
@@ -607,22 +609,28 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     };
     function fx(name){ if(!ctx||!on) return; try{ FX[name](ctx.currentTime+.01); }catch(e){} }
     function duck(v){ if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(v,ctx.currentTime,.25); }
+    var ttsFinish=null, releaseVoice=null;
     function tts(text){
       return new Promise(function(fin){
-        try{ var s=window.speechSynthesis; if(!s||!text) return fin();
+        var timer, done=function(){ clearTimeout(timer); if(ttsFinish===done) ttsFinish=null; fin(); };
+        try{ var s=window.speechSynthesis; if(!s||!text) return done();
           s.cancel(); var u=new SpeechSynthesisUtterance(String(text).replace(/…|\.\.\./g,', ')); u.lang='en-GB'; u.rate=.9;
           var v=s.getVoices().filter(function(x){ return /^en(-|_)GB/i.test(x.lang); })[0] || s.getVoices().filter(function(x){ return /^en/i.test(x.lang); })[0]; if(v) u.voice=v;
-          u.onend=u.onerror=function(){ fin(); }; setTimeout(fin,12000); s.speak(u);
-        }catch(e){ fin(); } });
+          ttsFinish=done; u.onstart=function(){ clearTimeout(timer); }; u.onend=u.onerror=done;
+          timer=setTimeout(done,12000); s.speak(u);
+        }catch(e){ done(); } });
     }
     function say(text){
+      if(releaseVoice) releaseVoice();
+      if(cur){ try{cur.stop();}catch(e){} cur=null; }
+      if(ttsFinish){ var finishTTS=ttsFinish; try{ window.speechSynthesis.cancel(); }catch(e){} finishTTS(); }
       var id=VOICE[key(text)]; if(!on) return Promise.resolve();
       if(!id) return tts(text);  // фразы ещё без записи — голос телефона, чтобы кнопка не молчала
       if(!ctx){ pending=text; return Promise.resolve(); }
       return new Promise(function(fin){
-      var ok=false, done=function(){ if(!ok){ok=true; fin();} }; setTimeout(done,15000);
+      var ok=false, loadTimer, done=function(){ if(!ok){ok=true; clearTimeout(loadTimer); if(releaseVoice===done) releaseVoice=null; fin();} }; releaseVoice=done; loadTimer=setTimeout(done,15000);
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
-      var play=function(b){ if(!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ src.start(ctx.currentTime+.06); setTimeout(done,b.duration*1000+900); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
+      var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
       fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
@@ -630,7 +638,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     }
     var lastKey='', curScene='library', seq=0;
     function setScene(id){ curScene=id; if(!crackle) return; var v={fire:.5,riddle:.45,cliff:.35}[id]||0; crackle.gain.setTargetAtTime(v,ctx.currentTime,.6); }
-    function toggle(){ on=!on; try{localStorage.setItem('sf_sound',on?'on':'off');}catch(e){} unlock(); if(master) master.gain.setTargetAtTime(on?1:0,ctx.currentTime,.05); if(on&&music) music.play().catch(function(){}); if(!on&&cur){try{cur.stop();}catch(e){}} paint(); }
+    function toggle(){ on=!on; if(!on&&releaseVoice) releaseVoice(); if(!on&&ttsFinish){ var finishTTS=ttsFinish; try{ window.speechSynthesis.cancel(); }catch(e){} finishTTS(); } try{localStorage.setItem('sf_sound',on?'on':'off');}catch(e){} unlock(); if(master) master.gain.setTargetAtTime(on?1:0,ctx.currentTime,.05); if(on&&music) music.play().catch(function(){}); if(!on&&cur){try{cur.stop();}catch(e){}} paint(); }
     function paint(){ var b=$('#sndBtn'); if(!b) return; b.setAttribute('aria-pressed',on?'true':'false'); b.setAttribute('aria-label',on?'Выключить звук':'Включить звук'); }
     ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ unlock(); if(ctx&&ctx.state==='suspended') ctx.resume(); },{passive:true}); });
     var musicOn=true;
@@ -639,7 +647,10 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     function sess(t){ try{ if(navigator.audioSession) navigator.audioSession.type=t; }catch(e){} }
     sess('playback');
     function mic(onm){ sess(onm?'play-and-record':'playback'); if(cur&&onm){ try{cur.stop();}catch(e){} } if(musicGain&&musicOn) musicGain.gain.setTargetAtTime(onm?0:.22,ctx.currentTime,.15); if(ctx&&!onm&&ctx.state!=='running') ctx.resume(); }
-    return {music:musicSet, say:function(t){ lastKey=key(t); return say(t); }, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
+    // Переходы ждут текущую реплику, включая новую, запущенную повторным нажатием.
+    var voiceIdle=Promise.resolve();
+    function whenIdle(){ var p=voiceIdle; return p.then(function(){ if(p!==voiceIdle) return whenIdle(); }); }
+    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
   })();
   $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
   var cur='library';
