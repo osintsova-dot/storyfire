@@ -1527,9 +1527,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     nextBtn(body,'Прочитано',next,T==='little'?400:1500);
   };
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+  function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; SND.whenIdle().then(nx); }); })(); }
+    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true;if(progress){progress.step=i;checkpoint();}SND.whenIdle().then(nx); }); })(); }
 
 
   /* uses engine */
@@ -1829,6 +1829,51 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       document.body.appendChild(ov); requestAnimationFrame(function(){ ov.classList.add('in'); }); ov.querySelector('.tip-ok').addEventListener('click',function(){ ov.classList.remove('in'); setTimeout(function(){ ov.remove(); },260); }); }); })();
   function addLogs(n){ setN('sf_logs',getN('sf_logs')+n); paintHud(); fly('+'+n+' 🪵'); if(hud){ hud.classList.remove('hudpop'); void hud.offsetWidth; hud.classList.add('hudpop'); } }
   var STARS=[]; try{ STARS=JSON.parse(localStorage.getItem('sf_s'+SID+'_stars')||'[]'); }catch(e){}
+  // Версионированный снимок текущей истории. Общие искры/поленья не откатываем:
+  // они принадлежат всему профилю ребёнка, а не одной странице или вкладке.
+  var RUN_KEY='sf_s'+SID+'_run', RUN=null, resumed=false;
+  function readRun(){
+    var r=null; try{ r=JSON.parse(localStorage.getItem(RUN_KEY)||'null'); }catch(e){}
+    var valid=r&&r.v===1&&r.track===T&&Number.isInteger(r.done)&&r.done>=0&&r.done<=6&&Number.isInteger(r.pos)&&r.pos>=-1&&r.pos<24;
+    if(valid&&['arrive','board','badge','badgeDone','final','end'].indexOf(r.phase)>=0&&Array.isArray(r.stars)&&r.stars.length===r.done&&r.stars.every(function(n){return n>=1&&n<=3;})&&
+       (['badge','badgeDone','final','end'].indexOf(r.phase)<0||r.done===6)&&(r.done===0||r.pos>=STATIONS[r.done-1])&&(r.done===6||r.pos<=STATIONS[r.done])&&
+       (!r.pending||(r.pending.kind==='station'&&r.pending.k===r.done&&r.done<6)||(r.pending.kind==='event'&&['mouse','snow','own','adult'].indexOf(r.pending.type)>=0&&Number.isInteger(r.pending.mouse)&&r.pending.mouse>=0))&&
+       (!r.task||(typeof r.task.id==='string'&&Number.isInteger(r.task.step)&&r.task.step>=0&&r.task.step<100&&Number.isFinite(r.task.miss0)&&Number.isFinite(r.task.hint0)))) return r;
+    // Старые версии оставляли только счётчик и звёзды. Продолжить можно с последней страницы.
+    var old=0, stars=[], rep=null;
+    if(!r){ try{ old=Number(localStorage.getItem('sf_s'+SID+'_done')||0); stars=JSON.parse(localStorage.getItem('sf_s'+SID+'_stars')||'[]'); rep=JSON.parse(localStorage.getItem('sf_s'+SID+'_report')||'null'); }catch(e){} }
+    if(!Number.isInteger(old)||old<0||old>6||!Array.isArray(stars)||stars.length!==old||!stars.every(function(n){return n>=1&&n<=3;})||(rep&&rep.track!==T)) {old=0;stars=[];rep=null;}
+    var phase=old?'board':'arrive';
+    if(old===6) phase=rep&&typeof rep.gain==='number'?'badgeDone':'badge';
+    if(old===6&&rep&&getN('sf_s'+SID+'_complete')) phase='end';
+    return {v:1,track:T,pos:old?STATIONS[old-1]:-1,done:old,stars:stars,mice:0,phase:phase,pending:null,task:null,got:[],miss:0,hints:0};
+  }
+  function saveRun(){
+    if(!RUN) return; RUN.pos=pos; RUN.done=done; RUN.stars=STARS.slice(0,done); RUN.mice=mice; RUN.miss=MISS; RUN.hints=window.SF_HINTS||0;
+    RUN.got=$$('.cell-ico.got',forest).map(function(e){return Number(e.dataset.cell);});
+    try{ localStorage.setItem(RUN_KEY,JSON.stringify(RUN)); }catch(e){}
+  }
+  function restoreRun(){
+    RUN=readRun(); pos=RUN.pos;done=RUN.done;mice=Number.isInteger(RUN.mice)?Math.max(0,RUN.mice):0;STARS=RUN.stars.slice();
+    MISS=Number.isFinite(RUN.miss)?Math.max(0,RUN.miss):0;window.SF_HINTS=Number.isFinite(RUN.hints)?Math.max(0,RUN.hints):0;
+    $$('.pg',pages).forEach(function(p,i){p.classList.toggle('warm',i<done);});
+    $$('.cell-ico',forest).forEach(function(c){c.classList.toggle('got',c.dataset.st!=null?Number(c.dataset.st)<done:(Array.isArray(RUN.got)&&RUN.got.indexOf(Number(c.dataset.cell))>=0));});
+    place(pos<0?START:CELLS[pos]);
+  }
+  function freshRun(){
+    RUN={v:1,track:T,pos:-1,done:0,stars:[],mice:0,phase:'arrive',pending:null,task:null,got:[],miss:0,hints:0};
+    pos=-1;done=0;mice=0;STARS=[];MISS=0;window.SF_HINTS=0;resumed=false;
+    $$('.pg.warm',pages).forEach(function(e){e.classList.remove('warm');});
+    $$('.cell-ico.got',forest).forEach(function(e){e.classList.remove('got');});
+    place(START);saveRun();
+  }
+  function taskProgress(id){
+    if(!RUN.task||RUN.task.id!==id) RUN.task={id:id,step:0,miss0:MISS,hint0:window.SF_HINTS||0};
+    saveRun();return RUN.task;
+  }
+  restoreRun();
+  addEventListener('pagehide',saveRun);
+  document.addEventListener('visibilitychange',function(){if(document.hidden)saveRun();});
   NOART.pick3=1; if(typeof NOART2!=='undefined') NOART2.forEach(function(k){ NOART[k]=1; });   // свои типы заданий истории без картинки-арта
 
   /* --- stations & events on the board --- */
@@ -1842,16 +1887,18 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     steps=steps.concat(d.steps);
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
     speak(say,'A frozen page! '+ST[k][1]+'. Open it!'); ru.textContent='Замёрзшая страница: '+ST[k][2]+'. Открой её!';
-    var miss0=MISS, hint0=window.SF_HINTS||0;
-    return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key]); })
+    RUN.pending={kind:'station',k:k};RUN.phase='board';var progress=taskProgress('station:'+k), miss0=progress.miss0, hint0=progress.hint0;
+    return taskPage(box,'Страница '+(k+1)+' из 6 · '+ST[k][1],'Открыть страницу',function(body,finish){ runSteps(body,steps,finish,ART[key],progress,saveRun); })
       .then(function(){ var m=MISS-miss0, hn=(window.SF_HINTS||0)-hint0, got=(m===0&&hn===0)?3:(m<=2?2:1); STARS[k]=got; setN('sf_s'+SID+'_stars',0); try{ localStorage.setItem('sf_s'+SID+'_stars',JSON.stringify(STARS)); }catch(e){}
         addLogs(got); if(m===0&&hn===0) addSpark(); var kept=m>0&&hn===0; if(kept) addSpark(); teach('log',hud.children[1]||hud);  // «не сдался»: ошибся, но дошёл сам, без подсказок — тоже искра
         box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
         try{ localStorage.setItem('sf_s'+SID+'_done',String(done)); }catch(e){}
+        RUN.pending=null;RUN.task=null;RUN.phase=done===6?'badge':'board';saveRun();
         if(done===6) return speak(say,'All six pages are warm again! Now — the Badge Battle!').then(function(){ ru.textContent='Все шесть страниц оттаяли! Осталась Битва за значок.'; return badge(); });
         var g=STARS[k]; ru.textContent=T==='little'?'Страница оттаяла! Костёр горит ярче 🔥 Бросай кубик.':'Страница оттаяла! '+(g===3?'Сам и с первого раза — ты положил в костёр 3 полена 🪵 и получил искру ✦.':g===2?'Ты справился — положил в костёр 2 полена 🪵.':'Ты дошёл до конца — положил в костёр 1 полено 🪵.')+(m>0&&hn===0?' Ошибся, но исправил сам — держи искру ✦.':'')+' Теперь бросай кубик.'; return speak(say,'The page is warm again! Roll the dice.'); });
   }
   function badge(){
+    RUN.phase='badge';RUN.pending=null;RUN.task=null;saveRun();
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
     var risk=false;
     return taskPage(box,'Битва за значок','В бой!',function(body,finish){
@@ -1866,27 +1913,30 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       .then(function(){ var r={}; try{ r=JSON.parse(localStorage.getItem('sf_s'+SID+'_report')||'{}'); }catch(e){}
         var sc=r.score||0, of=r.of||5, gain=risk?Math.max(1,2*sc-(of-sc)):sc; addLogs(gain);
         try{ r.logs=getN('sf_logs'); r.stars=STARS; r.risk=risk; r.gain=gain; localStorage.setItem('sf_s'+SID+'_report',JSON.stringify(r)); }catch(e){}
+        RUN.phase='badgeDone';saveRun();
         box.hidden=true; ru.textContent=typeof BADGE_RU!=='undefined'?BADGE_RU:'Значок твой! Верни книгу герою.'; later($('#toFinal'),400); return speak(say,'The book is alive!'); });
   }
   function event(kind){
     var box=$('#ev');
-    if(kind==='spark'){ var st=forest.querySelector('.cell-ico.ico-spark[data-cell="'+pos+'"]'); if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
+    if(kind==='spark'){ var st=forest.querySelector('.cell-ico.ico-spark[data-cell="'+pos+'"]'); if(st) st.classList.add('got'); SND.fx('spark'); addSpark();saveRun();
       ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
-    if(kind==='log'){ teach('log',hud.children[1]||hud); var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
+    if(kind==='log'){ teach('log',hud.children[1]||hud); var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);saveRun();
       ru.textContent='Полено! Костёр горит ярче.'; return wait(1300); }
-    if(kind==='wind'){ SND.fx('no'); teach('wind',token); var bk=pos-1; if(T!=='little'&&STATIONS.indexOf(bk)<0&&bk>=0&&STATIONS.indexOf(bk+1)<0){ pos=bk; place(CELLS[pos]); ru.textContent='Метель! Ветер отнёс тебя на шаг назад.'; } else ru.textContent='Метель! Но ты удержался на месте.'; return wait(1500); }
+    if(kind==='wind'){ SND.fx('no'); teach('wind',token); var bk=pos-1; if(T!=='little'&&STATIONS.indexOf(bk)<0&&bk>=0&&STATIONS.indexOf(bk+1)<0){ pos=bk; place(CELLS[pos]); ru.textContent='Метель! Ветер отнёс тебя на шаг назад.'; } else ru.textContent='Метель! Но ты удержался на месте.'; saveRun();return wait(1500); }
     if(kind==='star'){ SND.fx('spark'); teach('star',token); ru.textContent='Короткая тропа! Прямо к странице.'; return wait(900).then(function(){ var to=STATIONS[done]; while(pos<to){ pos++; } place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); return wait(500).then(function(){ return station(done); }); }); }
     $('.dierow').hidden=true; box.hidden=false; box.innerHTML='';
-    var steps, kick, lbl;
-    if(kind==='mouse'){ teach('mouse',token); steps=MOUSE[T][mice++%2]; kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a message.'); ru.textContent='Мышиный след! Мыши что-то оставили.'; }
+    var again=RUN.pending&&RUN.pending.kind==='event'&&RUN.pending.type===kind;
+    if(!again) RUN.pending={kind:'event',type:kind,mouse:mice};
+    var progress=taskProgress('event:'+kind+':'+pos),steps,kick,lbl;
+    if(kind==='mouse'){ teach('mouse',token); steps=MOUSE[T][RUN.pending.mouse%2];if(!again)mice++;saveRun(); kick='Мышиный след'; lbl='Открыть страницу'; speak(say,'Mouse tracks! The mice left a message.'); ru.textContent='Мышиный след! Мыши что-то оставили.'; }
     else if(kind==='snow'&&T!=='little'&&getN('sf_sparks')>0&&!window._snowAsk){ window._snowAsk=1; box.hidden=false; box.innerHTML='';
       return teach('snow',token).then(function(){ return new Promise(function(res){ var w=el('div','pick'); w.innerHTML='<p class="pk-t">Сугроб на тропе! Растопить: назвать 3 слова — или отдать 1 искру?</p><div class="pk-row"><button class="btn btn-gold s3">Назову 3 слова</button><button class="gloss s1">Отдать ✦</button></div>'; box.appendChild(w);
-        w.querySelector('.s1').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); SND.fx('fire'); box.hidden=true; $('.dierow').hidden=false; ru.textContent='Искра растопила сугроб!'; window._snowAsk=0; res(); };
-        w.querySelector('.s3').onclick=function(){ box.innerHTML=''; event('snow').then(function(){ window._snowAsk=0; res(); }); }; }); }); }
+        w.querySelector('.s1').onclick=function(){ setN('sf_sparks',getN('sf_sparks')-1); paintHud(); SND.fx('fire'); box.hidden=true; $('.dierow').hidden=false; ru.textContent='Искра растопила сугроб!'; window._snowAsk=0;RUN.pending=null;RUN.task=null;saveRun();res(); };
+        w.querySelector('.s3').onclick=function(){ box.innerHTML=''; event('snow').then(function(){ window._snowAsk=0;RUN.pending=null;RUN.task=null;saveRun();res(); }); }; }); }); }
     else if(kind==='snow'){ kick='Сугроб'; lbl='Что делать?'; speak(say,'Oh! A big snowdrift. Find three things from the story to melt it!'); ru.textContent='Сугроб! Найди три слова из истории, чтобы его растопить.'; steps=[SNOW[T]]; }
     else if(kind==='own'){ kick=OWN.kick; lbl=OWN.lbl; speak(say,OWN.say); ru.textContent=OWN.ru; steps=OWN.steps(T); }
     else { kick='Ход для взрослого'; lbl='Открыть'; speak(say,'A move for a grown-up! Play together.'); ru.textContent='Ход для взрослого: играем вместе!'; steps=ADULT[T]; }
-    return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish); }).then(function(){ box.hidden=true; $('.dierow').hidden=false; return wait(300); });
+    return taskPage(box,kick,lbl,function(body,finish){ runSteps(body,steps,finish,null,progress,saveRun); }).then(function(){ RUN.pending=null;RUN.task=null;saveRun();box.hidden=true; $('.dierow').hidden=false; return wait(300); });
   }
   var aim=document.createElement('div'); aim.className='aim'; aim.hidden=true; forest.insertBefore(aim,token);
   function kindAt(c){ return STATIONS.indexOf(c)>=0?'page':(EVS[c]||''); }
@@ -1921,7 +1971,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
           if(pos>=to){ out.textContent=''; var k=STATIONS.indexOf(pos);
             if(k>=0) return station(k).then(function(){ rolling=false; });
             return (EVS[pos]?event(EVS[pos]):Promise.resolve()).then(function(){ rolling=false; if(done<6){ ru.textContent=ru.textContent||'Бросай ещё!'; } }); }
-          pos++; place(CELLS[pos]); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
+          pos++; place(CELLS[pos]);saveRun(); token.classList.remove('hop'); void token.offsetWidth; token.classList.add('hop'); SND.fx('step');
           wait(380).then(step); })(); }
       teach('pick',$('#die')).then(show);
     });
@@ -1929,23 +1979,34 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
 
   /* --- сцены: общие для v2 --- */
   ENTER.who=function(){};
-  $$('.track').forEach(function(b){ b.addEventListener('click',function(){ setTrack(b.dataset.track); save(); go('arrive'); }); });
-  ENTER.board=function(){ speak(say,BOARD_SAY);
+  $$('.track').forEach(function(b){ b.addEventListener('click',function(){ setTrack(b.dataset.track);freshRun();save();go('arrive'); }); });
+  ENTER.board=function(){
+    if(!resumed){resumed=true;place(pos<0?START:CELLS[pos]);
+      if(RUN.phase==='badgeDone'){ $('.dierow').hidden=true;later($('#toFinal'),200);return; }
+      if(RUN.phase==='badge'||done===6){badge();return;}
+      if(RUN.pending){if(RUN.pending.kind==='station')station(done);else event(RUN.pending.type);return;}
+    }
+    if(RUN.phase==='arrive')RUN.phase='board';saveRun();speak(say,done?'The page is warm again! Roll the dice.':BOARD_SAY);
     showRules(true).then(function(){ if(!getN('sf_s'+SID+'_gift')&&getN('sf_sparks')<2){ setN('sf_s'+SID+'_gift',1); setN('sf_sparks',getN('sf_sparks')+2); paintHud(); ru.textContent='Книга дарит тебе 2 искры ✦✦. Трать их на подсказки или на шаг кубика.'; fly('+2 ✦'); } }); };
   // костёр в финале горит по числу поленьев
   function finalGlow(){ try{ var g=Math.min(1,.3+getN('sf_logs')/30); $('[data-scene="final"] .camp').style.setProperty('--glow',g.toFixed(2)); }catch(e){} }
   // решение героя (v2): от выбора зависит, какая карточка героя встанет на полку — и её сила в финале
-  function heroChoice(){ if(typeof CHOICE==='undefined'||!CHOICE) return Promise.resolve(); return new Promise(function(res){
+  function heroChoice(){ if(RUN&&RUN.choice&&typeof CHOICE!=='undefined'&&CHOICE){var selected=CHOICE.opts.filter(function(o){return o.key===RUN.choice;})[0];if(selected){var cardSpan=$('#card span');if(cardSpan)cardSpan.innerHTML=selected.card;return Promise.resolve();}}if(typeof CHOICE==='undefined'||!CHOICE) return Promise.resolve(); return new Promise(function(res){
     var fin=$('#finSay')||$('#finAlice'), v=fin.parentNode, q=el('div','hchoice','<p class="say">'+CHOICE.say+'</p><p class="ru">'+CHOICE.ru+'</p>');
     teach('card',null);
     var row=el('div','row2'); q.appendChild(row);
     CHOICE.opts.forEach(function(o,i){ var bt=el('button',i?'btn btn-ghost':'btn btn-gold',o.btn); row.appendChild(bt);
-      bt.addEventListener('click',function(){ try{ localStorage.setItem('sf_s'+SID+'_choice',o.key); }catch(e){} var sp=$('#card span'); if(sp) sp.innerHTML=o.card; q.innerHTML='<p class="ru">'+o.ru+'</p>'; SND.fx('spark'); setTimeout(res,1600); }); });
+      bt.addEventListener('click',function(){ try{ localStorage.setItem('sf_s'+SID+'_choice',o.key);RUN.choice=o.key;saveRun(); }catch(e){} var sp=$('#card span'); if(sp) sp.innerHTML=o.card; q.innerHTML='<p class="ru">'+o.ru+'</p>'; SND.fx('spark'); setTimeout(res,1600); }); });
     v.insertBefore(q,$('#card')); }); }
   // итог истории: отчёт родителю + поленья по страницам
   function endReport(){ try{ localStorage.setItem('sf_s'+SID+'_complete','1'); var r=JSON.parse(localStorage.getItem('sf_s'+SID+'_report')||'null'); var box=$('#report'); if(r&&box){ box.innerHTML=''; box.appendChild(reportCard(r)); if(r.stars) box.appendChild(el('p','note','Поленья по страницам: '+r.stars.map(function(x){ return '🪵'.repeat(x||1); }).join(' · ')+'. Всего в костре: '+(r.logs||0)+'.')); box.hidden=false; } }catch(e){} }
-  var START_SCENE=state.track?'arrive':'who';
+  var originalGo=go;
+  go=function(id){if(RUN&&(id==='final'||id==='end')){RUN.phase=id;saveRun();}return originalGo(id);};
+  var START_SCENE=!state.track?'who':RUN.phase==='end'?'end':RUN.phase==='final'?'final':RUN.phase==='arrive'?'arrive':'board';
   if(state.track) setTrack(state.track);
+  var replay=el('button','btn btn-ghost','Пройти ещё раз');replay.type='button';replay.id='replayStory';
+  ($('[data-scene="end"] .cta')||$('[data-scene="end"]')).appendChild(replay);
+  replay.addEventListener('click',function(){freshRun();location.reload();});
 
 var BOOK={"title": "The Jungle Book", "author": "Rudyard Kipling", "pages": [{"v": "video/book_1.mp4", "a": "audio/b2_1.mp3", "en": "One night a little boy came out of the jungle. He was all alone, but he was not afraid.", "ru": "Однажды ночью из джунглей вышел маленький мальчик. Он был совсем один, но ничуть не боялся.", "t": [0.0, 0.57, 0.85, 1.14, 1.71, 1.99, 2.28, 2.56, 2.85, 3.13, 4.13, 4.47, 4.82, 5.16, 5.84, 6.09, 6.35, 6.6, 6.86]}, {"v": "video/book_2.mp4", "a": "audio/b2_2.mp3", "en": "A family of wolves found him. Mother Wolf loved him like her own cubs. She called him Mowgli, the little frog.", "ru": "Его нашла семья волков. Мама-волчица полюбила его, как своих волчат, и назвала Маугли — Лягушонок.", "t": [0.0, 0.3, 1.19, 1.48, 2.08, 2.38, 2.79, 3.37, 3.66, 4.24, 4.53, 4.82, 5.11, 5.41, 6.24, 6.56, 7.18, 7.49, 8.55, 8.87, 9.51]}, {"v": "video/book_3.mp4", "a": "audio/b2_3.mp3", "en": "But the tiger Shere Khan wanted the boy. Mother Wolf stood in front of the cubs and showed her teeth. Now Mowgli needs your help!", "ru": "Но тигр Шерхан хотел забрать мальчика. Мама-волчица встала перед волчатами и оскалила зубы. А теперь Маугли нужна твоя помощь!", "t": [0.0, 0.32, 0.65, 1.29, 1.62, 1.94, 2.58, 2.91, 3.92, 4.49, 4.77, 5.06, 5.34, 5.63, 5.91, 6.19, 6.48, 6.76, 7.33, 7.61, 8.47, 8.89, 9.74, 10.16, 10.58]}]};
 /* «Костёр историй»: доступ по коду семьи и открытие историй по датам.
