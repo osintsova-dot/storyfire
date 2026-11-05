@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<meta name="sf-board-build" content="native-cells-20261105">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 5 · Dorothy · Костёр историй</title>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="../../img/10_board_s5.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s5.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -253,6 +254,33 @@ img{display:block;max-width:100%}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+/* BEGIN shared native board cells css */
+/* One wooden cell design for the tutorial and all ten stories. No bitmap game cells. */
+:root{--board-cell-size:clamp(30px,8.5vw,38px)}
+.forest .board-cell{--cell-ink:#633b19;--cell-ring:#b98143}
+.forest[data-native-cells="1"] .board-cell.cell-ico{
+  width:var(--board-cell-size);box-sizing:border-box;border:2px solid #71421f;
+  color:var(--cell-ink);opacity:1;
+  background:repeating-radial-gradient(ellipse at 44% 42%,transparent 0 4px,#9e602332 5px 6px,transparent 7px 10px),linear-gradient(145deg,#ffe6ac,#dca25a);
+  box-shadow:inset 0 0 0 1px #ffeec8,0 3px 0 #4c2c17,0 5px 8px #0008,0 0 0 1px var(--cell-ring);
+}
+.forest .board-cell svg{width:62%;height:62%;filter:drop-shadow(0 1px 0 #fff8)}
+.forest .board-cell.ico-page{--cell-ink:#173e68;--cell-ring:#a8c7e5}
+.forest .board-cell.ico-spark{--cell-ink:#744400;--cell-ring:#ffcf58}
+.forest .board-cell.ico-mouse{--cell-ink:#4b286e;--cell-ring:#bf9edc}
+.forest .board-cell.ico-log{--cell-ink:#633215;--cell-ring:#b98143}
+.forest .board-cell.ico-star{--cell-ink:#155538;--cell-ring:#8dcaa9}
+.forest .board-cell.ico-wind{--cell-ink:#294c78;--cell-ring:#a7c1e1}
+.forest .board-cell.ico-snow{--cell-ink:#2a628f;--cell-ring:#daebff}
+.forest .board-cell.ico-adult{--cell-ink:#693365;--cell-ring:#d7aad4}
+.forest .board-cell.ico-own{--cell-ink:#9a3513;--cell-ring:#f1a764}
+.forest[data-native-cells="1"] .board-cell.cell-ico.is-current{box-shadow:inset 0 0 0 1px #fff1cc,0 3px 0 #4c2c17,0 0 0 3px #f5c842,0 0 16px #f5c842a0}
+.forest .board-cell.cell-ico.got{opacity:1}
+.forest .board-cell.got svg{opacity:.3;filter:none}
+.forest .board-route{position:absolute;inset:0;width:100%;height:100%;max-width:none;z-index:0;pointer-events:none;overflow:visible}
+.forest .board-route polyline{fill:none;stroke:#ffe0a78c;stroke-width:2;stroke-dasharray:2 8;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+
+/* END shared native board cells css */
 
 /* ===== История: доска, страницы, задания ===== */
 .say.alice{color:var(--gold-2)}
@@ -612,15 +640,35 @@ header.top .topr{margin-left:0}
 
 /* ===== общее для всех историй: поле на весь экран ===== */
 [data-scene="board"]{overflow:hidden}
-[data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .7s var(--ease-out),left .7s var(--ease-out)}
-[data-scene="board"] .forest .token{width:calc(25% / var(--z,1))}
-[data-scene="board"] .forest .cell-ico{width:calc(7.5% / var(--z,1))}
+[data-scene="board"] .forest{position:absolute;margin:0;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;flex:none;z-index:0;transition:top .38s var(--ease-out),left .38s var(--ease-out),width .38s var(--ease-out),height .38s var(--ease-out)}
+[data-scene="board"] .forest .token{width:clamp(64px,19vw,84px)}
+[data-scene="board"] .forest .cell-ico{width:var(--board-cell-size,clamp(30px,8.5vw,38px))}
 [data-scene="board"] .pages{position:absolute;z-index:6;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 58px);padding:8px 0 18px;background:linear-gradient(180deg,rgba(14,10,34,.7),rgba(14,10,34,0))}
-[data-scene="board"] .voice{position:absolute;left:0;right:0;bottom:0;z-index:5;margin:0;padding-top:56px;gap:6px;background:linear-gradient(180deg,rgba(14,10,34,0) 0,rgba(14,10,34,.78) 52px,rgba(14,10,34,.9) 100%)}
-[data-scene="board"] .voice .say{font-size:clamp(19px,5vw,22px)}
+[data-scene="board"] .voice{position:absolute;left:0;right:0;bottom:0;z-index:5;margin:0;padding-top:8px;gap:5px;background:var(--night)}
+[data-scene="board"] .voice .say{font-size:clamp(17px,4.5vw,20px);line-height:1.25;height:3.75em;max-width:none;width:100%;margin:0;overflow:auto;align-content:center}
 [data-scene="board"] .voice .ru{font-size:13px}
 [data-scene="board"] .dierow{justify-content:center}
-[data-scene="board"] .die{width:76px;height:76px}
+[data-scene="board"] .die{width:64px;height:64px}
+[data-scene="board"] .board-viewport{position:absolute;left:0;right:0;top:110px;bottom:270px;overflow:hidden;isolation:isolate;background:var(--night);border-block:1px solid rgba(245,200,66,.16)}
+[data-scene="board"] .board-viewport::before{content:"";position:absolute;inset:-20px;z-index:-1;background:var(--board-image) center/cover;filter:blur(18px) brightness(.65)}
+[data-scene="board"] .board-viewport .forest{overflow:visible}
+[data-scene="board"] .pages{padding-bottom:10px;background:var(--night)}
+[data-scene="board"] .voice .plaque{font-size:14px;line-height:1.4;min-height:4.2em;margin:0;padding:9px 12px;align-content:center}
+[data-scene="board"] .voice .hud{min-height:20px;font-size:14px}
+[data-scene="board"] .voice .hud b{font-size:15px}
+[data-scene="board"] .forest .aim{width:38px}
+[data-scene="board"] .forest .aim.alt{width:32px}
+[data-scene="board"] #toFinal:not(.in){display:none}
+[data-scene="board"].board-choosing .voice #boardSay,
+[data-scene="board"].board-choosing .dierow,
+[data-scene="board"].board-choosing #boardRu{display:none}
+@media (max-height:650px){
+  [data-scene="board"] .voice{gap:3px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}
+  [data-scene="board"] .voice .say{height:3.75em;font-size:16px}
+  [data-scene="board"] .voice .plaque{font-size:13px;min-height:3.8em;padding:7px 10px}
+  [data-scene="board"] .die{width:54px;height:54px}
+}
+@media (prefers-reduced-motion:reduce){[data-scene="board"] .forest{transition:none}}
 /* приход героя: картинка на весь экран (постер видео iOS рисует «contain» с полосами), видео проявляется, когда пошло */
 .apost{object-fit:cover;object-position:50% 30%}
 .avid{opacity:0;transition:opacity .35s;object-position:50% 30%}
@@ -890,7 +938,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Жёлтая дорога в снегу">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="../../img/10_board24_s5.webp" alt="Тропа из клеток от костра по заснеженной жёлтой дороге к Изумрудному городу">
+      <img src="../../img/10_board_bg_s5.webp" alt="Тропа из клеток от костра по заснеженной жёлтой дороге к Изумрудному городу">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -947,7 +995,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(s,r){return (r||document).querySelector(s);}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
   var ORDER=['arrive','board','final','end'];
-  var BG={who:'06_t2_open',arrive:'08_v9_dorothy',board:'10_board_s5',final:'04_fire_4',end:'05_card_back'};
+  var BG={who:'06_t2_open',arrive:'08_v9_dorothy',board:'10_board_bg_s5',final:'04_fire_4',end:'05_card_back'};
   var state={name:'',track:''};
   try{var s=JSON.parse(localStorage.getItem('sf_prolog')||'{}'); state.name=s.name||''; state.track=s.track||'';}catch(e){}
   function save(){try{localStorage.setItem('sf_prolog',JSON.stringify(state));}catch(e){}}
@@ -1111,6 +1159,45 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
 
   var ENTER={};
 
+/* BEGIN shared native board cells js */
+  // Shared native cells: artwork is scenery only; CELLS is the single source of board geometry.
+  function boardStart(cells){
+    var a=cells[0], b=cells[1]||a;
+    return [Math.max(4,Math.min(96,a[0]-(b[0]-a[0])*.8)),Math.max(4,Math.min(96,a[1]-(b[1]-a[1])*.8))];
+  }
+  function mountBoardCells(forest,cells,token){
+    if(!forest||forest.dataset.nativeCells==='1') return;
+    if(cells.length!==24) throw new Error('The board must contain exactly 24 cells');
+    forest.dataset.nativeCells='1';
+    var nodes=[];
+    cells.forEach(function(c,i){
+      var d=forest.querySelector('.cell-ico[data-cell="'+i+'"]');
+      if(!d){ d=document.createElement('div'); d.className='cell-ico'; forest.insertBefore(d,token); }
+      d.classList.add('board-cell'); d.dataset.cell=String(i);
+      d.style.left=c[0]+'%'; d.style.top=c[1]+'%';
+      d.setAttribute('role','img');
+      d.setAttribute('aria-label','Клетка '+(i+1)+(d.title?': '+d.title:''));
+      nodes.push(d);
+    });
+    var ns='http://www.w3.org/2000/svg', route=document.createElementNS(ns,'svg');
+    route.classList.add('board-route'); route.setAttribute('viewBox','0 0 100 100');
+    route.setAttribute('preserveAspectRatio','none'); route.setAttribute('aria-hidden','true');
+    var line=document.createElementNS(ns,'polyline');
+    line.setAttribute('points',cells.map(function(c){return c[0]+','+c[1];}).join(' '));
+    route.appendChild(line); forest.insertBefore(route,nodes[0]);
+    function current(){
+      var x=parseFloat(token.style.left), y=parseFloat(token.style.top);
+      nodes.forEach(function(d,i){
+        var on=Math.abs(cells[i][0]-x)<.001&&Math.abs(cells[i][1]-y)<.001;
+        d.classList.toggle('is-current',on);
+        if(on) d.setAttribute('aria-current','step'); else d.removeAttribute('aria-current');
+      });
+    }
+    if(window.MutationObserver) new MutationObserver(current).observe(token,{attributes:true,attributeFilter:['style']});
+    current();
+  }
+
+/* END shared native board cells js */
   /* ===== общий движок заданий (истории с пометкой «uses engine»). История задаёт: T, SID, ACTW, HERO, REPORT, LISTEN_POSTER, SUBS_LITTLE, QUICK_WIN ===== */
   var shuffle=function(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x;} return a; };
   var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
@@ -1967,6 +2054,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
           if(!left){ fb.textContent='Сугроб растаял! Скажи все три слова вслух.'; SND.fx('fire'); nextBtn(body,'Дальше',next,900); } }
         else { wrong(b); fb.textContent='Этого не было в истории. Ищи дальше!'; } }); });
   };
+  START=boardStart(CELLS); // The starting point follows the route, rather than the painted traveller.
   var token=$('#token'), forest=$('#forest'), pos=-1, mice=0, rolling=false, done=0;
   function place(xy){ token.style.left=xy[0]+'%'; token.style.top=xy[1]+'%'; }
   place(START);
@@ -1976,8 +2064,10 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=ST[st][1]; d.dataset.st=st; }
     else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
     else return;
+    d.dataset.cell=String(i); if(!d.title) d.title=EVNAME[EVS[i]]||'';
     d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token);
   });
+  mountBoardCells(forest,CELLS,token);
   var pages=$('#pages');
   ST.forEach(function(s){ var p=document.createElement('span'); p.className='pg'; p.innerHTML=PAGE+'<em>'+s[3]+'</em>'; p.title=s[1]; pages.appendChild(p); });
   var addSpark=function(){ try{ var n=+(localStorage.getItem('sf_sparks')||0)+1; localStorage.setItem('sf_sparks',String(n)); }catch(e){} if(window.SF_HUD) SF_HUD(); if(typeof fly==='function') fly('+1 ✦'); };
@@ -2071,7 +2161,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   }
   function event(kind){
     var box=$('#ev');
-    if(kind==='spark'){ var st=$$('.cell-ico.ico-spark').filter(function(x){return !x.classList.contains('got');})[0]; if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
+    if(kind==='spark'){ var st=forest.querySelector('.cell-ico.ico-spark[data-cell="'+pos+'"]'); if(st) st.classList.add('got'); SND.fx('spark'); addSpark();
       ru.textContent='Искра! Её можно потратить на подсказку.'; return Promise.all([speak(say,'A spark! Keep it for a hint.'),wait(1600)]); }
     if(kind==='log'){ teach('log',hud.children[1]||hud); var lg=$$('.cell-ico.ico-log').filter(function(x){return x.dataset.c==pos;})[0]; if(lg) lg.classList.add('got'); SND.fx('fire'); addLogs(1);
       ru.textContent='Полено! Костёр горит ярче.'; return wait(1300); }
@@ -2248,19 +2338,55 @@ var SF = (function () {
   (function(){
     var sc=$('[data-scene="board"]'), f=$('#forest'); if(!sc||!f) return;
     var img=f.querySelector('img'), pg=$('#pages'); if(pg) sc.appendChild(pg);
-    var last=START;
+    // The illustrated map has its own clipped window: HUD and captions never cover cells.
+    var view=document.createElement('div'); view.className='board-viewport';
+    view.style.setProperty('--board-image','url('+JSON.stringify(img.src)+')');
+    f.parentNode.insertBefore(view,f); view.appendChild(f);
+    var voice=sc.querySelector('.voice'), pick=sc.querySelector('#pick'), last=START;
     function ar(){ if(img.naturalWidth) return img.naturalWidth/img.naturalHeight; var m=/([\d.]+)\s*\/\s*([\d.]+)/.exec(f.style.aspectRatio||''); return m?m[1]/m[2]:720/840; }
-    function fit(xy){ if(xy) last=xy; var W=sc.clientWidth, H=sc.clientHeight; if(!W||!H) return;
-      var a=ar(), h=H*1.18, w=h*a; if(w<W){ w=W; h=W/a; }
-      var xs=CELLS.concat([START]).map(function(c){return c[0];});
-      var cx=(Math.min.apply(0,xs)+Math.max.apply(0,xs))/200;
-      var left=Math.min(0,Math.max(W-w,W/2-cx*w));
-      var top=Math.min(0,Math.max(H*.66-h,H*.4-last[1]/100*h)); // фишка — чуть выше середины, над текстом и кубиком
+    function fit(xy){ if(xy) last=xy;
+      sc.classList.toggle('board-choosing',!!pick&&!pick.hidden);
+      view.style.top=((pg?pg.offsetTop+pg.offsetHeight:100)+6)+'px';
+      view.style.bottom=((voice?voice.offsetHeight:240)+8)+'px';
+      var W=view.clientWidth, H=view.clientHeight; if(!W||!H) return;
+      var a=ar(), gaps=[];
+      for(var i=1;i<CELLS.length;i++){
+        var dx=(CELLS[i][0]-CELLS[i-1][0])/100, dy=(CELLS[i][1]-CELLS[i-1][1])/100/a;
+        var d=Math.sqrt(dx*dx+dy*dy); if(d>0) gaps.push(d);
+      }
+      gaps.sort(function(a,b){return a-b;});
+      var step=gaps.length?gaps[Math.floor(gaps.length/2)]:.08;
+      // Equal on-screen distance between typical cells, regardless of the painted route's density.
+      var at=CELLS.indexOf(last), ahead=[last].concat(CELLS.slice(at+1,at+4));
+      // A rolled destination (and the optional ±1 choices) must also stay in the map window.
+      f.querySelectorAll('.aim').forEach(function(aim){
+        var x=parseFloat(aim.style.left), y=parseFloat(aim.style.top);
+        if(!aim.hidden&&isFinite(x)&&isFinite(y)) ahead.push([x,y]);
+      });
+      var xs=ahead.map(function(c){return c[0]/100;}), ys=ahead.map(function(c){return c[1]/100;});
+      var loX=Math.min.apply(0,xs), hiX=Math.max.apply(0,xs), loY=Math.min.apply(0,ys), hiY=Math.max.apply(0,ys);
+      var w=Math.max(W,Math.min(W*4,Math.max(44,Math.min(54,W*.135))/step));
+      // Frame the current cell and the next three, including the tall token above its cell.
+      var padX=48, padTop=82, padBottom=28;
+      if(hiX>loX) w=Math.min(w,(W-padX*2)/(hiX-loX));
+      if(hiY>loY) w=Math.min(w,Math.max(60,H-padTop-padBottom)*a/(hiY-loY));
+      var h=w/a, left=W*.5-(loX+hiX)/2*w;
+      var top=padTop+(H-padTop-padBottom)/2-(loY+hiY)/2*h;
+      // Keep the illustration filling the window where possible; leave room above edge cells for the token.
+      if(w>=W) left=Math.min(0,Math.max(W-w,left));
+      if(h>=H) top=Math.min(0,Math.max(H-h,top));
+      var foot=top+last[1]/100*h;
+      if(foot<padTop) top+=padTop-foot;
+      else if(foot>H-padBottom) top-=foot-(H-padBottom);
       f.style.width=w+'px'; f.style.height=h+'px'; f.style.left=left+'px'; f.style.top=top+'px'; f.style.setProperty('--z',(w/W).toFixed(3)); }
     var _pl=place; place=function(xy){ _pl(xy); fit(xy); };
     var _eb=ENTER.board; ENTER.board=function(){ fit(); return _eb&&_eb.apply(this,arguments); };
     if(!img.complete) img.addEventListener('load',function(){ fit(); });
     window.addEventListener('resize',function(){ fit(); });
+    if(window.ResizeObserver){ var ro=new ResizeObserver(function(){fit();}); if(voice) ro.observe(voice); if(pg) ro.observe(pg); }
+    if(window.MutationObserver){ new MutationObserver(function(changes){
+      if(changes.some(function(c){return c.target.classList.contains('aim');})) fit();
+    }).observe(f,{subtree:true,attributes:true,attributeFilter:['style','hidden']}); }
     fit();
   })();
   (function(){ var v=$('#avid'); if(!v) return; v.addEventListener('playing',function(){ v.classList.add('on'); }); })();
