@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<meta name="sf-preview-build" content="native-cells-20261105">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Пролог · Костёр историй</title>
@@ -254,6 +256,33 @@ img{display:block;max-width:100%}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+/* BEGIN shared native board cells css */
+/* One wooden cell design for the tutorial and all ten stories. No bitmap game cells. */
+:root{--board-cell-size:clamp(30px,8.5vw,38px)}
+.forest .board-cell{--cell-ink:#633b19;--cell-ring:#b98143}
+.forest[data-native-cells="1"] .board-cell.cell-ico{
+  width:var(--board-cell-size);box-sizing:border-box;border:2px solid #71421f;
+  color:var(--cell-ink);opacity:1;
+  background:repeating-radial-gradient(ellipse at 44% 42%,transparent 0 4px,#9e602332 5px 6px,transparent 7px 10px),linear-gradient(145deg,#ffe6ac,#dca25a);
+  box-shadow:inset 0 0 0 1px #ffeec8,0 3px 0 #4c2c17,0 5px 8px #0008,0 0 0 1px var(--cell-ring);
+}
+.forest .board-cell svg{width:62%;height:62%;filter:drop-shadow(0 1px 0 #fff8)}
+.forest .board-cell.ico-page{--cell-ink:#173e68;--cell-ring:#a8c7e5}
+.forest .board-cell.ico-spark{--cell-ink:#744400;--cell-ring:#ffcf58}
+.forest .board-cell.ico-mouse{--cell-ink:#4b286e;--cell-ring:#bf9edc}
+.forest .board-cell.ico-log{--cell-ink:#633215;--cell-ring:#b98143}
+.forest .board-cell.ico-star{--cell-ink:#155538;--cell-ring:#8dcaa9}
+.forest .board-cell.ico-wind{--cell-ink:#294c78;--cell-ring:#a7c1e1}
+.forest .board-cell.ico-snow{--cell-ink:#2a628f;--cell-ring:#daebff}
+.forest .board-cell.ico-adult{--cell-ink:#693365;--cell-ring:#d7aad4}
+.forest .board-cell.ico-own{--cell-ink:#9a3513;--cell-ring:#f1a764}
+.forest[data-native-cells="1"] .board-cell.cell-ico.is-current{box-shadow:inset 0 0 0 1px #fff1cc,0 3px 0 #4c2c17,0 0 0 3px #f5c842,0 0 16px #f5c842a0}
+.forest .board-cell.cell-ico.got{opacity:1}
+.forest .board-cell.got svg{opacity:.3;filter:none}
+.forest .board-route{position:absolute;inset:0;width:100%;height:100%;max-width:none;z-index:0;pointer-events:none;overflow:visible}
+.forest .board-route polyline{fill:none;stroke:#ffe0a78c;stroke-width:2;stroke-dasharray:2 8;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+
+/* END shared native board cells css */
 </style>
 <style data-prolog>
 /* ===== Пролог: поле v2 как в историях (05.11.2026). build.py этот блок в истории НЕ копирует ===== */
@@ -407,7 +436,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- 3 · board -->
   <section class="scene" data-scene="board" aria-label="Зимний лес">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/img/10_board24_s1.webp" alt="Тропа из 24 пеньков от костра мимо кроличьей норы в зимний лес">
+      <img src="/t-49db8ebd/img/10_board_bg_s1.webp" alt="Снежная тропа от костра мимо кроличьей норы в зимний лес">
       <div class="token" id="token"><img src="/img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -503,7 +532,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(s,r){return (r||document).querySelector(s);}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s));};
   var ORDER=['library','open','board','fire','shelf','cliff','end'];
-  var BG={intro:'06_t1_library',library:'06_t1_library',open:'06_t2_open',board:'10_board24_s1',fire:'04_fire_4',shelf:'05_bookshelf',cliff:'04_fire_1',end:'05_card_back'};
+  var BG={intro:'06_t1_library',library:'06_t1_library',open:'06_t2_open',board:'10_board_bg_s1',fire:'04_fire_4',shelf:'05_bookshelf',cliff:'04_fire_1',end:'05_card_back'};
   var state={name:'',track:''};
   try{var s=JSON.parse(localStorage.getItem('sf_prolog')||'{}'); state.name=s.name||''; state.track=s.track||'';}catch(e){}
   function save(){try{localStorage.setItem('sf_prolog',JSON.stringify(state));}catch(e){}}
@@ -658,7 +687,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url(/img/'+BG[id]+'.webp)';
+    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s1.webp':'/img/'+BG[id]+'.webp')+')';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -667,6 +696,45 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
 
   var ENTER={};
 
+/* BEGIN shared native board cells js */
+  // Shared native cells: artwork is scenery only; CELLS is the single source of board geometry.
+  function boardStart(cells){
+    var a=cells[0], b=cells[1]||a;
+    return [Math.max(4,Math.min(96,a[0]-(b[0]-a[0])*.8)),Math.max(4,Math.min(96,a[1]-(b[1]-a[1])*.8))];
+  }
+  function mountBoardCells(forest,cells,token){
+    if(!forest||forest.dataset.nativeCells==='1') return;
+    if(cells.length!==24) throw new Error('The board must contain exactly 24 cells');
+    forest.dataset.nativeCells='1';
+    var nodes=[];
+    cells.forEach(function(c,i){
+      var d=forest.querySelector('.cell-ico[data-cell="'+i+'"]');
+      if(!d){ d=document.createElement('div'); d.className='cell-ico'; forest.insertBefore(d,token); }
+      d.classList.add('board-cell'); d.dataset.cell=String(i);
+      d.style.left=c[0]+'%'; d.style.top=c[1]+'%';
+      d.setAttribute('role','img');
+      d.setAttribute('aria-label','Клетка '+(i+1)+(d.title?': '+d.title:''));
+      nodes.push(d);
+    });
+    var ns='http://www.w3.org/2000/svg', route=document.createElementNS(ns,'svg');
+    route.classList.add('board-route'); route.setAttribute('viewBox','0 0 100 100');
+    route.setAttribute('preserveAspectRatio','none'); route.setAttribute('aria-hidden','true');
+    var line=document.createElementNS(ns,'polyline');
+    line.setAttribute('points',cells.map(function(c){return c[0]+','+c[1];}).join(' '));
+    route.appendChild(line); forest.insertBefore(route,nodes[0]);
+    function current(){
+      var x=parseFloat(token.style.left), y=parseFloat(token.style.top);
+      nodes.forEach(function(d,i){
+        var on=Math.abs(cells[i][0]-x)<.001&&Math.abs(cells[i][1]-y)<.001;
+        d.classList.toggle('is-current',on);
+        if(on) d.setAttribute('aria-current','step'); else d.removeAttribute('aria-current');
+      });
+    }
+    if(window.MutationObserver) new MutationObserver(current).observe(token,{attributes:true,attributeFilter:['style']});
+    current();
+  }
+
+/* END shared native board cells js */
   /* intro cartoon: plays with sound after a tap, English captions, Russian on request */
   var CUES=[[0.6,6.6,'Every book is alive… while somebody reads it.','Каждая книга жива… пока её кто-то читает.'],
     [7.0,14.1,'But this winter, nobody opened me. My stories began to freeze.','Но этой зимой меня никто не открыл. Мои истории начали замерзать.'],
@@ -713,6 +781,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   // поле истории 1 (board24_s1): от костра к замку
   var START=[41,86];
   var CELLS=[[33.9,73.9],[40.7,72.5],[47.6,71.8],[54.6,70.8],[61.4,69.5],[68.1,67.6],[73.8,64.8],[77.5,60.8],[76.9,55.8],[74.0,51.1],[63.8,44.4],[57.5,41.8],[44.6,37.7],[38.5,35.6],[28.3,29.4],[30.6,25.0],[40.7,19.0],[47.2,17.4],[53.6,15.7],[66.4,12.9],[72.8,11.2],[78.9,9.4],[84.0,6.2],[89.3,3.6]];
+  START=boardStart(CELLS);
   var STATIONS=[3,7,11,15,19,23];
   var EVS={0:'spark',1:'mouse',2:'log',4:'wind',5:'snow',6:'spark',8:'star',9:'adult',10:'log',12:'mouse',13:'spark',14:'wind',16:'log',17:'star',18:'spark',20:'spark',21:'adult',22:'log'};
   var EVNAME={spark:'искра ✦',mouse:'мышиный след',log:'полено 🪵',wind:'метель (шаг назад)',snow:'сугроб',adult:'ход для взрослого',star:'короткая тропа ⭐',page:'замёрзшая страница'};
@@ -735,7 +804,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     if(st>=0){ d.className='cell-ico ico-page'; d.innerHTML=PAGE; d.title=PG[st][1]; }
     else if(EVS[i]){ d.className='cell-ico ico-'+EVS[i]; d.innerHTML=ICO[EVS[i]]; d.dataset.c=i; }
     else return;
+    d.dataset.cell=String(i); if(!d.title) d.title=EVNAME[EVS[i]]||'';
     d.style.left=c[0]+'%'; d.style.top=c[1]+'%'; forest.insertBefore(d,token); });
+  mountBoardCells(forest,CELLS,token);
   PG.forEach(function(p){ var s=el('span','pg',PAGE+'<em>'+p[0]+'</em>'); s.title=p[1]; pages.appendChild(s); });
   /* искры и поленья: общие с историями (sf_sparks / sf_logs), но по-настоящему начисляются только в первое прохождение Пролога */
   var getN=function(k){ try{ return +(localStorage.getItem(k)||0); }catch(e){ return 0; } }, setN=function(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} };
