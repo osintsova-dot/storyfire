@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/5/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1635,8 +1635,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
-      fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
-    skip.addEventListener('click',function(){ fb.textContent='Скажи вслух — взрослый слышит.'; skip.hidden=true; nextBtn(body,'Сказал(а) ✓',pass,300); });
+      fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(true); }); } }
+    skip.addEventListener('click',function(){ fb.textContent='Скажи вслух — взрослый слышит.'; skip.hidden=true; nextBtn(body,'Сказал(а) ✓',function(){pass(true);},300); });
     var media=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder;
     LASR.load();
     if(!media&&LASR.state==='fail'){ rec.hidden=true; skip.click(); }
@@ -1649,7 +1649,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         fb.textContent=LASR.state==='ready'?'Книга слушает…':'Книга учится слушать… '+LASR.pct+'%';
         LASR.ready(function(ok){ if(!ok){ clearInterval(tick); rec.disabled=false; fb.textContent=''; return selfOk(); }
           fb.textContent='Книга слушает…';
-          LASR.hear(a).then(function(t){ clearInterval(tick); rec.disabled=false; if(judge(t)) pass(); else retry(); })
+          LASR.hear(a).then(function(t){ clearInterval(tick); rec.disabled=false; if(!normT(t).trim()) selfOk('Книга не расслышала слова. Повтори или проверь себя по образцу.'); else if(judge(t)) pass(); else retry(); })
             .catch(function(){ clearInterval(tick); rec.disabled=false; selfOk(); }); });
         return; }
       var ctx=LASR.wake();
@@ -1658,7 +1658,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         lt=setTimeout(function(){ if(lr) local(); },(s.sec||6)*1000);
       }).catch(function(){ if(typeof SND!=='undefined'&&SND.mic) SND.mic(false); rec.hidden=true; skip.click(); });
     }
-    function selfOk(){ fb.textContent='Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
+    function selfOk(message){ fb.textContent=message||'Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(true); }); } }
     rec.addEventListener('click',function(){
       if(SND.busy&&SND.busy()){ fb.textContent='Сначала дослушай вопрос или образец, затем нажми «Скажи».'; return; }
       if(!ASR&&LASR.state!=='fail') return local();
@@ -1670,7 +1670,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
           var blob=new Blob(chunks,{type:mr.mimeType||'audio/webm'}); if(blob.size<1500) return retry('Ничего не слышно. Нажми и говори громче!');
           if(!ASR) return self(blob);
           fb.textContent='Книга слушает…';
-          fetch(ASR,{method:'POST',body:blob,headers:{'X-Track':T}}).then(function(r){ return r.json(); }).then(function(j){ if(judge(j.text||'')) pass(); else retry(); }).catch(function(){ self(blob); }); };
+          fetch(ASR,{method:'POST',body:blob,headers:{'X-Track':T}}).then(function(r){ return r.json(); }).then(function(j){ if(!normT(j.text||'').trim()) selfOk('Книга не расслышала слова. Повтори или проверь себя по образцу.'); else if(judge(j.text||'')) pass(); else retry(); }).catch(function(){ self(blob); }); };
         mr.start(); rec.classList.add('on'); rec.querySelector('span').textContent='Стоп'; fb.textContent='Говори! Нажми «Стоп», когда закончишь.';
         setTimeout(function(){ if(mr&&mr.state==='recording') mr.stop(); },(s.sec||6)*1000);
       }).catch(function(){ if(typeof SND!=='undefined'&&SND.mic) SND.mic(false); rec.hidden=true; skip.click(); });
