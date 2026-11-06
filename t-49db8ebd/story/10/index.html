@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3"><meta name="sf-king-build" content="mouse-king-20261106">
+<head><meta name="sf-phonics-queue" content="phonics-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3"><meta name="sf-king-build" content="mouse-king-20261106">
 <base href="/story/10/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1339,7 +1339,21 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
-  var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
+  var phonemeCancel=null;
+  function phonicsSoundOn(){ var b=document.getElementById('sndBtn'); return !b||b.getAttribute('aria-pressed')!=='false'; }
+  function playPhoneme(g){
+    if(!phonicsSoundOn()) return Promise.resolve();
+    return new Promise(function(fin){
+      var a, timer, settled=false;
+      function done(){ if(settled)return;settled=true;clearTimeout(timer);if(phonemeCancel===cancel)phonemeCancel=null;fin(); }
+      function cancel(){ if(a){try{a.pause();a.currentTime=0;}catch(e){}}done(); }
+      try{a=new Audio('../../audio/ph/'+g+'.m4a');phonemeCancel=cancel;
+        a.onended=a.onerror=done;a.onplaying=function(){clearTimeout(timer);};timer=setTimeout(cancel,15000);
+        var p=a.play();if(p&&p.catch)p.catch(done);
+      }catch(e){done();}
+    });
+  }
+  var phs=function(g){ return SND.phoneme?SND.phoneme(g):playPhoneme(g); };
   // распознавание речи: адрес сервиса на нашем VPS; пока не задан — ребёнок слушает себя и жмёт «Сказал ✓»
   var ASR=window.SF_ASR||null;
   var MISS=0;
@@ -1383,10 +1397,15 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     if(SND.serialized) return;
     var sayNow=SND.say, idleNow=SND.whenIdle, tail=Promise.resolve(), pending=0, epoch=0;
     SND.serialized=true;
-    SND.say=function(text){ var token=epoch; pending++;
-      var job=tail.then(function(){ if(token===epoch) return sayNow(text); });
+    function enqueue(task){ var token=epoch; pending++;
+      var job=tail.then(function(){ if(token===epoch) return task(); });
       tail=job.then(function(){ pending--; },function(){ pending--; }); return tail;
-    };
+    }
+    SND.say=function(text){ return enqueue(function(){return sayNow(text);}); };
+    SND.phoneme=function(g){ return enqueue(function(){return playPhoneme(g);}); };
+    var stopNow=SND.stop, toggleNow=SND.toggle;
+    SND.stop=function(){ if(phonemeCancel)phonemeCancel();if(stopNow)stopNow(); };
+    SND.toggle=function(){ toggleNow();if(!phonicsSoundOn())SND.cancelNarration(); };
     SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
     SND.busy=function(){ return pending>0; };
     SND.narrationEpoch=function(){ return epoch; };
@@ -1572,7 +1591,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var k=0;
     var row=el('div','gph'); body.appendChild(row);
     s.g.forEach(function(g,i){ var b=el('button','gp'+(g.length>1?' dg':''),esc(g)); b.setAttribute('aria-label','Звук '+g); row.appendChild(b);
-      b.addEventListener('click',function(){ phs(g); if(i===k){ k++; b.classList.add('on'); SND.fx('step'); if(k===s.g.length) setTimeout(function(){ row.classList.add('joined'); setTimeout(next,900); },700); } else if(i>k) wrong(b); }); });
+      b.addEventListener('click',function(){ phs(g); if(i===k){ k++; b.classList.add('on'); SND.fx('step'); if(k===s.g.length) afterVoice(700,function(){ row.classList.add('joined'); afterVoice(900,next); }); } else if(i>k) wrong(b); }); });
   };
   R.letters=function(body,s,next){ R.tiles(body,{q:s.q,ru:s.ru,words:s.word.split(''),paws:s.paws,pre:s.pre},next); var b=body.querySelector('.opts'); b.classList.add('letters2'); };
   // выбрать любое → готовое предложение
@@ -1914,7 +1933,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                    dirs:{N:'w:sun',E:'w:tap',S:'w:ice',W:'w:rain'},path:['N','E','S','W'],word:'STIR',opts:[['STIR',1],['STAR'],['STOP']]}],
         steps:[{t:'magic',g:['f','l','u','t','e'],q:'Magic e changes the word! Tap the letters, then e and listen.',ru:'Взрослому: Magic E — волшебная e в конце не читается, но будит гласную: В cube, mule, cute u-e звучит /juː/, а во flute — /uː/. Соберите слово по буквам, добавьте e и послушайте слово целиком. Сначала здесь собираем буквы, а не сливаем короткие звуки.'},
                {t:'magic',g:['c','u','b','e'],q:'And this one? Cub … with a magic e!',ru:'Взрослому: cub — детёныш; с волшебной e — cube, кубик.'},
-               {t:'magic',g:['m','u','l','e'],q:'Tap the sounds and the magic e!',ru:'Взрослому: mule — мул.'},
+               {t:'magic',g:['m','u','l','e'],q:'Magic e changes the word! Tap the letters, then e and listen.',ru:'Взрослому: mule — мул.'},
                {t:'magic',g:['c','u','t','e'],q:'Cut … with a magic e!',ru:'Взрослому: cut — резать; с волшебной e — cute, милый.'},
                {t:'snowread',words:L8,q:'The final throw! Read each word — the picture comes out of the snow.',ru:'Взрослому: «Финальный бросок»: 8 слов из всех историй — ai, ee, oo, sh, oi, ar, i-e, o-e. Ребёнок читает слово сам, потом нажимает — картинка выходит из-под снега и слово звучит. Проверьте себя!'}]},
       write:{steps:[{t:'notes',pre:'I’d like a ',q:'Notes on the music stand! Make: I’d like a …',ru:'Взрослому: соберите по нотам слово CUBE. Последняя e — волшебная, она светится.',word:'CUBE'},
@@ -2325,7 +2344,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     s.g.forEach(function(g,i){ var last=i===n-1, b=mk('button','gp'+(last?' me':''),row,esc(g)); b.setAttribute('aria-label',last?'Волшебная e':'Буква '+g);
       b.addEventListener('click',function(){ if(b.classList.contains('on')) return; if(i!==k) return wrong(b); k++; b.classList.add('on');
         if(!last){ SND.fx('step'); if(k===n-1) row.classList.add('ready'); return; }
-        SND.fx('spark'); row.children[v].classList.add('long'); row.classList.add('joined'); afterVoice(500,function(){ SND.say(w); pp.classList.remove('snowy'); }); setTimeout(next,2400); }); });
+        SND.fx('spark'); row.children[v].classList.add('long'); row.classList.add('joined'); afterVoice(500,function(){ var token=SND.narrationEpoch(); pp.classList.remove('snowy'); sayThen(w,0,function(){if(token===SND.narrationEpoch())next();}); }); }); });
   };
   // «Финальный бросок» фоники: читай сам — нажми — картинка выходит из-под снега и слово звучит
   R.snowread=function(body,s,next){
