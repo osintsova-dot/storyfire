@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-phonics-queue" content="phonics-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/4/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1063,11 +1063,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
           timer=setTimeout(done,12000); s.speak(u);
         }catch(e){ done(); } });
     }
-    function say(text){
+    function say(text,asset){
       if(releaseVoice) releaseVoice();
       if(cur){ try{cur.stop();}catch(e){} cur=null; }
       if(ttsFinish){ var finishTTS=ttsFinish; try{ window.speechSynthesis.cancel(); }catch(e){} finishTTS(); }
-      var id=VOICE[key(text)]; if(!on) return Promise.resolve();
+      var id=asset?'ph:'+asset:VOICE[key(text)]; if(!on) return Promise.resolve();
       if(!id) return tts(text);  // фразы ещё без записи — голос телефона, чтобы кнопка не молчала
       if(!ctx){ pending=text; return Promise.resolve(); }
       return new Promise(function(fin){
@@ -1075,7 +1075,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
       var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
-      fetch((/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s4/':'audio/')+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+      fetch(asset || ((/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s4/':'audio/')+id+'.mp3')).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
       });
     }
@@ -1093,7 +1093,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     // Переходы ждут текущую реплику, включая новую, запущенную повторным нажатием.
     var voiceIdle=Promise.resolve();
     function whenIdle(){ var p=voiceIdle; return p.then(function(){ if(p!==voiceIdle) return whenIdle(); }); }
-    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, stop:function(){ voiceIdle=say(''); }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
+    return {music:musicSet, clip:function(asset){voiceIdle=say('',asset);return voiceIdle;}, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, stop:function(){ voiceIdle=say(''); }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
   })();
   $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
   var cur='who';
@@ -1170,21 +1170,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
-  var phonemeCancel=null;
   function phonicsSoundOn(){ var b=document.getElementById('sndBtn'); return !b||b.getAttribute('aria-pressed')!=='false'; }
-  function playPhoneme(g){
-    if(!phonicsSoundOn()) return Promise.resolve();
-    return new Promise(function(fin){
-      var a, timer, settled=false;
-      function done(){ if(settled)return;settled=true;clearTimeout(timer);if(phonemeCancel===cancel)phonemeCancel=null;fin(); }
-      function cancel(){ if(a){try{a.pause();a.currentTime=0;}catch(e){}}done(); }
-      try{a=new Audio('../../audio/ph/'+g+'.m4a');phonemeCancel=cancel;
-        a.onended=a.onerror=done;a.onplaying=function(){clearTimeout(timer);};timer=setTimeout(cancel,15000);
-        var p=a.play();if(p&&p.catch)p.catch(done);
-      }catch(e){done();}
-    });
-  }
-  var phs=function(g){ return SND.phoneme?SND.phoneme(g):playPhoneme(g); };
+  var phs=function(g){ return SND.phoneme?SND.phoneme(g):SND.clip('../../audio/ph/'+g+'.m4a'); };
   // распознавание речи: адрес сервиса на нашем VPS; пока не задан — ребёнок слушает себя и жмёт «Сказал ✓»
   var ASR=window.SF_ASR||null;
   var MISS=0;
@@ -1233,9 +1220,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       tail=job.then(function(){ pending--; },function(){ pending--; }); return tail;
     }
     SND.say=function(text){ return enqueue(function(){return sayNow(text);}); };
-    SND.phoneme=function(g){ return enqueue(function(){return playPhoneme(g);}); };
-    var stopNow=SND.stop, toggleNow=SND.toggle;
-    SND.stop=function(){ if(phonemeCancel)phonemeCancel();if(stopNow)stopNow(); };
+    SND.phoneme=function(g){ return enqueue(function(){return SND.clip('../../audio/ph/'+g+'.m4a');}); };
+    var toggleNow=SND.toggle;
     SND.toggle=function(){ toggleNow();if(!phonicsSoundOn())SND.cancelNarration(); };
     SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
     SND.busy=function(){ return pending>0; };
