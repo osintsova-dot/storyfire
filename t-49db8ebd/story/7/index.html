@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-audio-build" content="voice-review-20261106-2">
+<head><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/7/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1652,11 +1652,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
     var x=null;
     var cleanup=function(){ try{ v.pause(); }catch(e){} v.classList.remove('full'); if(x) x.remove(); sub.remove(); st.remove(); SND.music(true); };
-    var moving2=false;
+    var moving2=false, pendingAdvance=null;
     var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function advance(){
       if(moving2)return;
-      if(!v.paused&&!v.ended){ v.addEventListener('ended',advance,{once:true}); v.addEventListener('pause',advance,{once:true}); return; }
-      moving2=true; v.removeEventListener('ended',advance);v.removeEventListener('pause',advance);
+      if(!v.paused&&!v.ended){ pendingAdvance=advance;v.addEventListener('ended',advance,{once:true});return; }
+      moving2=true;pendingAdvance=null;v.removeEventListener('ended',advance);
       SND.whenIdle().then(function(){ cleanup(); next(); });
     },200);} };
     var SUB=T==='little'?SUBS_LITTLE:[], subOn=T==='little';
@@ -1671,7 +1671,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     v.addEventListener('timeupdate',upd);
     x=document.createElement('button'); x.className='vclose'; x.textContent='Свернуть ✕'; x.hidden=true; $('#stage').appendChild(x);
     var shrink=function(){ v.classList.remove('full'); x.hidden=true; sub.hidden=true; st.hidden=true; };
-    x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2(); });
+    x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2();if(pendingAdvance)pendingAdvance(); });
     b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent=''; v.classList.add('full'); x.hidden=false; st.hidden=T!=='little';
       var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ shrink(); SND.say(s.text).then(go2); }); });
     if(SND.serialized){ b.disabled=true; SND.whenIdle().then(function(){ b.disabled=false; }); }
