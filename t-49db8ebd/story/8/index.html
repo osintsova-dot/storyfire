@@ -1190,7 +1190,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   function phonicsSoundOn(){ var b=document.getElementById('sndBtn'); return !b||b.getAttribute('aria-pressed')!=='false'; }
-  var phs=function(g){ return SND.phoneme?SND.phoneme(g):SND.clip('../../audio/ph/'+g+'.m4a'); };
+  var phs=function(g){ return SND.phoneme?SND.phoneme(g):SND.clip('/t-49db8ebd/assets/phonics-20261106/sounds/'+g+'.m4a'); };
   // распознавание речи: адрес сервиса на нашем VPS; пока не задан — ребёнок слушает себя и жмёт «Сказал ✓»
   var ASR=window.SF_ASR||null;
   var MISS=0;
@@ -1239,7 +1239,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       tail=job.then(function(){ pending--; },function(){ pending--; }); return tail;
     }
     SND.say=function(text){ return enqueue(function(){return sayNow(text);}); };
-    SND.phoneme=function(g){ return enqueue(function(){return SND.clip('../../audio/ph/'+g+'.m4a');}); };
+    SND.phoneme=function(g){ return enqueue(function(){return SND.clip('/t-49db8ebd/assets/phonics-20261106/sounds/'+g+'.m4a');}); };
     var toggleNow=SND.toggle;
     SND.toggle=function(){ toggleNow();if(!phonicsSoundOn())SND.cancelNarration(); };
     SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
