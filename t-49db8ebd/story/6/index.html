@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/6/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -822,6 +822,10 @@ header.top .topr{margin-left:0}
 @keyframes cfPop{0%{transform:scale(.8)}50%{transform:scale(1.18)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.campfire.grow::before,.campfire.grow img.on{animation:none}}
 /* «Книга рассказывает»: раскрытая книга на тёмном столе, страница оживает */
+.lvid.full{inset:auto;left:var(--listen-left,0px);top:var(--listen-top,0px);width:var(--listen-width,100vw);height:var(--listen-height,100dvh);object-fit:contain;object-position:center;padding:calc(env(safe-area-inset-top,0px) + 58px) 0 calc(env(safe-area-inset-bottom,0px) + 16px);box-sizing:border-box}
+.vclose{top:calc(var(--listen-top,0px) + env(safe-area-inset-top,0px) + 14px);right:calc(var(--listen-right,0px) + max(14px,env(safe-area-inset-right,0px)))}
+.vsubbtn{top:calc(var(--listen-top,0px) + env(safe-area-inset-top,0px) + 14px);left:calc(var(--listen-left,0px) + max(14px,env(safe-area-inset-left,0px)))}
+.vsub{left:calc(var(--listen-left,0px) + var(--listen-width,100vw)/2);bottom:calc(var(--listen-bottom,0px) + env(safe-area-inset-bottom,0px) + 40px);max-width:calc(var(--listen-width,100vw) - 32px)}
 .book{position:fixed;inset:0;z-index:60;display:grid;grid-template-rows:auto 1fr auto auto;justify-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px calc(env(safe-area-inset-bottom,0px) + 16px);
   background:radial-gradient(120% 70% at 50% 35%,#4a2c17 0%,#24150b 55%,#120a05 100%);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s .45s}
 .book.open{opacity:1;visibility:visible;transition:opacity .45s ease}
@@ -1729,8 +1733,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var v=document.createElement('video'); v.className='lvid'; v.src='video/listen_'+T+'.mp4'; v.poster='../../img/'+LISTEN_POSTER+'.webp'; v.setAttribute('playsinline',''); v.preload='auto'; body.appendChild(v);
     var b=document.createElement('button'); b.className='iplay small vplay'; b.setAttribute('aria-label','Смотреть'); b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'; body.appendChild(b);
     var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
-    var x=null;
-    var cleanup=function(){ try{ v.pause(); }catch(e){} v.classList.remove('full'); if(x) x.remove(); sub.remove(); st.remove(); SND.music(true); };
+    var x=null, home=document.createComment('Listening movie');body.insertBefore(home,v);
+    var cleanup=function(){ try{ v.pause(); }catch(e){} shrink();$('#sheetX').removeEventListener('click',cleanup);if(x)x.remove();sub.remove();st.remove();home.remove();SND.music(true); };
     var moving2=false, pendingAdvance=null;
     var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function advance(){
       if(moving2)return;
@@ -1739,8 +1743,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       SND.whenIdle().then(function(){ cleanup(); next(); });
     },200);} };
     var SUB=T==='little'?SUBS_LITTLE:[], subOn=T==='little';
-    var sub=document.createElement('p'); sub.className='vsub'; sub.hidden=true; $('#stage').appendChild(sub);
-    var st=document.createElement('button'); st.className='vsubbtn'; st.hidden=true; $('#stage').appendChild(st);
+    var sub=document.createElement('p'); sub.className='vsub'; sub.hidden=true; document.body.appendChild(sub);
+    var st=document.createElement('button'); st.className='vsubbtn'; st.hidden=true; document.body.appendChild(st);
     var paintSt=function(){ st.textContent=subOn?'Субтитры ✓':'Субтитры'; st.setAttribute('aria-pressed',subOn?'true':'false'); };
     paintSt(); st.addEventListener('click',function(){ subOn=!subOn; paintSt(); upd(); });
     var upd=function(){ var t=v.currentTime, c=SUB.filter(function(q){return t>=q[0]&&t<q[1];})[0];
@@ -1748,10 +1752,17 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(!c||!subOn||!full){ sub.hidden=true; return; }
       sub.textContent=c[2]; sub.hidden=!sub.textContent; };
     v.addEventListener('timeupdate',upd);
-    x=document.createElement('button'); x.className='vclose'; x.textContent='Свернуть ✕'; x.hidden=true; $('#stage').appendChild(x);
-    var shrink=function(){ v.classList.remove('full'); x.hidden=true; sub.hidden=true; st.hidden=true; };
+    x=document.createElement('button'); x.className='vclose'; x.textContent='Свернуть ✕'; x.hidden=true; document.body.appendChild(x);
+    var viewport=window.visualViewport;
+    var fitFull=function(){
+      var w=viewport?viewport.width:innerWidth,h=viewport?viewport.height:innerHeight,left=viewport?viewport.offsetLeft:0,top=viewport?viewport.offsetTop:0;
+      [v,x,sub,st].forEach(function(e){var s=e.style;s.setProperty('--listen-width',w+'px');s.setProperty('--listen-height',h+'px');s.setProperty('--listen-left',left+'px');s.setProperty('--listen-top',top+'px');s.setProperty('--listen-right',Math.max(0,innerWidth-left-w)+'px');s.setProperty('--listen-bottom',Math.max(0,innerHeight-top-h)+'px');});
+    };
+    var trackViewport=function(on){var method=on?'addEventListener':'removeEventListener';window[method]('resize',fitFull);if(viewport){viewport[method]('resize',fitFull);viewport[method]('scroll',fitFull);}};
+    var shrink=function(){ v.classList.remove('full');trackViewport(false);if(home.parentNode)home.parentNode.insertBefore(v,home.nextSibling);x.hidden=true;sub.hidden=true;st.hidden=true; };
+    $('#sheetX').addEventListener('click',cleanup);
     x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2();if(pendingAdvance)pendingAdvance(); });
-    b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent=''; v.classList.add('full'); x.hidden=false; st.hidden=T!=='little';
+    b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent='';document.body.appendChild(v);v.classList.add('full');fitFull();trackViewport(true);x.hidden=false;st.hidden=T!=='little';
       var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ shrink(); SND.say(s.text).then(go2); }); });
     if(SND.serialized){ b.disabled=true; SND.whenIdle().then(function(){ b.disabled=false; }); }
     v.addEventListener('ended',function(){ shrink(); SND.music(true); b.hidden=false; fb.textContent=n<2?'Можно посмотреть ещё раз':''; go2(); });
