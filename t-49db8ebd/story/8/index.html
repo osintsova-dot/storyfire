@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head>
+<head><meta name="sf-audio-build" content="voice-review-20261106-2">
 <base href="/story/8/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1105,7 +1105,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     // Переходы ждут текущую реплику, включая новую, запущенную повторным нажатием.
     var voiceIdle=Promise.resolve();
     function whenIdle(){ var p=voiceIdle; return p.then(function(){ if(p!==voiceIdle) return whenIdle(); }); }
-    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
+    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, stop:function(){ voiceIdle=say(''); }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
   })();
   $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
   var cur='who';
@@ -1219,6 +1219,41 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
   // сказать фразу и идти дальше, когда она ДОЗВУЧАЛА (не раньше ms): иначе следующий экран обрывал образец на полуслове (04.11)
   function sayThen(t,ms,cb){ var t0=Date.now(); var p=null; try{ p=SND.say(t); }catch(e){} (p&&p.then?p:Promise.resolve()).then(function(){ setTimeout(cb,Math.max(0,ms-(Date.now()-t0))); },function(){ cb(); }); }
+  // Opt-in for stories with nested renderers: one narration must finish before
+  // the next one starts, including prompt -> item and answer -> feedback.
+  function enableNarrationQueue(){
+    if(SND.serialized) return;
+    var sayNow=SND.say, idleNow=SND.whenIdle, tail=Promise.resolve(), pending=0, epoch=0;
+    SND.serialized=true;
+    SND.say=function(text){ var token=epoch; pending++;
+      var job=tail.then(function(){ if(token===epoch) return sayNow(text); });
+      tail=job.then(function(){ pending--; },function(){ pending--; }); return tail;
+    };
+    SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
+    SND.busy=function(){ return pending>0; };
+    SND.narrationEpoch=function(){ return epoch; };
+    SND.cancelNarration=function(){ epoch++; if(SND.stop) SND.stop(); };
+    var close=document.querySelector&&document.querySelector('#sheetX');
+    if(close) close.addEventListener('click',SND.cancelNarration,true);
+    if(window.addEventListener) window.addEventListener('pagehide',SND.cancelNarration);
+  }
+  function afterVoice(ms,cb){ var token=SND.narrationEpoch?SND.narrationEpoch():0;
+    setTimeout(function(){ SND.whenIdle().then(function(){ if(!SND.narrationEpoch||token===SND.narrationEpoch()) cb(); }); },ms);
+  }
+  function playArrivalVideo(video,line,caption,finish){
+    var completed=false, fallbackStarted=false;
+    function done(){ if(completed)return;completed=true;finish(); }
+    function fallback(){ if(completed||fallbackStarted)return;fallbackStarted=true;
+      if(video) video.pause(); speak(caption,line).then(done);
+    }
+    if(!video)return fallback();
+    video.muted=false;video.currentTime=0;
+    video.addEventListener('ended',function(){if(!fallbackStarted)done();},{once:true});
+    video.addEventListener('error',fallback,{once:true});
+    var pr=video.play();
+    if(pr&&pr.then)pr.then(function(){if(!fallbackStarted)speak(caption,line,true);}).catch(fallback);
+    setTimeout(function(){if(video.readyState<2&&video.currentTime===0)fallback();},10000);
+  }
   var R={};
   R.mcq=function(body,s,next){
     head(body,s.q,s.ru,s.note);
@@ -1258,9 +1293,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var i=0, card=document.createElement('p'); card.className='tfq'; body.appendChild(card);
     var box=document.createElement('div'); box.className='opts tf'; body.appendChild(box); var fb=document.createElement('p'); fb.className='fb'; body.appendChild(fb);
     var keys=s.ns?[['True','T'],['False','F'],['Not stated','N']]:[['True','T'],['False','F']];
-    function show(){ if(i>=s.items.length){ setTimeout(next,500); return; } card.textContent=s.items[i][0]; speak(card,s.items[i][0]); box.innerHTML='';
+    function show(){ delete box.dataset.lock; if(i>=s.items.length){ setTimeout(next,500); return; } card.textContent=s.items[i][0]; speak(card,s.items[i][0]); box.innerHTML='';
       keys.forEach(function(k){ var b=document.createElement('button'); b.className='opt'; b.textContent=k[0]; b.dataset.ok=k[1]===s.items[i][1]?1:0; box.appendChild(b);
-        b.addEventListener('click',function(){ if(k[1]===s.items[i][1]){ b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; i++; setTimeout(show,700);} else wrong(b,fb); }); }); }
+        b.addEventListener('click',function(){ if(box.dataset.lock)return; if(k[1]===s.items[i][1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; i++; afterVoice(700,show);} else wrong(b,fb); }); }); }
     show();
   };
   // малыши: правда / неправда на слух, без чтения; на «неправду» зверь смешно падает в сугроб
@@ -1269,9 +1304,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var pp=el('div','ppic'); body.appendChild(pp);
     var rep=el('button','btn btn-ghost','▶ Ещё раз'); body.appendChild(rep); rep.addEventListener('click',function(){ SND.say(s.items[i][0]); });
     var box=el('div','opts tf yn'); body.appendChild(box); var fb=el('p','fb'); body.appendChild(fb);
-    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; pp.className='ppic'; pp.innerHTML=pic(it[2])||''; setTimeout(function(){ SND.say(it[0]); },i?200:1500); box.innerHTML='';
+    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; pp.className='ppic'; pp.innerHTML=pic(it[2])||''; afterVoice(i?200:1500,function(){ SND.say(it[0]); }); box.innerHTML='';
       [['✓','T','Правда'],['✗','F','Неправда']].forEach(function(k){ var b=el('button','opt',k[0]); b.setAttribute('aria-label',k[2]); b.dataset.ok=k[1]===it[1]?1:0; box.appendChild(b);
-        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]===it[1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(it[1]==='F') pp.classList.add('flop'); i++; setTimeout(function(){ delete box.dataset.lock; show(); },1300);} else wrong(b,fb); }); }); }
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]===it[1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(it[1]==='F') pp.classList.add('flop'); i++; afterVoice(1300,function(){ delete box.dataset.lock; show(); });} else wrong(b,fb); }); }); }
     show();
   };
   // Маугли и мышь говорят фразу; кто сказал правильно?
@@ -1372,7 +1407,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var row=el('div','opts pics emo'); body.appendChild(row);
     s.pics.forEach(function(p,i){ var b=el('button','opt',pic(p)); b.setAttribute('aria-label',p.slice(2)); row.appendChild(b);
       b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; sayWord(p); b.classList.add('yes'); setTimeout(function(){ phs(s.word[i]); var sl=slots.children[i]; sl.textContent=s.word[i]; sl.classList.add('on'); got++;
-        if(got===s.word.length) setTimeout(function(){ slots.classList.add('joined'); SND.say(s.word).then(function(){ R.mcq(body,{q:'',pics:1,opts:s.opts},next); }); },900); },900); }); });
+        if(got===s.word.length) afterVoice(900,function(){ slots.classList.add('joined'); SND.say(s.word).then(function(){ R.mcq(body,{q:'',pics:1,opts:s.opts},next); }); }); },900); }); });
   };
   // фоника: нажимай звуки по порядку → слияние
   R.blend=function(body,s,next){
@@ -1429,14 +1464,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   };
   // two (or three) baskets: tap the basket the card belongs to
   R.sort=function(body,s,next){
-    head(body,s.q,s.ru); var i=0, items=shuffle(s.items);
+    head(body,s.q,s.ru); var i=0, changing=false, items=shuffle(s.items);
     var card=document.createElement('p'); card.className='sortq'; body.appendChild(card);
     var row=document.createElement('div'); row.className='bins'+(s.bins.length>2?' b3':''); body.appendChild(row);
     var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var bins=s.bins.map(function(bn){ var b=document.createElement('button'); b.className='bin'; b.dataset.key=bn[0]; b.innerHTML='<b>'+esc(bn[1])+'</b><ul></ul>'; row.appendChild(b);
-      b.addEventListener('click',function(){ if(i>=items.length) return;
-        if(items[i][1]===bn[0]){ var li=document.createElement('li'); li.textContent=items[i][0]; b.querySelector('ul').appendChild(li); SND.fx('ok'); fb.textContent=''; i++; show(); } else wrong(b,fb); }); return b; });
-    function show(){ if(i>=items.length){ card.textContent='Well done!'; card.classList.add('ok'); setTimeout(next,1000); return; }
+      b.addEventListener('click',function(){ if(changing||i>=items.length) return;
+        if(items[i][1]===bn[0]){ changing=true; var li=document.createElement('li'); li.textContent=items[i][0]; b.querySelector('ul').appendChild(li); SND.fx('ok'); fb.textContent=''; i++; afterVoice(0,show); } else wrong(b,fb); }); return b; });
+    function show(){ changing=false; if(i>=items.length){ card.textContent='Well done!'; card.classList.add('ok'); setTimeout(next,1000); return; }
       card.textContent=items[i][0]; card.classList.remove('popin'); void card.offsetWidth; card.classList.add('popin'); SND.say(items[i][0]); bins.forEach(function(b){ b.dataset.ok=b.dataset.key===items[i][1]?1:0; }); }
     show();
   };
@@ -1449,11 +1484,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     function tick(){ var left=1-(Date.now()-t0)/(s.sec*1000); bar.style.transform='scaleX('+Math.max(0,left)+')'; fuse.classList.toggle('low',left<.3);
       if(left<=0){ clearInterval(timer); SND.fx('no'); fb.textContent='The fire went out! Ещё раз — быстрее!'; setTimeout(show,1200); } }
-    function show(){ clearInterval(timer); if(i>=s.items.length){ fuse.classList.add('win'); card.textContent=QUICK_WIN[0]; speak(card,QUICK_WIN[0]); SND.fx('fire'); box.innerHTML=''; fb.textContent=QUICK_WIN[1]; setTimeout(next,1800); return; }
+    function show(){ clearInterval(timer); timer=null; if(i>=s.items.length){ fuse.classList.add('win'); card.textContent=QUICK_WIN[0]; speak(card,QUICK_WIN[0]); SND.fx('fire'); box.innerHTML=''; fb.textContent=QUICK_WIN[1]; setTimeout(next,1800); return; }
       var it=s.items[i]; card.textContent=it.q; SND.say(it.q.replace(/_+/g,'…')); box.className='opts'+(it.pics?' pics emo':''); box.innerHTML=''; fb.textContent='';
       shuffle(it.opts).forEach(function(o){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
-        b.addEventListener('click',function(){ if(!timer) return; sayWord(o[0]); if(o[1]){ clearInterval(timer); timer=null; b.classList.add('yes'); SND.fx('ok'); i++; setTimeout(show,700); } else wrong(b,fb); }); });
-      t0=Date.now(); timer=setInterval(tick,100); }
+        b.addEventListener('click',function(){ if(!timer) return; sayWord(o[0]); if(o[1]){ clearInterval(timer); timer=null; b.classList.add('yes'); SND.fx('ok'); i++; afterVoice(700,show); } else wrong(b,fb); }); });
+      SND.whenIdle().then(function(){ t0=Date.now(); timer=setInterval(tick,100); }); }
     show();
   };
   function writingCriteria(f,v){
@@ -1573,6 +1608,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     }
     function selfOk(){ fb.textContent='Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
     rec.addEventListener('click',function(){
+      if(SND.busy&&SND.busy()){ fb.textContent='Сначала дослушай вопрос или образец, затем нажми «Скажи».'; return; }
       if(!ASR&&LASR.state!=='fail') return local();
       if(mr&&mr.state==='recording'){ mr.stop(); return; }
       if(typeof SND!=='undefined'&&SND.mic) SND.mic(true);
@@ -1631,7 +1667,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
     var x=null;
     var cleanup=function(){ try{ v.pause(); }catch(e){} v.classList.remove('full'); if(x) x.remove(); sub.remove(); st.remove(); SND.music(true); };
-    var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function(){ cleanup(); next(); },200);} };
+    var moving2=false;
+    var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function advance(){
+      if(moving2)return;
+      if(!v.paused&&!v.ended){ v.addEventListener('ended',advance,{once:true}); v.addEventListener('pause',advance,{once:true}); return; }
+      moving2=true; v.removeEventListener('ended',advance);v.removeEventListener('pause',advance);
+      SND.whenIdle().then(function(){ cleanup(); next(); });
+    },200);} };
     var SUB=T==='little'?SUBS_LITTLE:[], subOn=T==='little';
     var sub=document.createElement('p'); sub.className='vsub'; sub.hidden=true; $('#stage').appendChild(sub);
     var st=document.createElement('button'); st.className='vsubbtn'; st.hidden=true; $('#stage').appendChild(st);
@@ -1647,6 +1689,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2(); });
     b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent=''; v.classList.add('full'); x.hidden=false; st.hidden=T!=='little';
       var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ shrink(); SND.say(s.text).then(go2); }); });
+    if(SND.serialized){ b.disabled=true; SND.whenIdle().then(function(){ b.disabled=false; }); }
     v.addEventListener('ended',function(){ shrink(); SND.music(true); b.hidden=false; fb.textContent=n<2?'Можно посмотреть ещё раз':''; go2(); });
     setTimeout(go2,T==='experts'?45000:22000);
   };
@@ -1666,6 +1709,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   /* ===== История 8 · Pinocchio — «Мыши расставили таблички с враньём» (план: docs/plans/story-08.md) ===== */
   /* uses board2 */
   var T=state.track||'explorers';
+  enableNarrationQueue();
   var POSTERS={little:'09_n1_workshop',explorers:'09_n5_whale',experts:'09_n5_whale'};
   var ACTW={};
   var SID=8, HERO=['g:08_v12_pinocchio','Pinocchio','Пиноккио'], LISTEN_POSTER='09_n5_whale', QUICK_WIN=['The truth!','Правда победила!'], SUBS_LITTLE=[[0.5, 4.55, 'Я Пиноккио. Джеппетто сделал меня из дерева.'], [4.55, 7.2, 'У меня есть голова и чёрные волосы.'], [7.2, 10.09, 'У меня два глаза и два уха.'], [10.09, 11.61, 'У меня есть рот —'], [11.61, 12.86, 'я умею говорить!'], [12.86, 15.62, 'У меня две руки и две ноги —'], [15.62, 17.05, 'я умею бегать!'], [17.05, 18.96, 'А ещё у меня нос…'], [18.96, 22.3, 'длинный-предлинный нос!']];
@@ -1874,8 +1918,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var btns=shuffle(order).map(function(p){ var b=mk('button','opt',box,pic(PARTS[p])); b.dataset.p=p; b.dataset.ok=0; b.setAttribute('aria-label',p);
       b.addEventListener('click',function(){ if(i>=order.length||b.classList.contains('yes')) return; if(p!==order[i]){ sayWord(PARTS[p]); return wrong(b,fb); }
         b.classList.add('yes'); b.dataset.ok=0; var g=pup.querySelector('.p-'+p); g.classList.add('on'); SND.fx('ok'); var t='He’s got '+GIVE[p]+'!'; bub.textContent=t; SND.say(t); fb.textContent=''; i++;
-        if(i>=order.length){ rep.hidden=true; pup.classList.add('alive'); setTimeout(function(){ bub.textContent='He’s alive!'; SND.fx('spark'); SND.say('Look! He’s alive!'); setTimeout(next,1800); },1500); } else setTimeout(ask,1600); }); return b; });
-    function ask(){ bub.textContent=cur(); btns.forEach(function(b){ b.dataset.ok=b.dataset.p===order[i]?1:0; }); setTimeout(function(){ if(i<order.length) SND.say(cur()); },i?100:1400); }
+        if(i>=order.length){ rep.hidden=true; pup.classList.add('alive'); afterVoice(1500,function(){ bub.textContent='He’s alive!'; SND.fx('spark'); SND.say('Look! He’s alive!'); setTimeout(next,1800); }); } else afterVoice(1600,ask); }); return b; });
+    function ask(){ bub.textContent=cur(); btns.forEach(function(b){ b.dataset.ok=b.dataset.p===order[i]?1:0; }); afterVoice(i?100:1400,function(){ if(i<order.length) SND.say(cur()); }); }
     ask();
   };
   // «Нос растёт»: правда / ложь; на каждую ложь нос куклы вырастает (шкала)
@@ -1884,18 +1928,18 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var row=mk('div','nrow',body,puppet('all',1)+'<div class="ppic"></div>'), pup=row.querySelector('.pup'), pp=row.querySelector('.ppic');
     var card=mk('p','tfq small',body), rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'); rep.addEventListener('click',function(){ SND.say(s.items[i][0]); });
     var box=mk('div','opts tf yn',body), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
-    function show(){ if(i>=s.items.length){ fb.textContent='Truth wins!'; setTimeout(next,700); return; } var it=s.items[i]; pp.innerHTML=it[2]?pic(it[2]):''; pp.style.display=it[2]?'':'none'; card.textContent=it[0]; setTimeout(function(){ SND.say(it[0]); },i?200:1400); box.innerHTML=''; delete box.dataset.lock;
+    function show(){ if(i>=s.items.length){ fb.textContent='Truth wins!'; setTimeout(next,700); return; } var it=s.items[i]; pp.innerHTML=it[2]?pic(it[2]):''; pp.style.display=it[2]?'':'none'; card.textContent=it[0]; afterVoice(i?200:1400,function(){ SND.say(it[0]); }); box.innerHTML=''; delete box.dataset.lock;
       [['✓','T','Правда'],['✗','F','Неправда']].forEach(function(k){ var b=mk('button','opt',box,k[0]); b.setAttribute('aria-label',k[2]); b.dataset.ok=k[1]===it[1]?1:0;
         b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]!==it[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok');
           if(it[1]==='F'){ n+=1.4; pup.style.setProperty('--n',n); pup.classList.remove('grow'); void pup.offsetWidth; pup.classList.add('grow'); SND.fx('step'); fb.textContent='A lie! The nose grows!'; } else fb.textContent='True!';
-          i++; setTimeout(function(){ fb.textContent=''; show(); },1500); }); }); }
+          i++; afterVoice(1500,function(){ fb.textContent=''; show(); }); }); }); }
     show();
   };
   // какой нос — длинный или короткий: две куклы
   R.twonose=function(body,s,next){
     head(body,s.q,s.ru); var box=mk('div','opts twon',body), fb=mk('p','fb',body);
     shuffle([['long',3.4,1],['short',.7,0]]).forEach(function(o){ var b=mk('button','opt',box,puppet('all head',o[1])+'<em>'+o[0]+'</em>'); b.dataset.ok=o[2]; b.setAttribute('aria-label',o[0]+' nose');
-      b.addEventListener('click',function(){ if(box.dataset.done) return; SND.say(o[0]); if(!o[2]) return wrong(b,fb); box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); setTimeout(function(){ SND.say('A long, long nose!'); },700); setTimeout(next,2000); }); });
+      b.addEventListener('click',function(){ if(box.dataset.done) return; SND.say(o[0]); if(!o[2]) return wrong(b,fb); box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); afterVoice(700,function(){ SND.say('A long, long nose!'); }); setTimeout(next,2000); }); });
   };
   // «Саймон говорит»: Touch your nose! — нажми нос у куклы (и потрогай свой)
   R.simon=function(body,s,next){
@@ -1905,10 +1949,10 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var cmd=function(){ var w=s.items[i]; return (s.who==='his'?'Touch his ':'Simon says: touch your ')+w+'!'; };
     rep.addEventListener('click',function(){ if(i<s.items.length) SND.say(cmd()); });
     var zs=Object.keys(ZONES).map(function(z){ var b=mk('button','opt hz',wrap,''); b.dataset.z=z; b.dataset.ok=0; b.style.left=ZONES[z][0]+'%'; b.style.top=ZONES[z][1]+'%'; b.setAttribute('aria-label',z);
-      b.addEventListener('click',function(){ if(i>=s.items.length) return; SND.say(z); if(z!==s.items[i]) return wrong(b,fb); b.classList.remove('yes'); void b.offsetWidth; b.classList.add('yes'); SND.fx('ok'); fb.textContent='Yes! '+z+'!'; i++; mark(); setTimeout(ask,1300); }); return b; });
+      b.addEventListener('click',function(){ if(i>=s.items.length) return; SND.say(z); if(z!==s.items[i]) return wrong(b,fb); b.classList.remove('yes'); void b.offsetWidth; b.classList.add('yes'); SND.fx('ok'); fb.textContent='Yes! '+z+'!'; i++; mark(); afterVoice(1300,ask); }); return b; });
     function mark(){ zs.forEach(function(b){ b.dataset.ok=(i<s.items.length&&b.dataset.z===s.items[i])?1:0; }); }
     function ask(){ fb.textContent=''; if(i>=s.items.length){ rep.hidden=true; line.textContent=''; if(!s.line) return setTimeout(next,400); R.voice(sub,{q:s.line,line:s.line,want:s.want,sec:6,good:'Great! Костёр стал ярче.'},next); return; }
-      line.textContent=cmd(); mark(); var ii=i; setTimeout(function(){ if(ii===i) SND.say(cmd()); },i?100:1400); }
+      line.textContent=cmd(); mark(); var ii=i; afterVoice(i?100:1400,function(){ if(ii===i) SND.say(cmd()); }); }
     ask();
   };
   // замок малышей: нос растёт по букве; золотые буквы — настоящие, с лапкой — мышиные (лишние)
@@ -1923,7 +1967,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(j===s.seq.length-1){ ready=true; mark(); fb.textContent='Tap the gold letters!'; lad=hintLadder(body,[function(){ gold[k].classList.add('lit'); return 'Намёк: светится следующая золотая буква.'; },function(){ take(); return 'Одна буква уже есть. Дальше сами!'; },function(){ while(k<gold.length) take(); return 'Ответ: '+s.word; }],fb); } },500+j*550); });
     function mark(){ btns.forEach(function(b){ b.dataset.ok=(ready&&b===gold[k])?1:0; }); }
     function take(){ var b=gold[k]; b.classList.remove('lit'); b.classList.add('yes'); var sl=slots.children[k]; sl.textContent=s.word[k]; sl.classList.add('on'); SND.fx('step'); k++; mark();
-      if(k===s.word.length){ ready=false; if(lad) lad.stop(); SND.fx('ok'); setTimeout(function(){ slots.classList.add('joined'); SND.say(s.word.toLowerCase()); fb.textContent=s.word+'! Find the picture.'; R.mcq(body,{q:'',pics:1,opts:s.opts},next); },700); } }
+      if(k===s.word.length){ ready=false; if(lad) lad.stop(); SND.fx('ok'); afterVoice(700,function(){ slots.classList.add('joined'); SND.say(s.word.toLowerCase()); fb.textContent=s.word+'! Find the picture.'; R.mcq(body,{q:'',pics:1,opts:s.opts},next); }); } }
   };
   // мышиный след: стружки (или носы) разной длины — по порядку от короткой к длинной
   R.shavings=function(body,s,next){
@@ -1937,7 +1981,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       b.addEventListener('click',function(){ if(k>=w.length||b.classList.contains('yes')) return; phs(x[0].toLowerCase()); if(i!==k) return wrong(b,fb); take(); }); });
     function mark(){ btns.forEach(function(b,i){ b.dataset.ok=i===k?1:0; }); }
     function take(){ var b=btns[k]; b.classList.remove('lit'); b.classList.add('yes'); var sl=slots.children[k]; sl.textContent=w[k]; sl.classList.add('on'); SND.fx('step'); k++; mark();
-      if(k===w.length){ lad.stop(); SND.fx('ok'); setTimeout(function(){ slots.classList.add('joined'); SND.say(w.toLowerCase()); fb.textContent=w+'!'; if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else setTimeout(next,1200); },700); } }
+      if(k===w.length){ lad.stop(); SND.fx('ok'); afterVoice(700,function(){ slots.classList.add('joined'); SND.say(w.toLowerCase()); fb.textContent=w+'!'; if(s.opts) R.mcq(body,{q:'',pics:1,opts:s.opts},next); else setTimeout(next,1200); }); } }
     mark(); lad=hintLadder(body,[function(){ btns[k].classList.add('lit'); return s.mode==='noses'?'Намёк: самый короткий нос светится.':'Намёк: самая короткая стружка светится.'; },function(){ take(); return 'Одна буква уже есть. Дальше сам!'; },function(){ while(k<w.length) take(); return 'Ответ: '+w; }],fb);
   };
   // замок Explorers: нос вырос с лишними буквами — бери каждую вторую
@@ -1978,7 +2022,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       shuffle(it.opts).forEach(function(o){ var b=mk('button','opt',box,esc(o[0])); b.dataset.ok=o[1]?1:0;
         b.addEventListener('click',function(){ if(box.dataset.lock) return; SND.say(o[0]);
           if(!o[1]){ n+=1.4; pup.style.setProperty('--n',n); pup.classList.remove('grow'); void pup.offsetWidth; pup.classList.add('grow'); wrong(b,fb); fb.textContent='Bad advice — the nose grows!'; return; }
-          box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent='Good advice! says the Cricket.'; i++; setTimeout(function(){ fb.textContent=''; show(); },1700); }); }); }
+          box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent='Good advice! says the Cricket.'; i++; afterVoice(1700,function(){ fb.textContent=''; show(); }); }); }); }
     show();
   };
   // «В брюхе рыбы»: темно, фонарик идёт за пальцем — найди предмет
@@ -1988,9 +2032,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var line=mk('p','tline',body), rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
     rep.addEventListener('click',function(){ if(r<s.find.length) SND.say(s.find[r][1]); });
     var btns=shuffle(s.items).map(function(v,i){ var b=mk('button','opt litem',room,pic(v)); var p=spots[i%spots.length]; b.style.left=p[0]+'%'; b.style.top=p[1]+'%'; b.dataset.v=v; b.dataset.ok=0; b.setAttribute('aria-label','Предмет');
-      b.addEventListener('click',function(){ if(r>=s.find.length) return; lens(p[0],p[1]); sayWord(v); if(v!==s.find[r][0]) return wrong(b,fb); b.classList.add('yes'); SND.fx('ok'); fb.textContent='Found it!'; r++; mark(); setTimeout(ask,1500); }); return b; });
+      b.addEventListener('click',function(){ if(r>=s.find.length) return; lens(p[0],p[1]); sayWord(v); if(v!==s.find[r][0]) return wrong(b,fb); b.classList.add('yes'); SND.fx('ok'); fb.textContent='Found it!'; r++; mark(); afterVoice(1500,ask); }); return b; });
     function mark(){ btns.forEach(function(b){ b.dataset.ok=(r<s.find.length&&b.dataset.v===s.find[r][0])?1:0; }); }
-    function ask(){ if(r>=s.find.length){ line.textContent='Now we can see!'; rep.hidden=true; room.classList.add('lit'); SND.fx('spark'); setTimeout(next,1400); return; } line.textContent=s.find[r][1]; fb.textContent='Води пальцем — фонарик светит'; mark(); var rr=r; setTimeout(function(){ if(rr===r) SND.say(s.find[rr][1]); },r?100:1400); }
+    function ask(){ if(r>=s.find.length){ line.textContent='Now we can see!'; rep.hidden=true; room.classList.add('lit'); SND.fx('spark'); setTimeout(next,1400); return; } line.textContent=s.find[r][1]; fb.textContent='Води пальцем — фонарик светит'; mark(); var rr=r; afterVoice(r?100:1400,function(){ if(rr===r) SND.say(s.find[rr][1]); }); }
     function lens(x,y){ room.style.setProperty('--x',x+'%'); room.style.setProperty('--y',y+'%'); }
     function mv(e){ var rc=room.getBoundingClientRect(), t=e.touches?e.touches[0]:e; lens((t.clientX-rc.left)/rc.width*100,(t.clientY-rc.top)/rc.height*100); }
     room.addEventListener('pointermove',mv); room.addEventListener('touchmove',function(e){ mv(e); },{passive:true}); lens(50,50); ask();
@@ -2008,9 +2052,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var wd=mk('div','mword',body,s.base.split('').map(function(l,i){ return '<b class="ml'+(i===1?' mo':'')+'">'+l+'</b>'; }).join('')+'<b class="ml me">e</b>');
     var row=mk('div','opts',body), fb=mk('p','fb',body), pp=mk('div','ppic snowy',body,pic('w:'+s.word));
     var b=mk('button','opt magic',row,'e ✦'); b.dataset.ok=1; b.setAttribute('aria-label','Волшебная e');
-    setTimeout(function(){ SND.say(s.base); },1400);
+    afterVoice(1400,function(){ SND.say(s.base); });
     b.addEventListener('click',function(){ if(b.disabled) return; b.disabled=true; b.classList.add('yes'); wd.classList.add('woke'); SND.fx('spark'); setTimeout(function(){ phs('oa'); },500);
-      setTimeout(function(){ SND.say(s.word); pp.classList.remove('snowy'); fb.textContent=s.base+' → '+s.word+'! The e is quiet, but o says its name.'; nextBtn(body,'Next',next,900); },1300); });
+      afterVoice(1300,function(){ SND.say(s.word); pp.classList.remove('snowy'); fb.textContent=s.base+' → '+s.word+'! The e is quiet, but o says its name.'; nextBtn(body,'Next',next,900); }); });
   };
   // фоника со звуками-буквами; волшебная e (o-e) молчит и светится
   R.blendE=function(body,s,next){
@@ -2034,7 +2078,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       shuffle(s.rounds[r]).forEach(function(o){ var b=mk('button','opt',box,esc(o[0])); b.dataset.ok=o[1]?1:0;
         b.addEventListener('click',function(){ if(box.dataset.lock) return; SND.say(o[0]);
           if(!o[1]){ n+=1.4; pup.style.setProperty('--n',n); pup.classList.remove('grow'); void pup.offsetWidth; pup.classList.add('grow'); wrong(b,fb); fb.textContent='That’s true! The nose grows — try again.'; return; }
-          box.dataset.lock=1; b.classList.add('yes','lie'); SND.fx('ok'); fb.textContent='That’s the lie!'; r++; setTimeout(function(){ fb.textContent=''; show(); },1700); }); }); }
+          box.dataset.lock=1; b.classList.add('yes','lie'); SND.fx('ok'); fb.textContent='That’s the lie!'; r++; afterVoice(1700,function(){ fb.textContent=''; show(); }); }); }); }
     show();
   };
 
@@ -2070,8 +2114,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   $('#astart').addEventListener('click',function(){ // говорящего видео пока нет — Пиноккио говорит голосом поверх картинки
     $('#agate').classList.add('gone'); SND.music(false);
     var done=false, end=function(){ if(done) return; done=true; SND.music(true); later($('#toBoard'),200); };
-    if(avid){ avid.muted=false; avid.currentTime=0; var pr=avid.play(); if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#herSay'),ARRIVE_LINE,true); },300); }).catch(function(){ speak($('#herSay'),ARRIVE_LINE).then(end); }); avid.addEventListener('ended',end); setTimeout(end,10000); }
-    else speak($('#herSay'),ARRIVE_LINE).then(end);
+    playArrivalVideo(avid,ARRIVE_LINE,$('#herSay'),end);
   });
   var BOARD_SAY='Six frozen pages are hidden on the road to the giant fish. Roll the dice!', BADGE_RU='Значок твой! Верни книгу Пиноккио.';
   ENTER.final=function(p){ finalGlow();

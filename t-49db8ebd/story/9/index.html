@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head>
+<head><meta name="sf-audio-build" content="voice-review-20261106-2">
 <base href="/story/9/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1170,7 +1170,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     // Переходы ждут текущую реплику, включая новую, запущенную повторным нажатием.
     var voiceIdle=Promise.resolve();
     function whenIdle(){ var p=voiceIdle; return p.then(function(){ if(p!==voiceIdle) return whenIdle(); }); }
-    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
+    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, stop:function(){ voiceIdle=say(''); }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
   })();
   $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
   var cur='who';
@@ -1284,6 +1284,41 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   function el(tag,cls,html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
   // сказать фразу и идти дальше, когда она ДОЗВУЧАЛА (не раньше ms): иначе следующий экран обрывал образец на полуслове (04.11)
   function sayThen(t,ms,cb){ var t0=Date.now(); var p=null; try{ p=SND.say(t); }catch(e){} (p&&p.then?p:Promise.resolve()).then(function(){ setTimeout(cb,Math.max(0,ms-(Date.now()-t0))); },function(){ cb(); }); }
+  // Opt-in for stories with nested renderers: one narration must finish before
+  // the next one starts, including prompt -> item and answer -> feedback.
+  function enableNarrationQueue(){
+    if(SND.serialized) return;
+    var sayNow=SND.say, idleNow=SND.whenIdle, tail=Promise.resolve(), pending=0, epoch=0;
+    SND.serialized=true;
+    SND.say=function(text){ var token=epoch; pending++;
+      var job=tail.then(function(){ if(token===epoch) return sayNow(text); });
+      tail=job.then(function(){ pending--; },function(){ pending--; }); return tail;
+    };
+    SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
+    SND.busy=function(){ return pending>0; };
+    SND.narrationEpoch=function(){ return epoch; };
+    SND.cancelNarration=function(){ epoch++; if(SND.stop) SND.stop(); };
+    var close=document.querySelector&&document.querySelector('#sheetX');
+    if(close) close.addEventListener('click',SND.cancelNarration,true);
+    if(window.addEventListener) window.addEventListener('pagehide',SND.cancelNarration);
+  }
+  function afterVoice(ms,cb){ var token=SND.narrationEpoch?SND.narrationEpoch():0;
+    setTimeout(function(){ SND.whenIdle().then(function(){ if(!SND.narrationEpoch||token===SND.narrationEpoch()) cb(); }); },ms);
+  }
+  function playArrivalVideo(video,line,caption,finish){
+    var completed=false, fallbackStarted=false;
+    function done(){ if(completed)return;completed=true;finish(); }
+    function fallback(){ if(completed||fallbackStarted)return;fallbackStarted=true;
+      if(video) video.pause(); speak(caption,line).then(done);
+    }
+    if(!video)return fallback();
+    video.muted=false;video.currentTime=0;
+    video.addEventListener('ended',function(){if(!fallbackStarted)done();},{once:true});
+    video.addEventListener('error',fallback,{once:true});
+    var pr=video.play();
+    if(pr&&pr.then)pr.then(function(){if(!fallbackStarted)speak(caption,line,true);}).catch(fallback);
+    setTimeout(function(){if(video.readyState<2&&video.currentTime===0)fallback();},10000);
+  }
   var R={};
   R.mcq=function(body,s,next){
     head(body,s.q,s.ru,s.note);
@@ -1323,9 +1358,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var i=0, card=document.createElement('p'); card.className='tfq'; body.appendChild(card);
     var box=document.createElement('div'); box.className='opts tf'; body.appendChild(box); var fb=document.createElement('p'); fb.className='fb'; body.appendChild(fb);
     var keys=s.ns?[['True','T'],['False','F'],['Not stated','N']]:[['True','T'],['False','F']];
-    function show(){ if(i>=s.items.length){ setTimeout(next,500); return; } card.textContent=s.items[i][0]; speak(card,s.items[i][0]); box.innerHTML='';
+    function show(){ delete box.dataset.lock; if(i>=s.items.length){ setTimeout(next,500); return; } card.textContent=s.items[i][0]; speak(card,s.items[i][0]); box.innerHTML='';
       keys.forEach(function(k){ var b=document.createElement('button'); b.className='opt'; b.textContent=k[0]; b.dataset.ok=k[1]===s.items[i][1]?1:0; box.appendChild(b);
-        b.addEventListener('click',function(){ if(k[1]===s.items[i][1]){ b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; i++; setTimeout(show,700);} else wrong(b,fb); }); }); }
+        b.addEventListener('click',function(){ if(box.dataset.lock)return; if(k[1]===s.items[i][1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; i++; afterVoice(700,show);} else wrong(b,fb); }); }); }
     show();
   };
   // малыши: правда / неправда на слух, без чтения; на «неправду» зверь смешно падает в сугроб
@@ -1334,9 +1369,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var pp=el('div','ppic'); body.appendChild(pp);
     var rep=el('button','btn btn-ghost','▶ Ещё раз'); body.appendChild(rep); rep.addEventListener('click',function(){ SND.say(s.items[i][0]); });
     var box=el('div','opts tf yn'); body.appendChild(box); var fb=el('p','fb'); body.appendChild(fb);
-    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; pp.className='ppic'; pp.innerHTML=pic(it[2])||''; setTimeout(function(){ SND.say(it[0]); },i?200:1500); box.innerHTML='';
+    function show(){ if(i>=s.items.length){ setTimeout(next,400); return; } var it=s.items[i]; pp.className='ppic'; pp.innerHTML=pic(it[2])||''; afterVoice(i?200:1500,function(){ SND.say(it[0]); }); box.innerHTML='';
       [['✓','T','Правда'],['✗','F','Неправда']].forEach(function(k){ var b=el('button','opt',k[0]); b.setAttribute('aria-label',k[2]); b.dataset.ok=k[1]===it[1]?1:0; box.appendChild(b);
-        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]===it[1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(it[1]==='F') pp.classList.add('flop'); i++; setTimeout(function(){ delete box.dataset.lock; show(); },1300);} else wrong(b,fb); }); }); }
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(k[1]===it[1]){ box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(it[1]==='F') pp.classList.add('flop'); i++; afterVoice(1300,function(){ delete box.dataset.lock; show(); });} else wrong(b,fb); }); }); }
     show();
   };
   // Маугли и мышь говорят фразу; кто сказал правильно?
@@ -1437,7 +1472,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var row=el('div','opts pics emo'); body.appendChild(row);
     s.pics.forEach(function(p,i){ var b=el('button','opt',pic(p)); b.setAttribute('aria-label',p.slice(2)); row.appendChild(b);
       b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; sayWord(p); b.classList.add('yes'); setTimeout(function(){ phs(s.word[i]); var sl=slots.children[i]; sl.textContent=s.word[i]; sl.classList.add('on'); got++;
-        if(got===s.word.length) setTimeout(function(){ slots.classList.add('joined'); SND.say(s.word).then(function(){ R.mcq(body,{q:'',pics:1,opts:s.opts},next); }); },900); },900); }); });
+        if(got===s.word.length) afterVoice(900,function(){ slots.classList.add('joined'); SND.say(s.word).then(function(){ R.mcq(body,{q:'',pics:1,opts:s.opts},next); }); }); },900); }); });
   };
   // фоника: нажимай звуки по порядку → слияние
   R.blend=function(body,s,next){
@@ -1494,14 +1529,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   };
   // two (or three) baskets: tap the basket the card belongs to
   R.sort=function(body,s,next){
-    head(body,s.q,s.ru); var i=0, items=shuffle(s.items);
+    head(body,s.q,s.ru); var i=0, changing=false, items=shuffle(s.items);
     var card=document.createElement('p'); card.className='sortq'; body.appendChild(card);
     var row=document.createElement('div'); row.className='bins'+(s.bins.length>2?' b3':''); body.appendChild(row);
     var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var bins=s.bins.map(function(bn){ var b=document.createElement('button'); b.className='bin'; b.dataset.key=bn[0]; b.innerHTML='<b>'+esc(bn[1])+'</b><ul></ul>'; row.appendChild(b);
-      b.addEventListener('click',function(){ if(i>=items.length) return;
-        if(items[i][1]===bn[0]){ var li=document.createElement('li'); li.textContent=items[i][0]; b.querySelector('ul').appendChild(li); SND.fx('ok'); fb.textContent=''; i++; show(); } else wrong(b,fb); }); return b; });
-    function show(){ if(i>=items.length){ card.textContent='Well done!'; card.classList.add('ok'); setTimeout(next,1000); return; }
+      b.addEventListener('click',function(){ if(changing||i>=items.length) return;
+        if(items[i][1]===bn[0]){ changing=true; var li=document.createElement('li'); li.textContent=items[i][0]; b.querySelector('ul').appendChild(li); SND.fx('ok'); fb.textContent=''; i++; afterVoice(0,show); } else wrong(b,fb); }); return b; });
+    function show(){ changing=false; if(i>=items.length){ card.textContent='Well done!'; card.classList.add('ok'); setTimeout(next,1000); return; }
       card.textContent=items[i][0]; card.classList.remove('popin'); void card.offsetWidth; card.classList.add('popin'); SND.say(items[i][0]); bins.forEach(function(b){ b.dataset.ok=b.dataset.key===items[i][1]?1:0; }); }
     show();
   };
@@ -1514,11 +1549,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=document.createElement('p'); fb.className='fb'; fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     function tick(){ var left=1-(Date.now()-t0)/(s.sec*1000); bar.style.transform='scaleX('+Math.max(0,left)+')'; fuse.classList.toggle('low',left<.3);
       if(left<=0){ clearInterval(timer); SND.fx('no'); fb.textContent='The fire went out! Ещё раз — быстрее!'; setTimeout(show,1200); } }
-    function show(){ clearInterval(timer); if(i>=s.items.length){ fuse.classList.add('win'); card.textContent=QUICK_WIN[0]; speak(card,QUICK_WIN[0]); SND.fx('fire'); box.innerHTML=''; fb.textContent=QUICK_WIN[1]; setTimeout(next,1800); return; }
+    function show(){ clearInterval(timer); timer=null; if(i>=s.items.length){ fuse.classList.add('win'); card.textContent=QUICK_WIN[0]; speak(card,QUICK_WIN[0]); SND.fx('fire'); box.innerHTML=''; fb.textContent=QUICK_WIN[1]; setTimeout(next,1800); return; }
       var it=s.items[i]; card.textContent=it.q; SND.say(it.q.replace(/_+/g,'…')); box.className='opts'+(it.pics?' pics emo':''); box.innerHTML=''; fb.textContent='';
       shuffle(it.opts).forEach(function(o){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
-        b.addEventListener('click',function(){ if(!timer) return; sayWord(o[0]); if(o[1]){ clearInterval(timer); timer=null; b.classList.add('yes'); SND.fx('ok'); i++; setTimeout(show,700); } else wrong(b,fb); }); });
-      t0=Date.now(); timer=setInterval(tick,100); }
+        b.addEventListener('click',function(){ if(!timer) return; sayWord(o[0]); if(o[1]){ clearInterval(timer); timer=null; b.classList.add('yes'); SND.fx('ok'); i++; afterVoice(700,show); } else wrong(b,fb); }); });
+      SND.whenIdle().then(function(){ t0=Date.now(); timer=setInterval(tick,100); }); }
     show();
   };
   function writingCriteria(f,v){
@@ -1638,6 +1673,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     }
     function selfOk(){ fb.textContent='Скажи ещё раз вслух — взрослый слышит.'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
     rec.addEventListener('click',function(){
+      if(SND.busy&&SND.busy()){ fb.textContent='Сначала дослушай вопрос или образец, затем нажми «Скажи».'; return; }
       if(!ASR&&LASR.state!=='fail') return local();
       if(mr&&mr.state==='recording'){ mr.stop(); return; }
       if(typeof SND!=='undefined'&&SND.mic) SND.mic(true);
@@ -1696,7 +1732,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
     var x=null;
     var cleanup=function(){ try{ v.pause(); }catch(e){} v.classList.remove('full'); if(x) x.remove(); sub.remove(); st.remove(); SND.music(true); };
-    var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function(){ cleanup(); next(); },200);} };
+    var moving2=false;
+    var go2=function(){ if(!shown){ shown=true; nextBtn(body,'К вопросам',function advance(){
+      if(moving2)return;
+      if(!v.paused&&!v.ended){ v.addEventListener('ended',advance,{once:true}); v.addEventListener('pause',advance,{once:true}); return; }
+      moving2=true; v.removeEventListener('ended',advance);v.removeEventListener('pause',advance);
+      SND.whenIdle().then(function(){ cleanup(); next(); });
+    },200);} };
     var SUB=T==='little'?SUBS_LITTLE:[], subOn=T==='little';
     var sub=document.createElement('p'); sub.className='vsub'; sub.hidden=true; $('#stage').appendChild(sub);
     var st=document.createElement('button'); st.className='vsubbtn'; st.hidden=true; $('#stage').appendChild(st);
@@ -1712,6 +1754,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     x.addEventListener('click',function(){ v.pause(); shrink(); SND.music(true); b.hidden=false; go2(); });
     b.addEventListener('click',function(){ n++; SND.music(false); v.currentTime=0; v.muted=false; b.hidden=true; fb.textContent=''; v.classList.add('full'); x.hidden=false; st.hidden=T!=='little';
       var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ shrink(); SND.say(s.text).then(go2); }); });
+    if(SND.serialized){ b.disabled=true; SND.whenIdle().then(function(){ b.disabled=false; }); }
     v.addEventListener('ended',function(){ shrink(); SND.music(true); b.hidden=false; fb.textContent=n<2?'Можно посмотреть ещё раз':''; go2(); });
     setTimeout(go2,T==='experts'?45000:22000);
   };
@@ -1731,6 +1774,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   /* ===== История 9 · Mary Lennox — «Тайный сад замёрз» (план: docs/plans/story-09.md) ===== */
   /* uses board2 */
   var T=state.track||'explorers';
+  enableNarrationQueue();
   var POSTERS={little:'08_v13_mary',explorers:'09_y1_manor',experts:'09_y3_garden'};
   var ACTW={};
   var SID=9, HERO=['g:08_v13_mary','Mary','Мэри'], LISTEN_POSTER='08_v13_mary', QUICK_WIN=['It’s wick!','Сад живой!'], SUBS_LITTLE=[[0.5, 2.3, 'Я Мэри.'], [2.3, 4.06, 'Это мой сад.'], [4.06, 6.35, 'Это мой друг Дикон —'], [6.35, 7.78, 'он мой друг.'], [7.78, 10.04, 'А это его семья!'], [10.04, 11.71, 'Это его мама.'], [11.71, 13.92, 'Это его сестра.'], [13.92, 16.25, 'А это его бабушка.'], [16.25, 17.05, 'Смотри!'], [17.05, 18.14, 'Кролик!'], [18.14, 20.2, 'А это моя птичка —'], [20.2, 22.23, 'малиновка!']];
@@ -1938,10 +1982,10 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var w=mk('p','bigword mword',body,s.from.split('').map(function(c){ return '<span'+(c===s.v?' class="v"':'')+'>'+esc(c)+'</span>'; }).join('')+'<b class="me">_</b>');
     var pp=mk('div','ppic snowy',body,pic(s.pic)), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
     var e=mk('button','opt fairy',body,'e'); e.dataset.ok=1; e.setAttribute('aria-label','Волшебная e');
-    setTimeout(function(){ SND.say(s.from); },1400);
+    afterVoice(1400,function(){ SND.say(s.from); });
     e.addEventListener('click',function(){ if(e.disabled) return; e.disabled=true; e.classList.add('yes'); SND.fx('spark'); w.querySelector('.me').textContent='e'; w.classList.add('magic');
       setTimeout(function(){ phs(s.snd); },500);
-      setTimeout(function(){ SND.say(s.to); pp.classList.remove('snowy'); fb.textContent=s.from+' → '+s.to+'! The magic e woke up the '+s.v+'.'; nextBtn(body,'Next',next,600); },1300); });
+      afterVoice(1300,function(){ SND.say(s.to); pp.classList.remove('snowy'); fb.textContent=s.from+' → '+s.to+'! The magic e woke up the '+s.v+'.'; nextBtn(body,'Next',next,600); }); });
   };
   // семечки-звуки: нажимай по порядку; волшебная e молчит, но будит гласную
   R.mblend=function(body,s,next){
@@ -2006,7 +2050,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(i>=items.length){ card.textContent=s.win||'The garden is growing!'; card.classList.add('ok'); bed.classList.add('bloom'); SND.fx('spark'); setTimeout(next,1600); return; }
       var it=items[i]; card.textContent=it[0]; card.classList.remove('popin'); void card.offsetWidth; card.classList.add('popin'); SND.say(it[0]);
       bins.forEach(function(bn){ var b=mk('button','opt',box,esc(bn[1])); b.dataset.ok=bn[0]===it[1]?1:0;
-        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(bn[0]!==it[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; plants[i].classList.add('up'); i++; setTimeout(show,800); }); }); }
+        b.addEventListener('click',function(){ if(box.dataset.lock) return; if(bn[0]!==it[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; plants[i].classList.add('up'); i++; afterVoice(800,show); }); }); }
     show();
   };
   // «Времена года»: круг сезонов поворачивается к нужному времени года
@@ -2020,11 +2064,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(i>=s.items.length){ line.textContent=s.win; SND.say(s.win); SND.fx('spark'); setTimeout(next,1700); return; }
       var it=s.items[i]; turn(it[0]); SND.fx('whoosh');
       line.innerHTML=it[1].indexOf('{0}')>=0?esc(it[1]).replace('{0}','<span class="gap cur">   </span>'):esc(it[1]);
-      setTimeout(function(){ SND.say(it[1].replace('{0}','…')); },700);
+      afterVoice(700,function(){ SND.say(it[1].replace('{0}','…')); });
       box.className='opts'+(it[3]?' pics emo':'');
       shuffle(it[2]).forEach(function(o){ var pv=pic(o[0]), b=mk('button','opt',box,pv||esc(o[0])); b.dataset.ok=o[1]?1:0; if(pv) b.setAttribute('aria-label',name9(o[0]));
         b.addEventListener('click',function(){ if(box.dataset.lock) return; if(pv) sayWord(o[0]); if(!o[1]) return wrong(b,fb); box.dataset.lock=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent='';
-          var g=line.querySelector('.gap'); if(g){ g.textContent=o[0]; g.classList.add('ok'); SND.say(it[1].replace('{0}',o[0])); } i++; setTimeout(show,1700); }); }); }
+          var g=line.querySelector('.gap'); if(g){ g.textContent=o[0]; g.classList.add('ok'); SND.say(it[1].replace('{0}',o[0])); } i++; afterVoice(1700,show); }); }); }
     show();
   };
   // «Малиновка ведёт» по буквам (мышиный след): малиновка прыгает на букву — нажми туда же
@@ -2080,12 +2124,12 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var map=mk('div','gmap',body);
     s.spots.forEach(function(p){ var b=mk('button','opt gspot',map,(p[3]?pic(p[3]):'')+'<em>'+esc(p[1])+'</em>'); b.style.left=p[2][0]+'%'; b.style.top=p[2][1]+'%'; b.dataset.ok=0; spots[p[0]]=b; b.setAttribute('aria-label',p[1]);
       b.addEventListener('click',function(){ if(i>=s.stops.length||map.dataset.lock) return; if(p[0]!==s.stops[i][1]) return wrong(b,fb); map.dataset.lock=1; b.dataset.ok=0; b.classList.add('yes'); SND.fx('ok'); fb.textContent='';
-        bird.style.left=p[2][0]+'%'; bird.style.top=(p[2][1]-7)+'%'; bird.classList.remove('hop'); void bird.offsetWidth; bird.classList.add('hop'); i++; setTimeout(function(){ delete map.dataset.lock; show(); },1500); }); });
+        bird.style.left=p[2][0]+'%'; bird.style.top=(p[2][1]-7)+'%'; bird.classList.remove('hop'); void bird.offsetWidth; bird.classList.add('hop'); i++; afterVoice(1500,function(){ delete map.dataset.lock; show(); }); }); });
     var bird=mk('span','rbird',map,pic('i:robin')); bird.style.left=s.start[0]+'%'; bird.style.top=s.start[1]+'%';
     var line=mk('p','gtext',body), rep=mk('button','btn btn-ghost',body,'▶ Ещё раз'), fb=mk('p','fb',body); fb.setAttribute('aria-live','polite');
     rep.addEventListener('click',function(){ if(i<s.stops.length) SND.say(s.stops[i][0]); });
     function show(){ if(i>=s.stops.length){ line.textContent=s.win; rep.hidden=true; SND.say(s.win); SND.fx('spark'); setTimeout(next,1800); return; }
-      var st=s.stops[i]; line.textContent='“'+st[0]+'”'; SND.fx('squeak'); setTimeout(function(){ SND.say(st[0]); },300); spots[st[1]].dataset.ok=1; }
+      var st=s.stops[i]; line.textContent='“'+st[0]+'”'; SND.fx('squeak'); afterVoice(300,function(){ SND.say(st[0]); }); spots[st[1]].dataset.ok=1; }
     show();
   };
 
@@ -2121,8 +2165,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   $('#astart').addEventListener('click',function(){ // говорящего видео пока нет — Мэри говорит голосом поверх картинки
     $('#agate').classList.add('gone'); SND.music(false);
     var done=false, end=function(){ if(done) return; done=true; SND.music(true); later($('#toBoard'),200); };
-    if(avid){ avid.muted=false; avid.currentTime=0; var pr=avid.play(); if(pr&&pr.catch) pr.then(function(){ setTimeout(function(){ speak($('#herSay'),ARRIVE_LINE,true); },300); }).catch(function(){ speak($('#herSay'),ARRIVE_LINE).then(end); }); avid.addEventListener('ended',end); setTimeout(end,10000); }
-    else speak($('#herSay'),ARRIVE_LINE).then(end);
+    playArrivalVideo(avid,ARRIVE_LINE,$('#herSay'),end);
   });
   var BOARD_SAY='Six frozen pages are hidden in the snowy garden. Jump from stump to stump — roll the dice!', BADGE_RU='Значок твой! Верни книгу Мэри.';
   ENTER.final=function(p){ finalGlow();
