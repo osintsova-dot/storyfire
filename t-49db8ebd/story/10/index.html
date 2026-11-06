@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-audio-build" content="voice-review-20261106-3"><meta name="sf-king-build" content="mouse-king-20261106">
 <base href="/story/10/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1315,7 +1315,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var shuffle=function(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x;} return a; };
   var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
   // картинки: i: предметы, a: действия (лист GPT, пока может не быть — тогда слово), w: картинки фоники, g: сцены, m: мышь
-  var pic=function(v){ v=String(v); var k=v.slice(2);
+  var pic=function(v){ v=String(v); var k=v.slice(2); if(v==="g:h_mouse_king")return '<img src="/t-49db8ebd/assets/mouse-king-20261106/hero.webp" alt="Мышиный король — семь голов и семь корон">';
     if(v.indexOf('i:')===0) return '<img src="../../img/items/'+k+'.webp" alt="'+k+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(WORDS[k]||k)+'</span>\'">';
     if(v.indexOf('a:')===0) return '<img src="../../img/items/act_'+k+'.webp" alt="'+(ACTW[k]||k)+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(ACTW[k]||k)+'</span>\'">';
     if(v.indexOf('w:')===0) return '<img src="../../img/ph/w_'+k+'.jpg" alt="'+k+'">';
@@ -2748,7 +2748,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   ($('[data-scene="end"] .cta')||$('[data-scene="end"]')).appendChild(replay);
   replay.addEventListener('click',function(){freshRun();location.reload();});
 
-var BOOK={"title": "The Nutcracker", "author": "E. T. A. Hoffmann", "pages": [{"v": "video/book_1.mp4", "a": "audio/b10_1.mp3", "en": "On Christmas Eve Marie found a funny wooden Nutcracker under the tree. She loved him at once.", "ru": "В сочельник Мари нашла под ёлкой смешного деревянного Щелкунчика и сразу его полюбила.", "t": [0.0, 0.31, 0.92, 1.53, 1.83, 2.14, 2.44, 3.05, 3.66, 4.58, 5.19, 5.5, 6.48, 6.81, 7.47, 7.81, 8.14]}, {"v": "video/book_2.mp4", "a": "audio/b10_2.mp3", "en": "At midnight the Mouse King and his army came out of the walls!", "ru": "В полночь из стен вышел Мышиный король со своим войском!", "t": [0.0, 0.38, 1.15, 1.53, 1.91, 2.3, 2.68, 3.06, 3.83, 4.21, 4.59, 4.98, 5.36]}, {"v": "video/book_3.mp4", "a": "audio/b10_3.mp3", "en": "The Nutcracker and his soldiers fought bravely. Marie threw her slipper at the Mouse King! Now the Nutcracker needs your help!", "ru": "Щелкунчик и солдатики храбро сражались. Мари бросила в Мышиного короля свою туфельку! А теперь Щелкунчику нужна твоя помощь!", "t": [0.0, 0.36, 1.44, 1.8, 2.16, 2.88, 3.24, 4.64, 5.04, 5.45, 5.85, 6.66, 7.07, 7.47, 7.88, 8.83, 9.28, 9.72, 11.07, 11.51, 11.96]}]};
+var BOOK={"title": "The Nutcracker", "author": "E. T. A. Hoffmann", "pages": [{"v": "video/book_1.mp4", "a": "audio/b10_1.mp3", "en": "On Christmas Eve Marie found a funny wooden Nutcracker under the tree. She loved him at once.", "ru": "В сочельник Мари нашла под ёлкой смешного деревянного Щелкунчика и сразу его полюбила.", "t": [0.0, 0.31, 0.92, 1.53, 1.83, 2.14, 2.44, 3.05, 3.66, 4.58, 5.19, 5.5, 6.48, 6.81, 7.47, 7.81, 8.14]}, {"v": "/t-49db8ebd/assets/mouse-king-20261106/book_2.mp4", "a": "audio/b10_2.mp3", "en": "At midnight the Mouse King and his army came out of the walls!", "ru": "В полночь из стен вышел Мышиный король со своим войском!", "t": [0.0, 0.38, 1.15, 1.53, 1.91, 2.3, 2.68, 3.06, 3.83, 4.21, 4.59, 4.98, 5.36]}, {"v": "video/book_3.mp4", "a": "audio/b10_3.mp3", "en": "The Nutcracker and his soldiers fought bravely. Marie threw her slipper at the Mouse King! Now the Nutcracker needs your help!", "ru": "Щелкунчик и солдатики храбро сражались. Мари бросила в Мышиного короля свою туфельку! А теперь Щелкунчику нужна твоя помощь!", "t": [0.0, 0.36, 1.44, 1.8, 2.16, 2.88, 3.24, 4.64, 5.04, 5.45, 5.85, 6.66, 7.07, 7.47, 7.88, 8.83, 9.28, 9.72, 11.07, 11.51, 11.96]}]};
 /* «Костёр историй»: доступ по коду семьи и открытие историй по датам.
    Сервер — ss-pay (проверка кода идёт ручкой /pay/status {sf_code}); сначала российский шлюз Яндекса, потом workers.dev.
    Код храним в localStorage sf_code; удачную проверку — sf_ok (время), чтобы без связи не выкидывало из игры. */
