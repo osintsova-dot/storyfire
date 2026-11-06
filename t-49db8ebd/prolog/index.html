@@ -681,7 +681,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     // Переходы ждут текущую реплику, включая новую, запущенную повторным нажатием.
     var voiceIdle=Promise.resolve();
     function whenIdle(){ var p=voiceIdle; return p.then(function(){ if(p!==voiceIdle) return whenIdle(); }); }
-    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
+    return {music:musicSet, say:function(t){ lastKey=key(t); voiceIdle=say(t); return voiceIdle; }, stop:function(){ voiceIdle=say(''); }, whenIdle:whenIdle, fx:fx, scene:setScene, toggle:toggle, paint:paint, mic:mic};
   })();
   $('#sndBtn').addEventListener('click',function(e){ e.stopPropagation(); SND.toggle(); }); SND.paint();
   var cur='library';
