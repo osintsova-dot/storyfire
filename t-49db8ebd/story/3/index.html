@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/3/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -980,7 +980,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    fetch('audio/voice.json?v=1793929691').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    fetch('/t-49db8ebd/assets/voice-refresh-20261106/s3/voice.json').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1044,7 +1044,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
       var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
-      fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+      fetch((/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s3/':'audio/')+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
       });
     }
@@ -1725,7 +1725,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'memory',q:'How often? Find the pairs.',ru:'Как часто? Соедини слово и шкалу.',pairs:[['always','●●●●'],['often','●●●○'],['sometimes','●●○○'],['never','○○○○']]}]
              .concat(nameIt([['a:makebed','What does Gerda do? She …','make|bed','She makes the bed.'],['a:waterplants','And now?','water','She waters the plants.'],['a:laytable','And now?','lay|table','She lays the table.'],['a:feedpets','And now?','feed','She feeds the pets.']],'Скажи, что делает Герда: She makes… / She waters… — с -s! И картинка оттает.'))},
       grammar:{steps:[{t:'rule',q:'Gerda’s rule',ru:'Он / она — глагол с -s (wash → washes). Always, often, sometimes, never стоят ПЕРЕД глаголом, но ПОСЛЕ is.',rows:[['I water → she waters','Gerda waters the roses.'],['wash → washes, tidy → tidies','Kay washes up.'],['always / often / sometimes / never + глагол','Grandma often lays the table.'],['is + always / never','Kay is never late.']]},
-               {t:'sort',q:'Right or wrong? The mice wrote some of them!',ru:'Верно или мыши ошиблись?',bins:[['ok','Right ✓'],['bad','The mice! ✗']],items:[['She waters the plants.','ok'],['She water the plants.','bad'],['Kay is never late.','ok'],['Kay is never lates.','bad'],['He washes up.','ok'],['He wash up.','bad']]},
+               {t:'sort',q:'Right or wrong? The mice wrote some of them!',ru:'Верно или мыши ошиблись?',bins:[['ok','Right ✓'],['bad','The mice! ✗']],items:[['She waters the plants.','ok'],['She water the plants.','bad'],['Kay is never late.','ok'],['Kay are never late.','bad'],['He washes up.','ok'],['He wash up.','bad']]},
                {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей: нажми на неверное слово и выбери правильное.',words:['Kay','are never','late.'],bad:1,opts:[['is never',1],['never are'],['not never']],ok:'Kay is never late.'},
                {t:'fix',q:'And here?',ru:'И здесь ошибка.',words:['She','water','the plants.'],bad:1,opts:[['waters',1],['watering'],['wateres']],ok:'She waters the plants.'},
                {t:'gaps',q:'Ask about Kay.',ru:'Вопрос: does + глагол БЕЗ -s.',text:'How often {0} Kay wash up? — He {1} washes up. {2} he make his bed? — No, he doesn’t.',gaps:[[['does','do','is'],'does'],[['sometimes','sometime','not'],'sometimes'],[['Does','Do','Is'],'Does']]},

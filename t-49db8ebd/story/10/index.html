@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3"><meta name="sf-king-build" content="mouse-king-20261106">
+<head><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3"><meta name="sf-king-build" content="mouse-king-20261106">
 <base href="/story/10/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1180,7 +1180,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    fetch('audio/voice.json?v=1793791171').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    fetch('/t-49db8ebd/assets/voice-refresh-20261106/s10/voice.json').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1244,7 +1244,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
       var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
-      fetch('audio/'+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+      fetch((/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s10/':'audio/')+id+'.mp3').then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
       });
     }
@@ -1820,7 +1820,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       b0.addEventListener('click',function(){ n0++; SND.music(false); f0.textContent=''; SND.say(s.text).then(function(){ SND.music(true); f0.textContent=n0<2?'Можно послушать ещё раз':''; go0(); }); });
       setTimeout(go0,T==='experts'?40000:20000); return;
     }
-    var v=document.createElement('video'); v.className='lvid'; v.src=T==='experts'?'/t-49db8ebd/assets/mice-circles-20261106/listen_experts.mp4':'video/listen_'+T+'.mp4'; v.poster='../../img/'+LISTEN_POSTER+'.webp'; v.setAttribute('playsinline',''); v.preload='auto'; body.appendChild(v);
+    var v=document.createElement('video'); v.className='lvid'; v.src=T==='experts'?'/t-49db8ebd/assets/mice-circles-20261106/listen_experts.mp4':(T==='little'?'/t-49db8ebd/assets/voice-refresh-20261106/s10/listen_little.mp4':'video/listen_'+T+'.mp4'); v.poster='../../img/'+LISTEN_POSTER+'.webp'; v.setAttribute('playsinline',''); v.preload='auto'; body.appendChild(v);
     var b=document.createElement('button'); b.className='iplay small vplay'; b.setAttribute('aria-label','Смотреть'); b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'; body.appendChild(b);
     var fb=document.createElement('p'); fb.className='fb'; fb.textContent='Нажми и слушай'+(HERO[2]?' '+HERO[2]:''); body.appendChild(fb); var n=0, shown=false;
     var x=null, home=document.createComment('Listening movie');body.insertBefore(home,v);
@@ -1878,7 +1878,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   enableNarrationQueue();
   var POSTERS={little:'09_k1_gift',explorers:'09_k5_sweets',experts:'09_k2_midnight'};
   var ACTW={mix:'mix',add:'add',stir:'stir',pour:'pour',bake:'bake'};
-  var SID=10, HERO=['g:08_v14_nutcracker','Nutcracker','Щелкунчика'], LISTEN_POSTER='09_k1_gift', QUICK_WIN=['Forward! The mice ran away!','Вперёд! Мыши разбежались!'], SUBS_LITTLE=[[0.5, 2.5, 'Рождество!'], [2.5, 5.44, 'Посмотри на ёлку и большую звезду.'], [5.44, 7.68, 'Под ёлкой подарки.'], [7.68, 10.08, 'Я хочу игрушечного солдатика!'], [10.08, 12.02, 'Это Щелкунчик.'], [12.02, 13.46, 'Он игрушка!'], [13.46, 14.58, 'Ой —'], [14.58, 15.72, 'мышь!'], [15.72, 17.12, 'Семь мышей!'], [17.12, 19.64, 'И Мышиный король!']];
+  var SID=10, HERO=['g:08_v14_nutcracker','Nutcracker','Щелкунчика'], LISTEN_POSTER='09_k1_gift', QUICK_WIN=['Forward! The mice ran away!','Вперёд! Мыши разбежались!'], SUBS_LITTLE=[[1.02, 2.12, "Рождество!"], [2.12, 5.82, "Посмотри на ёлку и большую звезду."], [5.82, 8.02, "Под ёлкой подарки."], [8.02, 10.02, "Я хочу игрушечного солдатика!"], [10.02, 12.3, "Это Щелкунчик."], [12.3, 13.52, "Он игрушка!"], [13.52, 14.57, "Ой —"], [14.57, 16.02, "мышь!"], [16.02, 17.34, "Семь мышей!"], [17.34, 19.126, "И Мышиный король!"]];
   WORDS.present='a present'; WORDS.xmastree='a Christmas tree'; WORDS.snowman='a snowman'; WORDS.toysoldier='a toy soldier'; WORDS.mouseking='the Mouse King'; WORDS.lollipop='sweets'; WORDS.candycane='a candy cane';
   WORDS.walnut='nuts'; WORDS.flour='flour'; WORDS.chocolate='chocolate'; WORDS.fire='fire'; WORDS.drum2='a drum'; WORDS.cannon='a cannon'; WORDS.owl='an owl'; WORDS.cocoa='hot cocoa'; WORDS.musicbox='a music box';
   WORDS.grandclock='a clock'; WORDS.gingerbread='a gingerbread man'; WORDS.slipper='a slipper'; WORDS.crown2='a crown'; WORDS.goldcoin2='a gold coin'; WORDS.marzipan='a marzipan pig'; WORDS.nutcracker='the Nutcracker';
