@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/4/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1153,7 +1153,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var shuffle=function(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x;} return a; };
   var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
   // картинки: i: предметы, a: действия (лист GPT, пока может не быть — тогда слово), w: картинки фоники, g: сцены, m: мышь
-  var pic=function(v){ v=String(v); var k=v.slice(2);
+  var REVIEW_PICS={"w:pen":"/t-49db8ebd/assets/content-art-20261106/pen.jpg","w:neck":"/t-49db8ebd/assets/content-art-20261106/neck.jpg","w:tail":"/t-49db8ebd/assets/content-art-20261106/tail.jpg","w:wing":"/t-49db8ebd/assets/content-art-20261106/wing.jpg","i:biscuits":"/t-49db8ebd/assets/content-art-20261106/biscuits.webp"};
+  var pic=function(v){ v=String(v); var k=v.slice(2); if(REVIEW_PICS[v])return '<img src="'+REVIEW_PICS[v]+'" alt="'+k+'">';
     if(v.indexOf('i:')===0) return '<img src="../../img/items/'+k+'.webp" alt="'+k+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(WORDS[k]||k)+'</span>\'">';
     if(v.indexOf('a:')===0) return '<img src="../../img/items/act_'+k+'.webp" alt="'+(ACTW[k]||k)+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(ACTW[k]||k)+'</span>\'">';
     if(v.indexOf('w:')===0) return '<img src="../../img/ph/w_'+k+'.jpg" alt="'+k+'">';
