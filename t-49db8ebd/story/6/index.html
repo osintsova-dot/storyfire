@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/6/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 6 · Peter Pan · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s6.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s6.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -920,7 +920,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -962,7 +962,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Путь в Нетинебудет">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s6.webp" alt="Тропа из пней от костра по заснеженному острову Нетинебудет к Дому под землёй">
+      <img src="../../img/10_board_bg_s6.webp" alt="Тропа из пней от костра по заснеженному острову Нетинебудет к Дому под землёй">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -1005,7 +1005,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">Тень Питера вернулась — Венди пришила её крепко-накрепко. А мыши убежали и уронили ещё один кусок старой карты… Завтра к костру придёт Джим Хокинс.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -1174,7 +1174,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s6.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1235,6 +1235,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1443,7 +1448,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1512,6 +1517,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1529,6 +1542,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1586,12 +1600,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1751,12 +1766,12 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     },
     explorers:{
       listen:{video:1,prompt:'Peter shows you the night sky. Listen!', ru:'Питер рассказывает про ночное небо: что самое большое, самое яркое, самое быстрое.',
-        text:'Tick-tock! Can you hear the crocodile? He swallowed a clock! Now look at the night sky. The moon is the biggest light in the sky. That star is the brightest star — it’s the way to Neverland! Look, a comet! The comet is the fastest thing in the sky. And that little planet over there is the farthest. Second to the right, and straight on till morning!',
+        text:'Tick-tock! Can you hear the crocodile? He swallowed a clock! Now look at the night sky. The moon is the biggest light in the sky. That star is the brightest star — it’s the way to Neverland! Look, a comet! The comet is the fastest thing in this picture. And that little planet over there is the farthest. Second to the right, and straight on till morning!',
         warm:[{t:'voice',pic:'g:09_p1_shadow',q:'Is Wendy brave?',want:['yes','no','is','isnt'],line:'Yes, she is!',sec:6,ru:'Повтор Дороти: краткий ответ голосом — Yes, she is / No, she isn’t.'},
               {t:'voice',pic:'i:fairy',q:'Does Tinker Bell like Wendy?',want:['yes','no','does','doesnt'],line:'No, she doesn’t!',sec:6,ru:'Does …? — отвечаем с does: Yes, she does / No, she doesn’t.'}],
         steps:[{t:'croc',q:'The Crocodile’s clock is ticking! Answer before it comes.',ru:'Часы Крокодила тикают: отвечай, пока он не подплыл. Не успел — не страшно, просто ещё раз.',sec:14,
-                 items:[{q:'What is the biggest light in the sky?',opts:[['the moon',1],['a star'],['a comet']]},{q:'What is the fastest thing in the sky?',opts:[['the comet',1],['the planet'],['the moon']]},{q:'What is the farthest?',opts:[['the little planet',1],['the moon'],['the comet']]}]},
-               {t:'stars',q:'Which star is the brightest? Tap it!',ru:'Какая звезда самая яркая? Это дорога в Нетинебудет.',n:5,line:'That’s the brightest star! Second to the right, and straight on till morning!'}]},
+                 items:[{q:'What is the biggest light in the sky?',opts:[['the moon',1],['a star'],['a comet']]},{q:'What is the fastest thing in Peter’s picture?',opts:[['the comet',1],['the planet'],['the moon']]},{q:'What is the farthest?',opts:[['the little planet',1],['the moon'],['the comet']]}]},
+               {t:'stars',q:'Which star is the brightest? Tap it!',ru:'Какая звезда самая яркая? Это дорога в Нетландия.',n:5,line:'That’s the brightest star! Second to the right, and straight on till morning!'}]},
       vocab:{steps:[{t:'shadows',words:1,q:'Shadows! What is it?',ru:'Тени: узнай предмет по тени и выбери слово.',
                  items:[['i:star','star','звезда'],['i:moon','moon','луна'],['w:sky','sky','небо'],['i:planet','planet','планета'],['i:comet','comet','комета'],['i:rocket','rocket','ракета']]},
                {t:'memory',q:'Find the pairs: a word and its picture.',ru:'«Найди пару»: слово + картинка. Открытая пара говорит фразу урока.',
@@ -1776,7 +1791,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         text:'One night Peter Pan flew into the nursery in London. He was looking for his shadow. Wendy found it and sewed it back on. “Come with me to Neverland!” said Peter. “There are mermaids and pirates, and you will never grow up!” Tinker Bell gave them some fairy dust, and the children flew out of the window. The sky was dark, and the stars were very shiny. “Where is Neverland?” asked Wendy. Peter pointed to the brightest star. “Second to the right, and straight on till morning.” They flew for a very long time. It was the longest and the most exciting night of their lives. In the morning they saw a green island in a blue sea. It was Neverland!',
         lock:{t:'sym',answer:'THE BRIGHTEST STAR',q:'Shadow letters on the door! Use the key and write it.',ru:'Тени-буквы: каждая тень — буква, только размытая и повёрнутая. Найди такую же тень в ключе и напиши ответ.'},
         steps:[{t:'tf',q:'True or false?',ru:'Правда или нет?',items:[['Peter was looking for his shadow.','T'],['The children went to Neverland by ship.','F'],['They saw the island in the morning.','T']]},
-               {t:'seamap',q:'The Neverland map! Follow Peter’s way.',ru:'Карта Нетинебудет: найди путь по тексту и поставь крестик там, где остров.',
+               {t:'seamap',q:'The Neverland map! Follow Peter’s way.',ru:'Карта Нетландия: найди путь по тексту и поставь крестик там, где остров.',
                  steps:[['The nursery window in London is at A5. Tap it!','A5'],['Second to the right: fly two squares to the right.','C5'],['Straight on till morning: fly three squares up — and put an X!','C2']]},
                {t:'retell',q:'Tell the Book: how did they fly to Neverland?',ru:'Перескажи по картинкам: 4 предложения. Используй опорные слова.',
                  pics:[['g:09_p1_shadow','window, London'],['g:09_p2_fly','the brightest star'],['i:star','second to the right'],['g:09_p3_island','Neverland, morning']],
@@ -1823,14 +1838,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       write:{steps:[{t:'write',area:1,poster:'card',cardTitle:'INVITATION',cardPic:'i:fairydust',doneMsg:'Приглашение у Венди. «I’ll be there!»',q:'Write an invitation from Wendy to a friend (25–35 words).',ru:'Напиши приглашение от Венди: куда (to …), когда (at / tomorrow / tonight …) и что взять (Bring …). Будущее время: will, going to, might или -ing.',
                fields:[{ph:'Dear …, we’re flying to Neverland …',need:/\b(will|’ll|'ll|going to|might|(’re|'re|are|is|am|’m|'m) \w+ing)\b/i,why:'Нужно будущее: we’re flying… / we’re going to… / we will… / we might…',
                  also:[/\bto \w+/i,/\b(at|on|tonight|tomorrow|midnight|next|o’clock|o'clock|\d)\b/i,/\bbring\b/i,/^(?![\s\S]*\b(will|might|won’t|won't) to\b)/i],alsoWhy:'Нужны 3 пункта: куда (to …), когда (at / tomorrow …) и что взять (Bring …). И без «will to»!',min:25,max:35}],
-               model:'Dear Wendy, we’re flying to Neverland tomorrow at midnight! We’re going to meet the mermaids and we might see the pirates. Please bring a warm coat and a candle. You will love it! Peter'}]},
+               model:'Dear Jane, we’re flying to Neverland tomorrow at midnight! We’re going to meet the mermaids and we might see the pirates. Please bring a warm coat and a candle. You will love it! Wendy'}]},
       speak:{steps:[{t:'voice',pic:'g:09_p1_shadow',q:'Wendy asks: What are you going to do in the summer?',want:['going','will','might'],line:'In the summer I’m going to visit my grandparents.',sec:9,ru:'Интервью с Венди. Отвечай полным предложением.'},
                {t:'voice',pic:'g:09_p1_shadow',q:'What will you be when you grow up?',want:['will','be','going','want'],line:'When I grow up, I will be a pilot.',sec:9},
                {t:'voice',pic:'g:09_p1_shadow',q:'What might you do tomorrow?',want:['might','maybe'],line:'Tomorrow I might go to the cinema.',sec:9}]}
     }
   };
   var ART={listen:'09_p1_shadow',vocab:'09_p2_fly',grammar:'09_p5_happy',read:'09_p3_island',write:'09_p1_shadow',speak:'09_p4_hook'};
-  var ST=[['listen','Listening','Пропала тень','Listen'],['vocab','Vocabulary','Тени','Words'],['grammar','Grammar','Счастливые мысли','Grammar'],['read','Reading','Путь в Нетинебудет','Read'],['write','Writing','Письмо для Венди','Write'],['speak','Speaking','Крик петуха','Speak']];
+  var ST=[['listen','Listening','Пропала тень','Listen'],['vocab','Vocabulary','Тени','Words'],['grammar','Grammar','Счастливые мысли','Grammar'],['read','Reading','Путь в Нетландия','Read'],['write','Writing','Письмо для Венди','Write'],['speak','Speaking','Крик петуха','Speak']];
 
   /* --- «Битва за значок» --- */
   var CHECK={
@@ -1852,7 +1867,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   };
   var REPORT={
     little:{words:'star, moon, sky, bird, cloud, fairy, window, shadow + числа 1–12',grammar:'How many …? · There are five stars · There’s one moon (не five star)',more:'Фоника: повтор (ten, six, sun, jet) + ou, oi (out, cloud, mouth, coin, oil)'},
-    explorers:{words:'star, planet, moon, comet, rocket, sky, shiny, bright, far, fast',grammar:'превосходная степень: the biggest, the shiniest, the most beautiful (не the most big)',more:'Чтение: «Second to the Right» + карта Нетинебудет и пересказ, звёздная карта для Венди'},
+    explorers:{words:'star, planet, moon, comet, rocket, sky, shiny, bright, far, fast',grammar:'превосходная степень: the biggest, the shiniest, the most beautiful (не the most big)',more:'Чтение: «Second to the Right» + карта Нетландия и пересказ, звёздная карта для Венди'},
     experts:{words:'plan, dream, adventure, island, pirate, mermaid, explore, invite, stay up late, come back, grow up, forever, next week, the day after tomorrow',grammar:'будущее: going to · will / won’t · might · Present Continuous (договорённость)',more:'Чтение: «Wendy’s Blog» (A2 Key, детали) + пересказ, приглашение 25–35 слов'}
   };
 
@@ -1941,7 +1956,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
           box.dataset.lock=1; var g=line.querySelector('.gap'); g.textContent=w; g.classList.add('ok'); SND.fx('ok'); fb.textContent=''; SND.say(it[0].replace('{0}',w)); i++; setTimeout(show,1700); }); }); }
     show();
   };
-  // карта Нетинебудет: клетки A1–E5, иди по тексту и поставь крестик
+  // карта Нетландия: клетки A1–E5, иди по тексту и поставь крестик
   R.seamap=function(body,s,next){
     head(body,s.q,s.ru); var k=0, cells={};
     var grid=mk('div','smap',body); grid.appendChild(el('span','sh',''));
@@ -1997,18 +2012,18 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var OWN={name:'Пыльца феи',ico:DUSTI,kick:'Пыльца феи',lbl:'Смотреть!',say:'Fairy dust! Watch the little lights and repeat.',ru:'Пыльца феи! Огоньки мигают по очереди — запомни и повтори.',steps:function(t){ return DUST[t]; }};
   // сугроб (v2): три слова из истории Питера Пэна + три лишних
   var SNOW={
-    little:{t:'pick3',q:'Find three things from the night sky!',note:'Сугроб! Чтобы растопить его, найди 3 вещи из ночного неба Питера и назови каждое вслух. Взрослому: помогите и повторите слова вместе.',items:[['i:star',1,'star'],['i:moon',1,'moon'],['i:shadow',1,'shadow'],['i:apple',0,'apple'],['i:fish',0,'fish'],['i:drum',0,'drum']]},
+    little:{t:'pick3',q:'Find three words from Peter’s story!',note:'Сугроб! Чтобы растопить его, найди 3 вещи из ночного неба Питера и назови каждое вслух. Взрослому: помогите и повторите слова вместе.',items:[['i:star',1,'star'],['i:moon',1,'moon'],['i:shadow',1,'shadow'],['i:apple',0,'apple'],['i:fish',0,'fish'],['i:drum',0,'drum']]},
     explorers:{t:'pick3',words:1,q:'Find three words from space!',note:'Сугроб! Чтобы растопить его, найди 3 слова про космос из истории Питера и скажи каждое вслух.',items:[['planet',1],['comet',1],['rocket',1],['biscuit'],['walnut'],['beard']]},
-    experts:{t:'pick3',words:1,q:'Find three words from Neverland!',note:'Сугроб! Найди 3 слова из Нетинебудет и скажи каждое вслух.',items:[['pirate',1],['mermaid',1],['adventure',1],['greenhouse'],['timetable'],['recipe']]}
+    experts:{t:'pick3',words:1,q:'Find three words from Neverland!',note:'Сугроб! Найди 3 слова из Нетландия и скажи каждое вслух.',items:[['pirate',1],['mermaid',1],['adventure',1],['greenhouse'],['timetable'],['recipe']]}
   };
   // решение героя (v2): какая карточка встанет на полку
-  var CHOICE={say:'Wendy wants to go home and grow up. Shall I fly her home, or ask her to stay in Neverland forever?',ru:'Питер: «Венди хочет домой — и вырасти. Отнести её домой или уговорить остаться в Нетинебудет навсегда?» Выбор за тобой — от него зависит, какая карточка Питера встанет на полку.',
+  var CHOICE={say:'Wendy wants to go home and grow up. Shall I fly her home, or ask her to stay in Neverland forever?',ru:'Питер: «Венди хочет домой — и вырасти. Отнести её домой или уговорить остаться в Нетландия навсегда?» Выбор за тобой — от него зависит, какая карточка Питера встанет на полку.',
     opts:[{btn:'Fly her home',key:'brave',card:'<b>Brave Peter</b>Храбрый Питер · в финале приводит на помощь Потерянных мальчишек',ru:'Питер отнёс Венди домой и пообещал прилетать каждую весну. Карточка «Храбрый Питер».'},
           {btn:'Ask her to stay',key:'forever',card:'<b>Forever-young Peter</b>Вечно юный Питер · в финале Динь-Динь сыплет пыльцу, и фишка летит через клетки',ru:'Венди осталась ещё на одну ночь — и Динь-Динь ревнует! Карточка «Вечно юный Питер».'}]};
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,shadows:1,countq:1,sky:1,pickn:1,rooster:1,croc:1,stars:1,happy:1,seamap:1,dust:1,clockc:1,letters:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+  function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    R[st.t](body,st,nx); })(); }
+    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; if(progress){progress.step=i;checkpoint();} SND.whenIdle().then(nx); }); })(); }
 
 
   /* --- scenes --- */

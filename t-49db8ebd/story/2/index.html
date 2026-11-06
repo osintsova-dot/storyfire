@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/2/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 2 · Mowgli · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s2.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s2.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -744,7 +744,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -786,7 +786,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Зимний лес">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s2.webp" alt="Тропа из клеток от костра через заснеженные джунгли к Скале Совета">
+      <img src="../../img/10_board_bg_s2.webp" alt="Тропа из клеток от костра через заснеженные джунгли к Скале Совета">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -829,7 +829,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">У волчьей пещеры снова крошечные следы лапок и обгрызенный уголок старой карты. Что ищут мыши? Завтра к костру придёт Герда.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -998,7 +998,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s2.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1059,6 +1059,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1267,7 +1272,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1336,6 +1341,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1353,6 +1366,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1410,12 +1424,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1542,11 +1557,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var L={
     little:{
       listen:{video:1,prompt:'Mowgli tells his story. Listen!', ru:'Взрослому: нажмите ▶ и слушайте вместе. Маугли рассказывает, кто что умеет. Повторяйте за ним движения.',
-        text:'I’m Mowgli. Look! A monkey can climb. A tiger can run, but a tiger can’t climb. A snake can’t run. A bear can swim. And me? I can run, I can jump, I can climb, I can swim! But I can’t fly.',
+        text:'I’m Mowgli. Look! A monkey can climb. A tiger can run, but a tiger can’t fly. A snake can’t run. A bear can swim. And me? I can run, I can jump, I can climb, I can swim! But I can’t fly.',
         warm:[{t:'voice',pic:'i:cake',q:'Mowgli is hungry. Do you like cake?',want:['yes','no','i do','i don'],line:'Yes, I do!',ru:'Взрослому: Маугли спрашивает «Ты любишь торт?» (повтор Истории 1). Ребёнок отвечает голосом: Yes, I do! или No, I don’t.'},
               {t:'voice',pic:'i:bananas',q:'Do you like bananas?',want:['yes','no','i do','i don'],line:'Yes, I do!',ru:'Взрослому: «А бананы любишь?» Ответ голосом.'},
               {t:'voice',pic:'i:fish',q:'Do you like fish?',want:['yes','no','i do','i don'],line:'No, I don’t!',ru:'Взрослому: «А рыбу?» Можно ответить No, I don’t!'}],
-        steps:[{t:'mcq',q:'Who can climb? Tap!',ru:'Взрослому: «Кто умеет лазать?» Каждая картинка при нажатии называет себя.',pics:1,opts:[['i:monkey',1],['i:tiger'],['i:snake']]},
+        steps:[{t:'mcq',q:'What can the monkey do in Mowgli’s story? Tap!',ru:'Взрослому: «Что умеет обезьянка в рассказе?» Каждая картинка при нажатии называет себя.',pics:1,opts:[['a:climb',1],['a:paint'],['a:comics']]},
                {t:'mcq',q:'Who can’t run?',ru:'Взрослому: «Кто не умеет бегать?»',pics:1,opts:[['i:snake',1],['i:tiger'],['i:bear']]},
                {t:'tfa',q:'Yes or no?',ru:'Взрослому: послушайте фразу и нажмите ✓ (правда) или ✗ (неправда).',items:[['Mowgli can fly.','F','g:08_v6_mowgli_face'],['A bear can swim.','T','i:bear']]}]},
       vocab:{steps:[{t:'show',q:'Tap and listen!',ru:'Взрослому: нажимайте на каждую картинку — она назовёт себя. Повторяйте вслух. Новые слова: 4 зверя и 4 действия.',items:['i:monkey','i:tiger','i:snake','i:bear','a:run','a:jump','a:climb','a:swim']},
@@ -1568,7 +1583,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         text:'I love running with my wolf brothers. I’m good at climbing trees. I like swimming in the river. I don’t like sleeping in the cave. The monkeys love dancing. Baloo is good at singing — well, he thinks so! Bagheera is good at hunting. And I’m not good at sitting still!',
         warm:[{t:'voice',pic:'i:honey',q:'Would you like some honey?',want:['yes','please','like some','no'],line:'Yes, please! I’d like some honey.',ru:'Повтор Истории 1. Ответь Маугли голосом: Yes, please! I’d like some honey.'},
               {t:'choose',q:'What would you like? Tap and say!',ru:'Выбери еду — и скажи фразу вслух.',pics:1,opts:['i:cake','i:fish','i:bananas','i:coconut'],tpl:'I’d like some {}.'}],
-        steps:[{t:'sort',q:'What does Mowgli love? What doesn’t he like?',ru:'Разложи по корзинкам — как в рассказе Маугли.',bins:[['yes','He loves …'],['no','He doesn’t like …']],items:[['running','yes'],['climbing trees','yes'],['swimming in the river','yes'],['sleeping in the cave','no'],['sitting still','no']]},
+        steps:[{t:'sort',q:'What does Mowgli say? Likes, dislikes or abilities?',ru:'Раздели: что Маугли любит, что не любит и что говорит об умениях. Good at — про умение, а не про любовь.',bins:[['yes','He likes / loves …'],['no','He doesn’t like …'],['can','He is good / not good at …']],items:[['running','yes'],['climbing trees','can'],['swimming in the river','yes'],['sleeping in the cave','no'],['sitting still','can']]},
                {t:'mcq',q:'Who is good at hunting?',ru:'Кто хорошо охотится?',pics:1,opts:[['i:panther',1],['i:bear'],['i:monkey']]},
                {t:'mcq',q:'Who loves dancing?',ru:'Кто любит танцевать?',pics:1,opts:[['i:monkey',1],['i:bear'],['i:wolf']]},
                {t:'mcq',q:'Baloo thinks he is good at …',ru:'Балу думает, что он хорошо…',opts:[['singing',1],['dancing'],['painting']]}]},
@@ -1623,7 +1638,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'mcq',q:'5. What can Man do that animals can’t?',opts:[['A  Make the Red Flower.',1],['B  Climb trees.'],['C  Swim fast.']]},
                {t:'retell',type:1,q:'Retell the page in 5–6 sentences.',ru:'Перескажи голосом (или напиши). Используй минимум 6 слов из списка.',
                  keys:['pack','river','swimming','baloo','law','bagheera','shere khan','red flower'],need:6,sec:60,line:'Mowgli lives with the wolf Pack. Every morning he goes swimming in the river. Baloo teaches him the Law of the Jungle. Bagheera often takes him to the tops of the trees. Shere Khan hates him. But Man can make the Red Flower.'}]},
-      write:{steps:[{t:'write',area:1,doneMsg:'Опубликовано в блоге Стаи!',q:'The Pack blog: My free time (35–45 words).',ru:'Пост в блог Стаи: что ты любишь делать, как часто, что не любишь. Нужны 2 глагола с -ing и наречие частоты.',fields:[{ph:'In my free time I …',need:/\b(love|like|enjoy|hate|mind)s?\s+\w+ing\b/i,also:[/\b(always|usually|often|sometimes|never|rarely)\b/i],min:35,max:55}],model:'In my free time I usually go swimming with my friends. I love swimming because the water is fun. I sometimes play chess with my dad, and I enjoy winning! But I hate getting up early on Saturdays. I never miss my karate training.'}]},
+      write:{steps:[{t:'write',area:1,doneMsg:'Опубликовано в блоге Стаи!',q:'The Pack blog: My free time (35–45 words).',ru:'Пост в блог Стаи: что ты любишь делать, как часто, что не любишь. Нужны 2 глагола с -ing и наречие частоты.',fields:[{ph:'In my free time I …',need:/\b(love|like|enjoy|hate|mind)s?\s+\w+ing\b/i,also:[/\b(always|usually|often|sometimes|never|rarely)\b/i],minIng:2,min:35,max:45}],model:'In my free time I usually go swimming with my friends. I love swimming because the water is fun. I sometimes play chess with my dad, and I enjoy winning! But I hate getting up early on Saturdays. I never miss my karate training.'}]},
       speak:{steps:[{t:'voice',pic:'i:panther',q:'How often do you play computer games?',want:['always','usually','often','sometimes','never','every','once','twice'],line:'I sometimes play computer games at the weekend.',sec:10,ru:'Багира берёт интервью. Отвечай полным предложением.'},
                {t:'voice',pic:'i:panther',q:'What do you hate doing?',want:['hate \\w+ing','don.?t like \\w+ing'],line:'I hate washing the dishes.',sec:10},
                {t:'voice',pic:'i:panther',q:'What can you do well?',want:['can','good at'],line:'I can swim very well, and I’m good at drawing.',sec:10}]}
@@ -1667,7 +1682,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'mcq',ph:'w',q:'Sound 5 of 5. Listen! What starts with it?',pics:1,opts:[['i:wolf',1],['i:tiger'],['i:monkey']]}]],
     explorers:[[{t:'cipher',mode:'vowels',q:'The mice ate the vowels: A, E, I, O, U. What is the word?',ru:'Мыши съели гласные. Какое это слово?',code:'CL _ MB _ NG',opts:[['CLIMBING',1],['CLAMBING'],['CLUMBUNG']]}],
                [{t:'decode',kind:'rev',code:'MIWS SEKIL ILGWOM',answer:'MOWGLI LIKES SWIM',q:'A mouse message! Read it backwards.',ru:'Мыши написали задом наперёд. Прочитай и напиши.'},
-                {t:'fix',q:'The mice made a mistake. Fix it!',words:['Mowgli','likes','swim.'],bad:2,opts:[['swimming.',1],['swims.'],['to swim.']],ok:'Mowgli likes swimming.'}]],
+                {t:'fix',q:'The mice made a mistake. Fix it!',words:['Mowgli','likes','swim.'],bad:2,opts:[['swimming.',1],['swims.'],['swims.']],ok:'Mowgli likes swimming.'}]],
     experts:[[{t:'decode',kind:'atbash',code:'R ZN SFMTIB ZODZBH',answer:'I AM HUNGRY ALWAYS',q:'Shere Khan’s note! Mirror alphabet: A=Z, B=Y …',ru:'Записка Шерхана атбашем. Расшифруй…'},
               {t:'mcq',q:'…and fix it. Where does “always” go?',opts:[['I am always hungry.',1],['I always am hungry.'],['Always I am hungry.']]}],
              [{t:'decode',kind:'atbash',code:'XLZXS',answer:'COACH',q:'Mirror alphabet again. Who is it?'}]]

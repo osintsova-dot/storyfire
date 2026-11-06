@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/7/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 7 · Jim Hawkins · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s7.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s7.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -844,7 +844,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -886,7 +886,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Замёрзшее озеро и остров">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s7.webp" alt="Пеньки по льду озера от костра к острову сокровищ">
+      <img src="../../img/10_board_bg_s7.webp" alt="Пеньки по льду озера от костра к острову сокровищ">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -929,7 +929,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">Под золотом в сундуке лежал ещё один кусок старой карты. Мыши что-то собирают… Завтра к костру придёт Пиноккио.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -1098,7 +1098,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s7.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1159,6 +1159,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1367,7 +1372,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1436,6 +1441,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1453,6 +1466,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1510,12 +1524,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1680,7 +1695,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       listen:{video:1,prompt:'Jim is loading the ship. Listen!', ru:'Джим грузит припасы на «Испаньолу». Слушай: чего много (a lot of), чего мало (a little), чего нет (not any).',
         text:'We’ve got a lot of water. We’ve got a hundred apples in a big barrel. There’s some bread, but there isn’t any cheese. We’ve got a little salt and a little sugar. How much rice? A lot! How many apples? A hundred! And Mr Silver has got a thousand gold coins…',
         warm:[{t:'mcq',img:'g:h_peter_pan',q:'Peter Pan asks from the mast: which is the biggest?',ru:'Повтор Питера Пэна: превосходная степень. Что самое большое?',pics:1,opts:[['i:ship',1],['i:boat'],['i:barrel']]},
-              {t:'voice',pic:'g:h_peter_pan',q:'Which is the brightest star? Say: The … is the brightest.',want:['brightest','biggest','est'],line:'The North Star is the brightest!',sec:7,ru:'Ответь голосом: The North Star is the brightest! / The moon is the biggest!'}],
+              {t:'voice',pic:'g:h_peter_pan',q:'Which is the brightest star? Say: The … is the brightest.',want:['brightest','biggest','est'],line:'That star is the brightest in this picture!',sec:7,ru:'Ответь голосом: That star is the brightest in this picture! / The moon is the biggest!'}],
         steps:[{t:'sort',q:'What has the ship got?',ru:'Разложи: чего много, чего мало и чего нет совсем.',bins:[['lot','a lot of'],['few','a little'],['none','not any']],items:[['water','lot'],['rice','lot'],['salt','few'],['sugar','few'],['cheese','none']]},
                {t:'mcq',q:'How many apples are in the barrel?',ru:'Сколько яблок в бочке?',opts:[['a hundred',1],['a few'],['a thousand']]},
                {t:'mcq',q:'How many gold coins has Mr Silver got?',ru:'А сколько монет у мистера Сильвера?',opts:[['a thousand',1],['a hundred'],['a little']]}]},
@@ -1706,12 +1721,12 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         steps:[{t:'tf',q:'True or false?',ru:'Правда или нет?',items:[['Silver is the cook.','T'],['There is a lot of cheese.','F'],['Jim knows that Silver is a pirate.','F']]},
                {t:'mcq',q:'How many apples are in the barrel?',opts:[['a hundred',1],['a few'],['a thousand']]},
                {t:'retell',q:'Tell the Book about the cook’s list!',ru:'Перескажи по картинкам: 4 предложения. Используй a lot of, a few, any.',
-                 pics:[['i:parrot','Silver, the cook'],['i:barrel','a barrel, apples'],['i:water','a lot of water'],['i:rice','a few · rice · no cheese']],
+                 pics:[['i:parrot','Silver, the cook'],['i:barrel','a barrel, apples'],['i:water','a lot of water'],['i:rice','a few bags of sugar · some rice · no cheese']],
                  keys:['silver','cook','barrel','apples','water','rice','cheese','sugar'],need:4,sec:40,line:'Long John Silver is the cook. There are a hundred apples in a barrel. We’ve got a lot of water and some rice. There are only a few bags of sugar, and there isn’t any cheese.'}]},
       write:{steps:[{t:'write',poster:'card',cardTitle:'THE COOK’S LIST',cardPic:'i:barrel',doneMsg:'Список у кока! «Good lad, Jim!»',q:'Write the cook’s list!',ru:'Список кока: some — в утверждении, a few + то, что считаем (apples), a little + то, что не считаем (salt), any — с not.',
                fields:[{ph:'We need some …',need:/\bsome \w+/i,why:'Начни так: We need some bread / water …'},
-                       {ph:'We need a few …',need:/\ba few \w+s\b/i,why:'a few + то, что считаем, во множественном числе: a few apples, a few bags.'},
-                       {ph:'We need a little …',need:/\ba little (?!\w+s\b)\w+/i,why:'a little + то, что не считаем: a little salt / sugar / water.'},
+                       {ph:'We need a few …',need:/\ba few (?!waters?\b|rices?\b|sugars?\b|salts?\b|breads?\b|flours?\b|oils?\b)\w+s\b/i,why:'a few + то, что считаем, во множественном числе: a few apples, a few bags.'},
+                       {ph:'We need a little …',need:/\ba little (?:\w+ ){0,2}(water|salt|sugar|rice|oil|bread|butter|flour|milk|cheese|chocolate|honey|juice|tea|coffee|soup|meat|fish|fruit|pasta|cream)\b/i,why:'a little + то, что не считаем: a little salt / sugar / water.'},
                        {ph:'We haven’t got any …',need:/\bany \w+/i,why:'Нужно: We haven’t got any … (с not — any).'}],model:'We need some bread. We need a few apples. We need a little salt. We haven’t got any cheese.'}]},
       speak:{steps:[{t:'voice',pic:'g:09_j2_barrel',q:'Silver asks: How much water do we need?',want:['lot','little','much','water','need'],line:'We need a lot of water!',sec:7,ru:'Сильвер спрашивает. Ответь коротко и добавь деталь: We need a lot of water!'},
                {t:'voice',pic:'g:09_j2_barrel',q:'Is there any bread?',want:['yes','no','there','any','some'],line:'Yes, there is. There’s some bread in the barrel.',sec:8,ru:'Краткий ответ + добавка: Yes, there is. There’s some bread…'}]}
@@ -1731,7 +1746,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'mcq',q:'Without a map you can easily get ___ .',opts:[['lost',1],['off'],['sail']]}]},
       grammar:{steps:[{t:'rule',q:'The captain’s log: irregular verbs',ru:'Нажми на строчку — услышишь пример. В вопросе и с not — did + обычная форма: Did you see? I didn’t find.',
                  rows:[['go → went','We went to the island.'],['find → found','Jim found the map.'],['see → saw','I saw a ship.'],['take → took','Silver took the gold.'],['hide → hid','The pirates hid the treasure.'],['run → ran','Everyone ran to the side.'],['think → thought','I thought he was my friend.'],['bring → brought','The cook brought apples.'],['Did you see …? Yes, I did.','not: Did you saw …?'],['didn’t + verb','I didn’t find it. (not: didn’t found)']]},
-               {t:'fix',q:'The mice wrote in the log. Fix it!',words:['We','goed','to the island.'],bad:1,opts:[['went',1],['did go'],['wented']],ok:'We went to the island.'},
+               {t:'fix',q:'The mice wrote in the log. Fix it!',words:['We','goed','to the island.'],bad:1,opts:[['went',1],['goes'],['wented']],ok:'We went to the island.'},
                {t:'fix',q:'And this one?',words:['Did you','saw','the map?'],bad:1,opts:[['see',1],['seen'],['sawed']],ok:'Did you see the map?'},
                {t:'fix',q:'One more!',words:['Jim','didn’t found','the treasure.'],bad:1,opts:[['didn’t find',1],['didn’t founded'],['not found']],ok:'Jim didn’t find the treasure.'},
                {t:'fix',q:'And the last one!',words:['Silver','did went','away.'],bad:1,opts:[['went',1],['did gone'],['goed']],ok:'Silver went away.'},
@@ -1740,7 +1755,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         text:'We left Bristol in June and sailed for many weeks. The crew worked hard, and the cook, Long John Silver, was everyone’s friend. He often told me stories about the sea, and his green parrot shouted “Pieces of eight!” all day long.\n\nOne evening, just before we saw the island, I wanted an apple. The big apple barrel was almost empty, so I climbed inside it to find the last one. It was dark and warm in there, and I nearly fell asleep. Then I heard voices. Silver sat down next to the barrel and began to talk quietly to a young sailor.\n\n“I was with Captain Flint,” he said. “Most of this crew are Flint’s old men. When we find the treasure, we won’t share it with the captain. We’ll take it all.” I didn’t move. I didn’t breathe. My friend, the kind cook, was a pirate!\n\nAt that moment someone shouted, “Land ho!” Everyone ran to look at the island, and I quickly climbed out of the barrel. I found the captain and the doctor and told them everything. The captain listened carefully. “Thank you, Jim,” he said. “You are a brave boy. Now we know the truth, and that is our best weapon.”',
         lock:{t:'sym',answer:'SET SAIL',q:'Pigpen code on the map! The key is on the back.',ru:'Шифр «свинарник»: каждая буква — кусочек решётки или креста, некоторые с точкой. Ключ сверху. Расшифруй и напиши.'},
         steps:[{t:'cloze',q:'The captain’s log: write one word in each gap.',ru:'Open cloze (A2 Key): в каждый пропуск — одно слово. Подсказок-вариантов нет!',
-                 text:'Three weeks {0} we left Bristol. Yesterday {1} weather was terrible, and the sea {2} very rough. In the evening Jim {3} {4} the apple barrel. Why {5} he go there? He wanted an apple!',gaps:['ago','the','was','went','to','did']},
+                 text:'Three weeks {0} we left Bristol. Yesterday {1} weather was terrible, and the sea {2} very rough. In the evening Jim {3} (go) {4} the apple barrel. Why {5} he go there? He wanted an apple!',gaps:['ago','the','was','went','to','did'],alternatives:{4:['into']}},
                {t:'mcq',q:'1. Where did Jim go to find an apple?',opts:[['A  into the barrel',1],['B  to the kitchen'],['C  to the captain']]},
                {t:'mcq',q:'2. Who did Silver sail with before?',opts:[['A  Captain Flint',1],['B  the doctor'],['C  Jim’s father']]},
                {t:'mcq',q:'3. What did the pirates want to do?',opts:[['A  take all the treasure',1],['B  go home'],['C  buy a new ship']]},
@@ -1801,7 +1816,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                [{t:'grid',answer:'SUGAR',q:'Mouse tracks on the map! Read the coordinates.',ru:'Мыши отметили на карте припасы. Расшифруй координаты.'},
                 {t:'mcq',q:'…and use it: How ___ sugar have we got?',opts:[['much',1],['many'],['few']]}]],
     experts:[[{t:'sym',answer:'WE GOED TO THE ISLAND',q:'A note from Silver’s mice in pigpen code!',ru:'Записка «свинарником». Расшифруй — и найди ошибку.'},
-              {t:'fix',q:'Find the mistake and fix it!',words:['We','goed','to the island.'],bad:1,opts:[['went',1],['did go'],['wented']],ok:'We went to the island.'}],
+              {t:'fix',q:'Find the mistake and fix it!',words:['We','goed','to the island.'],bad:1,opts:[['went',1],['goes'],['wented']],ok:'We went to the island.'}],
              [{t:'sym',answer:'HARBOUR',q:'Pigpen again. Write the word.'},
               {t:'mcq',q:'…and what is it?',opts:[['a place where ships stop',1],['a person who works on a ship'],['a long journey by sea']]}]]
   };
@@ -1914,8 +1929,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var lad=hintLadder(body,[function(){ return 'Намёк: нужны слова '+s.gaps.length+' разных видов: время (ago), артикль, глаголы was / went, предлог, did в вопросе.'; },
       function(){ ins.forEach(function(e){ if(!e.disabled&&!e.value) e.value=e.dataset.ans[0]; }); return 'Первые буквы уже стоят. Допиши слова!'; },
       function(){ ins.forEach(function(e){ e.value=e.dataset.ans; }); return 'Ответы: '+s.gaps.join(', '); }],fb);
-    ok.addEventListener('click',function(){ var bad=0; ins.forEach(function(e){ var good=e.value.trim().toLowerCase().replace(/[’']/g,'')===e.dataset.ans; e.classList.toggle('ok',good); e.classList.toggle('bad',!good); if(good) e.disabled=true; else bad++; });
-      if(!bad){ lad.stop(); ok.disabled=true; SND.fx('ok'); fb.textContent='The log is complete!'; SND.say(s.text.replace(/\{(\d)\}/g,function(_,i){ return s.gaps[i]; })); setTimeout(next,1800); }
+    ok.addEventListener('click',function(){ var bad=0; ins.forEach(function(e){ var good=e.value.trim().toLowerCase().replace(/[’']/g,'')===e.dataset.ans||(s.alternatives&&s.alternatives[ins.indexOf(e)]||[]).indexOf(e.value.trim().toLowerCase())>=0; e.classList.toggle('ok',good); e.classList.toggle('bad',!good); if(good) e.disabled=true; else bad++; });
+      if(!bad){ lad.stop(); ok.disabled=true; SND.fx('ok'); fb.textContent='The log is complete!'; SND.say(s.text.replace(/\{(\d)\}/g,function(_,i){ return ins[i].value.trim(); }).replace(/\s*\(go\)/g,'')); setTimeout(next,1800); }
       else { wrong(ok,fb); fb.textContent='Пока неверно: '+bad+'. Красные пропуски — подумай ещё.'; } });
   };
   // «Судовой журнал»: письмо по трём картинкам
@@ -1967,9 +1982,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     opts:[{btn:'Stop him!',key:'brave',card:'<b>Brave Jim</b>Храбрый Джим · в финале первым идёт в бой с мышами',ru:'Джим преградил Сильверу путь — и пираты сдались! Карточка «Храбрый Джим».'},
           {btn:'Let him go',key:'fair',card:'<b>Fair Jim</b>Справедливый Джим · в финале старый враг приходит на помощь',ru:'Джим отвернулся — и Сильвер исчез в тумане, оставив на берегу попугая. Карточка «Справедливый Джим».'}]};
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,parrot:1,maptf:1,compass:1,spot:1,grid:1,drops:1,route:1,cloze:1,logbook:1,hold:1,chests:1,coinword:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+  function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    R[st.t](body,st,nx); })(); }
+    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; if(progress){progress.step=i;checkpoint();} SND.whenIdle().then(nx); }); })(); }
 
 
   /* --- scenes --- */

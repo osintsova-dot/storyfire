@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/4/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 4 · Sherlock Holmes · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s4.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s4.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -840,7 +840,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -882,7 +882,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Туманный Лондон">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s4.webp" alt="Тропа из клеток от костра по туманному Лондону к Бейкер-стрит">
+      <img src="../../img/10_board_bg_s4.webp" alt="Тропа из клеток от костра по туманному Лондону к Бейкер-стрит">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -925,7 +925,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">Дрова нашлись у мышиной норы — и рядом лежал ещё один кусок старой карты. Мыши что-то собирают… Завтра к костру придёт Дороти.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -1094,7 +1094,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s4.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1155,6 +1155,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1363,7 +1368,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1432,6 +1437,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1449,6 +1462,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1506,12 +1520,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1684,11 +1699,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'fix',q:'And here?',ru:'И здесь ошибка.',words:['She’s','got','a long hair.'],bad:2,opts:[['long hair.',1],['a long hairs.'],['an long hair.']],ok:'She’s got long hair.'},
                {t:'voice',q:'Now you: I’ve got … hair. I haven’t got …',want:['got','hair'],line:'I’ve got short dark hair. I haven’t got glasses.',sec:8,ru:'Опиши себя голосом.'}]},
       read:{title:'Three Witnesses',ru:'Прочитай страницу книги.',
-        text:'Somebody took the firewood from the campfire last night! Sherlock Holmes asks three people. Mrs Hudson says, “I saw a man. He is tall and thin. He has got long dark hair and a moustache.” A little boy says, “No, he isn’t tall! He is very small. He has got grey hair and big round ears.” The cabman says, “I saw him too. He has got a long beard and glasses.” Holmes looks at the snow. He sees very small footprints and a long thin tail line. “The boy is right,” he says. “The thief is small and grey. He hasn’t got a beard. He has got a tail!” Watson laughs. “A mouse?” “Elementary!” says Holmes.',
+        text:'The next night, more firewood is missing! This is a new case. Sherlock Holmes asks the three witnesses again. Mrs Hudson says, “I saw a man. He is tall and thin. He has got long dark hair and a moustache.” A little boy says, “No, he isn’t tall! He is very small. He has got grey hair and big round ears.” The cabman says, “I saw him too. He has got a long beard and glasses.” Holmes looks at the snow. He sees very small footprints and a long thin tail line. “The boy is right,” he says. “The thief is small and grey. He hasn’t got a beard. He has got a tail!” Watson laughs. “A mouse?” “Elementary!” says Holmes.',
         lock:{t:'sym',answer:'HE HAS GOT GLASSES',q:'Dancing men on the door! Use the key and write it.',ru:'Пляшущие человечки: у каждого своя буква — ключ сверху. Расшифруй и напиши.'},
         steps:[{t:'threads',q:'The clue board: who said what? Tap a witness, then a clue.',ru:'Доска улик: соедини свидетеля с тем, что он сказал.',pairs:[['Mrs Hudson','tall, thin, a moustache'],['the boy','small, grey, big ears'],['the cabman','a beard and glasses']]},
                {t:'tf',q:'True or false?',ru:'Правда или нет?',items:[['Mrs Hudson says the man is tall.','T'],['The cabman says the man has got glasses.','T'],['The thief has got a beard.','F']]},
-               {t:'mcq',q:'Who is right?',ru:'Кто из свидетелей прав?',opts:[['the boy',1],['Mrs Hudson'],['the cabman']]},
+               {t:'mcq',q:'In this new case, who is right?',ru:'Кто из свидетелей прав?',opts:[['the boy',1],['Mrs Hudson'],['the cabman']]},
                {t:'retell',q:'Tell Sherlock: what does each witness say?',ru:'Перескажи по картинкам: 4 предложения. Не забудь has got!',
                  pics:[['i:bowler','Mrs Hudson · tall, thin'],['i:magnifier','the boy · small, grey'],['i:cab','the cabman · beard, glasses'],['i:coatmouse','the thief · a tail!']],
                  keys:['tall','thin','small','grey','beard','glasses','tail','mouse'],need:4,sec:40,line:'Mrs Hudson says the man is tall and thin. The boy says he is small and grey. The cabman says he has got a beard and glasses. But the thief has got a tail — it’s a mouse!'}]},
@@ -1727,7 +1742,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'retell',type:1,q:'What happened that night? Retell in 5–6 sentences.',ru:'Перескажи голосом (или напиши). Используй минимум 6 слов из списка.',
                  keys:['midnight','campfire','hudson','reading','cabman','sleeping','boy','footprints'],need:6,sec:60,line:'At midnight Mrs Hudson was reading a letter when she heard a noise near the campfire. The cabman was sleeping in his cab, but a loud crack woke him up. Billy was helping his dad when he saw tiny footprints. They went to a hole under the old house. The thieves were mice!'}]},
       write:{steps:[{t:'write',area:1,poster:'card',cardTitle:'DETECTIVE REPORT',cardPic:'i:notebook',doneMsg:'Отчёт у Шерлока. «Excellent, my friend!»',q:'Write your detective report (30–40 words).',ru:'Что делал каждый свидетель, что случилось и кто вор. Нужны Past Continuous (was reading) и Past Simple (heard, found), а ещё when или while.',
-               fields:[{ph:'At midnight Mrs Hudson was …',need:/\b(was|were) \w+ing\b/i,why:'Нужен Past Continuous: Mrs Hudson was reading… The cabman was sleeping…',also:[/\b(when|while)\b/i,/\b(\w+ed|saw|took|went|found|heard|came|ran|woke|stole)\b/i],alsoWhy:'Добавь when / while и что случилось (Past Simple: heard, saw, found…).',min:30,max:45}],
+               fields:[{ph:'At midnight Mrs Hudson was …',need:/\b(was|were) \w+ing\b/i,why:'Нужен Past Continuous: Mrs Hudson was reading… The cabman was sleeping…',also:[/\b(when|while)\b/i,/\b(\w+ed|saw|took|went|found|heard|came|ran|woke|stole)\b/i],alsoWhy:'Добавь when / while и что случилось (Past Simple: heard, saw, found…).',min:30,max:40}],
                model:'At midnight Mrs Hudson was reading a letter when she heard a scratching sound. The cabman was sleeping in his cab. While Billy was closing the shop, he saw tiny footprints. The thieves were mice!'}]},
       speak:{steps:[{t:'voice',pic:'g:08_v8_sherlock',q:'Your alibi! What were you doing at 7 last night?',want:['was','were','ing'],line:'At 7 last night I was having dinner with my family.',sec:8,ru:'Шерлок допрашивает. Отвечай полным предложением.'},
                {t:'voice',pic:'g:08_v8_sherlock',q:'What happened when you were walking home yesterday?',want:['when','while','was','saw','met','happened'],line:'When I was walking home, I saw a big dog.',sec:10}]}
@@ -1747,7 +1762,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'voice',q:'Say it: He’s got glasses.',want:['glass','got'],line:'He’s got glasses.'},
                {t:'gaps',q:'Fill the gap.',text:'She {0} got freckles.',gaps:[[['has','have','is'],'has']]},
                {t:'mcq',q:'Which is right?',opts:[['She’s got long hair.',1],['She’s got a long hair.'],['She have got long hair.']]},
-               {t:'mcq',q:'Who is right about the thief?',opts:[['the boy',1],['Mrs Hudson'],['the cabman']]}],
+               {t:'mcq',q:'Who is right in the second case?',opts:[['the boy',1],['Mrs Hudson'],['the cabman']]}],
     experts:[{t:'mcq',q:'Not young and not old: about 50. He’s …',opts:[['middle-aged',1],['elderly'],['slim']]},
              {t:'mcq',q:'She was worried and her hands were shaking. She was …',opts:[['nervous',1],['calm'],['honest']]},
              {t:'mcq',q:'While I ___ , the light went out.',opts:[['was reading',1],['read'],['am reading']]},
@@ -1888,9 +1903,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     opts:[{btn:'Tell the police',key:'strict',card:'<b>Strict Sherlock</b>Строгий Шерлок · в финале мыши боятся его и разбегаются',ru:'Шерлок вызвал инспектора Лестрейда — мышь под стражей! Карточка «Строгий Шерлок».'},
           {btn:'Let it go',key:'kind',card:'<b>Kind Sherlock</b>Добрый Шерлок · в финале одна мышь переходит на нашу сторону и показывает тайный ход',ru:'Шерлок отпустил мышь — и она шепнула ему что-то на ухо… Карточка «Добрый Шерлок».'}]};
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,pick3:1,loupe:1,put:1,witness:1,threads:1,alibi:1,fog:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+  function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    R[st.t](body,st,nx); })(); }
+    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; if(progress){progress.step=i;checkpoint();} SND.whenIdle().then(nx); }); })(); }
 
 
   /* --- scenes --- */

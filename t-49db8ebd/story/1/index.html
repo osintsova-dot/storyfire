@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/1/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 1 · Alice · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s1.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s1.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -785,7 +785,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -827,7 +827,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Зимний лес">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s1.webp" alt="Тропа из клеток от костра мимо кроличьей норы в зимний лес">
+      <img src="../../img/10_board_bg_s1.webp" alt="Тропа из клеток от костра мимо кроличьей норы в зимний лес">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -870,7 +870,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">А у пустой банки джема в норе остались следы крошечных лапок… Чьи они? Завтра к костру придёт Маугли.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -1039,7 +1039,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s1.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1100,6 +1100,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1308,7 +1313,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1377,6 +1382,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1394,6 +1407,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1451,12 +1465,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1613,7 +1628,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         text:'I’m at a tea party with the Mad Hatter. There are a lot of biscuits — sweet and crunchy! There’s some cheese and some chicken, too. The Hatter says, “Would you like some mushrooms?” “No, thank you. I’d like a biscuit, please.” The March Hare likes spicy onions! I don’t. I like soft cheese and savoury tomatoes.',
         warm:[{t:'voice',pic:'g:08_v5_alice',v:'alice',q:'Hello! My name is Alice. What’s your name? How old are you?',want:['name','i.?m','years'],line:'My name is Masha. I’m nine.',sec:8,ru:'Алиса знакомится. Ответь голосом: My name is … I’m …'},
               {t:'voice',pic:'g:08_v5_alice',q:'What’s your favourite food?',want:['favourite','like','love','is'],line:'My favourite food is pizza.',sec:8,ru:'Какая твоя любимая еда? My favourite food is …'}],
-        steps:[{t:'sort',q:'Sweet or savoury? Sort the food from the tea party.',ru:'Сладкое или несладкое? Разложи по корзинкам.',bins:[['sw','sweet'],['sa','savoury']],items:[['biscuits','sw'],['cake','sw'],['ice cream','sw'],['cheese','sa'],['chicken','sa'],['mushrooms','sa']]},
+        steps:[{t:'sort',q:'Sweet or savoury? Sort the food.',ru:'Сладкое или несладкое? Разложи по корзинкам.',bins:[['sw','sweet'],['sa','savoury']],items:[['biscuits','sw'],['cake','sw'],['ice cream','sw'],['cheese','sa'],['chicken','sa'],['mushrooms','sa']]},
                {t:'mcq',q:'What would Alice like?',ru:'Что хочет Алиса?',opts:[['a biscuit',1],['some mushrooms'],['some onions']]},
                {t:'mcq',q:'Who likes spicy onions?',ru:'Кто любит острый лук?',opts:[['the March Hare',1],['Alice'],['the Hatter']]},
                {t:'mcq',q:'The biscuits are sweet and …',ru:'Печенье сладкое и…',opts:[['crunchy',1],['spicy'],['soft']]}]},
@@ -1623,7 +1638,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'memory',q:'How does it taste? Find the pairs.',ru:'Какое на вкус? Соедини слово и объяснение.',pairs:[['sweet','like sugar'],['savoury','salty, not sweet'],['spicy','hot in your mouth'],['crunchy','makes a noise when you eat it'],['soft','not hard']]}]
              .concat(nameIt([['i:cheese','What is it? Say it!','chees|cheez','cheese'],['i:mushrooms','And this?','mush','mushrooms'],['i:tomatoes','And this?','tomat','tomatoes'],['i:biscuits','And this?','biscu|bisk','biscuits']],'Назови еду вслух — и картинка оттает.'))},
       grammar:{steps:[{t:'rule',q:'The Hatter’s rule',ru:'Правило Шляпника: one thing — a; cheese, milk, mushrooms — some. A lot of + mushrooms (с -s!).',rows:[['I’d like a + one thing','I’d like a biscuit, please.'],['I’d like some + cheese / mushrooms','I’d like some cheese.'],['a lot of + -s','There are a lot of mushrooms.']]},
-               {t:'sort',q:'Right or wrong? The mice wrote some of them!',ru:'Верно или мыши ошиблись?',bins:[['ok','Right ✓'],['bad','The mice! ✗']],items:[['I’d like some cheese.','ok'],['I’d like a cheese.','bad'],['a lot of mushrooms','ok'],['a lot of mushroom','bad'],['I’d like a biscuit.','ok'],['I’d like some biscuit.','bad']]},
+               {t:'sort',q:'Right or wrong? The mice wrote some of them!',ru:'Верно или мыши ошиблись?',bins:[['ok','Right ✓'],['bad','The mice! ✗']],items:[['I’d like some cheese.','ok'],['I’d like many cheese.','bad'],['a lot of mushrooms','ok'],['a lot of mushroom','bad'],['I’d like a biscuit.','ok'],['I’d like a biscuits.','bad']]},
                {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей: нажми на неверное слово и выбери правильное.',words:['I’d','like','a','cheese,','please.'],bad:2,opts:[['some',1],['an'],['many']],ok:'I’d like some cheese, please.'},
                {t:'fix',q:'And here?',ru:'И здесь ошибка.',words:['There','are','a lot of','mushroom.'],bad:3,opts:[['mushrooms.',1],['mushroomes.'],['a mushroom.']],ok:'There are a lot of mushrooms.'},
                {t:'voice',q:'Now you: what would you like? I’d like some …',want:['like some','like a','d like'],line:'I’d like some chicken, please.',ru:'Закажи у Шляпника: I’d like some … / I’d like a … (голосом).'}]},
@@ -1644,7 +1659,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         text:'In the Duchess’s kitchen there was a lot of pepper in the soup — far too much pepper! Everybody was sneezing. Later I went to a tea party. There wasn’t any tea in my cup, but there was a lot of bread and butter on the table. The Hatter asked, “How many cups of tea have you had?” “I haven’t had any!” I said. Then I found a little bottle of juice and a piece of cake. How much sugar was in it? I don’t know — but I started to grow!',
         warm:[{t:'voice',pic:'g:08_v5_alice',q:'Introduce yourself to Alice: your name, your age and what you like doing.',want:['name','i.?m','like','years'],line:'Hi! I’m Dima. I’m twelve, and I like playing football.',sec:10}],
         steps:[{t:'mcq',q:'Why was everybody sneezing?',opts:[['There was too much pepper in the soup.',1],['It was very cold.'],['The cook was ill.']]},
-               {t:'mcq',q:'How many cups of tea had Alice had?',opts:[['none',1],['one'],['a lot']]},
+               {t:'mcq',q:'How many cups of tea did Alice drink at the tea party?',opts:[['none',1],['one'],['a lot']]},
                {t:'mcq',q:'What did Alice find?',opts:[['a bottle of juice and a piece of cake',1],['a cup of tea and some bread'],['a packet of biscuits']]},
                {t:'mcq',q:'What happened after the cake?',opts:[['She started to grow.',1],['She fell asleep.'],['She started to sneeze.']]}]},
       vocab:{steps:[{t:'sort',q:'Countable or uncountable?',ru:'Исчисляемое (a / many) или нет (much / some)?',bins:[['c','a / many …'],['u','much / some …']],items:[['biscuit','c'],['egg','c'],['tomato','c'],['sandwich','c'],['bread','u'],['butter','u'],['sugar','u'],['juice','u'],['flour','u'],['salt','u']]},
@@ -1662,8 +1677,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'mcq',q:'Who was sitting between the March Hare and the Hatter?',opts:[['A  the Dormouse',1],['B  the Queen'],['C  the White Rabbit']]},
                {t:'mcq',q:'What was wrong with the Hatter’s watch?',opts:[['A  It was two days wrong.',1],['B  It was broken into pieces.'],['C  It told only the hour.']]},
                {t:'retell',type:1,q:'Retell the tea party in 5–6 sentences.',ru:'Перескажи голосом (или напиши). Используй минимум 5 слов из списка.',
-                 keys:['table','tea','any','hatter','watch','butter','bread','wood'],need:5,sec:60,line:'Alice found a long table under a tree. There wasn’t any tea in her cup. The Hatter’s watch told the day of the month. He had put butter in it. Alice ate some bread and butter and walked off into the wood.'}]},
-      write:{steps:[{t:'write',area:1,doneMsg:'Приглашение отправлено! Шляпник ставит чашки.',q:'Write a message: invite a friend to a tea party (25–35 words).',ru:'Пригласи друга на чаепитие: когда, где и что будет на столе. Нужны some / any и come.',fields:[{ph:'Hi! Come to my tea party …',need:/\b(come|join)\b/i,also:[/\b(some|any|a lot of)\b/i],min:25,max:45}],model:'Hi Sasha! Come to my tea party on Saturday at five. There will be some cake and a lot of biscuits, but there isn’t any lemonade, so please bring a bottle. See you!'}]},
+                 keys:['table','tea','any','hatter','watch','butter','bread','wood'],need:5,sec:60,line:'Alice found a long table under a tree. There wasn’t any tea in her cup. The Hatter’s watch told the day of the month. He put butter in it. Alice ate some bread and butter and walked off into the wood.'}]},
+      write:{steps:[{t:'write',area:1,doneMsg:'Приглашение отправлено! Шляпник ставит чашки.',q:'Write a message: invite a friend to a tea party (25–35 words).',ru:'Пригласи друга на чаепитие: когда, где и что будет на столе. Нужны some / any и come.',fields:[{ph:'Hi! Come to my tea party …',need:/\b(come|join)\b/i,also:[/\b(some|any|a lot of)\b/i],min:25,max:35}],model:'Hi Sasha! Come to my tea party on Saturday at five. There will be some cake and a lot of biscuits, but there isn’t any lemonade, so please bring a bottle. See you!'}]},
       speak:{steps:[{t:'voice',pic:'g:08_v5_alice',q:'How much water do you drink every day?',want:['much','lot','glass','cup','bottle','litre','liter','little'],line:'I drink about five glasses of water a day.',sec:10,ru:'Алиса спрашивает. Отвечай полным предложением.'},
                {t:'voice',pic:'g:08_v5_alice',q:'What would you bring to a tea party? Why?',want:['some','bring','bottle','packet','piece','cup','because'],line:'I’d bring a packet of biscuits, because everybody likes them.',sec:10}]}
     }
@@ -1687,7 +1702,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'mcq',q:'a ___ of lemonade',opts:[['bottle',1],['slice'],['piece']]},
              {t:'mcq',q:'There isn’t ___ juice in the fridge.',opts:[['any',1],['some'],['many']]},
              {t:'fix',q:'Fix the mistake.',words:['There','isn’t','many','water.'],bad:2,opts:[['much',1],['a lot'],['few']],ok:'There isn’t much water.'},
-             {t:'mcq',q:'Was there any tea in Alice’s cup?',opts:[['No, there wasn’t.',1],['Yes, a lot.'],['Yes, a little.']]}]
+             {t:'mcq',q:'At the start of the tea party, was there any tea in Alice’s cup?',opts:[['No, there wasn’t.',1],['Yes, a lot.'],['Yes, a little.']]}]
   };
   var REPORT={
     little:{words:'apple, banana, cake, cheese, fish, ice cream, milk, egg',grammar:'I like … / I don’t like … · Do you like …? Yes, I do / No, I don’t',more:'Фоника: повтор букв (jam, ham, cup, mug, fish, pan) + ai, oa, ie (tail, rain, toast, pie)'},

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/9/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 9 · Mary · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s9.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s9.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -924,7 +924,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -966,7 +966,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Заснеженный сад у старого дома">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s9.webp" alt="Пеньки по снегу от костра к двери в стене тайного сада">
+      <img src="../../img/10_board_bg_s9.webp" alt="Пеньки по снегу от костра к двери в стене тайного сада">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -1009,7 +1009,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">Под розами малиновка нашла ещё один кусок старой карты. Мыши что-то собирают… Завтра — финал: к костру придут Щелкунчик и Мышиный король.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -1178,7 +1178,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s9.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1239,6 +1239,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1447,7 +1452,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1516,6 +1521,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1533,6 +1546,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1590,12 +1604,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1787,7 +1802,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       write:{steps:[{t:'write',poster:'card',cardTitle:'MARY’S DIARY',cardPic:'i:robin',doneMsg:'Дневник у Мэри! «Thank you!»',q:'Write Mary’s diary!',ru:'Дневник Мэри: три предложения в прошедшем времени. Помни: found, was — без was перед глаголом.',
                fields:[{ph:'Yesterday I …',need:/\byesterday,? i (\w+ed|went|found|saw|got|had|was|learnt|made|took|met|came|ate|ran|dug|gave|read|wrote|sang)\b/i,why:'Нужно прошедшее время: Yesterday I planted… / Yesterday I went…'},
                        {ph:'I found …',need:/\bi found \w+/i,why:'Нужно: I found … (что ты нашёл?)'},
-                       {ph:'I was …',need:/\bi was (?!\w+ing\b)\w+/i,why:'Нужно: I was happy / I was in the garden.'}],model:'Yesterday I planted seeds. I found an old key. I was very happy.'}]},
+                       {ph:'I was …',need:/\bi was (?!\w+ing\b|go\b|went\b|do\b|did\b|play\b|eat\b|find\b|have\b|make\b|see\b|swim\b)\w+/i,why:'Нужно: I was happy / I was in the garden.'}],model:'Yesterday I planted seeds. I found an old key. I was very happy.'}]},
       speak:{steps:[{t:'voice',pic:'g:09_y4_friends',q:'Dickon asks: Where did you live when you were small?',want:['lived','live','was','in'],line:'I lived in a small town. It was cold!',sec:8,ru:'Дикон спрашивает. Ответь коротко и добавь деталь.'},
                {t:'voice',pic:'g:09_y4_friends',q:'Did you have a pet?',want:['yes','no','did','had','didnt'],line:'Yes, I did. I had a little cat.',sec:8,ru:'Краткий ответ + добавка: Yes, I did. I had … / No, I didn’t, but …'}]}
     },
@@ -1810,13 +1825,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'mcq',q:'There’s a high ___ wall around the garden.',opts:[['stone',1],['stony'],['stones']]},
                {t:'mcq',q:'Dickon likes to ___ in the earth with his spade.',opts:[['dig',1],['grow'],['roof']]}]},
       grammar:{steps:[{t:'rule',q:'Two garden beds: -ing or to?',ru:'Нажми на строчку — услышишь пример.',
-                 rows:[['enjoy / like / love / hate / don’t mind + -ing','I enjoy digging.'],['want / decide / hope / need + to','I want to plant roses.'],['there is + one thing','There is a wooden gate.'],['there are + many things','There are two gates.'],['material before a noun','a stone wall, a wooden door (not: a wood door)']]},
+                 rows:[['enjoy / like / love / hate / don’t mind + -ing','I enjoy digging.'],['want / decide / hope / need + to','I want to plant roses.'],['there is + one thing','There is a wooden gate.'],['there are + many things','There are two gates.'],['describing materials','a stone wall, a wooden door']]},
                {t:'grow',q:'Put the verbs into the garden beds!',ru:'',bins:[['ing','+ -ing (digging)'],['to','+ to (to dig)']],win:'Both beds are growing!',
                  items:[['enjoy','ing'],['hate','ing'],['don’t mind','ing'],['love','ing'],['want','to'],['decide','to'],['hope','to'],['need','to']]},
                {t:'fix',q:'The mice wrote it wrong. Fix it!',words:['I','enjoy to dig','in the garden.'],bad:1,opts:[['enjoy digging',1],['enjoy dig'],['enjoying to dig']],ok:'I enjoy digging in the garden.'},
                {t:'fix',q:'And this one?',words:['Mary','wants planting','roses.'],bad:1,opts:[['wants to plant',1],['wants plant'],['want planting']],ok:'Mary wants to plant roses.'},
                {t:'fix',q:'One more!',words:['There is','two gates','in the wall.'],bad:0,opts:[['There are',1],['There be'],['It is']],ok:'There are two gates in the wall.'},
-               {t:'fix',q:'And the last one!',words:['Dickon made','a wood door','for the shed.'],bad:1,opts:[['a wooden door',1],['a woody door'],['a door wood']],ok:'Dickon made a wooden door for the shed.'},
+               {t:'fix',q:'And the last one!',words:['Dickon made','a wooden doors','for the shed.'],bad:1,opts:[['a wooden door',1],['a woody door'],['a door wood']],ok:'Dickon made a wooden door for the shed.'},
                {t:'voice',q:'Now you: I enjoy … but I want to …',want:['enjoy','want to','like','love'],line:'I enjoy reading, but I want to learn to dance.',sec:8}]},
       read:{title:'A Letter from Misselthwaite',ru:'',
         text:'Dear Mrs Sowerby,\n\nI want to thank you for the skipping rope and for your kind letter. I enjoy skipping very much — I can do a hundred skips now!\n\nI have a secret, and I want to tell you about it, because Dickon says you never tell secrets. There is a garden here behind a high stone wall. Nobody went into it for ten years. The door was under the ivy, and a robin showed me the key. When I opened the old wooden door, everything looked dead and grey. I was very sad.\n\nThen Dickon came. He knows everything about plants. He scratched a grey branch with his knife and said, “It’s wick!” — that means it’s alive. Now we go there every morning. Dickon digs and I plant seeds. We don’t mind getting dirty. There are little green points everywhere, and the roses are waking up.\n\nThere is one more secret. My cousin Colin lives in a room in the house. He was always ill and he hated going outside. Last week we took him to the garden in his chair. He loved being there! Today he decided to stand up, and he did. He wants to walk by the summer.\n\nPlease don’t tell anyone yet. We hope to show the garden to Colin’s father one day.\n\nLove from Mary',
@@ -2086,7 +2101,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var OWN={name:'Времена года',ico:BLOOM,kick:'Времена года',lbl:'Повернуть круг',say:'The seasons wheel! Winter, spring, summer, autumn.',ru:'Круг времён года! Зима, весна, лето, осень — что бывает в каждое время года?',steps:function(t){ return SEASON[t]; }};
   // сугроб (v2): три слова из истории Мэри + три лишних
   var SNOW={
-    little:{t:'pick3',q:'Find three friends from Mary’s garden!',note:'Сугроб! Чтобы растопить его, найди 3 друзей из сада Мэри и назови каждое вслух. Взрослому: помогите и повторите слова вместе.',items:[['i:robin',1,'robin'],['i:rabbit',1,'rabbit'],['i:mum',1,'mum'],['i:rocket',0,'rocket'],['i:cake',0,'cake'],['i:boat',0,'boat']]},
+    little:{t:'pick3',q:'Find three words from Mary’s story!',note:'Сугроб! Чтобы растопить его, найди 3 друзей из сада Мэри и назови каждое вслух. Взрослому: помогите и повторите слова вместе.',items:[['i:robin',1,'robin'],['i:rabbit',1,'rabbit'],['i:mum',1,'mum'],['i:rocket',0,'rocket'],['i:cake',0,'cake'],['i:boat',0,'boat']]},
     explorers:{t:'pick3',words:1,q:'Find three things from the secret garden!',note:'Сугроб! Чтобы растопить его, найди 3 вещи из тайного сада Мэри и скажи каждое вслух.',items:[['key',1],['door',1],['robin',1],['comet'],['compass'],['biscuit']]},
     experts:{t:'pick3',words:1,q:'Find three parts of the garden!',note:'Сугроб! Найди 3 слова про сад из истории Мэри и скажи каждое вслух.',items:[['greenhouse',1],['wall',1],['gate',1],['harbour'],['timetable'],['moustache']]}
   };
@@ -2095,9 +2110,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     opts:[{btn:'Show them the garden',key:'friendly',card:'<b>Friendly Mary</b>Дружная Мэри · в финале Колин и Дикон приходят на помощь',ru:'Мэри открыла дверь друзьям — и сад ожил втроём быстрее! Карточка «Дружная Мэри».'},
           {btn:'Keep the secret',key:'quiet',card:'<b>Quiet Mary</b>Тихая Мэри · в финале проходит мимо мышей незамеченной',ru:'Мэри спрятала ключ под камнем — пока сад не расцветёт. Карточка «Тихая Мэри».'}]};
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,robin:1,album:1,magice:1,mblend:1,seedgrid:1,whisper:1,night:1,grow:1,seasons:1,hop:1,fence:1,rooms:1,follow:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+  function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    R[st.t](body,st,nx); })(); }
+    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; if(progress){progress.step=i;checkpoint();} SND.whenIdle().then(nx); }); })(); }
 
 
   /* --- scenes --- */

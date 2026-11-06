@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="sf-preview-build" content="native-cells-20261105">
-<meta name="robots" content="noindex,nofollow">
 <base href="/story/3/">
+<meta name="sf-preview-build" content="content-review-20261106">
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 3 · Gerda · Костёр историй</title>
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
-<link rel="preload" as="image" href="/t-49db8ebd/img/10_board_bg_s3.webp">
+<link rel="preload" as="image" href="../../img/10_board_bg_s3.webp">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --night-3:#221849;
@@ -809,7 +809,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
+    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Костёр историй</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -851,7 +851,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   <!-- board: six frozen pages on the path -->
   <section class="scene" data-scene="board" aria-label="Зимний лес">
     <div class="forest" id="forest" style="aspect-ratio:720/840">
-      <img src="/t-49db8ebd/img/10_board_bg_s3.webp" alt="Тропа из клеток от костра через северные снега к ледяному дворцу">
+      <img src="../../img/10_board_bg_s3.webp" alt="Тропа из клеток от костра через северные снега к ледяному дворцу">
       <div class="token" id="token"><img src="../../img/04_token.webp" alt="Твоя фишка"></div>
     </div>
     <div class="voice">
@@ -894,7 +894,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       </ul>
       <div id="report" hidden></div>
       <p class="note">В ледяном дворце мыши оставили следы — и пропал ещё один кусок старой карты. Что они ищут? Завтра к костру придёт сыщик Шерлок Холмс.</p>
-      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -973,7 +973,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    fetch('audio/voice.json?v=1793770274').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    fetch('audio/voice.json?v=1793929691').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1063,7 +1063,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var from=$('[data-scene="'+cur+'"]'), to=$('[data-scene="'+id+'"]');
     from.classList.remove('on'); to.classList.add('on'); cur=id; SND.scene(id); SND.fx('whoosh');
     $$('.ru.show').forEach(function(r){r.classList.remove('show');}); $$('.rubtn').forEach(function(b){b.hidden=false;});
-    $('#backdrop').style.backgroundImage='url('+(id==='board'?'/t-49db8ebd/img/10_board_bg_s3.webp':'../../img/'+BG[id]+'.webp')+')';
+    $('#backdrop').style.backgroundImage='url(../../img/'+BG[id]+'.webp)';
     $$('i',dots).forEach(function(d,i){d.classList.toggle('on',i<=ORDER.indexOf(id));});
     var say=$('[data-say]',to); var p=say?speak(say):Promise.resolve();
     (ENTER[id]||function(){})(p);
@@ -1124,6 +1124,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return null; };
   var NUMW={'1':'one','2':'two','3':'three','4':'four','5':'five','6':'six'};
   var WORDS={paw:'paw print',cub:'wolf cub',fire:'the Red Flower',bananas:'bananas'};
+  var SENTENCE_WORDS={icecream:'ice cream',teddybear:'teddy bear',secretgarden:'secret garden',xmastree:'Christmas tree',toysoldier:'toy soldier',lollipop:'lollipop',robin:'robin'};
+  function sentenceWord(o,tpl){ var k=o.slice(2), w=o.indexOf('a:')===0?ACTW[k]:(SENTENCE_WORDS[k]||WORDS[k]||k);
+    if(/^I like /.test(tpl)){ if(k==='apple')w='apples';if(k==='bananas')w='bananas'; }
+    return w;
+  }
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   var phs=function(g){ try{ var a=new Audio('../../audio/ph/'+g+'.m4a'); var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} };
@@ -1332,7 +1337,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     head(body,s.q,s.ru); var box=el('div','opts'+(s.pics?' pics emo':'')); body.appendChild(box);
     var line=el('p','tline'); body.appendChild(line);
     s.opts.forEach(function(o){ var b=el('button','opt',pic(o)||esc(o)); b.dataset.ok=1; b.setAttribute('aria-label',o.slice(2)); box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=o.indexOf('a:')===0?ACTW[o.slice(2)]:o.slice(2); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
+      b.addEventListener('click',function(){ if(box.dataset.done) return; box.dataset.done=1; b.classList.add('yes'); var w=sentenceWord(o,s.tpl); var t=s.tpl.replace('{}',w); line.textContent=t; line.classList.add('ok'); SND.fx('ok'); SND.say(t);
         if(T==='little') setTimeout(next,1800); else SND.whenIdle().then(function(){ R.voice(body,{q:'',line:t,want:[w.split(' ')[0].slice(0,4)],sec:6},next); }); }); });
   };
   // правило Балу: карточки с примерами
@@ -1401,6 +1406,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       t0=Date.now(); timer=setInterval(tick,100); }
     show();
   };
+  function writingCriteria(f,v){
+    if(f.minIng&&(v.match(/\b(?:love|like|enjoy|hate|mind)s?\s+\w+ing\b/gi)||[]).length<f.minIng) return 'Нужны две фразы с глаголом + -ing, например: I love swimming. I enjoy reading.';
+    if(f.minSentences&&(v.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[]).filter(function(x){return x.trim();}).length<f.minSentences) return 'Напиши пять отдельных правил — каждое отдельным предложением.';
+    if(f.minStructures){var tests=[/\b(will|going to)\b|\bI[’']ll\b/i,/\b(was|were|went|saw|met|found|had|made|\w+ed)\b/i,/\b(must|have to|should)\b/i,/\benjoy \w+ing\b/i,/\b(the most|the \w+est|the best|the worst)\b/i];
+      if(tests.filter(function(r){return r.test(v);}).length<f.minStructures)return 'Покажи две разные структуры сезона: например, enjoy reading и I will read.';
+    }
+    return '';
+  }
   R.write=function(body,s,next){
     head(body,s.q,s.ru); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
@@ -1418,6 +1431,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         else if(f.also&&!f.also.every(function(r){ return r.test(v); })) why=f.alsoWhy||'Добавь наречие частоты: always / usually / often / sometimes / never.';
         else if(f.min&&n<f.min) why='Пока '+n+' слов, нужно '+f.min+'–'+(f.max||45)+'.';
         else if(f.max&&n>f.max) why='Слишком длинно: '+n+' слов. Нужно '+(f.min||1)+'–'+f.max+'.';
+        if(!why) why=writingCriteria(f,v);
         if(why) ins[i].focus(); });
       if(why){ wrong(null,fb); fb.textContent=why; return; }
       go2.disabled=true; SND.fx('ok'); try{ var w=JSON.parse(localStorage.getItem('sf_s'+SID+'_writing')||'[]'); w.push(ins.map(function(x){return x.value.trim();}).join(' ')); localStorage.setItem('sf_s'+SID+'_writing',JSON.stringify(w)); }catch(e){}
@@ -1475,12 +1489,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var fb=el('p','fb'); fb.setAttribute('aria-live','polite'); body.appendChild(fb);
     var skip=el('button','gloss','Без микрофона'); body.appendChild(skip);
     var tries=0, fin=false, mr=null;
-    function pass(){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=s.good||'Great! Костёр стал ярче.'; if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
-    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
+    function pass(supported){ if(fin) return; fin=true; rec.disabled=true; skip.hidden=true; if(pp) pp.classList.remove('snowy'); SND.fx('ok'); SND.fx('fire'); flare(row); fb.textContent=supported===true?'Попробовали вместе. Можно идти дальше — к этой фразе ещё вернёмся.':(s.good||'Great! Костёр стал ярче.'); if(s.reveal&&s.line&&!s.late) sayThen(s.line,1500,next); else setTimeout(next,1500); }
+    function retry(msg){ tries++; MISS++; if(hear) hear.hidden=false; if(tries>=2) return pass(true); SND.fx('no'); fb.textContent=msg||'Ещё разок! Послушай образец и скажи снова.'; rec.querySelector('span').textContent='Ещё раз'; }
     function judge(text){ var t=normT(text);
       if(s.keys){ var n=s.keys.filter(function(k){ return t.indexOf(' '+k)>=0||t.indexOf(k.split(' ')[0])>=0; }).length; return n>=(s.need||1); }
       if(!s.want) return t.trim().length>0;
-      return s.want.some(function(w){ return new RegExp(w).test(t); }); }
+      if(s.line&&s.line.trim().split(/\s+/).length>1&&t.trim().split(/\s+/).length<2) return false;
+      return s.want.some(function(w){ return w==='can'?/\bcan\b/.test(t):new RegExp(w).test(t); }); }
     function self(blob){ // без сервера: ребёнок слышит себя и сам подтверждает
       try{ new Audio(URL.createObjectURL(blob)).play().catch(function(){}); }catch(e){}
       fb.textContent='Слышишь? Это твой голос!'; if(!body.querySelector('.selfok')){ var b=el('button','btn btn-ghost selfok','Сказал(а) ✓'); body.insertBefore(b,skip); b.addEventListener('click',function(){ b.remove(); pass(); }); } }
@@ -1618,14 +1633,14 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         steps:[{t:'mcq',q:'What has Gerda got? Tap!',ru:'Взрослому: «Что есть у Герды?» Каждая картинка при нажатии называет себя.',pics:1,opts:[['i:hat',1],['i:icecream'],['i:umbrella']]},
                {t:'mcq',q:'Kay hasn’t got a …',ru:'Взрослому: «Чего нет у Кая?»',pics:1,opts:[['i:scarf',1],['i:rose'],['i:sledge']]},
                {t:'mcq',q:'Oh no! What did Gerda lose?',ru:'Взрослому: «Что Герда потеряла?»',pics:1,opts:[['i:mittens',1],['i:hat'],['i:scarf']]},
-               {t:'mcq',q:'The sun is out. Is it cold or sunny?',ru:'Взрослому: «Холодно или солнечно?» Нажмите — карточка назовёт себя.',pics:1,opts:[['i:sunny',1],['i:cold']]}]},
+               {t:'mcq',q:'The sun is out. What word did Gerda say?',ru:'Взрослому: «Какое слово сказала Герда про солнце?» Нажмите — карточка назовёт себя.',pics:1,opts:[['i:sunny',1],['i:cold']]}]},
       vocab:{steps:[{t:'show',q:'Tap and listen!',ru:'Взрослому: нажимайте на каждую картинку — она назовёт себя. Повторяйте вслух. 8 слов: зимняя одежда и погода.',items:['i:hat','i:scarf','i:coat','i:boots','i:mittens','i:snow','i:cold','i:sunny']},
                {t:'shards',q:'The mirror is broken! Turn the pieces.',ru:'Взрослому: волшебное зеркало разбилось! Нажимайте на кусочки — они поворачиваются. Ровный кусочек назовёт себя. Повторяйте вместе.',items:['i:hat','i:scarf','i:boots','i:mittens']},
                {t:'memory',q:'Find two the same!',ru:'Взрослому: «Найди пару». Открывайте по две карточки — каждая назовёт себя.',pairs:[['i:hat','i:hat'],['i:coat','i:coat'],['i:snow','i:snow'],['i:sunny','i:sunny']]}]
              .concat(nameIt([['i:hat',0,'hat|hut','hat'],['i:scarf',0,'scar','scarf'],['i:coat',0,'coat|cot','coat'],['i:boots',0,'boot','boots'],['i:mittens',0,'mitt|mit','mittens'],['i:snow',0,'snow','snow'],['i:cold',0,'cold|cod','cold'],['i:sunny',0,'sun','sunny']],'Взрослому: вещь спряталась в снегу. Назови её вслух — и она появится! Не получается — нажмите «Образец».'))},
       grammar:{steps:[{t:'tfa',q:'Look at Gerda’s things. Yes or no?',ru:'Взрослому: слушаем фразу и смотрим на картинку: правда — ✓, неправда — ✗. Читать не нужно.',items:[['She’s got a hat.','T','i:hat'],['She’s got boots.','F','i:scarf'],['She’s got mittens.','T','i:mittens'],['She’s got a coat.','F','i:icecream']]},
                {t:'who2',q:'Who says it right? Gerda or the mouse?',ru:'Взрослому: нажмите на Герду и на мышь — каждая скажет фразу. Мышь говорит She have got — так нельзя. Кто прав?',good:'She’s got boots.',bad:'She have got boots.'},
-               {t:'who2',q:'And now?',ru:'Взрослому: правильно I’ve got a hat — мышь потеряла кусочек ’ve.',good:'I’ve got a hat.',bad:'I got a hat.'},
+               {t:'who2',q:'And now?',ru:'Взрослому: правильно I’ve got a hat — мышь потеряла кусочек ’ve.',good:'I’ve got a hat.',bad:'I have a got hat.'},
                {t:'dress',q:'It is cold! Listen and dress Gerda.',ru:'Взрослому: Книга говорит, что есть у Герды (She’s got a scarf!) — найдите эту вещь и «наденьте» на Герду.',need:[['i:scarf','a scarf'],['i:hat','a hat'],['i:boots','boots']],extra:[['i:icecream','ice cream'],['i:driedfish','a fish'],['i:mittens','mittens']]},
                {t:'voice',pic:'i:hat',q:'And you? What have you got? I’ve got a …',want:['got','ive','have'],line:'I’ve got a hat!',ru:'Взрослому: ребёнок говорит про свою одежду: I’ve got a hat! I’ve got a coat!'}]},
       read:{lock:{t:'sym',mode:'tiles',answer:'HAT',q:'The mice wrote with snowflakes! Use the key on the ice.',ru:'Взрослому: мыши написали слово снежинками (внизу). Для каждой снежинки найдите такую же в ключе и нажмите её — откроется буква. Не торопитесь с подсказкой: сначала попробуйте сами.',opts:[['w:hat',1],['w:mug'],['w:bed']]},
@@ -1647,26 +1662,26 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       vocab:{steps:[{t:'shards',q:'The mirror is broken! Turn the pieces.',ru:'Зеркало разбилось! Нажимай на осколки, чтобы повернуть их. Ровный осколок назовёт домашнее дело.',items:['a:makebed','a:washup','a:laytable','a:tidyup','a:waterplants','a:feedpets']},
                {t:'memory',q:'Find the pairs: a picture and a word!',ru:'«Найди пару»: картинка + слово. Карточка говорит фразу урока.',
                  pairs:[['a:makebed','make the bed'],['a:washup','wash up'],['a:laytable','lay the table'],['a:waterplants','water the plants'],['a:feedpets','feed the pets'],['a:tidyup','tidy up']],
-                 say:{'a:makebed':'Gerda always makes her bed.','a:washup':'Kay never washes up.','a:laytable':'Grandma often lays the table.','a:waterplants':'Kay waters the roses.','a:feedpets':'Gerda feeds the cat every day.','a:tidyup':'They sometimes tidy up together.'}},
+                 say:{'a:makebed':'Gerda always makes her bed.','a:washup':'Kay sometimes washes up.','a:laytable':'Grandma often lays the table.','a:waterplants':'Gerda waters the roses.','a:feedpets':'Gerda feeds the cat every day.','a:tidyup':'They sometimes tidy up together.'}},
                {t:'memory',q:'How often? Find the pairs.',ru:'Как часто? Соедини слово и шкалу.',pairs:[['always','●●●●'],['often','●●●○'],['sometimes','●●○○'],['never','○○○○']]}]
              .concat(nameIt([['a:makebed','What does Gerda do? She …','make|bed','She makes the bed.'],['a:waterplants','And now?','water','She waters the plants.'],['a:laytable','And now?','lay|table','She lays the table.'],['a:feedpets','And now?','feed','She feeds the pets.']],'Скажи, что делает Герда: She makes… / She waters… — с -s! И картинка оттает.'))},
       grammar:{steps:[{t:'rule',q:'Gerda’s rule',ru:'Он / она — глагол с -s (wash → washes). Always, often, sometimes, never стоят ПЕРЕД глаголом, но ПОСЛЕ is.',rows:[['I water → she waters','Gerda waters the roses.'],['wash → washes, tidy → tidies','Kay washes up.'],['always / often / sometimes / never + глагол','Grandma often lays the table.'],['is + always / never','Kay is never late.']]},
-               {t:'sort',q:'Right or wrong? The mice wrote some of them!',ru:'Верно или мыши ошиблись?',bins:[['ok','Right ✓'],['bad','The mice! ✗']],items:[['She waters the plants.','ok'],['She water the plants.','bad'],['Kay is never late.','ok'],['Kay never is late.','bad'],['He washes up.','ok'],['He wash up.','bad']]},
-               {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей: нажми на неверное слово и выбери правильное.',words:['Kay','never is','late.'],bad:1,opts:[['is never',1],['never are'],['not never']],ok:'Kay is never late.'},
+               {t:'sort',q:'Right or wrong? The mice wrote some of them!',ru:'Верно или мыши ошиблись?',bins:[['ok','Right ✓'],['bad','The mice! ✗']],items:[['She waters the plants.','ok'],['She water the plants.','bad'],['Kay is never late.','ok'],['Kay is never lates.','bad'],['He washes up.','ok'],['He wash up.','bad']]},
+               {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей: нажми на неверное слово и выбери правильное.',words:['Kay','are never','late.'],bad:1,opts:[['is never',1],['never are'],['not never']],ok:'Kay is never late.'},
                {t:'fix',q:'And here?',ru:'И здесь ошибка.',words:['She','water','the plants.'],bad:1,opts:[['waters',1],['watering'],['wateres']],ok:'She waters the plants.'},
-               {t:'gaps',q:'Ask about Kay.',ru:'Вопрос: does + глагол БЕЗ -s.',text:'How often {0} Kay wash up? — He {1} washes up. {2} he make his bed? — No, he doesn’t.',gaps:[[['does','do','is'],'does'],[['never','nevers','not'],'never'],[['Does','Do','Is'],'Does']]},
+               {t:'gaps',q:'Ask about Kay.',ru:'Вопрос: does + глагол БЕЗ -s.',text:'How often {0} Kay wash up? — He {1} washes up. {2} he make his bed? — No, he doesn’t.',gaps:[[['does','do','is'],'does'],[['sometimes','sometime','not'],'sometimes'],[['Does','Do','Is'],'Does']]},
                {t:'voice',q:'Now you: I always … / I never …',want:['always','never','often','sometimes','usually'],line:'I always make my bed. I never wash up!',sec:8,ru:'Расскажи про себя голосом: I always … / I never …'}]},
       read:{title:'Next Door',ru:'Прочитай страницу книги.',
-        text:'Gerda and Kay live next door to each other. Their windows are very close, and there is a little roof garden between them. Every morning Gerda makes her bed and feeds the cat. Kay usually waters the roses — he loves them. Grandma often lays the table, and the children have breakfast together. After school they sometimes tidy up the roof garden. Kay never washes up — he always says he is busy! In winter the roses sleep under the snow, and Grandma tells stories. “Can the Snow Queen come in here?” asks Gerda. “Let her come!” says Kay. “I will put her on the hot stove, and she will melt!”',
-        lock:{t:'sym',answer:'KAY NEVER WASHES UP',q:'The mice wrote with snowflakes! Use the key and write it.',ru:'У каждой снежинки своя буква — ключ сверху. Расшифруй и напиши.'},
+        text:'Gerda and Kay live next door to each other. Their windows are very close, and there is a little roof garden between them. Every morning Gerda makes her bed and feeds the cat. Gerda always waters the roses — she loves them. Grandma often lays the table, and the children have breakfast together. After school they sometimes tidy up the roof garden. Kay sometimes washes up, but he never makes his bed! In winter the roses sleep under the snow, and Grandma tells stories. “Can the Snow Queen come in here?” asks Gerda. “Let her come!” says Kay. “I will put her on the hot stove, and she will melt!”',
+        lock:{t:'sym',answer:'KAY SOMETIMES WASHES UP',q:'The mice wrote with snowflakes! Use the key and write it.',ru:'У каждой снежинки своя буква — ключ сверху. Расшифруй и напиши.'},
         steps:[{t:'tf',q:'True or false?',ru:'Правда или нет?',items:[['Gerda feeds the cat every morning.','T'],['Kay always washes up.','F'],['Grandma often lays the table.','T']]},
-               {t:'mcq',q:'How often does Kay wash up?',ru:'Как часто Кай моет посуду?',opts:[['never',1],['always'],['every day']]},
+               {t:'mcq',q:'How often does Kay wash up?',ru:'Как часто Кай моет посуду?',opts:[['sometimes',1],['always'],['every day']]},
                {t:'retell',q:'Tell the Book: who does what at home?',ru:'Перескажи Книге по картинкам: 4 предложения. Не забудь -s: Gerda makes…',
-                 pics:[['a:makebed','Gerda · makes her bed'],['i:rose','Kay · waters the roses'],['a:laytable','Grandma · lays the table'],['a:washup','Kay · never washes up']],
-                 keys:['makes','bed','waters','roses','lays','table','never','washes'],need:4,sec:40,line:'Every morning Gerda makes her bed. Kay usually waters the roses. Grandma often lays the table. Kay never washes up.'}]},
+                 pics:[['a:makebed','Gerda · makes her bed'],['i:rose','Gerda · waters the roses'],['a:laytable','Grandma · lays the table'],['a:washup','Kay · sometimes washes up']],
+                 keys:['makes','bed','waters','roses','lays','table','sometimes','washes'],need:4,sec:40,line:'Every morning Gerda makes her bed. Gerda always waters the roses. Grandma often lays the table. Kay sometimes washes up.'}]},
       write:{steps:[{t:'fish',q:'A letter on a dried fish for Kay!',ru:'Письмо Каю на сушёной рыбе, как у лапландки. Помни: Grandma often lays… (с -s), а наречие — перед глаголом.',
-               fields:[{ph:'Kay, Grandma often …',need:/\bgrandma (always|usually|often|sometimes|never) \w+s\b/i,why:'Про бабушку: Grandma often … + глагол с -s (lays, waters, tells).'},{ph:'I always …',need:/\bI (always|usually|often|sometimes|never) \w+/i,why:'Про себя: I always / I often … + глагол.'},{ph:'You never …',need:/\byou (always|usually|often|sometimes|never) \w+/i,why:'Про Кая: You never … + глагол.'}],
-               model:'Kay, Grandma often tells stories. I always water the roses. You never wash up!'}]},
+               fields:[{ph:'Kay, Grandma often …',need:/\bgrandma (always|usually|often|sometimes|never) \w+s\b/i,why:'Про бабушку: Grandma often … + глагол с -s (lays, waters, tells).'},{ph:'I always …',need:/\bI (always|usually|often|sometimes|never) \w+/i,why:'Про себя: I always / I often … + глагол.'},{ph:'You sometimes …',need:/\byou (always|usually|often|sometimes|never) \w+/i,why:'Про Кая: You sometimes … + глагол.'}],
+               model:'Kay, Grandma often tells stories. I always water the roses. You sometimes wash up!'}]},
       speak:{steps:[{t:'melt',q:'Kay is frozen! Say warm words: Kay, sweet little Kay!',ru:'Кай заледенел. Скажи громко и тепло — лёд растает от голоса.',line:'Kay, sweet little Kay!'},
                {t:'voice',pic:'g:08_v7_gerda',q:'How often do you make your bed?',want:['always','never','often','sometimes','usually','every'],line:'I usually make my bed in the morning.',sec:8,ru:'Герда спрашивает. Ответь с наречием: always / often / sometimes / never.'},
                {t:'voice',pic:'g:08_v7_gerda',q:'Do you wash up?',want:['yes','no','do','sometimes','never','often'],line:'Yes, I do. I sometimes wash up after dinner.',sec:8,ru:'Ответь Yes, I do / No, I don’t и добавь, как часто.'}]}
@@ -1696,7 +1711,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'retell',type:1,q:'Retell Gerda’s day in 5–6 sentences.',ru:'Перескажи голосом (или напиши). Используй минимум 6 слов из списка.',
                  keys:['reindeer','north','freezing','boots','mittens','lapland','fish','palace'],need:6,sec:60,line:'Gerda is riding a reindeer to the north, and it is freezing. She lost her boots and mittens. In the evening they stop at the Lapland woman’s house. The woman writes a letter on a dried fish. Tomorrow Gerda is going to the Snow Queen’s palace.'}]},
       write:{steps:[{t:'write',poster:'card',area:1,cardTitle:'PHOTO FOR KAY',cardPic:'g:09_g4_reindeer',doneMsg:'Фото с подписью улетело к Каю!',q:'Write about the photo for Kay (30–40 words).',ru:'Опиши фото: что на Герде надето, что она делает и почему. Нужны Present Continuous и because / so.',
-               fields:[{ph:'In the picture Gerda is wearing …',need:/\b(is|are|’s|'s) \w+ing\b/i,why:'Нужен Present Continuous: Gerda is wearing… The reindeer is running…',also:[/\b(because|so)\b/i],alsoWhy:'Добавь because или so: …because it is freezing / …so she is cold.',min:30,max:45}],
+               fields:[{ph:'In the picture Gerda is wearing …',need:/\b(is|are|’s|'s) \w+ing\b/i,why:'Нужен Present Continuous: Gerda is wearing… The reindeer is running…',also:[/\b(because|so)\b/i],alsoWhy:'Добавь because или so: …because it is freezing / …so she is cold.',min:30,max:40}],
                model:'In the picture Gerda is wearing a big fur hat, but she isn’t wearing boots. She is riding a reindeer through the snow because she is looking for Kay. It is freezing, so she looks cold and tired.'}]},
       speak:{steps:[{t:'melt',q:'Say Gerda’s words to melt the ice: Kay, sweet little Kay! Have I then found you at last?',line:'Kay, sweet little Kay! Have I then found you at last?'},
                {t:'voice',pic:'i:raven',q:'The raven asks: What are you wearing today?',want:['wearing'],line:'Today I’m wearing jeans and a warm hoodie.',sec:8},
@@ -1713,11 +1728,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
             {t:'voice',pic:'i:boots',q:'What is it? Say it!',want:['boot'],line:'They’re boots.',frame:'They’re …'},
             {t:'who2',q:'Who says it right?',good:'She’s got a hat.',bad:'She have got a hat.'},
             {t:'mcq',show:'fork',q:'Read the word. Find the picture!',pics:1,opts:[['w:fork',1],['w:horn'],['w:storm']]}],
-    explorers:[{t:'mcq',img:'a:waterplants',q:'What is she doing?',opts:[['She waters the plants.',1],['She feeds the pets.'],['She washes up.']]},
+    explorers:[{t:'mcq',img:'a:waterplants',q:'What does she do?',opts:[['She waters the plants.',1],['She feeds the pets.'],['She washes up.']]},
                {t:'mcq',img:'a:laytable',q:'What does Grandma do?',opts:[['She lays the table.',1],['She tidies up.'],['She makes the bed.']]},
-               {t:'voice',pic:'a:washup',q:'Say it! Kay never …',want:['wash'],line:'Kay never washes up.'},
+               {t:'voice',pic:'a:washup',q:'Say it! Kay sometimes …',want:['wash'],line:'Kay sometimes washes up.'},
                {t:'gaps',q:'Fill the gap.',text:'She {0} (water) the plants every day.',gaps:[[['waters','water','watering'],'waters']]},
-               {t:'mcq',q:'Which is right?',opts:[['Kay is always late.',1],['Kay always is late.'],['Kay late is always.']]}],
+               {t:'mcq',q:'Which is right?',opts:[['Kay is always late.',1],['Kay always are late.'],['Kay late is always.']]}],
     experts:[{t:'mcq',q:'Sports shoes are …',opts:[['trainers',1],['boots'],['gloves']]},
              {t:'mcq',q:'These jeans are too small. They are …',opts:[['tight',1],['loose'],['waterproof']]},
              {t:'fix',q:'Fix the mistake.',words:['I','am knowing','the way.'],bad:1,opts:[['know',1],['knowing'],['am know']],ok:'I know the way.'},
@@ -1739,7 +1754,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
             [{t:'sym',mode:'tiles',answer:'KING',q:'Another snowflake word!',ru:'Взрослому: ищите каждую снежинку в ключе. В конце два звука вместе — ng.',opts:[['w:king',1],['w:ring'],['w:wing']]}]],
     explorers:[[{t:'sym',answer:'SOMETIMES',q:'Snowflake letters from the mice! Write the word.',ru:'Мыши написали снежинками. Расшифруй по ключу.'},
                 {t:'mcq',q:'…and use it: Kay ___ washes up.',opts:[['sometimes',1],['sometime'],['is sometimes']]}],
-               [{t:'fix',q:'A mouse note! Find the mistake and fix it.',ru:'Записка мышей. Где ошибка?',words:['Grandma','never is','angry.'],bad:1,opts:[['is never',1],['nevers is'],['never are']],ok:'Grandma is never angry.'}]],
+               [{t:'fix',q:'A mouse note! Find the mistake and fix it.',ru:'Записка мышей. Где ошибка?',words:['Grandma','are never','angry.'],bad:1,opts:[['is never',1],['nevers is'],['never are']],ok:'Grandma is never angry.'}]],
     experts:[[{t:'morse',answer:'COAT',q:'The raven croaks again. What does he say?'}],
              [{t:'fix',q:'A mouse note: I am knowing where Kay is. Fix it!',words:['I','am knowing','where Kay is.'],bad:1,opts:[['know',1],['knowing'],['am know']],ok:'I know where Kay is.'}]]
   };
@@ -1897,9 +1912,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     opts:[{btn:'Hug him and cry',key:'warm',card:'<b>Warm-hearted Gerda</b>Герда с горячим сердцем · в финале её слёзы растапливают любой лёд',ru:'Горячие слёзы Герды упали Каю на грудь — и осколок зеркала растаял! Карточка «Герда с горячим сердцем».'},
           {btn:'Sing our song',key:'song',card:'<b>Singing Gerda</b>Поющая Герда · в финале её песня усыпляет мышиную армию',ru:'Герда запела про розы — и Кай вспомнил всё! Карточка «Поющая Герда».'}]};
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1,pick3:1,shards:1,kim:1,dress:1,fish:1,melt:1,iceword:1,morse:1,twoice:1};
-  function runSteps(body,steps,finish,art){ var i=0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
+  function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
     if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
-    R[st.t](body,st,nx); })(); }
+    var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; if(progress){progress.step=i;checkpoint();} SND.whenIdle().then(nx); }); })(); }
 
 
   /* --- scenes --- */
@@ -2205,7 +2220,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   ($('[data-scene="end"] .cta')||$('[data-scene="end"]')).appendChild(replay);
   replay.addEventListener('click',function(){freshRun();location.reload();});
 
-var BOOK={"title": "The Snow Queen", "author": "Hans Christian Andersen", "pages": [{"v": "video/book_1.mp4", "a": "audio/b3_1.mp3", "en": "Long ago a wicked troll made a magic mirror. It broke into millions of tiny pieces, and they flew all over the world.", "ru": "Давным-давно злой тролль сделал волшебное зеркало. Оно разбилось на миллионы осколков, и они разлетелись по всему свету.", "t": [0.0, 0.34, 1.03, 1.38, 2.07, 2.41, 2.75, 3.1, 3.79, 4.64, 5.0, 5.36, 6.09, 6.82, 7.18, 7.91, 8.64, 9.01, 9.39, 9.76, 10.13, 10.88, 11.25]}, {"v": "video/book_2.mp4", "a": "audio/b3_2.mp3", "en": "Gerda and Kai were best friends. They grew roses by the window. But one day a tiny piece of glass flew into Kai's eye, and his heart turned to ice.", "ru": "Герда и Кай были лучшими друзьями и растили розы у окна. Но однажды крошечный осколок попал Каю в глаз, и его сердце стало ледяным.", "t": [0.0, 0.77, 1.16, 1.54, 1.93, 2.31, 2.95, 3.22, 3.48, 4.02, 4.28, 4.55, 5.52, 5.85, 6.51, 6.84, 7.17, 7.82, 8.15, 8.48, 8.81, 9.14, 9.79, 10.12, 10.45, 10.79, 11.13, 11.47, 12.15, 12.49]}, {"v": "video/book_3.mp4", "a": "audio/b3_3.mp3", "en": "In winter the Snow Queen came in her white sledge. She took Kai far away to the north. Now Gerda needs your help!", "ru": "Зимой приехала Снежная королева в белых санях и увезла Кая далеко на север. А теперь Герде нужна твоя помощь!", "t": [0.0, 0.42, 1.25, 1.67, 2.09, 2.51, 2.93, 3.34, 3.76, 4.18, 4.83, 5.21, 5.6, 5.98, 6.36, 7.12, 7.5, 7.88, 8.77, 9.17, 9.98, 10.38, 10.79]}]};
+var BOOK={"title": "The Snow Queen", "author": "Hans Christian Andersen", "pages": [{"v": "video/book_1.mp4", "a": "audio/b3_1.mp3", "en": "Long ago a wicked troll made a magic mirror. It broke into millions of tiny pieces, and they flew all over the world.", "ru": "Давным-давно злой тролль сделал волшебное зеркало. Оно разбилось на миллионы осколков, и они разлетелись по всему свету.", "t": [0.0, 0.34, 1.03, 1.38, 2.07, 2.41, 2.75, 3.1, 3.79, 4.64, 5.0, 5.36, 6.09, 6.82, 7.18, 7.91, 8.64, 9.01, 9.39, 9.76, 10.13, 10.88, 11.25]}, {"v": "video/book_2.mp4", "a": "audio/b3_2.mp3", "en": "Gerda and Kay were best friends. They grew roses by the window. But one day a tiny piece of glass flew into Kay's eye, and his heart turned to ice.", "ru": "Герда и Кай были лучшими друзьями и растили розы у окна. Но однажды крошечный осколок попал Каю в глаз, и его сердце стало ледяным.", "t": [0.0, 0.77, 1.16, 1.54, 1.93, 2.31, 2.95, 3.22, 3.48, 4.02, 4.28, 4.55, 5.52, 5.85, 6.51, 6.84, 7.17, 7.82, 8.15, 8.48, 8.81, 9.14, 9.79, 10.12, 10.45, 10.79, 11.13, 11.47, 12.15, 12.49]}, {"v": "video/book_3.mp4", "a": "audio/b3_3.mp3", "en": "In winter the Snow Queen came in her white sledge. She took Kay far away to the north. Now Gerda needs your help!", "ru": "Зимой приехала Снежная королева в белых санях и увезла Кая далеко на север. А теперь Герде нужна твоя помощь!", "t": [0.0, 0.42, 1.25, 1.67, 2.09, 2.51, 2.93, 3.34, 3.76, 4.18, 4.83, 5.21, 5.6, 5.98, 6.36, 7.12, 7.5, 7.88, 8.77, 9.17, 9.98, 10.38, 10.79]}]};
 /* «Костёр историй»: доступ по коду семьи и открытие историй по датам.
    Сервер — ss-pay (проверка кода идёт ручкой /pay/status {sf_code}); сначала российский шлюз Яндекса, потом workers.dev.
    Код храним в localStorage sf_code; удачную проверку — sf_ok (время), чтобы без связи не выкидывало из игры. */
