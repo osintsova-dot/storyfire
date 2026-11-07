@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/5/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1551,7 +1551,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return '';
   }
   R.write=function(body,s,next){
-    head(body,s.q,s.ru); var ins=[];
+    head(body,s.q,s.ru,s.note); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
     s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
       if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
@@ -1678,7 +1678,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
   R.retell=function(body,s,next){
     var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
-    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
+    R.voice(body,{q:s.q,ru:s.ru,note:s.note,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
     if(s.type){ var tb=el('button','gloss',(state.track==='experts'?"Type your answer":'Написать текстом')); body.appendChild(tb);
       tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold',(state.track==='experts'?"Done":'Готово')); body.appendChild(ok);
         ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
@@ -1873,8 +1873,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'retell',type:1,q:'Retell Dorothy’s road in 5–6 sentences.',ru:(state.track==='experts'?"Перескажи голосом (или напиши). Используй минимум 6 слов of списка.":'Перескажи голосом (или напиши). Используй минимум 6 слов из списка.'),
                  keys:['kansas','cyclone','yellow brick','forest','river','field','emerald','home'],need:6,sec:60,line:'Dorothy lived in Kansas, where everything was grey and dry. A cyclone carried her house to the Land of Oz. She walked along the yellow brick road to find the Wizard. The path went through a dark forest, and the friends crossed a deep river on a raft. In a field of red flowers Dorothy and the Lion fell asleep. At last they saw the Emerald City, but Dorothy still wanted to go home.'}]},
       write:{steps:[{t:'write',area:1,poster:'card',cardTitle:'POSTCARD FROM OZ',cardPic:'i:balloon',doneMsg:(state.track==='experts'?"Your postcard is flying away in the balloon!":'Открытка улетела на воздушном шаре!'),q:'Write a postcard from Oz (30–40 words).',ru:'Опиши страну Оз: 2 сравнения (-er than / more … than / as … as) и 1 превосходная степень (the most … / the -est / the best).',
-               fields:[{ph:'Dear …, Oz is …',need:/\b(\w+er|more \w+|less \w+) than\b|\bas \w+ as\b/i,why:(state.track==='experts'?"Use a comparison: greener than / more beautiful than / as … as.":'Нужно сравнение: greener than / more beautiful than / as … as.'),also:[/(than|as \w+ as)[\s\S]+(than|as \w+ as)/i,/\b(the most \w+|the \w+est|the best|the worst)\b/i],alsoWhy:(state.track==='experts'?"Use 2 comparatives and 1 superlative (the most beautiful / the highest / the best).":'Нужно 2 сравнения и 1 превосходная степень (the most beautiful / the highest / the best).'),min:30,max:45}],
-               model:'Dear Mum, Oz is much greener than Kansas. The rivers are wider and the hills are higher than at home. The forest is as dark as night. The Emerald City is the most beautiful place here, but I miss you!'}]},
+               fields:[{ph:'Dear …, Oz is …',need:/\b(\w+er|more \w+|less \w+) than\b|\bas \w+ as\b/i,why:(state.track==='experts'?"Use a comparison: greener than / more beautiful than / as … as.":'Нужно сравнение: greener than / more beautiful than / as … as.'),also:[/(than|as \w+ as)[\s\S]+(than|as \w+ as)/i,/\b(the most \w+|the \w+est|the best|the worst)\b/i],alsoWhy:(state.track==='experts'?"Use 2 comparatives and 1 superlative (the most beautiful / the highest / the best).":'Нужно 2 сравнения и 1 превосходная степень (the most beautiful / the highest / the best).'),min:30,max:40}],
+               model:'Dear Mum, Oz is greener than Kansas. The rivers are wider than at home. The forest is as dark as night. The Emerald City is the most beautiful place here. I miss you!'}]},
       speak:{steps:[{t:'voice',pic:'i:scarecrow',q:'The Scarecrow asks: Which is better — the city or the country? Why?',want:['better','than','more','because'],line:'I think the country is better than the city because it is quieter and the air is cleaner.',sec:12,ru:(state.track==='experts'?"Страшила спрашивает. Answerь полным предложением со сравнением и because.":'Страшила спрашивает. Ответь полным предложением со сравнением и because.')},
                {t:'voice',pic:'i:scarecrow',q:'What’s the most beautiful place you know?',want:['most','best','est'],line:'The most beautiful place I know is the lake near my grandma’s house.',sec:10}]}
     }
@@ -1900,6 +1900,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'mcq',q:'The trees were as tall ___ houses.',opts:[['as',1],['than'],['like']]},
              {t:'mcq',q:'Why did Dorothy and the Lion fall asleep?',opts:[['The red flowers made them sleep.',1],['They walked all night.'],['The Wizard wanted it.']]}]
   };
+  // Visible English requirements; never depend on the hidden Russian help.
+  L.experts.write.steps[0].note="Describe Oz. Include two comparisons (such as greener than or as dark as) and one superlative (such as the most beautiful). Write 30–40 words.";
+  L.experts.read.steps.filter(function(s){return s.t==='retell';}).forEach(function(s){s.note='Retell in 5–6 sentences. Use at least '+s.need+' words or phrases from the list. You can speak or type your answer.';});
   var REPORT={
     little:{words:'happy, sad, scared, tired, hungry, friend, lion, dog',grammar:'I’m … · He’s / She’s … · Is he …? Yes, he is / No, he isn’t (не «He are sad»)',more:'Фоника: повтор (dog, tin, big, yes) + sh, th (ship, shop, fish, sheep, brush, moth)'},
     explorers:{words:'kind / unkind, friendly, shy, confident, brave, scared, clever, lazy, quiet / noisy',grammar:'Is he …? vs Does he …? · краткие ответы Yes, he is / No, he doesn’t',more:'Чтение: «Three Friends on the Road» + пересказ, просьба к Волшебнику'},

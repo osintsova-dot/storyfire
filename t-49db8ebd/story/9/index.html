@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/9/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1158,7 +1158,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
       var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
-      fetch(asset || (id==='ph26_face'?'/t-49db8ebd/assets/phonics-20261106/face.mp3':(/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s9/':'audio/')+id+'.mp3')).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+      fetch(asset || ((id==='ph26_face'?'/t-49db8ebd/assets/phonics-20261106/face.mp3':(/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s9/':'audio/')+id+'.mp3'))).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
       });
     }
@@ -1577,7 +1577,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return '';
   }
   R.write=function(body,s,next){
-    head(body,s.q,s.ru); var ins=[];
+    head(body,s.q,s.ru,s.note); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
     s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
       if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
@@ -1704,7 +1704,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
   R.retell=function(body,s,next){
     var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
-    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
+    R.voice(body,{q:s.q,ru:s.ru,note:s.note,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
     if(s.type){ var tb=el('button','gloss',(state.track==='experts'?"Type your answer":'Написать текстом')); body.appendChild(tb);
       tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold',(state.track==='experts'?"Done":'Готово')); body.appendChild(ok);
         ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
@@ -1848,7 +1848,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                  pairs:[['live','lived'],['find','found'],['get','got'],['learn','learnt'],['plant','planted'],['move','moved']],
                  say:{lived:'I lived in India.',found:'I found a key.',got:'I got a pet.',learnt:'I learnt a lot.',planted:'We planted seeds.',moved:'I moved house.'}}]
              .concat(nameIt([['i:oldkey',0,'key|ki','a key'],['i:gardendoor',0,'door|dor|do','a door'],['i:robin',0,'robin|robbin|rob','a robin'],['i:secretgarden',0,'gard|gar','a garden']],'Картинка спит под снегом. Назови её вслух — и она проснётся!'))},
-      grammar:{steps:[{t:'rule',q:'Mary’s garden rules',ru:'was — один (I, he, she), were — много (we, you, they). В прошлом глагол меняется: lived, found. Но в вопросе с did — обычная форма: Did she find?',
+      grammar:{steps:[{t:'rule',q:'Mary’s garden rules',ru:'was — с I, he, she, it; were — с you, we, they (you — и про одного человека). В прошлом глагол меняется: lived, found. Но в вопросе с did — обычная форма: Did she find?',
                  rows:[['I / he / she was','She was in India.'],['we / you / they were','There were a hundred rooms.'],['Past Simple: -ed','She lived. She moved. She planted.'],['irregular','find → found, get → got, learn → learnt'],['Did she …? + verb','Did she find the key? Yes, she did.'],['Where did …?','Where did she live? In India.']]},
                {t:'grow',q:'Plant and grow! Right — or did the mice write it?',ru:(state.track==='experts'?"«Plant and grow»: верно или мыши ошиблись? Каждый верный ответ — цветок растёт.":'«Посади и вырасти»: верно или мыши ошиблись? Каждый верный ответ — цветок растёт.'),items:[['She was in India.','ok'],['She were in India.','bad'],['Did she find the key?','ok'],['Did she found the key?','bad'],['Mary found a door.','ok'],['Mary finded a door.','bad']]},
                {t:'fix',q:'The mice made a mistake. Tap it and fix it!',ru:'Найди ошибку мышей и исправь.',words:['Yesterday','I was go','to the garden.'],bad:1,opts:[['I went',1],['I was went'],['I goed']],ok:'Yesterday I went to the garden.'},
@@ -1934,6 +1934,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'gaps',q:'Fill the gap.',text:'We hope {0} the garden to Colin’s father.',gaps:[[['to show','showing','show'],'to show']]},
              {t:'mcq',q:'What does “wick” mean?',opts:[['alive',1],['dead'],['old']]}]
   };
+  // Visible English requirements; never depend on the hidden Russian help.
+  L.experts.write.steps[0].note="Describe the garden and your activities. Include a verb + -ing phrase (I enjoy digging), a verb + to phrase (I want to plant), and there is or there are.";
+  L.experts.read.steps.filter(function(s){return s.t==='retell';}).forEach(function(s){s.note='Retell in 5–6 sentences. Use at least '+s.need+' words or phrases from the list. You can speak or type your answer.';});
   var REPORT={
     little:{words:'mum, dad, brother, sister, grandma, rabbit, bird, garden',grammar:'This is my … · Who’s this? He’s my … / She’s my … (he — он, she — она)',more:'Фоника: Magic E — a-e, i-e (cake, face, wave, plate, kite, bike, smile) + повтор ai, oi, ee (rain, soil, sheep)'},
     explorers:{words:'lived, moved house, got a pet, learnt, found, planted, garden, key, door, robin',grammar:'was / were · Past Simple (lived, found, got, learnt) · Where did …? Did she …? Yes, she did',more:'Чтение: «Mary’s Story» + порядок событий, пересказ, дневник Мэри; садовая сетка семян'},

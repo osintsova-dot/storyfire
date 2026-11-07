@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/8/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1512,7 +1512,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return '';
   }
   R.write=function(body,s,next){
-    head(body,s.q,s.ru); var ins=[];
+    head(body,s.q,s.ru,s.note); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
     s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
       if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
@@ -1639,7 +1639,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
   R.retell=function(body,s,next){
     var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
-    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
+    R.voice(body,{q:s.q,ru:s.ru,note:s.note,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
     if(s.type){ var tb=el('button','gloss',(state.track==='experts'?"Type your answer":'Написать текстом')); body.appendChild(tb);
       tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold',(state.track==='experts'?"Done":'Готово')); body.appendChild(ok);
         ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
@@ -1867,7 +1867,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
                {t:'retell',type:1,q:'What happened? Retell in 5–6 sentences.',ru:(state.track==='experts'?"Перескажи голосом (или напиши). Используй минимум 6 слов of списка.":'Перескажи голосом (или напиши). Используй минимум 6 слов из списка.'),
                  keys:['geppetto','coat','abc book','school','theatre','ticket','puppets','cricket'],need:6,sec:60,line:'Geppetto sold his coat and bought Pinocchio an ABC book. He said Pinocchio had to go to school. On the way Pinocchio heard music and saw the puppet theatre. A ticket cost four pennies, so he sold his ABC book. The puppets danced with him, and the owner was very angry. The Talking Cricket was right.'}]},
       write:{steps:[{t:'write',area:1,poster:'card',cardTitle:'RULES FOR PINOCCHIO',cardPic:'i:primer',doneMsg:(state.track==='experts'?"Your rules are up in the workshop. The Cricket is pleased!":'Правила висят в мастерской. Сверчок доволен!'),q:'Rules for Pinocchio: 5 rules (35–45 words).',ru:'Пять правил. Нужны все четыре: must, mustn’t, have to, don’t have to (+ should, если хочешь). Без must to!',
-               fields:[{ph:'You must …',need:/^(?![\s\S]*\bmust to\b)[\s\S]*\bmust (?!to\b)\w+/i,why:(state.track==='experts'?"Use must + a verb without to: You must go to school.":'Нужно must + глагол без to: You must go to school.'),also:[/\b(mustn[’']?t|must not)\b/i,/\b(have|has) to\b/i,/\b(don[’']?t|doesn[’']?t|do not|does not) have to\b/i],alsoWhy:(state.track==='experts'?"Use all four: must, mustn’t, have to, don’t have to.":'Нужны все четыре: must, mustn’t, have to, don’t have to.'),minSentences:5,min:35,max:45}],
+               fields:[{ph:'You must …',need:/^(?![\s\S]*\bmust to\b)[\s\S]*\bmust (?!to\b)\w+/i,why:(state.track==='experts'?"Use must + a verb without to: You must go to school.":'Нужно must + глагол без to: You must go to school.'),also:[/\b(mustn[’']?t|must not)\b/i,/(?:^|[.!?]\s*|\band\s+)(?:you|we|they|i|he|she)\s+(?:have|has) to\b/i,/\b(don[’']?t|doesn[’']?t|do not|does not) have to\b/i],alsoWhy:(state.track==='experts'?"Use all four: must, mustn’t, have to, don’t have to.":'Нужны все четыре: must, mustn’t, have to, don’t have to.'),minSentences:5,min:35,max:45}],
                model:'You must go to school every day and be on time. You mustn’t sell your ABC book. You have to listen to your teacher and do your homework. You don’t have to go to the puppet theatre. You should always tell Geppetto the truth.'}]},
       speak:{steps:[{t:'voice',pic:'i:fairy2',q:'The Fairy asks: What do you have to do at school?',want:['have to','has to','must'],line:'We have to wear a uniform and do our homework.',sec:8,ru:'Фея с голубыми волосами спрашивает. Отвечай полным предложением.'},
                {t:'voice',pic:'i:fairy2',q:'What mustn’t you do at school?',want:['mustnt','must not','cant','not allowed'],line:'We mustn’t use our phones in lessons.',sec:8},
@@ -1895,6 +1895,10 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'sign',sign:'NO MOBILE PHONES IN LESSONS',q:'What does the sign say?',opts:[['You mustn’t use your phone in lessons.',1],['You don’t have to bring a phone.'],['You should call your teacher.']]},
              {t:'mcq',q:'How did Pinocchio get four pennies?',opts:[['He sold his ABC book.',1],['Geppetto gave them to him.'],['He found them.']]}]
   };
+  L.experts.grammar.steps.filter(function(s){return s.t==='mcq'&&s.q.indexOf('Saturday')>=0;}).forEach(function(s){s.note='This school has lessons from Monday to Friday. Saturday is a day off.';});
+  // Visible English requirements; never depend on the hidden Russian help.
+  L.experts.write.steps[0].note="Write five separate rules. Include must, must not / mustn’t, affirmative have to, and don’t have to. You can also use should. Do not use to after must.";
+  L.experts.read.steps.filter(function(s){return s.t==='retell';}).forEach(function(s){s.note='Retell in 5–6 sentences. Use at least '+s.need+' words or phrases from the list. You can speak or type your answer.';});
   var REPORT={
     little:{words:'head, eyes, ears, nose, mouth, hair, arms, legs',grammar:'He’s got … · I’ve got … · Touch your …! (не He have got, не a eyes)',more:'Фоника: Magic E o-e (nose, bone, rope, note) + повтор (leg, neck, chin, feet, mouth, arm)'},
     explorers:{words:'headache, toothache, sore throat, cough, cold, temperature, feel sick, medicine, doctor, sleep well',grammar:'must / mustn’t · should / shouldn’t · What’s the matter? I’ve got a …',more:'Чтение: «The Fairy and the Medicine» + пересказ, записка Феи; совет Сверчка'},

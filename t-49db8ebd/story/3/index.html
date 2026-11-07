@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/3/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1462,7 +1462,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return '';
   }
   R.write=function(body,s,next){
-    head(body,s.q,s.ru); var ins=[];
+    head(body,s.q,s.ru,s.note); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
     s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
       if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
@@ -1589,7 +1589,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
   R.retell=function(body,s,next){
     var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
-    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
+    R.voice(body,{q:s.q,ru:s.ru,note:s.note,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
     if(s.type){ var tb=el('button','gloss',(state.track==='experts'?"Type your answer":'Написать текстом')); body.appendChild(tb);
       tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold',(state.track==='experts'?"Done":'Готово')); body.appendChild(ok);
         ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
@@ -1703,7 +1703,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              .concat(nameIt([['i:hat',0,'hat|hut','hat'],['i:scarf',0,'scar','scarf'],['i:coat',0,'coat|cot','coat'],['i:boots',0,'boot','boots'],['i:mittens',0,'mitt|mit','mittens'],['i:snow',0,'snow','snow'],['i:cold',0,'cold|cod','cold'],['i:sunny',0,'sun','sunny']],(state.track==='experts'?"Взрослому: вещь спряталась в снегу. Назови её вслух — и она появится! Не получается — нажмите «Model».":'Взрослому: вещь спряталась в снегу. Назови её вслух — и она появится! Не получается — нажмите «Образец».')))},
       grammar:{steps:[{t:'tfa',q:'Look at Gerda’s things. Yes or no?',ru:'Взрослому: слушаем фразу и смотрим на картинку: правда — ✓, неправда — ✗. Читать не нужно.',items:[['She’s got a hat.','T','i:hat'],['She’s got boots.','F','i:scarf'],['She’s got mittens.','T','i:mittens'],['She’s got a coat.','F','i:icecream']]},
                {t:'who2',q:'Who says it right? Gerda or the mouse?',ru:(state.track==='experts'?"Взрослому: нажмите на Герду и на мышь — каждая скажет фразу. Mouse говорит She have got — так нельзя. Кто прав?":'Взрослому: нажмите на Герду и на мышь — каждая скажет фразу. Мышь говорит She have got — так нельзя. Кто прав?'),good:'She’s got boots.',bad:'She have got boots.'},
-               {t:'who2',q:'And now?',ru:'Взрослому: правильно I’ve got a hat — мышь потеряла кусочек ’ve.',good:'I’ve got a hat.',bad:'I have a got hat.'},
+               {t:'who2',q:'And now?',ru:(state.track==='experts'?"Взрослому: правильно I’ve got a hat. Mouse перепутала порядок слов в I have a got hat.":'Взрослому: правильно I’ve got a hat. Мышь перепутала порядок слов в I have a got hat.'),good:'I’ve got a hat.',bad:'I have a got hat.'},
                {t:'dress',q:'It is cold! Listen and dress Gerda.',ru:(state.track==='experts'?"Взрослому: Book говорит, что есть у Герды (She’s got a scarf!) — найдите эту вещь и «наденьте» на Герду.":'Взрослому: Книга говорит, что есть у Герды (She’s got a scarf!) — найдите эту вещь и «наденьте» на Герду.'),need:[['i:scarf','a scarf'],['i:hat','a hat'],['i:boots','boots']],extra:[['i:icecream','ice cream'],['i:driedfish','a fish'],['i:mittens','mittens']]},
                {t:'voice',pic:'i:hat',q:'And you? What have you got? I’ve got a …',want:['got','ive','have'],line:'I’ve got a hat!',ru:'Взрослому: ребёнок говорит про свою одежду: I’ve got a hat! I’ve got a coat!'}]},
       read:{lock:{t:'sym',mode:'tiles',answer:'HAT',q:'The mice wrote with snowflakes! Use the key on the ice.',ru:'Взрослому: мыши написали слово снежинками (внизу). Для каждой снежинки найдите такую же в ключе и нажмите её — откроется буква. Не торопитесь с подсказкой: сначала попробуйте сами.',opts:[['w:hat',1],['w:mug'],['w:bed']]},
@@ -1802,6 +1802,9 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'mcq',q:'Look! It ___ again.',opts:[['is snowing',1],['snows'],['snow']]},
              {t:'mcq',q:'Why does the Lapland woman write on a fish?',opts:[['She hasn’t got any paper.',1],['Fish is warm.'],['The reindeer likes fish.']]}]
   };
+  // Visible English requirements; never depend on the hidden Russian help.
+  L.experts.write.steps[0].note="Describe what Gerda is wearing and doing in the picture, and explain why. Use the Present Continuous and because or so.";
+  L.experts.read.steps.filter(function(s){return s.t==='retell';}).forEach(function(s){s.note='Retell in 5–6 sentences. Use at least '+s.need+' words or phrases from the list. You can speak or type your answer.';});
   var REPORT={
     little:{words:'hat, scarf, coat, boots, mittens, snow, cold, sunny',grammar:'I’ve got … / She’s got … · It’s cold / It’s sunny',more:'Фоника: повтор букв (hat, mug, fox, bed) + or, ng (storm, fork, horn, ring, king, wing)'},
     explorers:{words:'make the bed, wash up, lay the table, tidy up, water the plants, feed the pets, always, often, sometimes, never',grammar:'Present Simple: she waters / he washes · место always / never',more:'Чтение: «Next Door» + пересказ по картинкам, письмо на рыбе'},

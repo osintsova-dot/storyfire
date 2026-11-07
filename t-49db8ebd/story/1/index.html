@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="listening-fit-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/1/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1438,7 +1438,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     return '';
   }
   R.write=function(body,s,next){
-    head(body,s.q,s.ru); var ins=[];
+    head(body,s.q,s.ru,s.note); var ins=[];
     var post=null; if(s.poster==='card'){ post=el('div','poster wcard2','<b>'+esc(s.cardTitle||'MY CARD')+'</b>'+pic(s.cardPic||'i:wolf')+s.fields.map(function(){return '<p></p>';}).join('')); body.appendChild(post); }
     s.fields.forEach(function(f,i){ var e=document.createElement(s.area?'textarea':'input'); e.className='inp'; e.placeholder=f.ph; e.dataset.model=s.model; e.setAttribute('aria-label',f.ph); if(!s.area) e.type='text'; e.autocomplete='off'; e.spellcheck=false; body.appendChild(e); ins.push(e);
       if(post) e.addEventListener('input',function(){ post.querySelectorAll('p')[i].textContent=e.value.trim().slice(0,60); }); });
@@ -1565,7 +1565,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   // пересказ по картинкам: голосом (или текстом у старших), проверка ключевых слов
   R.retell=function(body,s,next){
     var top=s.pics?'<div class="rpics">'+s.pics.map(function(p){ return '<figure>'+pic(p[0])+'<figcaption>'+esc(p[1])+'</figcaption></figure>'; }).join('')+'</div>':'<p class="kwords">'+s.keys.map(esc).join(' · ')+'</p>';
-    R.voice(body,{q:s.q,ru:s.ru,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
+    R.voice(body,{q:s.q,ru:s.ru,note:s.note,top:top,keys:s.keys,need:s.need,sec:s.sec,line:s.line,late:1,good:(state.track==='experts'?"Great retelling!":'Отличный пересказ!')},next);
     if(s.type){ var tb=el('button','gloss',(state.track==='experts'?"Type your answer":'Написать текстом')); body.appendChild(tb);
       tb.addEventListener('click',function(){ tb.remove(); var ta=el('textarea','inp'); ta.placeholder='Mowgli lives with…'; body.appendChild(ta); var f2=el('p','fb'); body.appendChild(f2); var ok=el('button','btn btn-gold',(state.track==='experts'?"Done":'Готово')); body.appendChild(ok);
         ok.addEventListener('click',function(){ var t=normT(ta.value), n=s.keys.filter(function(k){ return t.indexOf(k)>=0; }).length;
@@ -1767,6 +1767,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              {t:'fix',q:'Fix the mistake.',words:['There','isn’t','many','water.'],bad:2,opts:[['much',1],['a lot'],['few']],ok:'There isn’t much water.'},
              {t:'mcq',q:'At the start of the tea party, was there any tea in Alice’s cup?',opts:[['No, there wasn’t.',1],['Yes, a lot.'],['Yes, a little.']]}]
   };
+  L.experts.write.steps[0].fields[0].why='Invite your friend with come or join.';
+  L.experts.write.steps[0].fields[0].alsoWhy='Mention the refreshments using some, any or a lot of.';
+  // Visible English requirements; never depend on the hidden Russian help.
+  L.experts.write.steps[0].note="Invite a friend: say when and where the party is, and what food or drink there will be. Use come or join and some, any or a lot of.";
+  L.experts.read.steps.filter(function(s){return s.t==='retell';}).forEach(function(s){s.note='Retell in 5–6 sentences. Use at least '+s.need+' words or phrases from the list. You can speak or type your answer.';});
   var REPORT={
     little:{words:'apple, banana, cake, cheese, fish, ice cream, milk, egg',grammar:'I like … / I don’t like … · Do you like …? Yes, I do / No, I don’t',more:'Фоника: повтор букв (jam, ham, cup, mug, fish, pan) + ai, oa, ie (tail, rain, toast, pie)'},
     explorers:{words:'cheese, chicken, mushrooms, tomatoes, onions, biscuits, sweet, savoury, spicy, crunchy, soft',grammar:'I’d like some … / I’d like a … · a lot of + -s',more:'Чтение: «A Mad Tea Party» + пересказ по картинкам'},
