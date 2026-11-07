@@ -1428,7 +1428,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       b.addEventListener('click',function(){ if(box.dataset.done) return; if(!s.show) sayWord(o[0]); if(o[1]){ box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(s.show) SND.say(s.show); setTimeout(next,900); } else wrong(b,fb); }); });
   };
   R.order=function(body,s,next){
-    head(body,s.q,s.ru); var k=0, box=document.createElement('div'); box.className='opts order'; body.appendChild(box);
+    head(body,s.q,s.ru,s.note); var k=0, box=document.createElement('div'); box.className='opts order'; body.appendChild(box);
     shuffle(s.items).forEach(function(it){ var b=document.createElement('button'); b.className='opt'; b.innerHTML='<i></i>'+esc(it); b.dataset.n=s.items.indexOf(it); box.appendChild(b);
       b.addEventListener('click',function(){ if(b.classList.contains('yes')) return; if(it===s.items[k]){ k++; b.classList.add('yes'); b.querySelector('i').textContent=k; SND.fx('step'); if(k===s.items.length){ SND.fx('ok'); setTimeout(next,900);} } else wrong(b); }); });
   };
@@ -1523,6 +1523,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     spk.addEventListener('click',function(){ var n=sparks(); if(n<1) return; try{ localStorage.setItem('sf_sparks',String(n-1)); }catch(e){} SND.fx('spark'); use(); });
     tick(); return {stop:function(){ done=true; clearInterval(iv); row.hidden=true; }};
   }
+  // Only visual lookalikes in Latin puzzle answers, not transliteration of prose.
+  function puzzleAnswer(value){
+    var map={'А':'A','В':'B','Е':'E','К':'K','М':'M','Н':'H','О':'O','Р':'P','С':'C','Т':'T','Х':'X','У':'Y','І':'I','Ј':'J'};
+    return String(value||'').normalize('NFKC').toUpperCase().replace(/[АВЕКМНОРСТХУІЈ]/g,function(c){return map[c];}).replace(/[^A-Z]/g,'');
+  }
   R.decode=function(body,s,next){
     head(body,s.q,s.ru); var AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     if(s.kind==='atbash'||s.kind==='shift'){ var k=el('div','abc'); AB.forEach(function(ch,i){ var to=s.kind==='atbash'?AB[25-i]:AB[(i+s.shift)%26]; k.insertAdjacentHTML('beforeend','<span>'+to+'<i>'+ch+'</i></span>'); }); body.appendChild(k); body.appendChild(el('p','ru',s.kind==='atbash'?(state.track==='experts'?"The cipher letter is above; the real letter is below.":'Сверху буква шифра, снизу — настоящая.'):(state.track==='experts'?"The cipher letter is above, the real letter below (shift: ":'Сверху буква шифра, снизу — настоящая (сдвиг на ')+s.shift+').')); }
@@ -1531,7 +1536,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder=(state.track==='experts'?"Answer…":'Ответ…'); inp.dataset.ans=s.answer; inp.setAttribute('aria-label',(state.track==='experts'?"Answer":'Ответ')); body.appendChild(inp);
     var fb=el('p','fb'); body.appendChild(fb);
     var ok=el('button','btn btn-gold',(state.track==='experts'?"Check":'Проверить')); body.appendChild(ok);
-    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); }, ans=norm(s.answer);
+    var norm=function(v){ return puzzleAnswer(v); }, ans=norm(s.answer);
     var upto=function(n){ var out='', c2=0; for(var i=0;i<s.answer.length&&c2<n;i++){ out+=s.answer[i]; if(/[A-Z]/.test(s.answer[i])) c2++; } inp.value=out; inp.focus(); };
     var nudge={rev:(state.track==='experts'?"Hint: read backwards, from right to left.":'Намёк: читай с конца — справа налево.'),mirror:(state.track==='experts'?"Hint: the letters are mirrored. Use a mirror or turn them around in your mind.":'Намёк: буквы отражены. Поднеси к зеркалу или переверни в уме.'),num:(state.track==='experts'?"Hint: ":'Намёк: ')+s.code.split(/[^0-9]+/)[0]+(state.track==='experts'?" means ":' — это ')+ans[0]+(state.track==='experts'?". Count through the alphabet.":'. Считай по алфавиту.'),shift:(state.track==='experts'?"Hint: ":'Намёк: ')+s.code.replace(/[^A-Z]/g,'')[0]+' → '+ans[0]+(state.track==='experts'?". Shift each letter by ":'. Каждую букву — на ')+s.shift+(state.track==='experts'?" backwards.":' назад.'),atbash:(state.track==='experts'?"Hint: A ↔ Z, B ↔ Y… the first letter is ":'Намёк: A ↔ Z, B ↔ Y… первая буква — ')+ans[0]+'.'}[s.kind]||((state.track==='experts'?"The first letter is ":'Первая буква — ')+ans[0]+'.');
     var lad=hintLadder(body,[function(){ return nudge; },function(){ upto(Math.ceil(ans.length/2)); return (state.track==='experts'?"Half is filled in. Try the rest yourself!":'Половина уже есть. Дальше сам!'); },function(){ upto(ans.length); return (state.track==='experts'?"Answer: ":'Ответ: ')+s.answer; }],fb);
@@ -1560,7 +1565,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       return; }
     var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder=(state.track==='experts'?"Answer…":'Ответ…'); inp.dataset.ans=s.answer; inp.setAttribute('aria-label',(state.track==='experts'?"Answer":'Ответ')); body.appendChild(inp);
     body.appendChild(fb); var ok=el('button','btn btn-gold',(state.track==='experts'?"Check":'Проверить')); body.appendChild(ok); lad=hintLadder(body,steps,fb);
-    ok.addEventListener('click',function(){ if(inp.value.toUpperCase().replace(/[^A-Z]/g,'')===letters.join('')){ ok.disabled=true; inp.disabled=true; fill(slots.length); fin(); } else { wrong(ok,fb); fb.textContent=(state.track==='experts'?"Not yet. Match each symbol with the key.":'Not yet. Сверь каждый знак с ключом.'); } });
+    ok.addEventListener('click',function(){ if(puzzleAnswer(inp.value)===letters.join('')){ ok.disabled=true; inp.disabled=true; fill(slots.length); fin(); } else { wrong(ok,fb); fb.textContent=(state.track==='experts'?"Not yet. Match each symbol with the key.":'Not yet. Сверь каждый знак с ключом.'); } });
   };
   // первые звуки картинок → слово (шифр малышей = та же фоника)
   R.picode=function(body,s,next){
@@ -2090,6 +2095,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
              [{t:'kwcode',key:'MOUSEKING',answer:'PUT OUT THE STORY FIRE FOREVER',q:'On the back: a keyword cipher! The keyword is MOUSEKING.',ru:(state.track==='experts'?"Шифр с ключевым словом, как у Пиноккио (Story 8): алфавит шифра начинается с MOUSEKING, дальше — остальные буквы по порядку. The cipher letter is above; the real letter is below.":'Шифр с ключевым словом, как у Пиноккио (История 8): алфавит шифра начинается с MOUSEKING, дальше — остальные буквы по порядку. Сверху буква шифра, снизу — настоящая.')},
               {t:'mcq',q:'What did the mice want to do?',opts:[['to put out the Story Fire forever',1],['to read all the books'],['to make the fire bigger']]},PLAN]]
   };
+  MOUSE.little[1][0]={t:'mcq',q:'Find the fire!',pics:1,opts:[['g:04_fire_4',1],['i:snowflake'],['i:tree']],ru:'Взрослому: найдите огонь. Мыши хотят погасить именно его!'};
+
   /* --- «Финальный бросок»: марафон ловушек всех историй --- */
   var THROW={
     little:[{t:'fog',pic:'i:present',q:'Sherlock’s fog! Rub it away.',ru:'Взрослому: ловушки всех историй сразу! Сначала туман Шерлока — протрите экран пальцем.'},{t:'voice',pic:'i:present',q:'What is it? Say it!',want:['present|presn|gift'],line:'It’s a present.',frame:'It’s a …'},
@@ -2196,7 +2203,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var inp=mk('input','inp',body); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder=(state.track==='experts'?"Answer…":'Ответ…'); inp.dataset.ans=ans; inp.setAttribute('aria-label',(state.track==='experts'?"Answer":'Ответ'));
     var fb=mk('p','fb',body); fb.setAttribute('aria-live','polite'); var row=mk('div','row2',body), clr=mk('button','gloss',row,(state.track==='experts'?"Clear":'Стереть')), ok=mk('button','btn btn-gold',body,(state.track==='experts'?"Check":'Проверить'));
     clr.addEventListener('click',function(){ inp.value=''; });
-    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); }, A=norm(ans);
+    var norm=function(v){ return puzzleAnswer(v); }, A=norm(ans);
     var lad=hintLadder(body,[function(){ var p=at[A[0]]; btn[p].classList.add('lit'); return (state.track==='experts'?"Hint: ":'Намёк: ')+co(p)+(state.track==='experts'?" — column ":' — колонка ')+COLS[p%5]+(state.track==='experts'?", row ":', строка ')+(Math.floor(p/5)+1)+(state.track==='experts'?". The letter there is ":'. Там буква ')+A[0]+(state.track==='experts'?" — it is highlighted.":' — она светится.'); },
       function(){ inp.value=A.slice(0,Math.ceil(A.length/2)); return (state.track==='experts'?"Half is filled in. Try the rest yourself!":'Половина уже есть. Дальше сам!'); },
       function(){ inp.value=ans; return (state.track==='experts'?"Answer: ":'Ответ: ')+ans; }],fb);
@@ -2206,7 +2213,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   function ansBox(body,s,next,nudge){
     var inp=mk('input','inp',body); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder=(state.track==='experts'?"Answer…":'Ответ…'); inp.dataset.ans=s.answer; inp.setAttribute('aria-label',(state.track==='experts'?"Answer":'Ответ'));
     var fb=mk('p','fb',body); fb.setAttribute('aria-live','polite'); var ok=mk('button','btn btn-gold',body,(state.track==='experts'?"Check":'Проверить'));
-    var norm=function(v){ return v.toUpperCase().replace(/[^A-Z]/g,''); }, A=norm(s.answer);
+    var norm=function(v){ return puzzleAnswer(v); }, A=norm(s.answer);
     var upto=function(n){ var out='', c=0; for(var i=0;i<s.answer.length&&c<n;i++){ out+=s.answer[i]; if(/[A-Z]/.test(s.answer[i])) c++; } inp.value=out; inp.focus(); };
     var lad=hintLadder(body,[function(){ return nudge; },function(){ upto(Math.ceil(A.length/2)); return (state.track==='experts'?"Half is filled in. Try the rest yourself!":'Половина уже есть. Дальше сам!'); },function(){ upto(A.length); return (state.track==='experts'?"Answer: ":'Ответ: ')+s.answer; }],fb);
     ok.addEventListener('click',function(){ if(norm(inp.value)===A){ lad.stop(); ok.disabled=true; inp.disabled=true; SND.fx('ok'); fb.textContent=s.answer; SND.say(s.answer.toLowerCase()); setTimeout(next,1500); } else { wrong(ok,fb); fb.textContent=(state.track==='experts'?"Not yet. Check the letters again.":'Not yet. Проверь буквы ещё раз.'); } });
