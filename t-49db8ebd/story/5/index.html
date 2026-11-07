@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head><meta name="sf-puzzle-audio" content="puzzle-audio-20261107"><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
 <base href="/story/5/">
 <meta name="sf-preview-build" content="content-review-20261106">
 <meta name="robots" content="noindex,nofollow">
@@ -1068,7 +1068,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    fetch('audio/voice.json?v=1793789367').then(function(r){return r.json();}).then(function(j){VOICE=j;}).catch(function(){});
+    var voiceBankLoaded=false, voiceBankReady=fetch('/t-49db8ebd/assets/puzzle-audio-20261107/s5/voice.json').then(function(r){return r.json();}).then(function(j){voiceBankLoaded=true;VOICE=j;}).catch(function(){voiceBankLoaded=true;});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1124,15 +1124,21 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(releaseVoice) releaseVoice();
       if(cur){ try{cur.stop();}catch(e){} cur=null; }
       if(ttsFinish){ var finishTTS=ttsFinish; try{ window.speechSynthesis.cancel(); }catch(e){} finishTTS(); }
+      // Wait for the recorded bank on a slow connection; cancellation still wins.
+      if(!asset&&!voiceBankLoaded&&text&&on) return new Promise(function(fin){
+        var waitDone=false, finishWait=function(){if(waitDone)return;waitDone=true;if(releaseVoice===finishWait)releaseVoice=null;fin();};
+        releaseVoice=finishWait;
+        voiceBankReady.then(function(){if(waitDone)return;releaseVoice=null;say(text,asset).then(finishWait,finishWait);});
+      });
       var id=asset?'ph:'+asset:VOICE[key(text)]; if(!on) return Promise.resolve();
-      if(!id) return tts(text);  // фразы ещё без записи — голос телефона, чтобы кнопка не молчала
+      if(!id) return Promise.resolve();  // Recorded audio only: never substitute the device voice.
       if(!ctx){ pending=text; return Promise.resolve(); }
       return new Promise(function(fin){
       var ok=false, loadTimer, done=function(){ if(!ok){ok=true; clearTimeout(loadTimer); if(releaseVoice===done) releaseVoice=null; fin();} }; releaseVoice=done; loadTimer=setTimeout(done,15000);
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
       var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
-      fetch(asset || ('audio/'+id+'.mp3')).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+      fetch(asset || (/^pv27_/.test(id)?'/t-49db8ebd/assets/puzzle-audio-20261107/s5/'+id+'.mp3':('audio/'+id+'.mp3'))).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
       });
     }
@@ -1258,8 +1264,10 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     out.push({t:'voice',show:w,pic:'w:'+w,reveal:1,late:1,q:'Read the word!',want:[w],line:w,sec:4,ru:(state.track==='experts'?"Read the word aloud to reveal the picture beneath the snow.":'Прочитай слово вслух — и картинка покажется из-под снега.')}); }); return out; };
 
   /* --- step renderers (inside the book page) --- */
+  // Spoken clues are restricted to the new puzzle instructions.
+  var PUZZLE_NOTE_AUDIO={"Tap the words to ask about the sugar.":true,"The players need someone to plan their training and teach them new skills.":true,"First she makes her bed. She feeds the cat after that. She waters the roses last. Tap the actions in order.":true,"The wind scattered her words. Make one sentence.":true,"He has got hair above his mouth. It is not a beard.":true,"I am strong and quiet. I work with an axe, but I want a heart.":true,"The forest path is longer than the river path. The mountain path is longer than the forest path. Tap the three paths from shortest to longest.":true,"The red rocket is faster than the blue one. The green rocket is slower than the blue one. Tap from fastest to slowest.":true,"Visit the Lost Boys before the lagoon. Meet the pirates after the lagoon. Tap the places in order.":true,"He wants to make the food sweet. The sack is not salt and it is not rice.":true,"Put the water on the ship before the bread. Put the rice on after the bread.":true,"He heard the pirates before he told the captain. First, he climbed into the barrel.":true,"They cannot find the harbour. They do not know where they are.":true,"First the doctors come. Next Pinocchio drinks the medicine. Then he tells a lie and his nose grows.":true,"He needs to know when Maths starts and which lesson comes next.":true,"Plant the seeds after digging. Water them after planting. Tap the actions in order.":true,"Here are three branches. One is green inside. The other two are dry.":true};
   function head(body,q,ru,note){ var ps=document.createElement('p'); ps.className='say'; body.appendChild(ps);
-    if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label',(state.track==='experts'?"Listen again":'Послушать ещё раз')); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); ruBtns(body); return ps; }
+    if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label',(state.track==='experts'?"Listen again":'Послушать ещё раз')); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); if(PUZZLE_NOTE_AUDIO[note])SND.say(note); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); if(PUZZLE_NOTE_AUDIO[note])SND.say(note); ruBtns(body); return ps; }
   function wrong(b,fb){ MISS++; if(!(window.SF_V2&&T==='little')) SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent=window.SF_V2?(state.track==='experts'?"Not quite. Look again.":'Почти! Посмотри ещё раз.'):'Not quite. Try again!'; }
   function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
   function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
@@ -1931,7 +1939,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   MOUSE.little[1]=[{"t":"who2","q":"Who says it right?","good":"She is happy.","bad":"She are happy.","ru":"Взрослому: мышь перепутала is и are. Кто говорит правильно?"}];
   MOUSE.explorers[0][0]={"t":"mcq","q":"Who left this message?","opts":[["i:tinman",1],["i:lion"],["i:scarecrow"]],"pics":1,"note":"I am strong and quiet. I work with an axe, but I want a heart.","ru":"Кто оставил записку? Сильный, тихий, работает топором и хочет сердце."};
   L.experts.read.lock={"t":"order","q":"Open the Emerald Gate!","note":"The forest path is longer than the river path. The mountain path is longer than the forest path. Tap the three paths from shortest to longest.","items":["River path","Forest path","Mountain path"]};
-  MOUSE.explorers[0][1].q='Ask about the Lion: ___ the Lion brave now?';
+  MOUSE.explorers[0][1].q='Ask about the Lion. Choose the question word.'; MOUSE.explorers[0][1].note='___ the Lion brave now?';
 
 
   // ураган на поле: слова и картинки кружатся — поймай нужные
