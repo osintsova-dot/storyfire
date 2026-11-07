@@ -352,6 +352,8 @@ img{display:block;max-width:100%}
 .snd.help{font:700 18px/1 var(--body);color:var(--gold);margin-right:-4px}
 .fly{position:fixed;z-index:55;transform:translate(-50%,0);font:700 18px/1 var(--body);color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none;animation:flyup 1.3s var(--ease-out) forwards}
 @keyframes flyup{0%{opacity:0;transform:translate(-50%,14px) scale(.8)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-34px) scale(1)}}
+.wait{opacity:.55;transition:opacity .2s}
+.opts .opt[disabled],.gopts .opt[disabled]{opacity:.45;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.forest .aim,.hud.hudpop,.swap,.fly,.tipspot{animation:none}}
 </style>
 
@@ -767,6 +769,21 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   ENTER.library=function(p){ try{ivid.pause();}catch(e){} SND.music(true); p.then(function(){later($('[data-scene="library"] .later'),300);});};
 
 
+  /* Книга договаривает (07.11.2026): новая реплика ждёт конца текущей, а не обрывает её; смена сцены и первый ход ждут Книгу.
+     Та же схема, что enableNarrationQueue в историях (engine.js). Явная отмена — SND.cancelNarration (закрытие страницы, выбор другого силуэта). */
+  (function(){ if(SND.serialized) return; var sayNow=SND.say, idleNow=SND.whenIdle, tail=Promise.resolve(), pending=0, epoch=0; SND.serialized=true;
+    function enqueue(task){ var token=epoch; pending++; var job=tail.then(function(){ if(token===epoch) return task(); }); tail=job.then(function(){ pending--; },function(){ pending--; }); return tail; }
+    SND.say=function(text){ return enqueue(function(){ return sayNow(text); }); };
+    SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
+    SND.busy=function(){ return pending>0; };
+    SND.cancelNarration=function(){ epoch++; if(SND.stop) SND.stop(); };
+    $('#sheetX').addEventListener('click',SND.cancelNarration,true);
+    window.addEventListener('pagehide',SND.cancelNarration);
+    // кнопки перехода между сценами: пока Книга говорит — ждём её, кнопка притухает
+    document.addEventListener('click',function(e){ var b=e.target.closest('[data-go]'); if(!b||b.disabled||!SND.busy()) return; e.stopPropagation(); e.preventDefault(); if(b.dataset.waiting) return; b.dataset.waiting='1'; b.classList.add('wait');
+      SND.whenIdle().then(function(){ delete b.dataset.waiting; b.classList.remove('wait'); if(b.isConnected) go(b.getAttribute('data-go')); }); },true);
+  })();
+
   /* name + track */
   var name=$('#name'), toBoard=$('#toBoard');
   name.value=state.name;
@@ -871,7 +888,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     var m=MOUSE[T()]||MOUSE.explorers; speak(say,m.say); ru.textContent=m.ru||'Мышиный след! Мыши что-то оставили.';
     return taskPage(box,'Мышиный след',T()==='little'?'Нажми на страницу':'Open the page',function(body,finish){
       body.innerHTML=(m.gaps?'<img class="thief" src="../img/07_mouse.webp" alt="Мышь с кусочком страницы в зубах">':'')+'<p class="say"></p>'+(m.ru?'<p class="ru">'+m.ru+'</p>':'');
-      var ps=$('.say',body); speak(ps,m.say);
+      var ps=$('.say',body), lineDone=speak(ps,m.say);
       if(!m.gaps){
         var left=3; body.insertAdjacentHTML('beforeend','<div class="mice">'+[0,1,2].map(function(){return '<button class="mouse" aria-label="Мышь">'+MOUSESVG+'</button>';}).join('')+'</div>');
         $$('.mouse',body).forEach(function(b){b.addEventListener('click',function(){ if(b.disabled) return; b.disabled=true; b.classList.add('run'); left--; SND.fx('squeak'); var pv=SND.say(['One!','Two!','Three!'][2-left]);
@@ -883,9 +900,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
         var gl=$('.gloss',body); if(gl) gl.addEventListener('click',function(){gl.setAttribute('aria-expanded',gl.getAttribute('aria-expanded')!=='true');});
         (function next(){
           $$('.gap',body).forEach(function(x){x.classList.toggle('cur',+x.dataset.i===g);});
-          if(g>=m.gaps.length){ speak(ps,'Yes! My page is whole again.').then(function(){return wait(300);}).then(function(){SND.say(m.text.replace(/\{(\d)\}/g,function(_,i){return m.gaps[i][1];}).replace(/ \(\w+\)/g,''));}); $('.thief',body).classList.add('run'); SND.fx('squeak'); $('.gopts',body).innerHTML='<button class="btn btn-gold later">Go on</button>'; var gb=$('.gopts .btn',body); later(gb,1500); gb.addEventListener('click',function(){gb.disabled=true; finish();}); return; }
+          if(g>=m.gaps.length){ $('.thief',body).classList.add('run'); SND.fx('squeak'); $('.gopts',body).innerHTML='<button class="btn btn-gold later">Go on</button>'; var gb=$('.gopts .btn',body); gb.addEventListener('click',function(){gb.disabled=true; finish();});
+            speak(ps,'Yes! My page is whole again.').then(function(){return wait(300);}).then(function(){return SND.say(m.text.replace(/\{(\d)\}/g,function(_,i){return m.gaps[i][1];}).replace(/ \(\w+\)/g,''));}).then(function(){ later(gb,200); }); return; }
           var gp=m.gaps[g], o=$('.gopts',body);
-          o.innerHTML=gp[0].map(function(w){return '<button class="opt">'+w+'</button>';}).join('');
+          o.innerHTML=gp[0].map(function(w){return '<button class="opt" disabled>'+w+'</button>';}).join('');
+          lineDone.then(function(){ $$('.opt',o).forEach(function(b){b.disabled=false;}); });
           $$('.opt',o).forEach(function(b){b.addEventListener('click',function(){
             if(b.textContent===gp[1]){ var sp=$('.gap[data-i="'+g+'"]',body); sp.textContent=gp[1]; sp.classList.add('ok'); SND.fx('ok'); $('.fb',body).textContent=''; g++; setTimeout(next,450);}
             else{ SND.fx('no'); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('.fb',body).textContent='Not quite. Try again!';}
@@ -919,12 +938,13 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(r.pics){html+='<div class="opts pics">'+r.pics.map(function(o){return '<button class="opt" data-ok="'+(o[2]?1:0)+'" aria-label="'+o[1]+'"><img src="../img/'+o[0]+'.webp" alt=""></button>';}).join('')+'</div>';}
       else{html+='<div class="opts">'+r.opts.map(function(o){return '<button class="opt" data-ok="'+(o[1]?1:0)+'">'+o[0]+'</button>';}).join('')+'</div>';}
       body.innerHTML=html+'<p class="fb" aria-live="polite"></p>';
-      var ps=$('.say',body); speak(ps,r.say);
+      var ps=$('.say',body), ropts=$$('.opt',body); ropts.forEach(function(b){b.disabled=true;});
+      speak(ps,r.say).then(function(){ ropts.forEach(function(b){b.disabled=false;}); });
       var gl=$('.gloss',body); if(gl) gl.addEventListener('click',function(){gl.setAttribute('aria-expanded',gl.getAttribute('aria-expanded')!=='true');});
       var ok=false;
       $$('.opt',body).forEach(function(b){b.addEventListener('click',function(){
         if(ok) return;
-        if(b.dataset.ok==='1'){ok=true; SND.fx('ok'); b.classList.add('yes'); $('.fb',body).textContent=''; speak(ps,r.yes); $('.ru',body).textContent=r.yesRu; setTimeout(finish,2600);}
+        if(b.dataset.ok==='1'){ok=true; SND.fx('ok'); b.classList.add('yes'); $('.fb',body).textContent=''; $('.ru',body).textContent=r.yesRu; speak(ps,r.yes).then(function(){return wait(400);}).then(finish);}
         else{miss++; SND.fx('no'); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('.fb',body).textContent='Not quite. Try again! (Почти! Попробуй ещё.)';}
       });});
     }); }).then(function(){
@@ -933,7 +953,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       if(REAL) setN('sf_p_rew',1);
       return teach('log',hud).then(function(){
         ru.textContent=T()==='little'?'Страница оттаяла! Костёр горит ярче 🔥':'Страница оттаяла! '+(got===3?'С первого раза — в костёр 3 полена 🪵 и искра ✦.':got===2?'Ты справился — в костёр 2 полена 🪵.':'Ты дошёл до конца — в костёр 1 полено 🪵.')+' В историях таких страниц шесть.';
-        later($('#toFire'),900); return speak(say,'The page is warm again! Brr… it is cold here. Let’s make a fire!'); });
+        return speak(say,'The page is warm again! Brr… it is cold here. Let’s make a fire!').then(function(){ later($('#toFire'),300); }); });
     });
   }
   function event(kind,box){
@@ -945,8 +965,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   }
   var aim=el('div','aim'); aim.hidden=true; forest.insertBefore(aim,token);
   var aimL=el('div','aim alt'), aimR=el('div','aim alt'); aimL.hidden=aimR.hidden=true; forest.insertBefore(aimL,token); forest.insertBefore(aimR,token);
+  var dieWait=false;
   $('#die').addEventListener('click',function(){
-    if(rolling||done>=1) return; rolling=true; SND.fx('dice');
+    if(rolling||done>=1) return;
+    if(SND.busy()){ if(dieWait) return; dieWait=true; var d=this; d.classList.add('wait'); SND.whenIdle().then(function(){ dieWait=false; d.classList.remove('wait'); d.click(); }); return; }
+    rolling=true; SND.fx('dice');
     var die=this, n=rolls===0?2:2+Math.floor(Math.random()*5), out=$('#count'), stop=STATIONS[0]; rolls++;
     die.classList.remove('roll'); void die.offsetWidth; die.classList.add('roll'); $('#dieN').classList.remove('in');
     wait(900).then(function(){
@@ -985,8 +1008,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
   /* fire: three taps */
   var taps=0, fireImgs=$$('#fire img'), camp=$('#camp');
   function stage(k,imgs){imgs.forEach(function(im,i){im.classList.toggle('on',i===k);});}
+  var fireQ=0;
   $('#fire').addEventListener('click',function(){
-    if(taps>=3) return; taps++; SND.fx('fire'); var pv=SND.say(['One!','Two!','Three!'][taps-1]);
+    if(taps>=3) return; var fireEl=this;
+    if(SND.busy()&&taps===0){ if(fireQ) return; fireQ=1; SND.whenIdle().then(function(){ fireQ=0; fireEl.click(); }); return; }
+    taps++; SND.fx('fire'); var pv=SND.say(['One!','Two!','Three!'][taps-1]);
     stage(taps,fireImgs);
     camp.style.setProperty('--glow',(.08+taps*.08).toFixed(2));
     this.style.setProperty('--glow',(taps*.14).toFixed(2));
@@ -994,9 +1020,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     $('[data-scene="fire"]').appendChild(pop); setTimeout(function(){pop.remove();},1300);
     if(taps===3){
       Promise.all([pv,wait(700)]).then(function(){
-        speak($('#fireSay'),'Thank you! Now the stories can wake up. But who is lost in my forest?');
         $('#fireRu').textContent='Спасибо! Теперь истории смогут проснуться. Но кто же потерялся в лесу?';
-        later($('#toShelf'),1200);
+        speak($('#fireSay'),'Thank you! Now the stories can wake up. But who is lost in my forest?').then(function(){ later($('#toShelf'),300); });
       });
     }
   });
@@ -1017,6 +1042,7 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
     b.setAttribute('aria-label','Гость истории '+(i+1)+', '+g[1]);
     b.innerHTML='<img src="../img/h_'+g[0]+'.webp" alt=""><small>'+g[1]+'</small>';
     b.addEventListener('click',function(){
+      if(!shelfReady) return; SND.cancelNarration();
       $$('.slot',shelf).forEach(function(x){x.setAttribute('aria-pressed','false');}); b.setAttribute('aria-pressed','true');
       var ruTxt='<b>История '+(i+1)+' · '+g[1]+'</b><br>'+g[2]+'. '+(g[3]?'<i>«'+g[3]+'»</i>':'Кто это? Узнаешь в его истории.');
       if(state.track==='experts'||state.track==='explorers'){
@@ -1025,11 +1051,11 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
           +(exp?'':'<br><button class="rubtn" id="hintRu" style="margin-top:8px">Не понятно? По-русски</button><span class="ru" id="hintRuT" style="display:none">'+g[2]+'.</span>');
         var hb=$('#hintRu'); if(hb) hb.addEventListener('click',function(){hb.hidden=true; $('#hintRuT').style.display='block';});
       } else $('#hint').innerHTML=ruTxt;
-      SND.say(state.track==='experts'?g[4]+'.':g[5]+'.');
-      later($('#toCliff'),400);
+      SND.say(state.track==='experts'?g[4]+'.':g[5]+'.').then(function(){ later($('#toCliff'),300); });
     });
     shelf.appendChild(b);});
-  ENTER.shelf=function(){$$('.slot',shelf).forEach(function(s,i){setTimeout(function(){s.classList.add('in');},reduce?0:200+i*90);}); later($('#toCliff'),4000);};
+  var shelfReady=false;
+  ENTER.shelf=function(p){ shelfReady=false; shelf.classList.add('wait'); $$('.slot',shelf).forEach(function(s,i){setTimeout(function(){s.classList.add('in');},reduce?0:200+i*90);}); p.then(function(){ shelfReady=true; shelf.classList.remove('wait'); later($('#toCliff'),2500); }); };
 
   /* cliffhanger: fire dies, paw prints cross the snow */
   ENTER.cliff=function(p){
@@ -1041,9 +1067,8 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
       paws.appendChild(d); setTimeout(function(){d.classList.add('in'); if(i%3===0) SND.fx('patter');}, reduce?0:2600+i*260);
     })(i);}
     Promise.all([p,wait(5400)]).then(function(){return wait(400);}).then(function(){
-      speak($('#cliffSay'),'Come back on the 27th of December. I’ll be waiting…');
       $('#cliffRu').textContent='Возвращайся 27 декабря. Я буду ждать…';
-      later($('#toEnd'),1600);
+      speak($('#cliffSay'),'Come back on the 27th of December. I’ll be waiting…').then(function(){ later($('#toEnd'),400); });
     });
   };
   ENTER.end=function(){ if(state.name) $('#endTitle').textContent=state.name+', Пролог пройден';
