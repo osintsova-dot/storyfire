@@ -124,7 +124,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
         <button type="button" class="chip" data-plan="camp" aria-pressed="true">Лагерь</button>
         <button type="button" class="chip" data-plan="camp_plus" aria-pressed="false">Лагерь + онлайн, 5 кодов</button>
       </div>
-      <div class="sum"><span id="total">51 000 ₽</span><small id="perTxt">по 1 700 ₽ за код</small></div>
+      <div class="sum"><span id="total">20 000 ₽</span><small id="perTxt">по 2 000 ₽ за код</small></div>
       <p class="per"><span class="early" id="early" hidden></span></p>
       <ul class="what" id="whatCodes">
         <li>Цена за код: 1–4 по 3 500 ₽, от 5 по 2 200 ₽, от 10 по 2 000 ₽, от 30 по 1 800 ₽, от 60 по 1 600 ₽, от 100 по 1 400 ₽</li>
@@ -261,8 +261,8 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
   function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' ₽'; }
 
   // цена: та же лестница, что на сервере (ss-pay sfPack): 1+ 3500, 5+ 2200, 10+ 2000, 30+ 1800, 60+ 1600, 100+ 1400; скидок на коды нет
-  var BIND='', PREV=0;   // докупка из кабинета: ?t=<код привязки>; цена считается по этой покупке, уже купленные не суммируются
-  function price(n){ n=Math.max(1,Math.min(500,parseInt(n,10)||1)); var t=n, per=3500; if(t>=100) per=1400; else if(t>=60) per=1600; else if(t>=30) per=1800; else if(t>=10) per=2000; else if(t>=5) per=2200; return {n:n,per:per,total:per*n}; }
+  var BIND='', PREV=0, CAMP_BUYER=false;   // докупка из кабинета: ?t=<код привязки>; цена считается по этой покупке, уже купленные не суммируются
+  function price(n){ n=Math.max(1,Math.min(500,parseInt(n,10)||1)); var t=n, per=3500; if(t>=100) per=1400; else if(t>=60) per=1600; else if(t>=30) per=1800; else if(t>=10) per=2000; else if(t>=5) per=2200; if(CAMP_BUYER) per=n>=10?1400:1500; return {n:n,per:per,total:per*n}; }
   // лагерь: те же тарифы, что в ss-pay CAMP_PLANS; ранняя цена до 30.11
   var CAMP_EARLY=Date.now()<Date.parse('2026-11-30T23:59:59+07:00');
   var CAMP={camp:{early:11900,late:14900,name:'Лагерь'},camp_plus:{early:15900,late:19900,name:'Лагерь + онлайн'}};
@@ -279,7 +279,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
       :tr?'Ключи ученикам на учебный год и бесплатные ключи учителям сразу после оплаты. Письмо и говорение проверяет ИИ по критериям ФИПИ. Чек приходит на почту.'
       :'Готовая офлайн-смена: мультики героев, поле, станции, финал для родителей. Пакет материалов придёт на почту до 10 декабря. Чек приходит на почту.';
     if(tr){ var k=trN(), tp=trPrice(k.oge+k.ege); $('total').textContent=fmt(tp.total); $('perTxt').textContent='по '+fmt(tp.per)+' за ученика в год'; $('early').textContent='От 5 учеников дешевле, от 10 и от 30 ещё дешевле'; $('early').hidden=k.oge+k.ege>=30; }
-    else if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n===1?'один код по розничной цене':'по '+fmt(p.per)+' за код'; $('early').textContent='От 5 кодов дешевле, от 10 ещё дешевле'; $('early').hidden=p.n>=10;
+    else if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n===1?'один код по розничной цене':'по '+fmt(p.per)+' за код'; $('early').textContent=(CAMP_BUYER?'Спеццена для купивших лагерь: от 10 кодов — 1 400 ₽':'От 5 кодов дешевле, от 10 ещё дешевле'); $('early').hidden=p.n>=10;
       [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.setAttribute('aria-pressed', +b.dataset.n===p.n?'true':'false'); }); }
     else { var c=CAMP[PLAN]; $('total').textContent=fmt(CAMP_EARLY?c.early:c.late); $('perTxt').textContent=CAMP_EARLY?'потом '+fmt(c.late):'пакет на одну школу'; $('early').textContent='Ранняя цена до 30 ноября'; $('early').hidden=!CAMP_EARLY;
       $('whatPlus').hidden=PLAN!=='camp_plus';
@@ -292,12 +292,13 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
   $('tabTrainer').addEventListener('click',function(){ PRODUCT='trainer'; redraw(); });
   $('n').addEventListener('input',redraw); $('nOge').addEventListener('input',redraw); $('nEge').addEventListener('input',redraw);
   var q=new URLSearchParams(location.search);
+  var LEAD=/^[a-f0-9]{32}$/.test(q.get('lead')||'')?q.get('lead'):'';
   if(q.get('n')) $('n').value=q.get('n');
   if(q.get('p')==='camp'||q.get('p')==='camp_plus'){ PRODUCT='camp'; PLAN=q.get('p'); $('iProduct').value=PLAN; }
   if(q.get('p')==='trainer'){ PRODUCT='trainer'; $('iProduct').value='trainer'; }
   redraw();
   var tq=(q.get('t')||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(tq){ post(SRV,'/pay/status',{cab:tq}).then(function(j){ if(!j||!j.ok) return; BIND=tq; PREV=(j.rows||[]).length; var trk=j.trainer||{}; PREV_T=(trk.oge||[]).length+(trk.ege||[]).length; if(j.school&&!$('school').value) $('school').value=j.school;
+  if(tq){ post(SRV,'/pay/status',{cab:tq}).then(function(j){ if(!j||!j.ok) return; BIND=tq; CAMP_BUYER=!!j.camp_codes; if(CAMP_BUYER) $('whatCodes').firstElementChild.textContent='Для купивших лагерь: 1–9 кодов по 1 500 ₽, от 10 по 1 400 ₽. Цена по количеству в этой покупке.'; PREV=(j.rows||[]).length; var trk=j.trainer||{}; PREV_T=(trk.oge||[]).length+(trk.ege||[]).length; if(j.school&&!$('school').value) $('school').value=j.school;
     $('moreNote').hidden=false; $('moreNote').textContent='Докупка для школы «'+j.school+'»: уже куплено '+PREV+', новые коды попадут в тот же кабинет.'; if(!q.get('n')) $('n').value=5;
     $('moreNoteT').hidden=false; $('moreNoteT').textContent='Докупка для школы «'+j.school+'»: уже '+PREV_T+' учеников, новые ключи попадут в тот же кабинет.'; redraw(); }).catch(function(){}); }
 
@@ -317,7 +318,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и коды.'; $('email').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие с условиями.'; return; }
     $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
-    post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim()}).then(function(j){
+    post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_sorder',JSON.stringify({id:j.order_id,claim:j.claim}));
       if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }
