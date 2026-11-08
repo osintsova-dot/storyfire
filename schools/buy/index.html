@@ -86,6 +86,11 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
   if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
 })(document, window, "tmr-code");
 </script>
+<script>/* sf-attr (08.11.2026): источник визита для платёжки — utm из ссылок бота/рекламы, страница входа, реферер; читают /oplata и /schools/buy */
+(function(){try{var q=new URLSearchParams(location.search),k='sf_attr',o=JSON.parse(localStorage.getItem(k)||'null'),u={};
+['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(n){if(q.get(n))u[n]=q.get(n).slice(0,160)});
+if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(document.referrer.match(/^https?:\/\/([^\/]+)/)||[])[1]||'',at:Date.now()};for(var n in u)o[n]=u[n];localStorage.setItem(k,JSON.stringify(o))}}catch(e){}})();
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -318,7 +323,7 @@ _tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и коды.'; $('email').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие с условиями.'; return; }
     $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
-    post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim()}).then(function(j){
+    post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim(),attribution:(function(){try{return JSON.parse(localStorage.getItem('sf_attr')||'null')||{}}catch(e){return {}}})()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_sorder',JSON.stringify({id:j.order_id,claim:j.claim}));
       if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }
