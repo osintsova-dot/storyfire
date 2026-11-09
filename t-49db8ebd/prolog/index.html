@@ -75,10 +75,10 @@ img{display:block;max-width:100%}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font:600 16px/1 var(--body);text-decoration:none;cursor:pointer;border:0;transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),background-color .2s,opacity .4s}
 .btn-gold{background:var(--gold);color:#1b1206;box-shadow:0 10px 24px -10px rgba(0,0,0,.7),inset 0 -2px 0 rgba(0,0,0,.12)}
-.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}
+@media (hover:hover){.btn-gold:hover{background:var(--gold-2);transform:translateY(-2px)}}
 .btn-gold:active{transform:scale(.97)}
 .btn-ghost{background:rgba(14,10,34,.5);color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.4)}
-.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}
+@media (hover:hover){.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}}
 .btn[disabled]{opacity:.35;pointer-events:none}
 .later{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
 .later.in{opacity:1;transform:none;pointer-events:auto}
@@ -147,7 +147,7 @@ img{display:block;max-width:100%}
 .opts{display:grid;gap:10px}
 .opts.pics{grid-template-columns:repeat(3,1fr)}
 .opt{min-height:54px;border-radius:14px;border:0;background:rgba(14,10,34,.7);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);font:600 18px/1.2 var(--body);cursor:pointer;padding:10px 16px;transition:box-shadow .2s,background-color .2s}
-.opt:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}
+@media (hover:hover){.opt:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}}
 .opts.pics .opt{aspect-ratio:1;padding:10px;display:grid;place-items:center}
 .opts.pics .opt img{width:100%;height:100%;object-fit:contain}
 .opt.no{animation:shake .45s;box-shadow:inset 0 0 0 1.5px #c9718a}
@@ -183,7 +183,7 @@ img{display:block;max-width:100%}
 .sheet .ru{color:var(--paper-ink-2);text-shadow:none;font-size:15px}
 .sheet .opts{width:min(100%,360px)}
 .sheet .opt,.sheet .mouse{background:rgba(255,250,238,.75);color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px rgba(43,33,64,.3)}
-.sheet .opt:hover{box-shadow:inset 0 0 0 2px var(--violet)}
+@media (hover:hover){.sheet .opt:hover{box-shadow:inset 0 0 0 2px var(--violet)}}
 .sheet .opt.yes{background:rgba(245,200,66,.45);box-shadow:inset 0 0 0 2px #b8901c}
 .sheet .opt.no{box-shadow:inset 0 0 0 2px #b0485f}
 .sheet .mice{gap:6px}
