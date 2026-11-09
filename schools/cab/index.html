@@ -53,8 +53,32 @@ td input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
 .msg{color:#ffb39b;min-height:1.3em}
 .note{font-size:13px;color:var(--ink-3)}
 .scroll{overflow:auto;border-radius:16px;box-shadow:inset 0 0 0 1px var(--line);background:rgba(247,238,219,.03)}
+/* Лагерь (09.11.2026): комплект дня из приватного хранилища, ссылки на 24 ч */
+.camp{margin:0 0 30px}
+.camp h2,.sec-h{font:600 clamp(24px,5vw,30px)/1.1 var(--display);margin:0 0 6px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:0 0 16px;padding:0;list-style:none;counter-reset:st}
+.steps li{position:relative;padding:12px 14px 12px 44px;border-radius:14px;background:rgba(247,238,219,.04);box-shadow:inset 0 0 0 1px var(--line);font-size:14px;color:var(--ink-2)}
+.steps li::before{counter-increment:st;content:counter(st);position:absolute;left:14px;top:12px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#241a06;font:700 12px/20px var(--body);text-align:center}
+.steps b{color:var(--ink);font-weight:600}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.day{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:linear-gradient(180deg,rgba(255,155,61,.08),rgba(247,238,219,.03) 46%);box-shadow:inset 0 0 0 1px var(--line)}
+.day .k{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ember)}
+.day h3{font:700 28px/1 var(--display);margin:2px 0 2px}
+.day p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.4}
+.day .cap{margin:4px 0 -2px;font-size:12px;color:var(--ink-3)}
+.lv{display:flex;flex-direction:column;gap:6px;margin:4px 0 0;padding:0;list-style:none}
+.lv a{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;padding:0 14px;border-radius:12px;background:rgba(14,10,34,.45);box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);text-decoration:none;font:500 14px var(--body);transition:box-shadow .15s ease,background-color .15s ease}
+.lv a span{color:var(--ink-3);font-size:12px;white-space:nowrap}
+.day .act{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:4px}
+.day .act .btn{width:100%;justify-content:space-between;padding:0 14px;border-radius:12px;font-size:14px;transition:transform .12s ease,box-shadow .15s ease}
+.day .act .btn span{opacity:.75;font-weight:500;font-size:12px}
+.day .ph{font-size:12px;color:var(--ink-3);text-align:right}
+.day .ph a{color:var(--ink-2)}
+@media (hover:hover){.lv a:hover,.day .act .btn:not(.btn-gold):hover{box-shadow:inset 0 0 0 1px rgba(245,200,66,.55)}}
+.lv a:active{transform:scale(.98)}
+.exp{font-size:13px;color:var(--ink-3);margin:10px 0 0}
 [hidden]{display:none!important}
-@media print{*{color:#000!important;background:#fff!important;box-shadow:none!important;text-shadow:none!important}.bar,.top a:last-child,.note{display:none}th,td{border-bottom:1px solid #999}.dots i{box-shadow:inset 0 0 0 1px #999!important}.dots i.on{background:#000!important}.dots i.lo{background:#888!important}td input{border:1px solid #bbb}}
+@media print{*{color:#000!important;background:#fff!important;box-shadow:none!important;text-shadow:none!important}.bar,.top a:last-child,.note,.camp{display:none}th,td{border-bottom:1px solid #999}.dots i{box-shadow:inset 0 0 0 1px #999!important}.dots i.on{background:#000!important}.dots i.lo{background:#888!important}td input{border:1px solid #bbb}}
 </style>
 <!-- Top.Mail.Ru counter -->
 <script type="text/javascript">
@@ -84,6 +108,20 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   <p class="msg" id="msg" aria-live="polite"></p>
 
   <div id="body" hidden>
+    <section class="camp" id="campBox" hidden aria-labelledby="campH">
+      <h2 id="campH">Лагерь «Истории у костра»</h2>
+      <p class="lead">Пять дней, на каждый — сценарий с раздаткой для трёх возрастов, комплект для работы без интернета и клип песни дня.</p>
+      <ol class="steps">
+        <li><b>Распечатайте PDF</b> своего уровня: сценарий для учителя и раздатка для детей.</li>
+        <li><b>Скачайте ZIP</b> на компьютер в классе, распакуйте и откройте START.html. Видео и звук работают без интернета.</li>
+        <li><b>Ссылки живут 24 часа.</b> Не успели — обновите кабинет, появятся новые. Пересылать их не нужно: учителям дайте ссылку на кабинет.</li>
+      </ol>
+      <p class="msg" id="campPend" hidden>Материалы готовятся к выдаче. Обновите кабинет позже или напишите в бот.</p>
+      <div class="days" id="campDays"></div>
+      <p class="exp" id="campExp"></p>
+    </section>
+    <h2 class="sec-h" id="codesH" hidden>Онлайн-квест</h2>
+    <div id="codesBox">
     <div class="stats">
       <div class="stat"><b id="sCodes">0</b><span>кодов куплено</span></div>
       <div class="stat"><b id="sAct">0</b><span>активировано</span></div>
@@ -103,6 +141,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       <tbody id="rows"></tbody>
     </table>
     </div>
+    </div>
+    <p class="note" id="noCodes" hidden>Кодов онлайн-квеста у школы пока нет. Школам с лагерем коды продаём по цене лагеря: <a id="moreCamp" href="#">купить коды</a>.</p>
     <div id="trBox" hidden>
       <h2 style="font:600 clamp(24px,5vw,30px)/1.1 var(--display);margin:30px 0 6px">Тренажёр ОГЭ/ЕГЭ</h2>
       <p class="lead" id="trLead"></p>
@@ -114,7 +154,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       </div>
       <p class="note">Ключ учителя открывает кабинет: уроки, журнал класса, печать и проверка бланков. Журнал хранится на устройстве учителя. Активации ключей тренажёра здесь не видны.</p>
     </div>
-    <p class="note">Подписи «кому выдан» хранятся только в этом браузере, на сервер не уходят: мы не собираем имена детей. Точка истории золотая, когда ребёнок прошёл её до конца; оранжевая, если в битве за значок меньше четырёх из пяти. Если по одному коду играют двое детей, строк будет две.</p>
+    <p class="note" id="codesNote">Подписи «кому выдан» хранятся только в этом браузере, на сервер не уходят: мы не собираем имена детей. Точка истории золотая, когда ребёнок прошёл её до конца; оранжевая, если в битве за значок меньше четырёх из пяти. Если по одному коду играют двое детей, строк будет две.</p>
   </div>
 </div>
 
@@ -170,8 +210,32 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       var td6=document.createElement('td'); td6.textContent=x.last?dt(x.last):''; td6.className='muted'; tr.appendChild(td6);
       tb.appendChild(tr);
     });
-    renderTrainer();
+    var camp=!!DATA.camp_files, noCodes=camp&&!rows.length;
+    $('codesBox').hidden=noCodes; $('codesNote').hidden=noCodes; $('noCodes').hidden=!noCodes; $('codesH').hidden=!camp||noCodes;
+    if(noCodes) $('lead').textContent='Материалы лагеря — ниже. Ссылки обновляются каждый раз, когда вы открываете кабинет.';
+    renderTrainer(); renderCamp();
     $('body').hidden=false;
+  }
+  function mb(b){ return b?(Math.max(1,Math.round(b/104857.6))/10).toString().replace('.',',')+' МБ':''; }
+  function el(tag,cls,text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+  function link(f,cls,label,size,blank){ var a=el('a',cls); a.href=f.url; a.rel='noopener'; if(blank) a.target='_blank';
+    a.appendChild(document.createTextNode(label)); if(size) a.appendChild(el('span',null,size));
+    a.addEventListener('click',function(ev){ if(DATA.camp_files.expires&&Date.now()>DATA.camp_files.expires-60000){ ev.preventDefault(); $('msg').textContent='Ссылки устарели, получаем новые…'; load(); } });
+    return a; }
+  function renderCamp(){
+    var C=DATA.camp_files; $('campBox').hidden=!C; if(!C) return;
+    var box=$('campDays'); box.innerHTML='';
+    $('campPend').hidden=!C.pending;
+    (C.days||[]).forEach(function(d){
+      var c=el('article','day'); c.appendChild(el('div','k','День '+d.day)); c.appendChild(el('h3',null,d.hero)); c.appendChild(el('p',null,d.line));
+      c.appendChild(el('div','cap','Сценарий и раздатка (PDF)')); var ul=el('ul','lv'); (d.pdf||[]).forEach(function(f){ var li=el('li'); li.appendChild(link(f,null,f.title,mb(f.size))); ul.appendChild(li); }); c.appendChild(ul);
+      var act=el('div','act');
+      if(d.zip) act.appendChild(link(d.zip,'btn btn-gold','Комплект без интернета',('ZIP '+mb(d.zip.size)).trim()));
+      if(d.clip){ act.appendChild(link(d.clip,'btn','Клип песни',mb(d.clip.size),true));
+        if(d.clip_phone){ var ph=el('div','ph'); ph.appendChild(document.createTextNode('для телефона: ')); ph.appendChild(link(d.clip_phone,null,'лёгкая версия',mb(d.clip_phone.size)?' '+mb(d.clip_phone.size):'',true)); act.appendChild(ph); } }
+      c.appendChild(act); box.appendChild(c);
+    });
+    if(C.expires){ var e=new Date(C.expires); $('campExp').textContent='Ссылки действуют до '+e.getDate()+' '+MONTHS[e.getMonth()]+', '+('0'+e.getHours()).slice(-2)+':'+('0'+e.getMinutes()).slice(-2)+'.'; } else $('campExp').textContent='';
   }
   function renderTrainer(){
     var T=DATA.trainer||{}, list=[]; (T.oge||[]).forEach(function(k){ list.push([k,'ОГЭ','oge']); }); (T.ege||[]).forEach(function(k){ list.push([k,'ЕГЭ','ege']); }); (T.teachers||[]).forEach(function(k){ list.push([k,'учитель','oge']); });
@@ -187,7 +251,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       var td5=document.createElement('td'); var a=document.createElement('a'); a.href='https://speakandsmile.online/'+x[2]+'.html?key='+x[0]; a.target='_blank'; a.rel='noopener'; a.textContent='открыть'; td5.appendChild(a); tr.appendChild(td5);
       tb.appendChild(tr); });
   }
-  $('more').href='../buy/?t='+t+'&n=5';
+  $('more').href='../buy/?t='+t+'&n=5'; $('moreCamp').href='../buy/?t='+t+'&n=5';
   $('q').addEventListener('input',render);
   $('refresh').addEventListener('click',load);
   $('csv').addEventListener('click',function(){
