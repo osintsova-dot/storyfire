@@ -904,6 +904,31 @@ header.top .topr{margin-left:0}
 .bookref .br-a{font-size:14px;color:var(--ink-2);margin-top:4px}
 .bookref .br-en{font-size:13px;color:var(--ink-3);font-style:italic;margin-top:2px}
 .bookref .br-f{font-size:14px;line-height:1.45;color:var(--ink-2);margin-top:10px}
+
+/* ===== «Песня героя» на экране «История пройдена» (09.11) ===== */
+.hsong{display:grid;gap:10px;padding:16px;border-radius:22px;background:linear-gradient(160deg,rgba(108,63,197,.32),rgba(14,10,34,.6) 60%);box-shadow:inset 0 0 0 1px rgba(245,200,66,.28),0 18px 40px -22px rgba(0,0,0,.9)}
+.scene.on .hsong{animation:hsIn .7s var(--ease-out) .25s both}
+@keyframes hsIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.end .hsong .hs-kick{margin:0;font:600 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.hsong .hs-t{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(23px,6.4vw,28px);line-height:1.1;color:var(--ink);text-wrap:balance}
+.hsong .hs-media{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0e0a22;box-shadow:0 10px 26px -14px rgba(0,0,0,.9)}
+.hsong .hs-poster,.hsong .hs-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hsong .hs-video{object-fit:contain;background:#000}
+.hsong .hs-play{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;border:0;padding:0;background:linear-gradient(180deg,rgba(14,10,34,0) 40%,rgba(14,10,34,.55));cursor:pointer;color:#1b1206;-webkit-tap-highlight-color:transparent}
+.hsong .hs-play svg{width:68px;height:68px;padding:18px 16px 18px 20px;border-radius:50%;background:var(--gold);fill:currentColor;box-shadow:0 0 0 0 rgba(245,200,66,.55),0 12px 26px -8px rgba(0,0,0,.8);animation:hsPulse 2.4s ease-out infinite;transition:transform .2s var(--ease-out)}
+.hsong .hs-play:hover svg{transform:scale(1.06)}
+.hsong .hs-play:active svg{transform:scale(.94)}
+.hsong .hs-len{position:absolute;right:10px;bottom:9px;font:600 12px/1 var(--body);color:var(--ink);background:rgba(14,10,34,.72);padding:5px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+@keyframes hsPulse{0%{box-shadow:0 0 0 0 rgba(245,200,66,.5),0 12px 26px -8px rgba(0,0,0,.8)}70%,100%{box-shadow:0 0 0 18px rgba(245,200,66,0),0 12px 26px -8px rgba(0,0,0,.8)}}
+.hsong.playing .hs-play,.hsong.playing .hs-poster{display:none}
+.hsong .hs-err{position:absolute;left:10px;right:10px;top:10px;margin:0;padding:8px 10px;border-radius:10px;background:rgba(14,10,34,.85);color:var(--ink);font-size:13px;line-height:1.3}
+.hsong .hs-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hsong .hs-bar[hidden]{display:none}
+.hsong .hs-tool{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:0;border-radius:999px;background:rgba(14,10,34,.55);box-shadow:inset 0 0 0 1.5px rgba(247,238,219,.3);color:var(--ink);font:600 14px/1 var(--body);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hsong .hs-tool:hover{box-shadow:inset 0 0 0 1.5px var(--gold);color:var(--gold-2)}
+.hsong .hs-tool svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.end .hsong .hs-sub{margin:0;font-size:13px;color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){.scene.on .hsong,.hsong .hs-play svg{animation:none}}
 </style>
 <!-- Top.Mail.Ru counter -->
 <script type="text/javascript">
@@ -2651,6 +2676,71 @@ var SF = (function () {
     // перехватываем «Помочь …» на сцене героя: сначала книга (один раз за заход), потом поле
     document.addEventListener('click',function(e){ var b=e.target.closest('[data-go="board"]'); if(!b||shown||!b.closest('[data-scene="arrive"]')) return;
       e.stopPropagation(); e.preventDefault(); open(); },true);
+  })();
+  /* ===== «Песня героя» (Оксана 09.11): на экране «История пройдена» герой поёт свою песню — клип-караоке.
+     Видео грузится только по нажатию (preload none, постер — после прихода на экран), звук — только по нажатию, playsinline;
+     «На весь экран» (iPhone — системный плеер) и «Закрыть». Прогресс/награды/переходы не трогает. Медиа: video/hero_song.{mp4,webp}. ===== */
+  (function(){
+    var SONG_V='20261109';
+    var NAMES={1:['Alice','Алиса'],2:['Mowgli','Маугли'],3:['Gerda',(state.track==='experts'?"Gerda":'Герда')],4:['Sherlock Holmes','Шерлок Холмс'],5:['Dorothy','Дороти'],6:['Peter Pan',(state.track==='experts'?"Peter Pan":'Питер Пэн')],7:['Jim Hawkins','Джим Хокинс'],8:['Pinocchio','Пиноккио'],9:['Mary','Мэри'],10:['The Nutcracker','Щелкунчик']};
+    var LEN={1:'1:31',2:'0:54',3:'1:02',4:'1:08',5:'1:02',6:'1:04',7:'0:47',8:'0:44',9:'0:46',10:'1:00'};
+    if(typeof SID==='undefined'||!NAMES[SID]||typeof ENTER==='undefined') return;
+    var scene=document.querySelector('[data-scene="end"]'), end=scene&&scene.querySelector('.end');
+    if(!end) return;
+    var ICON_PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+    var ICON_FULL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+    var ICON_X='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    var card=document.createElement('section'); card.className='hsong'; card.id='heroSong';
+    card.innerHTML='<p class="hs-kick"><span aria-hidden="true">♪</span> <span data-hs="kick"></span></p>'+
+      '<h2 class="hs-t" data-hs="title"></h2>'+
+      '<div class="hs-media"><img class="hs-poster" alt="" decoding="async">'+
+        '<button type="button" class="hs-play" data-hs-btn="play">'+ICON_PLAY+'<span class="hs-len">'+LEN[SID]+'</span></button>'+
+        '<p class="hs-err" role="status" hidden></p></div>'+
+      '<div class="hs-bar" hidden><button type="button" class="hs-tool" data-hs-btn="full">'+ICON_FULL+'<span data-hs="full"></span></button>'+
+        '<button type="button" class="hs-tool" data-hs-btn="close">'+ICON_X+'<span data-hs="close"></span></button></div>'+
+      '<p class="hs-sub" data-hs="sub"></p>';
+    // сразу под заголовком «История пройдена» — песня как главная награда, видна без прокрутки; «Книжная справка» и итоги ниже
+    var h=end.querySelector('#endTitle');
+    if(h&&h.parentNode===end) end.insertBefore(card,h.nextSibling); else end.insertBefore(card,end.querySelector('.cta'));
+    var media=card.querySelector('.hs-media'), poster=card.querySelector('.hs-poster'), playBtn=card.querySelector('.hs-play'),
+        bar=card.querySelector('.hs-bar'), err=card.querySelector('.hs-err'), v=null, musicPaused=false;
+    function en(){ return document.body.classList.contains('t-experts')||(typeof state!=='undefined'&&state.track==='experts'); }
+    function txt(){ var E=en(), n=NAMES[SID];
+      var t={kick:E?'Hero’s song':'Песня героя', title:E?n[0]+' sings for you!':n[1]+' поёт для тебя!',
+             sub:E?'Sing along — the words light up on the screen.':'Подпевай: слова загораются прямо на экране.',
+             full:E?'Full screen':'На весь экран', close:E?'Close':'Закрыть'};
+      card.querySelectorAll('[data-hs]').forEach(function(x){ x.textContent=t[x.getAttribute('data-hs')]; });
+      playBtn.setAttribute('aria-label',E?'Play '+n[0]+'’s song':'Включить песню: '+n[1]);
+      card.setAttribute('aria-label',t.title); }
+    function music(off){ try{ if(typeof SND==='undefined') return; if(off){ if(SND.stop) SND.stop(); SND.music(false); musicPaused=true; } else if(musicPaused){ musicPaused=false; SND.music(true); } }catch(e){} }
+    function fail(){ var E=en(); err.textContent=E?'The song did not load. Check the internet and tap ▶ again.':'Песня не загрузилась. Проверь интернет и нажми ▶ ещё раз.';
+      err.hidden=false; close(); }
+    function open(){
+      err.hidden=true;
+      if(!v){ v=document.createElement('video'); v.className='hs-video'; v.setAttribute('playsinline',''); v.setAttribute('webkit-playsinline','');
+        v.preload='auto'; v.controls=true; v.poster=poster.src; v.src='video/hero_song.mp4?v='+SONG_V;
+        v.addEventListener('error',fail);
+        v.addEventListener('play',function(){ music(true); });
+        v.addEventListener('pause',function(){ music(false); });
+        v.addEventListener('ended',function(){ music(false); try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){} });
+        media.appendChild(v); }
+      card.classList.add('playing'); bar.hidden=false;
+      var p=v.play(); if(p&&p.catch) p.catch(function(e){ if(e&&e.name==='NotSupportedError') fail(); });
+    }
+    function close(){ if(v){ try{ v.pause(); }catch(e){} v.removeEventListener('error',fail); v.removeAttribute('src'); try{ v.load(); }catch(e){} v.remove(); v=null; }
+      music(false); card.classList.remove('playing'); bar.hidden=true; }
+    function full(){ if(!v) return; try{
+      if(v.requestFullscreen) v.requestFullscreen().catch(function(){ if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); });
+      else if(v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+      else if(v.webkitEnterFullscreen) v.webkitEnterFullscreen();   // iPhone: системный плеер
+    }catch(e){} }
+    card.addEventListener('click',function(e){ var b=e.target.closest('[data-hs-btn]'); if(!b) return; e.stopPropagation();
+      var k=b.getAttribute('data-hs-btn'); if(k==='play') open(); else if(k==='full') full(); else if(k==='close') close(); });
+    // уходим с экрана (ещё раз / на главную) — песня замолкает
+    document.addEventListener('click',function(e){ if(v&&e.target.closest('[data-go], #replayStory')) close(); },true);
+    window.addEventListener('pagehide',function(){ if(v) close(); });
+    var prev=ENTER.end;
+    ENTER.end=function(p){ if(prev) prev(p); txt(); if(!poster.getAttribute('src')) poster.src='video/hero_song.webp?v='+SONG_V; };
   })();
   /* ===== доступ: код семьи и дата открытия (sf-access.js встроен сборкой). Локально и в тестовой копии замка нет. ===== */
   (function(){
