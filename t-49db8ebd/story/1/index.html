@@ -1699,8 +1699,10 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   R.readp=function(body,s,next){
     body.insertAdjacentHTML('beforeend','<p class="ptitle">'+esc(s.title)+'</p>'+(s.ru?'<p class="ru">'+esc(s.ru)+'</p>':'')+'<div class="passage">'+esc(s.text).replace(/\n\n/g,'<br><br>')+'</div>'); ruBtns(body);
     var row=el('div','row2'); body.appendChild(row);
-    var p=el('button','btn btn-ghost',(state.track==='experts'?"▶ Listen":'▶ Послушать')); row.appendChild(p); p.addEventListener('click',function(){ SND.say(s.text); });
-    nextBtn(body,(state.track==='experts'?"Read":'Прочитано'),next,T==='little'?400:1500);
+    // 09.11 (Оксана): повторное «Послушать» ставило текст в очередь второй раз (чтение по кругу), «Прочитано» ждало конца очереди
+    var stopRead=function(){ if(SND.cancelNarration) SND.cancelNarration(); else if(SND.stop) SND.stop(); };
+    var p=el('button','btn btn-ghost',(state.track==='experts'?"▶ Listen":'▶ Послушать')); row.appendChild(p); p.addEventListener('click',function(){ stopRead(); SND.say(s.text); });
+    nextBtn(body,(state.track==='experts'?"Read":'Прочитано'),function(){ stopRead(); next(); },T==='little'?400:1500);
   };
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1};
   function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
