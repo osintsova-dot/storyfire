@@ -453,7 +453,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
 (function(){
   var SLUG=((location.search.match(/[?&]r=([a-z0-9-]{3,40})/i)||[])[1]||'').toLowerCase(), SRV=['https://d5d6o4mldv5m1nj5hvih.6brbn2wz.apigw.yandexcloud.net/nihao','https://nihao-bot.o-sintsova.workers.dev'];
   var f=document.getElementById('sfform'), m=document.getElementById('sfmsg');
-  if(Date.now()>Date.parse('2026-12-20T23:59:59+07:00')){ f.classList.add('done'); m.className='msg'; m.textContent='Запись через эту страницу закрыта. Спросите о кодах у вашего учителя.'; return; }
+  if(Date.now()>Date.parse('2026-12-25T23:59:59+07:00')){ f.classList.add('done'); m.className='msg'; m.textContent='Запись через эту страницу закрыта. Спросите о кодах у вашего учителя.'; return; }
   function post(i,body){ if(i>=SRV.length) return Promise.reject(); var c=window.AbortController?new AbortController():null; var t=c&&setTimeout(function(){c.abort();},9000);
     return fetch(SRV[i]+'/sf/lead',{method:'POST',headers:{'content-type':'application/json'},body:body,signal:c?c.signal:undefined})
       .then(function(r){ clearTimeout(t); return r.json(); }).then(function(j){ if(!j||(!j.ok&&j.error!=='rate'&&j.error!=='bad')) throw 0; return j; })
