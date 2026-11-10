@@ -129,10 +129,10 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
         <button type="button" class="chip" data-plan="camp" aria-pressed="true">Лагерь</button>
         <button type="button" class="chip" data-plan="camp_plus" aria-pressed="false">Лагерь + онлайн, 5 кодов</button>
       </div>
-      <div class="sum"><span id="total">20 000 ₽</span><small id="perTxt">по 2 000 ₽ за код</small></div>
+      <div class="sum"><span id="total">23 000 ₽</span><small id="perTxt">по 2 300 ₽ за код</small></div>
       <p class="per"><span class="early" id="early" hidden></span></p>
       <ul class="what" id="whatCodes">
-        <li>Цена за код: 1–4 по 3 500 ₽, от 5 по 2 200 ₽, от 10 по 2 000 ₽, от 30 по 1 800 ₽, от 60 по 1 600 ₽, от 100 по 1 400 ₽</li>
+        <li>Цена за код: 1–4 по 3 000 ₽, от 5 по 2 500 ₽, от 10 по 2 300 ₽, от 30 по 2 100 ₽, от 60 по 1 900 ₽, от 100 по 1 800 ₽</li>
         <li>1 код = 1 семья, все десять историй, до трёх устройств, доступ навсегда. Братья и сёстры могут играть, у каждого свой прогресс</li>
         <li>Кабинет школы: кто активировал код, сколько историй прошёл, по какому уровню</li>
         <li>Коды продаёте родителям по своей цене или дарите ученикам</li>
@@ -265,9 +265,9 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function show(id){ ['form','wait','done','fail'].forEach(function(s){ $(s).hidden=s!==id; }); if(id!=='form'){ $('invoice').hidden=true; $('offer').hidden=true; } window.scrollTo(0,0); }
   function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' ₽'; }
 
-  // цена: та же лестница, что на сервере (ss-pay sfPack): 1+ 3500, 5+ 2200, 10+ 2000, 30+ 1800, 60+ 1600, 100+ 1400; скидок на коды нет
+  // цена: та же лестница, что на сервере (ss-pay sfPack): 1+ 3000, 5+ 2500, 10+ 2300, 30+ 2100, 60+ 1900, 100+ 1800 (11.11); скидок на коды нет
   var BIND='', PREV=0, CAMP_BUYER=false;   // докупка из кабинета: ?t=<код привязки>; цена считается по этой покупке, уже купленные не суммируются
-  function price(n){ n=Math.max(1,Math.min(500,parseInt(n,10)||1)); var t=n, per=3500; if(t>=100) per=1400; else if(t>=60) per=1600; else if(t>=30) per=1800; else if(t>=10) per=2000; else if(t>=5) per=2200; if(CAMP_BUYER) per=n>=10?1400:1500; return {n:n,per:per,total:per*n}; }
+  function price(n){ n=Math.max(1,Math.min(500,parseInt(n,10)||1)); var t=n, per=3000; if(t>=100) per=1800; else if(t>=60) per=1900; else if(t>=30) per=2100; else if(t>=10) per=2300; else if(t>=5) per=2500; if(CAMP_BUYER) per=1800; return {n:n,per:per,total:per*n}; }
   // лагерь: те же тарифы, что в ss-pay CAMP_PLANS; ранняя цена до 30.11
   var CAMP_EARLY=Date.now()<Date.parse('2026-11-30T23:59:59+07:00');
   var CAMP={camp:{early:11900,late:14900,name:'Лагерь'},camp_plus:{early:15900,late:19900,name:'Лагерь + онлайн'}};
@@ -284,7 +284,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       :tr?'Ключи ученикам на учебный год и бесплатные ключи учителям сразу после оплаты. Письмо и говорение проверяет ИИ по критериям ФИПИ. Чек приходит на почту.'
       :'Готовая офлайн-смена: мультики героев, поле, станции, финал для родителей. Материалы сразу после оплаты в кабинете школы. Чек приходит на почту.';
     if(tr){ var k=trN(), tp=trPrice(k.oge+k.ege); $('total').textContent=fmt(tp.total); $('perTxt').textContent='по '+fmt(tp.per)+' за ученика в год'; $('early').textContent='От 5 учеников дешевле, от 10 и от 30 ещё дешевле'; $('early').hidden=k.oge+k.ege>=30; }
-    else if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n===1?'один код по розничной цене':'по '+fmt(p.per)+' за код'; $('early').textContent=(CAMP_BUYER?'Спеццена для купивших лагерь: от 10 кодов — 1 400 ₽':'От 5 кодов дешевле, от 10 ещё дешевле'); $('early').hidden=p.n>=10;
+    else if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n<5?'по '+fmt(p.per)+' за код':'по '+fmt(p.per)+' за код'; $('early').textContent=(CAMP_BUYER?'Для купивших лагерь — 1 800 ₽ за код':'От 5 кодов дешевле, от 10 ещё дешевле'); $('early').hidden=p.n>=10;
       [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.setAttribute('aria-pressed', +b.dataset.n===p.n?'true':'false'); }); }
     else { var c=CAMP[PLAN]; $('total').textContent=fmt(CAMP_EARLY?c.early:c.late); $('perTxt').textContent=CAMP_EARLY?'потом '+fmt(c.late):'пакет на одну школу'; $('early').textContent='Ранняя цена до 30 ноября'; $('early').hidden=!CAMP_EARLY;
       $('whatPlus').hidden=PLAN!=='camp_plus';
@@ -303,7 +303,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   if(q.get('p')==='trainer'){ PRODUCT='trainer'; $('iProduct').value='trainer'; }
   redraw();
   var tq=(q.get('t')||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(tq){ post(SRV,'/pay/status',{cab:tq}).then(function(j){ if(!j||!j.ok) return; BIND=tq; CAMP_BUYER=!!j.camp_codes; if(CAMP_BUYER) $('whatCodes').firstElementChild.textContent='Для купивших лагерь: 1–9 кодов по 1 500 ₽, от 10 по 1 400 ₽. Цена по количеству в этой покупке.'; PREV=(j.rows||[]).length; var trk=j.trainer||{}; PREV_T=(trk.oge||[]).length+(trk.ege||[]).length; if(j.school&&!$('school').value) $('school').value=j.school;
+  if(tq){ post(SRV,'/pay/status',{cab:tq}).then(function(j){ if(!j||!j.ok) return; BIND=tq; CAMP_BUYER=!!j.camp_codes; if(CAMP_BUYER) $('whatCodes').firstElementChild.textContent='Для купивших лагерь: 1 800 ₽ за код при любом количестве.'; PREV=(j.rows||[]).length; var trk=j.trainer||{}; PREV_T=(trk.oge||[]).length+(trk.ege||[]).length; if(j.school&&!$('school').value) $('school').value=j.school;
     $('moreNote').hidden=false; $('moreNote').textContent='Докупка для школы «'+j.school+'»: уже куплено '+PREV+', новые коды попадут в тот же кабинет.'; if(!q.get('n')) $('n').value=5;
     $('moreNoteT').hidden=false; $('moreNoteT').textContent='Докупка для школы «'+j.school+'»: уже '+PREV_T+' учеников, новые ключи попадут в тот же кабинет.'; redraw(); }).catch(function(){}); }
 
