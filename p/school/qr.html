@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>QR для родителей · Истории у костра</title>
+<style>
+:root{--bg:#fbf6ec;--ink:#22183f;--ink2:#5b5274;--gold:#c98a12}
+@media (prefers-color-scheme:dark){:root{--bg:#141026;--ink:#f7eedb;--ink2:#cfc5ae;--gold:#f5c84c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px 16px}
+main{max-width:420px;width:100%;text-align:center}
+h1{font-size:26px;line-height:1.2;margin:0 0 8px}
+p{color:var(--ink2);margin:0 0 18px}
+#qr{display:inline-block;padding:18px;background:#fff;border-radius:20px;box-shadow:0 10px 40px rgba(34,24,63,.12)}
+#qr img,#qr canvas{display:block;width:260px;height:260px}
+.url{font-size:14px;word-break:break-all;margin:16px 0}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+a.btn,button{font:600 15px inherit;padding:12px 18px;border-radius:14px;border:0;background:var(--gold);color:#22183f;text-decoration:none;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink2)}
+.err{color:#c0392b}
+@media print{.btns,.hint{display:none}body{background:#fff;color:#000}#qr{box-shadow:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>«Истории у костра»</h1>
+  <p>Наведите камеру телефона: всё о квесте для детей 5–14 лет, бесплатный Пролог и запись.</p>
+  <div id="qr" aria-label="QR-код ссылки для родителей"></div>
+  <div class="url" id="url"></div>
+  <div class="btns"><button id="dl">Скачать картинку</button><button class="ghost" onclick="window.print()">Распечатать</button></div>
+  <p class="hint" style="margin-top:16px;font-size:14px">Картинку можно вставить в рассылку или чат родителей.</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  var r=((location.search.match(/[?&]r=([a-z0-9-]{3,40})/i)||[])[1]||'').toLowerCase();
+  var box=document.getElementById('qr'), u=document.getElementById('url');
+  if(!r){ box.outerHTML='<p class="err">В ссылке нет кода учителя. Возьмите ссылку в боте «Speak&amp;Smile для школ», написав «ссылка».</p>'; document.getElementById('dl').style.display='none'; return; }
+  var link='https://storyfire.ru/p/school/?r='+r; u.textContent=link;
+  try{ new QRCode(box,{text:link,width:520,height:520,correctLevel:QRCode.CorrectLevel.M}); }catch(e){ box.textContent=link; }
+  document.getElementById('dl').addEventListener('click',function(){
+    var c=box.querySelector('canvas'), src=c?c.toDataURL('image/png'):(box.querySelector('img')||{}).src; if(!src) return;
+    var a=document.createElement('a'); a.href=src; a.download='qr-istorii-u-kostra.png'; document.body.appendChild(a); a.click(); a.remove();
+  });
+})();
+</script>
+</body>
+</html>
