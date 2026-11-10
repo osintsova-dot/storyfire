@@ -444,7 +444,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     <label>Фамилия и имя ребёнка<input type="text" name="child" maxlength="80"></label>
     <label>Возраст<select name="age"><option value="">—</option><option>5–7 лет</option><option>8–10 лет</option><option>11–14 лет</option></select></label>
   </div>
-  <div class="fields"><label class="ok"><input type="checkbox" name="consent" required><span>Согласен(на) на обработку моих данных ИП Синцова О.&nbsp;В. (Speak&nbsp;&amp;&nbsp;Smile, ИНН 245718463277) с&nbsp;передачей вашему учителю английского, который дал эту ссылку, для записи на квест. Данные нужны только, чтобы с вами связаться.</span></label></div>
+  <div class="fields"><label class="ok"><input type="checkbox" name="consent" required><span>Согласен(на) на обработку моих данных ИП Синцова О.&nbsp;В. (Speak&nbsp;&amp;&nbsp;Smile, ИНН 245718463277) с&nbsp;передачей вашему учителю английского, который дал эту ссылку, для записи на квест. Данные нужны только, чтобы с вами связаться.</span></label>
+    <label class="ok"><input type="checkbox" name="news"><span>Хочу получать от Speak&nbsp;&amp;&nbsp;Smile (ИП Синцова О.&nbsp;В.) новости о новых квестах и играх на английском. Необязательно, можно отписаться в любой момент.</span></label></div>
   <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
   <div class="fields btns"><button class="btn btn-gold" type="submit">Записаться</button></div>
   <p class="msg" id="sfmsg" aria-live="polite"></p>
@@ -459,12 +460,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       .then(function(r){ clearTimeout(t); return r.json(); }).then(function(j){ if(!j||(!j.ok&&j.error!=='rate'&&j.error!=='bad')) throw 0; return j; })
       .catch(function(e){ clearTimeout(t); if(e&&e.ok===false) throw e; return post(i+1,body); }); }
   f.addEventListener('submit',function(e){ e.preventDefault();
-    var d={school:SLUG,parent:f.parent.value.trim(),phone:f.phone.value.trim(),child:f.child.value.trim(),age:f.age.value,consent:f.consent.checked,hp:f.hp.value};
+    var d={school:SLUG,parent:f.parent.value.trim(),phone:f.phone.value.trim(),child:f.child.value.trim(),age:f.age.value,consent:f.consent.checked,news:!!(f.news&&f.news.checked),hp:f.hp.value};
     if(d.parent.length<2){ m.className='msg bad'; m.textContent='Напишите, пожалуйста, ваше имя.'; f.parent.focus(); return; }
     if(d.phone.replace(/\D/g,'').length<10){ m.className='msg bad'; m.textContent='Проверьте телефон — нужен номер полностью.'; f.phone.focus(); return; }
     if(!d.consent){ m.className='msg bad'; m.textContent='Отметьте согласие — без него не можем записать.'; return; }
     var b=f.querySelector('button'); b.disabled=true; m.className='msg'; m.textContent='Отправляем…';
-    post(0,JSON.stringify(d)).then(function(j){ if(!j.ok){ throw j; } f.classList.add('done'); m.className='msg good'; m.textContent='Готово! Учитель скоро свяжется с вами.'; })
+    post(0,JSON.stringify(d)).then(function(j){ if(!j.ok){ throw j; } f.classList.add('done'); m.className='msg good'; m.textContent='Готово! Учитель скоро свяжется с вами.'; if(d.news){ var a=document.createElement('a'); a.className='btn btn-gold'; a.style.marginTop='12px'; a.href='https://max.ru/id245718463277_2_bot?start=news_'+(SLUG||'site'); a.target='_blank'; a.rel='noopener'; a.textContent='Подписаться на новости в MAX'; m.parentNode.insertBefore(a,m.nextSibling); } })
       .catch(function(j){ b.disabled=false; m.className='msg bad'; m.textContent=j&&j.error==='rate'?'Слишком много заявок подряд. Попробуйте через час.':'Не получилось отправить. Попробуйте ещё раз или напишите нам напрямую.'; });
   });
 })();
