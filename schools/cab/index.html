@@ -77,6 +77,11 @@ td input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
 @media (hover:hover){.lv a:hover,.day .act .btn:not(.btn-gold):hover{box-shadow:inset 0 0 0 1px rgba(245,200,66,.55)}}
 .lv a:active{transform:scale(.98)}
 .exp{font-size:13px;color:var(--ink-3);margin:10px 0 0}
+.go{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(255,155,61,.12),rgba(247,238,219,.04));box-shadow:inset 0 0 0 1px rgba(245,200,66,.4);color:var(--ink);text-decoration:none;transition:transform .12s ease,box-shadow .15s ease}
+.go .faces{display:flex;flex:0 0 auto}.go .faces img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:50% 20%;box-shadow:0 0 0 2px var(--night);margin-left:-10px;background:#2a1a4a}.go .faces img:first-child{margin-left:0}
+.go .t{flex:1;min-width:0}.go b{display:block;font:600 17px var(--body)}.go small{display:block;font-size:13px;color:var(--ink-2)}.go svg{flex:0 0 22px;width:22px;height:22px;color:var(--gold)}
+@media (hover:hover){.go:hover{box-shadow:inset 0 0 0 1.5px var(--gold)}}.go:active{transform:scale(.99)}
+@media (max-width:520px){.go .faces img{width:32px;height:32px;margin-left:-12px}}
 [hidden]{display:none!important}
 @media print{*{color:#000!important;background:#fff!important;box-shadow:none!important;text-shadow:none!important}.bar,.top a:last-child,.note,.camp{display:none}th,td{border-bottom:1px solid #999}.dots i{box-shadow:inset 0 0 0 1px #999!important}.dots i.on{background:#000!important}.dots i.lo{background:#888!important}td input{border:1px solid #bbb}}
 </style>
@@ -110,12 +115,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   <div id="body" hidden>
     <section class="camp" id="campBox" hidden aria-labelledby="campH">
       <h2 id="campH">Лагерь «Истории у костра»</h2>
-      <p class="lead">Пять дней, на каждый — сценарий с раздаткой для трёх возрастов, комплект для работы без интернета и клип песни дня.</p>
-      <ol class="steps">
-        <li><b>Распечатайте PDF</b> своего уровня: сценарий для учителя и раздатка для детей.</li>
-        <li><b>Скачайте ZIP</b> на компьютер в классе, распакуйте и откройте START.html. Видео и звук работают без интернета.</li>
-        <li><b>Ссылки живут 24 часа.</b> Не успели — обновите кабинет, появятся новые. Пересылать их не нужно: учителям дайте ссылку на кабинет.</li>
-      </ol>
+      <p class="lead">Пять дней по три часа для четырёх групп: Little, Explorers, Experts База и Плюс. Всё для учителя собрано на отдельной странице лагеря.</p>
+      <a class="go" id="campGo" href="../camp/"><span class="faces" id="campFaces"></span><span class="t"><b>Открыть лагерь</b><small>План урока, печать, видео и сообщение родителям — по каждому дню и группе</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
       <p class="msg" id="campPend" hidden>Материалы готовятся к выдаче. Обновите кабинет позже или напишите в бот.</p>
       <div class="days" id="campDays"></div>
       <p class="exp" id="campExp"></p>
@@ -212,7 +213,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     });
     var camp=!!DATA.camp_files, noCodes=camp&&!rows.length;
     $('codesBox').hidden=noCodes; $('codesNote').hidden=noCodes; $('noCodes').hidden=!noCodes; $('codesH').hidden=!camp||noCodes;
-    if(noCodes) $('lead').textContent='Материалы лагеря — ниже. Ссылки обновляются каждый раз, когда вы открываете кабинет.';
+    if(noCodes) $('lead').textContent='Материалы лагеря — ниже, на отдельной странице.';
     renderTrainer(); renderCamp();
     $('body').hidden=false;
   }
@@ -224,6 +225,14 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     return a; }
   function renderCamp(){
     var C=DATA.camp_files; $('campBox').hidden=!C; if(!C) return;
+    var v8=!!(C.days&&C.days[0]&&C.days[0].tracks);
+    $('campPend').hidden=!C.pending; $('campGo').hidden=!!C.pending||!v8;
+    $('campGo').href='../camp/?t='+t;
+    var fc=$('campFaces'); fc.innerHTML=''; ['08_v5_alice','08_v6_mowgli','08_v7_gerda','08_v8_sherlock','08_v9_dorothy'].forEach(function(n){ var im=el('img'); im.src='../../img/'+n+'.webp'; im.alt=''; im.loading='lazy'; fc.appendChild(im); });
+    if(v8){ $('campDays').innerHTML=''; $('campExp').textContent=''; return; }
+    renderCampOld(C);
+  }
+  function renderCampOld(C){
     var box=$('campDays'); box.innerHTML='';
     $('campPend').hidden=!C.pending;
     (C.days||[]).forEach(function(d){
