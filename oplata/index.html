@@ -136,7 +136,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       <p class="rem-t">🔔 Шаг 2 — подключите напоминания</p>
       <p class="note">Первая история — 27&nbsp;декабря, дальше по одной в день. Чтобы не пропустить ни одного вечера, нажмите кнопку: в MAX будет приходить короткое напоминание с вашей ссылкой, только днём.</p>
       <div class="row"><a class="btn btn-gold" id="remind" href="https://max.ru/id245718463277_2_bot?start=paid" target="_blank" rel="noopener">Подключить напоминания в MAX</a></div>
-      <p class="note">Без этого шага напоминаний не будет — только ссылка выше.</p>
+      <p class="note">Без MAX напоминания придут на почту из заказа — туда же мы отправили письмо с кодом.</p>
     </div>
   </section>
 
@@ -172,7 +172,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   $('f').addEventListener('submit',function(e){ e.preventDefault();
     var m=$('msg'), email=$('email').value.trim();
     m.className='msg bad';
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придёт чек.'; $('email').focus(); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и письмо с кодом.'; $('email').focus(); return; }
     if($('child').value.trim().split(/\s+/).length<2){ m.textContent='Напишите фамилию и имя ребёнка (или детей через запятую).'; $('child').focus(); return; }
     if($('parent').value.trim().split(/\s+/).length<2){ m.textContent='Напишите ФИО родителя.'; $('parent').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие на обработку данных.'; return; }
