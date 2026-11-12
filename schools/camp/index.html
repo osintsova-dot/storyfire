@@ -94,6 +94,12 @@ h1{font:600 clamp(34px,7vw,56px)/1 var(--display);margin:0 0 10px;text-wrap:bala
 .fl.main svg{color:#241a06}.fl.main small,.fl.main .sz{color:#5a4612}
 @media (hover:hover){.fl:not(.main):hover{box-shadow:inset 0 0 0 1px rgba(245,200,66,.55)}.fl.main:hover{background:var(--gold-2)}}
 .fl:active{transform:scale(.985)}
+.fl.lock{cursor:default;opacity:.62}.fl.lock:active{transform:none}
+@media (hover:hover){.fl.lock:hover{box-shadow:inset 0 0 0 1px var(--line)}}
+.fl.lock .sz{display:inline-flex;align-items:center;gap:4px}.fl.lock .sz svg{width:14px;height:14px;flex:0 0 14px;color:var(--ink-3)}
+.buy{margin-top:14px;padding:16px;border-radius:16px;background:linear-gradient(180deg,rgba(255,155,61,.14),rgba(247,238,219,.04));box-shadow:inset 0 0 0 1px rgba(245,200,66,.35)}
+.buy p{margin:0 0 12px;color:var(--ink-2);font-size:14px;line-height:1.45}.buy p b{color:var(--ink)}
+.buy .btn{width:100%}
 .player{margin:4px 0 2px;border-radius:14px;overflow:hidden;background:#000;box-shadow:inset 0 0 0 1px var(--line)}
 .player video{display:block;width:100%;max-height:60vh;background:#000}
 .fhint{font-size:12px;color:var(--ink-3);margin:10px 0 0}
@@ -190,6 +196,7 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
   var IMG='../../img/';
   var MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
   var C=null, HAS_CODES=false, cur={tr:'little',day:1};
+  var PUB=!t&&!window.__CAMP_DEMO; // без кода кабинета — открытая витрина без файлов
   function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
   function el(tag,cls,text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
   function mb(b){ return b?(Math.max(1,Math.round(b/104857.6))/10).toString().replace('.',',')+' МБ':''; }
@@ -199,7 +206,8 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
     print:'<path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/>',
     play:'<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z" fill="currentColor"/>',
     song:'<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
-    zip:'<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>'
+    zip:'<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>',
+    lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
   };
   function svg(k){ var s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor'); s.setAttribute('stroke-width','1.8'); s.setAttribute('stroke-linecap','round'); s.setAttribute('stroke-linejoin','round'); s.setAttribute('aria-hidden','true'); s.innerHTML=ICON[k]; return s; }
   function fresh(ev){ if(C&&C.expires&&Date.now()>C.expires-60000){ ev.preventDefault(); $('msg').textContent='Ссылки устарели — получаем новые…'; load(); return false; } return true; }
@@ -208,6 +216,11 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
     a.appendChild(svg(kind)); var d=el('div'); d.appendChild(el('b',null,title)); if(sub) d.appendChild(el('small',null,sub)); a.appendChild(d);
     if(f.size) a.appendChild(el('span','sz',mb(f.size)));
     a.addEventListener('click',fresh); return a;
+  }
+  function lockRow(kind,title,sub){
+    var a=el('div','fl lock'); a.setAttribute('aria-disabled','true');
+    a.appendChild(svg(kind)); var d=el('div'); d.appendChild(el('b',null,title)); if(sub) d.appendChild(el('small',null,sub)); a.appendChild(d);
+    var z=el('span','sz'); z.appendChild(svg('lock')); z.appendChild(document.createTextNode('после покупки')); a.appendChild(z); return a;
   }
   function videoRow(f,title,sub,box){
     var b=el('button','fl'); b.type='button'; b.appendChild(svg('play')); var d=el('div'); d.appendChild(el('b',null,title)); if(sub) d.appendChild(el('small',null,sub)); b.appendChild(d);
@@ -242,18 +255,25 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
 
     var h=el('div','head'); var im=el('img'); im.src=IMG+d.img; im.alt=d.hero; h.appendChild(im);
     var hd=el('div'); hd.appendChild(el('p','eyebrow','День '+d.day+' · '+d.hero+' · '+trl)); hd.appendChild(el('h2',null,T.title));
-    hd.appendChild(el('p',null,'По книге «'+d.book+'». 09:00–12:00, шесть блоков по 30 минут и перерыв.'));
+    hd.appendChild(el('p',null,'По книге «'+d.book+'». 09:00–12:00, шесть блоков по 30 минут и перерыв.'+(PUB&&d.day===1?' Этот день открыт целиком — посмотрите, как устроена смена.':'')));
     var tg=el('div','tags'); if(T.level) tg.appendChild(el('span','tag','Уровень '+T.level)); tg.appendChild(el('span','tag',T.age)); if(T.sheets) tg.appendChild(el('span','tag',sheetsTxt(T.sheets)));
     hd.appendChild(tg); h.appendChild(hd); s.appendChild(h);
 
     var g=el('div','grid'), L=el('div'), R=el('div'); g.appendChild(L); g.appendChild(R); s.appendChild(g);
 
-    var lc=el('div','card learn c-learn'); lc.appendChild(el('h3',null,'Сегодня дети выучат'));
+    var lc=el('div','card learn c-learn'); lc.appendChild(el('h3',null,PUB?'Дети выучат и повторят':'Сегодня дети выучат'));
     lc.appendChild(el('p',null,T.aims));
     if(T.words&&T.words.length){ var ul=el('ul','chips'); T.words.forEach(function(w){ ul.appendChild(el('li',null,w)); }); lc.appendChild(ul); }
     if(T.say) lc.appendChild(el('p','say',T.say));
     L.appendChild(lc);
 
+    var full=!!(T.blocks&&T.blocks.length);
+    if(!full){ var lk=el('div','card c-day'); lk.appendChild(el('h3',null,'Весь день — после покупки'));
+      lk.appendChild(el('p','sub','Расписание по блокам с играми, подготовка накануне и сообщение родителям для этого дня открываются в кабинете школы. День 1 можно посмотреть целиком прямо сейчас.'));
+      var g1=el('button','btn','Посмотреть день 1 целиком'); g1.type='button'; g1.style.marginTop='12px';
+      g1.addEventListener('click',function(){ cur.day=1; history.replaceState(null,'','#d1'); renderDays(); renderDay(); window.scrollTo({top:$('days').offsetTop-12,behavior:'smooth'}); });
+      lk.appendChild(g1); L.appendChild(lk); }
+    if(full){
     var tc=el('div','card c-day'); tc.appendChild(el('h3',null,'Как идёт день')); tc.appendChild(el('p','sub','Подробно, по минутам — в плане урока.'));
     var ol=el('ol','tl');
     (T.blocks||[]).forEach(function(b,i){ var li=el('li'); li.appendChild(el('time',null,b.time.replace('–','–​')));
@@ -263,11 +283,24 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
       if(i===2){ var br=el('li','brk'); br.appendChild(el('time',null,'10:15')); var bc=el('div'); bc.appendChild(el('h4',null,'Перерыв 15 минут')); bc.appendChild(el('p',null,'Перекус и вода — внутри третьего блока.')); br.appendChild(bc); ol.appendChild(br); }
     });
     tc.appendChild(ol); L.appendChild(tc);
+    }
 
     if(T.prep&&T.prep.length){ var pc=el('div','card c-prep'); pc.appendChild(el('h3',null,'Подготовка накануне'));
       T.prep.forEach(function(p,i){ var de=el('details'); if(i===0) de.open=true; de.appendChild(el('summary',null,p[0])); de.appendChild(el('p',null,p[1])); pc.appendChild(de); }); L.appendChild(pc); }
 
     var fc=el('div','card c-files'); fc.appendChild(el('h3',null,'Материалы дня')); var fs=el('div','files');
+    if(PUB){
+      fs.appendChild(lockRow('plan','План урока','PDF · на английском, по минутам'));
+      fs.appendChild(lockRow('docx','План урока в Word','Можно вписать свои пометки'));
+      fs.appendChild(lockRow('print','Печать для детей','PDF · карточки, чтение, личный лист'+(T.sheets?' · '+sheetsTxt(T.sheets):'')));
+      fs.appendChild(lockRow('play','Видео для аудирования','История героя — для блока «История»'));
+      videoRow({url:'../../story/'+d.day+'/video/hero_song.mp4'},'Клип песни дня','Поёт '+d.hero+' — посмотрите прямо здесь',fs);
+      fs.appendChild(lockRow('zip','Весь день без интернета','ZIP · все четыре группы, видео и песня'));
+      fc.appendChild(fs);
+      var by=el('div','buy'); var bp=el('p'); bp.innerHTML='Файлы всех пяти дней открываются в кабинете школы <b>сразу после оплаты</b>. До 30 ноября — <b>11&nbsp;900&nbsp;₽</b>, вместе с пятью кодами онлайн-квеста — <b>15&nbsp;900&nbsp;₽</b>.';
+      by.appendChild(bp); var bb=el('a','btn','Купить лагерь'); bb.href='../buy/?p=camp'; by.appendChild(bb); fc.appendChild(by);
+      R.appendChild(fc);
+    } else {
     fs.appendChild(fileRow(T.plan,'plan','План урока','PDF · на английском, по минутам','main',true));
     fs.appendChild(fileRow(T.docx,'docx','План урока в Word','Можно вписать свои пометки'));
     fs.appendChild(fileRow(T.print,'print','Печать для детей','PDF · карточки, чтение, личный лист'+(T.sheets?' · '+sheetsTxt(T.sheets):''),null,true));
@@ -278,7 +311,9 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
     fc.appendChild(fs);
     var hint=el('p','fhint'); hint.textContent='На телефоне клип тяжёлый — '; var a=el('a',null,'лёгкая версия'); a.href=d.clip_phone.url; a.target='_blank'; a.rel='noopener'; a.addEventListener('click',fresh); hint.appendChild(a); hint.appendChild(document.createTextNode('.')); fc.appendChild(hint);
     R.appendChild(fc);
+    }
 
+    if(!T.parent) return;
     var mc=el('div','card c-parent'); mc.appendChild(el('h3',null,'Сообщение родителям')); mc.appendChild(el('p','sub','Отправьте после занятия в чат группы.'));
     var pm=el('div','pm'); var key='sfcamp_q_'+t, withQ=ls(key); withQ=withQ==null?HAS_CODES:withQ==='1';
     function paint(){ pm.textContent=T.parent; if(withQ&&T.parentQuest){ pm.appendChild(document.createTextNode('\n')); pm.appendChild(el('span','q',T.parentQuest)); } }
@@ -307,6 +342,10 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
   }
   function load(){
     $('msg').textContent='';
+    if(PUB){ var sc=document.createElement('script'); sc.src='public.js?v=1';
+      sc.onload=function(){ C=window.__CAMP_PUBLIC; HAS_CODES=true; render(); };
+      sc.onerror=function(){ $('loading').hidden=true; $('msg').textContent='Нет связи. Обновите страницу.'; };
+      document.head.appendChild(sc); return; }
     if(window.__CAMP_DEMO){ C=window.__CAMP_DEMO.camp_files; HAS_CODES=!!window.__CAMP_DEMO.rows; $('school').textContent=window.__CAMP_DEMO.school; render(); return; }
     post('/pay/status',{cab:t}).then(function(j){
       $('loading').hidden=true;
@@ -316,7 +355,11 @@ details p{margin:0;padding:0 14px 14px;font-size:14px;color:var(--ink-2)}
     }).catch(function(){ $('loading').hidden=true; $('msg').textContent='Нет связи с сервером. Попробуйте позже.'; });
   }
   if(t){ $('toCab').href=$('toCab2').href='../cab/?t='+t; }
-  if(!t&&!window.__CAMP_DEMO){ $('loading').hidden=true; $('msg').textContent='В ссылке нет кода кабинета. Откройте лагерь из кабинета школы.'; return; }
+  if(PUB){ document.title='Лагерь «Истории у костра» — посмотреть все пять дней';
+    $('toCab').href='../../'; $('toCab2').href='../buy/?p=camp'; $('toCab2').lastChild.textContent='Купить лагерь'; $('toCab2').firstChild.style.display='none';
+    $('school').textContent='Посмотрите лагерь до покупки';
+    var ld=document.querySelector('.lead'); if(ld) ld.textContent='Пять дней по три часа, четыре группы от 5 до 14 лет. Каждый день — история одного героя квеста: слова в подвижных играх, язык героя, история, чтение, миссия и песня. День 1 открыт целиком, по остальным — что дети выучат и повторят.';
+    $('exp').textContent='Здесь всё описание лагеря. Планы, печать, видео и архивы дней школа получает в кабинете после оплаты.'; }
   load();
 })();
 </script>
