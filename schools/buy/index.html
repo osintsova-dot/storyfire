@@ -323,7 +323,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и коды.'; $('email').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие с условиями.'; return; }
     $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
-    post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim(),attribution:(function(){try{return JSON.parse(localStorage.getItem('sf_attr')||'null')||{}}catch(e){return {}}})()}).then(function(j){
+    try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'sch_checkout'});}catch(e){} post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim(),attribution:(function(){try{return JSON.parse(localStorage.getItem('sf_attr')||'null')||{}}catch(e){return {}}})()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_sorder',JSON.stringify({id:j.order_id,claim:j.claim}));
       if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }
@@ -375,7 +375,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('iEmail').value.trim())&&$('iPhone').value.replace(/\D/g,'').length<10){ m.textContent='Нужна почта или телефон, куда прислать счёт.'; return; }
     var ip=$('iProduct').value, p=price($('iN').value), nn=Math.max(1,parseInt($('iN').value,10)||1), sum=ip==='codes'?p.total:ip==='trainer'?trPrice(nn).total:(CAMP_EARLY?CAMP[ip].early:CAMP[ip].late);
     $('iSend').disabled=true; m.className='msg'; m.textContent='Отправляем…';
-    post(BOT,'/ssb/invoice',{school:$('iSchool').value.trim(),inn:$('iInn').value.trim(),product:ip==='codes'?'коды':ip==='trainer'?'тренажёр (учеников)':CAMP[ip].name,n:ip==='codes'?p.n:ip==='trainer'?nn:(ip==='camp_plus'?5:0),sum:String(sum),contact:$('iContact').value.trim(),email:$('iEmail').value.trim(),phone:$('iPhone').value.trim(),hp:$('hp').value}).then(function(j){
+    try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'sch_invoice'});}catch(e){} post(BOT,'/ssb/invoice',{school:$('iSchool').value.trim(),inn:$('iInn').value.trim(),product:ip==='codes'?'коды':ip==='trainer'?'тренажёр (учеников)':CAMP[ip].name,n:ip==='codes'?p.n:ip==='trainer'?nn:(ip==='camp_plus'?5:0),sum:String(sum),contact:$('iContact').value.trim(),email:$('iEmail').value.trim(),phone:$('iPhone').value.trim(),hp:$('hp').value}).then(function(j){
       if(!j||!j.ok) throw j; m.textContent='Заявка у Оксаны. Счёт придёт в течение рабочего дня.';
     }).catch(function(){ $('iSend').disabled=false; m.className='msg bad'; m.textContent='Не отправилось. Напишите на o.sintsova@gmail.com или в бот.'; });
   });

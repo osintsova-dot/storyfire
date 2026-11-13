@@ -158,5 +158,9 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   }
 })();
 </script>
+<script>/* 13.11: цели VK-пикселя для учителей — покупка/лагерь, бот (код на пробу), контакт, Пролог */
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
+var g=/schools\/(buy|camp)/.test(h)?'sch_buy_click':/max\.ru\//.test(h)?'sch_bot':/^(tel:|mailto:)|wa\.me|t\.me/.test(h)?'sch_contact':/prolog/.test(h)?'sch_prolog':'';
+if(g){try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:g});}catch(e){}}},true);</script>
 </body>
 </html>
