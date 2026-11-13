@@ -757,7 +757,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var ivid=$('#ivid'), icap=$('#icap'), lastCue=-1;
   $('#iplay').addEventListener('click',function(){
     SND.music(false); ivid.muted=false; var pr=ivid.play(); if(pr&&pr.catch) pr.catch(function(){ go('library'); });
-    $('#istart').classList.add('gone'); icap.hidden=false; $('.ishade').style.opacity='.6';
+    try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'prolog_start'});}catch(e){} $('#istart').classList.add('gone'); icap.hidden=false; $('.ishade').style.opacity='.6';
   });
   ivid.addEventListener('timeupdate',function(){
     var t=ivid.currentTime, k=-1; CUES.forEach(function(c,i){ if(t>=c[0]&&t<c[1]) k=i; });

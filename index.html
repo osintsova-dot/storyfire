@@ -466,7 +466,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     if(d.phone.replace(/\D/g,'').length<10){ m.className='msg bad'; m.textContent='Проверьте телефон — нужен номер полностью.'; f.phone.focus(); return; }
     if(!d.consent){ m.className='msg bad'; m.textContent='Отметьте согласие — без него не можем записать.'; return; }
     var b=f.querySelector('button'); b.disabled=true; m.className='msg'; m.textContent='Отправляем…';
-    post(0,JSON.stringify(d)).then(function(j){ if(!j.ok){ throw j; } f.classList.add('done'); m.className='msg good'; m.textContent='Записали! Напомним перед стартом квеста.'; })
+    post(0,JSON.stringify(d)).then(function(j){ if(!j.ok){ throw j; } try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'lead'});}catch(e){} f.classList.add('done'); m.className='msg good'; m.textContent='Записали! Напомним перед стартом квеста.'; })
       .catch(function(j){ b.disabled=false; m.className='msg bad'; m.textContent=j&&j.error==='rate'?'Слишком много заявок подряд. Попробуйте через час.':'Не получилось отправить. Попробуйте ещё раз или напишите нам напрямую.'; });
   });
 })();
@@ -633,5 +633,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   requestAnimationFrame(tick2);
 })();
 </script>
+<script>/* 13.11: цели VK-пикселя — кто пошёл к оплате / в Пролог (для оптимизации рекламы) */
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
+var g=/oplata/.test(h)?'buy_click':/prolog/.test(h)?'prolog_click':'';if(g){try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:g});}catch(e){}}},true);</script>
 </body>
 </html>

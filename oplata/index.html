@@ -176,7 +176,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     if($('child').value.trim().split(/\s+/).length<2){ m.textContent='Напишите фамилию и имя ребёнка (или детей через запятую).'; $('child').focus(); return; }
     if($('parent').value.trim().split(/\s+/).length<2){ m.textContent='Напишите ФИО родителя.'; $('parent').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие на обработку данных.'; return; }
-    $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
+    try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'checkout'});}catch(e){} $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
     post('/pay/create',{product:'quest',plan:'family',method:METHOD,email:email,child:$('child').value.trim(),parent:$('parent').value.trim(),phone:$('phone').value.trim(),attribution:(function(){try{return JSON.parse(localStorage.getItem('sf_attr')||'null')||{}}catch(e){return {}}})()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_order',JSON.stringify({id:j.order_id,claim:j.claim}));
