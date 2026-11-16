@@ -636,5 +636,9 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
 <script>/* 13.11: цели VK-пикселя — кто пошёл к оплате / в Пролог (для оптимизации рекламы) */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
 var g=/oplata/.test(h)?'buy_click':/prolog/.test(h)?'prolog_click':'';if(g){try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:g});}catch(e){}}},true);</script>
+<script>(function(){var done={};function g(n){if(done[n])return;done[n]=1;try{(window._tmr||(window._tmr=[])).push({type:'reachGoal',id:3811632,goal:n});}catch(e){}}
+g('page_open');setTimeout(function(){if(!document.hidden)g('stay_15s');},15000);
+if('IntersectionObserver' in window){var m={guests:'scroll_mid',price:'scroll_price'};var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){g(m[e.target.id]);io.unobserve(e.target);}});},{threshold:0.15});
+Object.keys(m).forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});}})();</script>
 </body>
 </html>
