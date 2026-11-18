@@ -1093,5 +1093,33 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   go('intro');
 })();
 </script>
+<style>/* sf-maxremind (18.11.2026): кнопка «Напомнить в MAX» для пришедших из лид-формы ВК (utm_medium=leadform) */
+.mxr{position:absolute;z-index:19;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translate(-50%,8px);opacity:0;display:flex;align-items:center;gap:4px;
+  padding:4px 4px 4px 14px;border-radius:999px;background:rgba(14,10,34,.72);box-shadow:inset 0 0 0 1px rgba(245,200,66,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font:500 13px/1.2 var(--body);color:var(--ink);white-space:nowrap;transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
+.mxr.show{opacity:1;transform:translate(-50%,0)}
+.mxr a{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:999px;background:var(--gold);color:#1b1206;font-weight:600;text-decoration:none}
+.mxr button{border:0;background:none;color:var(--ink-3);font:500 18px/1 var(--body);min-width:36px;min-height:36px;cursor:pointer;border-radius:999px}
+@media (prefers-reduced-motion:reduce){.mxr{transition:none}}
+</style>
+<script>(function(){try{
+var MX='https://max.ru/id245718463277_2_bot?start=remind',q=new URLSearchParams(location.search),lf=q.get('utm_medium')==='leadform';
+if(!lf){try{lf=(JSON.parse(localStorage.getItem('sf_attr')||'null')||{}).utm_medium==='leadform'}catch(e){}}
+if(!lf)return;
+var goal=function(n){try{(window._tmr||(window._tmr=[])).push({type:'reachGoal',id:3811632,goal:n})}catch(e){}};
+var end=document.querySelector('.cta a[href$="storyfire.ics"]');
+if(end){end.href=MX;end.target='_blank';end.rel='noopener';end.textContent='Напомнить в MAX';end.addEventListener('click',function(){goal('lf_max_remind')})}
+var off=false;try{off=sessionStorage.getItem('sf_mxr')==='x'}catch(e){}
+var st=document.getElementById('stage');if(off||!st)return;
+var d=document.createElement('div');d.className='mxr';d.setAttribute('role','note');
+d.innerHTML='Старт 27 декабря <a href="'+MX+'" target="_blank" rel="noopener">Напомнить в MAX</a><button type="button" aria-label="Скрыть">×</button>';
+st.appendChild(d);
+var hide=function(){d.classList.remove('show');setTimeout(function(){d.remove()},500)};
+d.querySelector('a').addEventListener('click',function(){goal('lf_max_remind');try{sessionStorage.setItem('sf_mxr','x')}catch(e){}setTimeout(hide,300)});
+d.querySelector('button').addEventListener('click',function(){try{sessionStorage.setItem('sf_mxr','x')}catch(e){}hide()});
+var first=function(){var on=document.querySelector('.scene.on');return !on||/^intro$/.test(on.getAttribute('data-scene')||'')};
+setTimeout(function(){if(first())d.classList.add('show')},1200);
+new MutationObserver(function(){if(!first())hide()}).observe(st,{subtree:true,attributes:true,attributeFilter:['class']});
+}catch(e){}})();</script>
 </body>
 </html>
