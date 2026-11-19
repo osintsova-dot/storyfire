@@ -44,7 +44,10 @@ var SF = (function () {
     var m = /[?&]k=([A-Za-z0-9-]+)/.exec(location.search);
     if (!m) return null;
     var code = norm(m[1]); ls('sf_code', code);
-    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])k=[^&]*&?/, '$1').replace(/[?&]$/, '') + location.hash); } catch (e) {}
+    // d= — номер устройства: иконка «на экране Домой» в iPhone живёт отдельно от Safari, пусть считается тем же устройством
+    var dm = /[?&]d=(d[a-z0-9]{6,20})(?:&|$)/.exec(location.search);
+    if (dm && !ls('sf_dev')) ls('sf_dev', dm[1]);
+    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])(k|d)=[^&]*/g, '$1').replace(/&+/g, '&').replace(/\?&/, '?').replace(/[?&]$/, '') + location.hash); } catch (e) {}
     return code;
   }
   // «Кто играет?»: несколько детей на одном устройстве. Прогресс ребёнка — все ключи sf_* кроме служебных;
@@ -69,6 +72,18 @@ var SF = (function () {
     p.push({ id: id, name: name }); ls('sf_players', JSON.stringify(p));
     stash(); load(id); ls('sf_prolog', JSON.stringify({ name: name }));
   }
+  // Квест как приложение: открыт с иконки на экране телефона?
+  function standalone() { try { return navigator.standalone === true || matchMedia('(display-mode: standalone)').matches || /[?&]app=1/.test(location.search); } catch (e) { return false; } }
+  // Адрес для иконки: с кодом и устройством, чтобы приложение открылось сразу «своим»
+  function appUrl() { var c = ls('sf_code'); return '/play/' + (c ? '?k=' + encodeURIComponent(c) + '&d=' + device() : ''); }
+  // В приложении (с иконки) нет адресной строки: «домой» из историй и финала ведёт к списку историй, а не на продающую главную
+  function backBtn() {
+    if (!standalone() || !/\/(story|final)\//.test(location.pathname)) return;
+    var home = /\/story\//.test(location.pathname) ? '../../' : '../';
+    var as = document.querySelectorAll('a[href="' + home + '"]');
+    for (var i = 0; i < as.length; i++) as[i].setAttribute('href', '/play/');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', backBtn); else backBtn();
   function switchTo(id) { if (id === cur()) return; stash(); load(id); }
 
   // История пройдена (битва за значок): сообщаем серверу код, игрока и счёт — для кабинета школы и отчёта родителям.
@@ -88,6 +103,6 @@ var SF = (function () {
     flushQ();
   }
 
-  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
+  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();

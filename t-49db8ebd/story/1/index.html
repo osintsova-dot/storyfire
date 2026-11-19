@@ -1,9 +1,7 @@
 <!doctype html>
 <html lang="ru">
-<head><meta name="sf-puzzle-audio" content="puzzle-audio-20261107"><meta name="sf-speech-review" content="speech-20261106"><meta name="sf-phonics-queue" content="phonics-web-audio-20261106"><meta name="sf-voice-refresh" content="voice-refresh-20261106"><meta name="sf-art-review" content="content-art-20261106"><meta name="sf-book-layout" content="book-layout-20261106"><meta name="sf-listening-fit" content="mice-circles-20261106"><meta name="sf-audio-build" content="voice-review-20261106-3">
+<head>
 <base href="/story/1/">
-<meta name="sf-preview-build" content="content-review-20261106">
-<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>История 1 · Alice · Истории у костра</title>
@@ -830,7 +828,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   <canvas id="snow" aria-hidden="true"></canvas>
 
   <header class="top">
-    <a href="/t-49db8ebd/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Истории у костра</b></a>
+    <a href="../../"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><b>Истории у костра</b></a>
     <div class="topr"><div class="dots" id="dots" aria-label="Шаги истории"></div><button class="snd" id="sndBtn" aria-pressed="true" aria-label="Выключить звук"><svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
@@ -915,7 +913,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       </ul>
       <div id="report" hidden></div>
       <p class="note">А у пустой банки джема в норе остались следы крошечных лапок… Чьи они? Завтра к костру придёт Маугли.</p>
-      <div class="cta"><a class="btn btn-ghost" href="/t-49db8ebd/">На главную</a></div>
+      <div class="cta"><a class="btn btn-ghost" href="../../">На главную</a></div>
     </div>
   </section>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Страница книги" tabindex="-1" hidden>
@@ -993,7 +991,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var SND=(function(){
     var on=true; try{ on=localStorage.getItem('sf_sound')!=='off'; }catch(e){}
     var ctx=null, master, musicGain, sfxGain, voiceGain, music=null, wind=null, crackle=null, cur=null, buf={}, pending=null, VOICE={};
-    var voiceBankLoaded=false, voiceBankReady=fetch('/t-49db8ebd/assets/puzzle-audio-20261107/s1/voice.json').then(function(r){return r.json();}).then(function(j){voiceBankLoaded=true;VOICE=j;}).catch(function(){voiceBankLoaded=true;});
+    var voiceBankLoaded=false, voiceBankReady=fetch('audio/voice.json?v=1794130936').then(function(r){return r.json();}).then(function(j){voiceBankLoaded=true;VOICE=j;}).catch(function(){voiceBankLoaded=true;});
     function key(t){ if(state&&state.name) t=t.split(state.name).join(''); return t.toLowerCase().replace(/[^a-z0-9]/g,''); }
     function noise(sec){var b=ctx.createBuffer(1,ctx.sampleRate*sec,ctx.sampleRate),d=b.getChannelData(0),l=0;for(var i=0;i<d.length;i++){var w=Math.random()*2-1;l=(l+.02*w)/1.02;d[i]=l*3.5;}return b;}
     function unlock(){
@@ -1063,7 +1061,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
       var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
       if(buf[id]) return play(buf[id]);
-      fetch(asset || (/^pv27_/.test(id)?'/t-49db8ebd/assets/puzzle-audio-20261107/s1/'+id+'.mp3':((/^fix26_/.test(id)?'/t-49db8ebd/assets/voice-refresh-20261106/s1/':'audio/')+id+'.mp3'))).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
+      fetch(asset || ('audio/'+id+'.mp3')).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
       });
     }
@@ -1141,8 +1139,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var shuffle=function(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x;} return a; };
   var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
   // картинки: i: предметы, a: действия (лист GPT, пока может не быть — тогда слово), w: картинки фоники, g: сцены, m: мышь
-  var REVIEW_PICS={"w:pen":"/t-49db8ebd/assets/content-art-20261106/pen.jpg","w:neck":"/t-49db8ebd/assets/content-art-20261106/neck.jpg","w:tail":"/t-49db8ebd/assets/content-art-20261106/tail.jpg","w:wing":"/t-49db8ebd/assets/content-art-20261106/wing.jpg","i:biscuits":"/t-49db8ebd/assets/content-art-20261106/biscuits.webp"};
-  var pic=function(v){ v=String(v); var k=v.slice(2); if(REVIEW_PICS[v])return '<img src="'+REVIEW_PICS[v]+'" alt="'+k+'">';
+  var pic=function(v){ v=String(v); var k=v.slice(2);
     if(v.indexOf('i:')===0) return '<img src="../../img/items/'+k+'.webp" alt="'+k+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(WORDS[k]||k)+'</span>\'">';
     if(v.indexOf('a:')===0) return '<img src="../../img/items/act_'+k+'.webp" alt="'+(ACTW[k]||k)+'" onerror="this.outerHTML=\'<span class=&quot;actw&quot;>'+(ACTW[k]||k)+'</span>\'">';
     if(v.indexOf('w:')===0) return '<img src="../../img/ph/w_'+k+'.jpg" alt="'+k+'">';
@@ -1159,7 +1156,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var sayWord=function(v){ v=String(v); if(/^[iawg]:/.test(v)) v=v.slice(2); if(v.indexOf('m:')===0) v='mouse'; if(ACTW[v]&&String(arguments[0]).indexOf('a:')===0) v=ACTW[v]; if(NUMW[v]) v=NUMW[v]; if(WORDS[v]) v=WORDS[v]; SND.say(v); };
   // звуки фоники — голос учителя (те же файлы, что в Phonics Hub)
   function phonicsSoundOn(){ var b=document.getElementById('sndBtn'); return !b||b.getAttribute('aria-pressed')!=='false'; }
-  var phs=function(g){ return SND.phoneme?SND.phoneme(g):SND.clip('/t-49db8ebd/assets/phonics-20261106/sounds/'+g+'.m4a'); };
+  var phs=function(g){ return SND.phoneme?SND.phoneme(g):SND.clip('../../audio/ph/'+g+'.m4a'); };
   // распознавание речи: адрес сервиса на нашем VPS; пока не задан — ребёнок слушает себя и жмёт «Сказал ✓»
   var ASR=window.SF_ASR||null;
   var MISS=0;
@@ -1210,7 +1207,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       tail=job.then(function(){ pending--; },function(){ pending--; }); return tail;
     }
     SND.say=function(text){ return enqueue(function(){return sayNow(text);}); };
-    SND.phoneme=function(g){ return enqueue(function(){return SND.clip('/t-49db8ebd/assets/phonics-20261106/sounds/'+g+'.m4a');}); };
+    SND.phoneme=function(g){ return enqueue(function(){return SND.clip('../../audio/ph/'+g+'.m4a');}); };
     var toggleNow=SND.toggle;
     SND.toggle=function(){ toggleNow();if(!phonicsSoundOn())SND.cancelNarration(); };
     SND.whenIdle=function idle(){ var p=tail; return p.then(idleNow).then(function(){ if(p!==tail) return idle(); }); };
@@ -2229,7 +2226,10 @@ var SF = (function () {
     var m = /[?&]k=([A-Za-z0-9-]+)/.exec(location.search);
     if (!m) return null;
     var code = norm(m[1]); ls('sf_code', code);
-    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])k=[^&]*&?/, '$1').replace(/[?&]$/, '') + location.hash); } catch (e) {}
+    // d= — номер устройства: иконка «на экране Домой» в iPhone живёт отдельно от Safari, пусть считается тем же устройством
+    var dm = /[?&]d=(d[a-z0-9]{6,20})(?:&|$)/.exec(location.search);
+    if (dm && !ls('sf_dev')) ls('sf_dev', dm[1]);
+    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])(k|d)=[^&]*/g, '$1').replace(/&+/g, '&').replace(/\?&/, '?').replace(/[?&]$/, '') + location.hash); } catch (e) {}
     return code;
   }
   // «Кто играет?»: несколько детей на одном устройстве. Прогресс ребёнка — все ключи sf_* кроме служебных;
@@ -2254,6 +2254,18 @@ var SF = (function () {
     p.push({ id: id, name: name }); ls('sf_players', JSON.stringify(p));
     stash(); load(id); ls('sf_prolog', JSON.stringify({ name: name }));
   }
+  // Квест как приложение: открыт с иконки на экране телефона?
+  function standalone() { try { return navigator.standalone === true || matchMedia('(display-mode: standalone)').matches || /[?&]app=1/.test(location.search); } catch (e) { return false; } }
+  // Адрес для иконки: с кодом и устройством, чтобы приложение открылось сразу «своим»
+  function appUrl() { var c = ls('sf_code'); return '/play/' + (c ? '?k=' + encodeURIComponent(c) + '&d=' + device() : ''); }
+  // В приложении (с иконки) нет адресной строки: «домой» из историй и финала ведёт к списку историй, а не на продающую главную
+  function backBtn() {
+    if (!standalone() || !/\/(story|final)\//.test(location.pathname)) return;
+    var home = /\/story\//.test(location.pathname) ? '../../' : '../';
+    var as = document.querySelectorAll('a[href="' + home + '"]');
+    for (var i = 0; i < as.length; i++) as[i].setAttribute('href', '/play/');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', backBtn); else backBtn();
   function switchTo(id) { if (id === cur()) return; stash(); load(id); }
 
   // История пройдена (битва за значок): сообщаем серверу код, игрока и счёт — для кабинета школы и отчёта родителям.
@@ -2273,7 +2285,7 @@ var SF = (function () {
     flushQ();
   }
 
-  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
+  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();
 

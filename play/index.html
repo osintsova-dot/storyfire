@@ -6,6 +6,12 @@
 <title>Мои истории · Истории у костра</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0e0a22">
+<link rel="manifest" href="/app.webmanifest">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="У костра">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
@@ -68,6 +74,16 @@ h1{font:600 clamp(34px,8vw,52px)/1.02 var(--display);margin:0 0 8px;text-wrap:ba
 .card.today{box-shadow:0 0 0 2px var(--gold),0 10px 30px rgba(0,0,0,.35)}
 @media (hover:hover){.card:not(.lock):hover img{transform:scale(1.04)}}
 .pro{margin-top:26px;font-size:14px;color:var(--ink-3)}
+.inst{display:grid;grid-template-columns:56px 1fr;gap:6px 14px;align-items:center;margin:0 0 22px;padding:16px;border-radius:20px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.inst[hidden]{display:none}
+.inst img{width:56px;height:56px;border-radius:13px;box-shadow:0 6px 18px rgba(255,155,61,.25)}
+.inst b{font:600 21px/1.15 var(--display);display:block}
+.inst p{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
+.inst .btn{grid-column:1/-1;min-height:46px;margin-top:6px}
+.inst ol{grid-column:1/-1;margin:6px 0 0;padding-left:22px;font-size:15px;line-height:1.5}
+.inst ol[hidden],.inst .btn[hidden]{display:none}
+.inst li{margin:4px 0}
+.inst .ic{display:inline-block;vertical-align:-3px;width:18px;height:18px}
 .kids{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:-6px 0 22px}
 .kids.on{display:flex}
 .kids>span{font-size:14px;color:var(--ink-3);margin-right:2px}
@@ -118,6 +134,17 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
 
   <div class="kids" id="kids" aria-label="Кто играет"></div>
   <div class="teach" id="teach">Режим учителя: открыты все истории.</div>
+  <section class="inst" id="inst" hidden>
+    <img src="/img/app-192.png" alt="">
+    <div><b>Квест на экран телефона</b><p>Иконка с огоньком: ребёнок открывает квест сам, как игру, код вводить не нужно.</p></div>
+    <button class="btn btn-ghost" id="instBtn" type="button">Поставить на экран</button>
+    <ol id="instIos" hidden>
+      <li>Нажмите <b style="display:inline;font:inherit;font-weight:600">«Поделиться»</b> <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg> внизу экрана (или вверху на iPad).</li>
+      <li>Пролистайте и выберите <b style="display:inline;font:inherit;font-weight:600">«На экран „Домой“»</b>.</li>
+      <li>Нажмите <b style="display:inline;font:inherit;font-weight:600">«Добавить»</b>. Готово, огонёк уже на экране.</li>
+    </ol>
+    <ol id="instOther" hidden></ol>
+  </section>
   <div class="grid" id="grid" aria-label="Истории"></div>
   <p class="pro">Не открывается? Напишите нам в бот «Holliday English», поможем.</p>
 </div>
@@ -162,9 +189,26 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     a.addEventListener('click',function(){ f.classList.add('on'); a.hidden=true; f.querySelector('input').focus(); });
     f.addEventListener('submit',function(e){ e.preventDefault(); var v=f.querySelector('input').value.trim(); if(!v) return; SF.addPlayer(v); drawKids(); });
   }
-  function ok(j){ gate.hidden=true; drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); }
+  // Поставить квест на экран телефона (как приложение). В самом приложении не показываем.
+  var bip=null; window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); bip=e; });
+  function inst(){
+    var box=document.getElementById('inst'); if(SF.standalone()) return; box.hidden=false;
+    var ua=navigator.userAgent, ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),
+        inapp=/VKClient|vkclient|Telegram|Instagram|FBAN|FBAV|MAX\//i.test(ua), other=document.getElementById('instOther');
+    document.getElementById('instBtn').addEventListener('click',function(){
+      // адрес с кодом: иконка в iPhone откроет квест уже «своим» и тем же устройством
+      try{ history.replaceState(null,'',SF.appUrl()); }catch(e){}
+      if(bip){ bip.prompt(); bip=null; return; }
+      if(ios&&!inapp){ document.getElementById('instIos').hidden=false; this.hidden=true; return; }
+      other.innerHTML=inapp?'<li>Откройте эту страницу в браузере: меню <b style="display:inline;font:inherit;font-weight:600">⋯</b> → «Открыть в браузере» ('+(ios?'Safari':'Chrome')+').</li><li>Там снова нажмите «Поставить на экран».</li>'
+        :ios?'<li>Нажмите «Поделиться» в браузере.</li><li>Выберите «На экран „Домой“» и «Добавить».</li>'
+        :'<li>Откройте меню браузера <b style="display:inline;font:inherit;font-weight:600">⋮</b> вверху справа.</li><li>Выберите «Добавить на главный экран» или «Установить приложение».</li>';
+      other.hidden=false; this.hidden=true;
+    });
+  }
+  function ok(j){ gate.hidden=true; drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); inst(); }
   var code=SF.takeFromUrl()||SF.code();
-  if(SF.free()){ draw(true); drawKids(); return; }
+  if(SF.free()){ draw(true); drawKids(); inst(); return; }
   draw(false);
   if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=REASON[j.reason]||REASON.offline; document.getElementById('code').value=code; } }); }
   else gate.hidden=false;

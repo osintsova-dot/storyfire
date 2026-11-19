@@ -1323,7 +1323,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   // Spoken clues are restricted to the new puzzle instructions.
   var PUZZLE_NOTE_AUDIO={"Tap the words to ask about the sugar.":true,"The players need someone to plan their training and teach them new skills.":true,"First she makes her bed. She feeds the cat after that. She waters the roses last. Tap the actions in order.":true,"The wind scattered her words. Make one sentence.":true,"He has got hair above his mouth. It is not a beard.":true,"I am strong and quiet. I work with an axe, but I want a heart.":true,"The forest path is longer than the river path. The mountain path is longer than the forest path. Tap the three paths from shortest to longest.":true,"The red rocket is faster than the blue one. The green rocket is slower than the blue one. Tap from fastest to slowest.":true,"Visit the Lost Boys before the lagoon. Meet the pirates after the lagoon. Tap the places in order.":true,"He wants to make the food sweet. The sack is not salt and it is not rice.":true,"Put the water on the ship before the bread. Put the rice on after the bread.":true,"He heard the pirates before he told the captain. First, he climbed into the barrel.":true,"They cannot find the harbour. They do not know where they are.":true,"First the doctors come. Next Pinocchio drinks the medicine. Then he tells a lie and his nose grows.":true,"He needs to know when Maths starts and which lesson comes next.":true,"Plant the seeds after digging. Water them after planting. Tap the actions in order.":true,"Here are three branches. One is green inside. The other two are dry.":true};
   function head(body,q,ru,note){ var ps=document.createElement('p'); ps.className='say'; body.appendChild(ps);
-    if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label',(state.track==='experts'?"Listen again":'Послушать ещё раз')); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ SND.say(q); if(PUZZLE_NOTE_AUDIO[note])SND.say(note); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); if(PUZZLE_NOTE_AUDIO[note])SND.say(note); ruBtns(body); return ps; }
+    if(q){ var rp=document.createElement('button'); rp.className='replay'; rp.setAttribute('aria-label',(state.track==='experts'?"Listen again":'Послушать ещё раз')); rp.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>'; rp.addEventListener('click',function(){ if(SND.cancelNarration)SND.cancelNarration();else if(SND.stop)SND.stop(); SND.say(q); if(PUZZLE_NOTE_AUDIO[note])SND.say(note); }); body.appendChild(rp); } if(note){ var nn=document.createElement('p'); nn.className='pnote'; nn.textContent=note; body.appendChild(nn); } if(ru){ var r=document.createElement('p'); r.className='ru'; r.textContent=ru; body.appendChild(r); } speak(ps,q); if(PUZZLE_NOTE_AUDIO[note])SND.say(note); ruBtns(body); return ps; }
   function wrong(b,fb){ MISS++; if(!(window.SF_V2&&T==='little')) SND.fx('no'); if(b){ b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); } if(fb) fb.textContent=window.SF_V2?(state.track==='experts'?"Not quite. Look again.":'Почти! Посмотри ещё раз.'):'Not quite. Try again!'; }
   function nextBtn(body,label,cb,ms){ var b=document.createElement('button'); b.className='btn btn-gold later'; b.textContent=label||'Next'; body.appendChild(b); later(b,ms==null?600:ms); b.addEventListener('click',function(){ b.disabled=true; cb(); }); return b; }
   function face(v){ return pic(v)||'<span>'+esc(v)+'</span>'; }
@@ -1830,8 +1830,10 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   R.readp=function(body,s,next){
     body.insertAdjacentHTML('beforeend','<p class="ptitle">'+esc(s.title)+'</p>'+(s.ru?'<p class="ru">'+esc(s.ru)+'</p>':'')+'<div class="passage">'+esc(s.text).replace(/\n\n/g,'<br><br>')+'</div>'); ruBtns(body);
     var row=el('div','row2'); body.appendChild(row);
-    var p=el('button','btn btn-ghost',(state.track==='experts'?"▶ Listen":'▶ Послушать')); row.appendChild(p); p.addEventListener('click',function(){ SND.say(s.text); });
-    nextBtn(body,(state.track==='experts'?"Read":'Прочитано'),next,T==='little'?400:1500);
+    // 09.11 (Оксана): повторное «Послушать» ставило текст в очередь второй раз (чтение по кругу), «Прочитано» ждало конца очереди
+    var stopRead=function(){ if(SND.cancelNarration) SND.cancelNarration(); else if(SND.stop) SND.stop(); };
+    var p=el('button','btn btn-ghost',(state.track==='experts'?"▶ Listen":'▶ Послушать')); row.appendChild(p); p.addEventListener('click',function(){ stopRead(); SND.say(s.text); });
+    nextBtn(body,(state.track==='experts'?"Read":'Прочитано'),function(){ stopRead(); next(); },T==='little'?400:1500);
   };
   var NOART={memory:1,quick:1,blend:1,sym:1,decode:1,who2:1,show:1,retell:1,picode:1,tfa:1,voice:1,choose:1,rule:1,check:1};
   function runSteps(body,steps,finish,art,progress,checkpoint){ var i=progress?Math.min(progress.step,steps.length):0; (function nx(){ var sh=$('#sheet'); if(sh) sh.scrollTop=0; if(i>=steps.length) return finish(); var st=steps[i++]; body.innerHTML='';
@@ -2502,7 +2504,10 @@ var SF = (function () {
     var m = /[?&]k=([A-Za-z0-9-]+)/.exec(location.search);
     if (!m) return null;
     var code = norm(m[1]); ls('sf_code', code);
-    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])k=[^&]*&?/, '$1').replace(/[?&]$/, '') + location.hash); } catch (e) {}
+    // d= — номер устройства: иконка «на экране Домой» в iPhone живёт отдельно от Safari, пусть считается тем же устройством
+    var dm = /[?&]d=(d[a-z0-9]{6,20})(?:&|$)/.exec(location.search);
+    if (dm && !ls('sf_dev')) ls('sf_dev', dm[1]);
+    try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])(k|d)=[^&]*/g, '$1').replace(/&+/g, '&').replace(/\?&/, '?').replace(/[?&]$/, '') + location.hash); } catch (e) {}
     return code;
   }
   // «Кто играет?»: несколько детей на одном устройстве. Прогресс ребёнка — все ключи sf_* кроме служебных;
@@ -2527,6 +2532,18 @@ var SF = (function () {
     p.push({ id: id, name: name }); ls('sf_players', JSON.stringify(p));
     stash(); load(id); ls('sf_prolog', JSON.stringify({ name: name }));
   }
+  // Квест как приложение: открыт с иконки на экране телефона?
+  function standalone() { try { return navigator.standalone === true || matchMedia('(display-mode: standalone)').matches || /[?&]app=1/.test(location.search); } catch (e) { return false; } }
+  // Адрес для иконки: с кодом и устройством, чтобы приложение открылось сразу «своим»
+  function appUrl() { var c = ls('sf_code'); return '/play/' + (c ? '?k=' + encodeURIComponent(c) + '&d=' + device() : ''); }
+  // В приложении (с иконки) нет адресной строки: «домой» из историй и финала ведёт к списку историй, а не на продающую главную
+  function backBtn() {
+    if (!standalone() || !/\/(story|final)\//.test(location.pathname)) return;
+    var home = /\/story\//.test(location.pathname) ? '../../' : '../';
+    var as = document.querySelectorAll('a[href="' + home + '"]');
+    for (var i = 0; i < as.length; i++) as[i].setAttribute('href', '/play/');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', backBtn); else backBtn();
   function switchTo(id) { if (id === cur()) return; stash(); load(id); }
 
   // История пройдена (битва за значок): сообщаем серверу код, игрока и счёт — для кабинета школы и отчёта родителям.
@@ -2546,7 +2563,7 @@ var SF = (function () {
     flushQ();
   }
 
-  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, norm: norm, DATES: DATES,
+  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();
 
