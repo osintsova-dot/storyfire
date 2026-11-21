@@ -136,14 +136,19 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       <a class="btn btn-gold" id="more" href="#">Докупить коды</a>
       <button class="btn" type="button" onclick="window.print()">Печать</button>
     </div>
+    <div id="parentBox" hidden style="margin:0 0 18px">
+      <p class="note" style="margin:0 0 8px">Текст для родителя. Выберите код семьи и скопируйте:</p>
+      <select id="parentPick" class="f" style="width:100%;margin-bottom:8px"></select>
+      <textarea id="parentText" readonly rows="5" style="width:100%;border-radius:12px;padding:12px;font-size:15px;line-height:1.5;color:inherit;background:transparent;box-sizing:border-box"></textarea>
+      <button type="button" class="btn btn-gold" id="parentCopy" style="margin-top:8px">Скопировать текст</button>
+    </div>
     <div class="scroll">
     <table>
-      <thead><tr><th>№</th><th>Код</th><th>Кому выдан</th><th>Активирован</th><th>Истории 1–10</th><th>Последняя</th><th>Родителю</th></tr></thead>
+      <thead><tr><th>№</th><th>Код</th><th>Кому выдан</th><th>Активирован</th><th>Истории 1–10</th><th>Последняя</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     </div>
     </div>
-    <div id="parentBox" hidden style="margin:14px 0"><p class="note">Не получилось скопировать само. Нажмите в поле ниже, выделите весь текст и скопируйте:</p><textarea id="parentText" readonly rows="5" style="width:100%;border-radius:12px;padding:12px;font-size:15px;line-height:1.5;color:inherit;background:transparent;box-sizing:border-box"></textarea></div>
     <p class="note" id="noCodes" hidden>Кодов онлайн-квеста у школы пока нет. Школам с лагерем коды продаём по цене лагеря: <a id="moreCamp" href="#">купить коды</a>.</p>
     <div id="trBox" hidden>
       <h2 style="font:600 clamp(24px,5vw,30px)/1.1 var(--display);margin:30px 0 6px">Тренажёр ОГЭ/ЕГЭ</h2>
@@ -186,10 +191,20 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function parentText(code){ return 'Здравствуйте! Вот доступ к квесту «Истории у костра» для вашего ребёнка. Нажмите ссылку, и квест откроется сам:\n'+
     'https://storyfire.ru/play/?k='+encodeURIComponent(code)+'\n'+
     'Квест открывается с 27 декабря, одна история в день. Если что-то не открылось, напишите нам.'; }
-  function copyParent(code,btn){ var text=parentText(code), box=$('parentBox'), ta=$('parentText');
-    var flash=function(){ btn.textContent='Скопировано ✓'; setTimeout(function(){ btn.textContent='Скопировать текст'; },1600); };
-    var show=function(){ ta.value=text; box.hidden=false; ta.focus(); ta.setSelectionRange(0,text.length); box.scrollIntoView({block:'nearest'}); };
-    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(flash,show); } else show(); }
+  function copyText(text,btn){
+    var flash=function(){ var o='Скопировать текст'; btn.textContent='Скопировано ✓'; setTimeout(function(){ btn.textContent=o; },1600); };
+    var fb=function(){ var ta=$('parentText'); ta.value=text; ta.focus(); ta.setSelectionRange(0,text.length); };
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(flash,fb); } else fb(); }
+  function fillParent(){
+    var rows=DATA.rows||[], box=$('parentBox'), sel=$('parentPick'), prev=sel.value;
+    box.hidden=!rows.length; if(!rows.length) return;
+    sel.innerHTML=''; rows.forEach(function(r){ var o=document.createElement('option'); o.value=r.code; o.textContent=r.code+(names[r.code]?' · '+names[r.code]:''); sel.appendChild(o); });
+    if(prev&&rows.some(function(r){ return r.code===prev; })) sel.value=prev;
+    $('parentText').value=parentText(sel.value);
+    if(!sel.dataset.bound){ sel.dataset.bound='1';
+      sel.addEventListener('change',function(){ $('parentText').value=parentText(sel.value); });
+      $('parentCopy').addEventListener('click',function(){ copyText($('parentText').value,this); }); }
+  }
   function flat(){ // строки: код × игрок
     var out=[]; (DATA.rows||[]).forEach(function(r,i){
       var pids=Object.keys(r.prog||{}); if(!pids.length) pids=[null];
@@ -217,12 +232,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       for(var n=1;n<=10;n++){ var i=document.createElement('i'); var p=x.prog[n]; if(p){ i.className='on'+((p.of&&p.score<4)?' lo':''); i.title='История '+n+': '+dt(p.at)+(p.of?', '+p.score+' из '+p.of:''); } else i.title='История '+n; d.appendChild(i); }
       td5.appendChild(d); tr.appendChild(td5);
       var td6=document.createElement('td'); td6.textContent=x.last?dt(x.last):''; td6.className='muted'; tr.appendChild(td6);
-      var td7=document.createElement('td'); if(!x.k){ var cb=document.createElement('button'); cb.type='button'; cb.className='btn btn-gold btn-sm'; cb.textContent='Скопировать текст'; cb.addEventListener('click',function(){ copyParent(x.code,cb); }); td7.appendChild(cb); } tr.appendChild(td7);
       tb.appendChild(tr);
     });
     var camp=!!DATA.camp_files, noCodes=camp&&!rows.length;
     $('codesBox').hidden=noCodes; $('codesNote').hidden=noCodes; $('noCodes').hidden=!noCodes; $('codesH').hidden=!camp||noCodes;
     if(noCodes) $('lead').textContent='Материалы лагеря — ниже, на отдельной странице.';
+    fillParent();
     renderTrainer(); renderCamp();
     $('body').hidden=false;
   }
