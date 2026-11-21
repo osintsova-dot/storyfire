@@ -218,7 +218,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       var tr=document.createElement('tr');
       var td1=document.createElement('td'); td1.textContent=x.k?'':String(x.i); tr.appendChild(td1);
       var td2=document.createElement('td'); td2.className='code'; td2.textContent=x.k?'':x.code; if(x.n>1&&x.pid){ var s=document.createElement('div'); s.className='pl'; s.textContent='игрок '+(x.k+1); td2.appendChild(s); }
-      if(!x.k){ var pb=document.createElement('button'); pb.type='button'; pb.className='btn btn-gold'; pb.style.cssText='min-height:36px;padding:0 12px;margin-top:6px;font-size:14px'; pb.textContent='Текст родителю'; pb.addEventListener('click',function(){ copyRow(x.code,tr,pb); }); td2.appendChild(pb); }
+      if(!x.k){ var pb=document.createElement('button'); pb.type='button'; pb.className='btn btn-gold'; pb.style.cssText='min-height:34px;padding:0 12px;margin-left:10px;font-size:14px;white-space:nowrap'; pb.textContent='Текст родителю'; pb.addEventListener('click',function(){ copyRow(x.code,tr,pb); }); td2.style.whiteSpace='nowrap'; td2.appendChild(pb); }
       tr.appendChild(td2);
       var td3=document.createElement('td'); if(!x.k){ var inp=document.createElement('input'); inp.value=label; inp.placeholder='например, Миша, 3 класс'; inp.setAttribute('aria-label','Кому выдан код '+x.code);
         inp.addEventListener('change',function(){ if(inp.value.trim()) names[x.code]=inp.value.trim(); else delete names[x.code]; saveNames(); }); td3.appendChild(inp); } tr.appendChild(td3);
