@@ -143,6 +143,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     </table>
     </div>
     </div>
+    <div id="parentBox" hidden style="margin:14px 0"><p class="note">Не получилось скопировать само. Нажмите в поле ниже, выделите весь текст и скопируйте:</p><textarea id="parentText" readonly rows="5" style="width:100%;border-radius:12px;padding:12px;font-size:15px;line-height:1.5;color:inherit;background:transparent;box-sizing:border-box"></textarea></div>
     <p class="note" id="noCodes" hidden>Кодов онлайн-квеста у школы пока нет. Школам с лагерем коды продаём по цене лагеря: <a id="moreCamp" href="#">купить коды</a>.</p>
     <div id="trBox" hidden>
       <h2 style="font:600 clamp(24px,5vw,30px)/1.1 var(--display);margin:30px 0 6px">Тренажёр ОГЭ/ЕГЭ</h2>
@@ -185,10 +186,10 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function parentText(code){ return 'Здравствуйте! Вот доступ к квесту «Истории у костра» для вашего ребёнка. Нажмите ссылку, и квест откроется сам:\n'+
     'https://storyfire.ru/play/?k='+encodeURIComponent(code)+'\n'+
     'Квест открывается с 27 декабря, одна история в день. Если что-то не открылось, напишите нам.'; }
-  function copyParent(code,btn){ var text=parentText(code);
-    var done=function(){ var o=btn.textContent; btn.textContent='Скопировано ✓'; setTimeout(function(){ btn.textContent=o; },1600); };
-    var fb=function(){ var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} ta.remove(); done(); };
-    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(done,fb); } else fb(); }
+  function copyParent(code,btn){ var text=parentText(code), box=$('parentBox'), ta=$('parentText');
+    var flash=function(){ btn.textContent='Скопировано ✓'; setTimeout(function(){ btn.textContent='Скопировать текст'; },1600); };
+    var show=function(){ ta.value=text; box.hidden=false; ta.focus(); ta.setSelectionRange(0,text.length); box.scrollIntoView({block:'nearest'}); };
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(flash,show); } else show(); }
   function flat(){ // строки: код × игрок
     var out=[]; (DATA.rows||[]).forEach(function(r,i){
       var pids=Object.keys(r.prog||{}); if(!pids.length) pids=[null];
