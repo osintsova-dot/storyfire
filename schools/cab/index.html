@@ -123,13 +123,6 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     </section>
     <h2 class="sec-h" id="codesH" hidden>Онлайн-квест</h2>
     <div id="codesBox">
-    <div id="parentBox" hidden style="margin:0 0 22px;padding:16px;border-radius:18px;background:#ffffff12;border:1px solid #ffffff24">
-      <p style="font:600 18px/1.3 inherit;margin:0 0 10px">Отправьте родителю — здесь же код и ссылка</p>
-      <p class="note" style="margin:0 0 8px">Текст для родителя. Выберите код семьи и скопируйте:</p>
-      <select id="parentPick" class="f" style="width:100%;margin-bottom:8px"></select>
-      <textarea id="parentText" readonly rows="5" style="width:100%;border-radius:12px;padding:12px;font-size:15px;line-height:1.5;color:inherit;background:transparent;box-sizing:border-box"></textarea>
-      <button type="button" class="btn btn-gold" id="parentCopy" style="margin-top:8px">Скопировать текст</button>
-    </div>
     <div class="stats">
       <div class="stat"><b id="sCodes">0</b><span>кодов куплено</span></div>
       <div class="stat"><b id="sAct">0</b><span>активировано</span></div>
@@ -143,6 +136,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       <a class="btn btn-gold" id="more" href="#">Докупить коды</a>
       <button class="btn" type="button" onclick="window.print()">Печать</button>
     </div>
+    <p class="note" style="margin:0 0 10px"><b>Родителю:</b> нажмите «Текст родителю» у кода — в тексте уже его ссылка.</p>
     <div class="scroll">
     <table>
       <thead><tr><th>№</th><th>Код</th><th>Кому выдан</th><th>Активирован</th><th>Истории 1–10</th><th>Последняя</th></tr></thead>
@@ -196,16 +190,14 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     var flash=function(){ var o='Скопировать текст'; btn.textContent='Скопировано ✓'; setTimeout(function(){ btn.textContent=o; },1600); };
     var fb=function(){ var ta=$('parentText'); ta.value=text; ta.focus(); ta.setSelectionRange(0,text.length); };
     if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(flash,fb); } else fb(); }
-  function fillParent(){
-    var rows=DATA.rows||[], box=$('parentBox'), sel=$('parentPick'), prev=sel.value;
-    box.hidden=!rows.length; if(!rows.length) return;
-    sel.innerHTML=''; rows.forEach(function(r){ var o=document.createElement('option'); o.value=r.code; o.textContent=r.code+(names[r.code]?' · '+names[r.code]:''); sel.appendChild(o); });
-    if(prev&&rows.some(function(r){ return r.code===prev; })) sel.value=prev;
-    $('parentText').value=parentText(sel.value);
-    if(!sel.dataset.bound){ sel.dataset.bound='1';
-      sel.addEventListener('change',function(){ $('parentText').value=parentText(sel.value); });
-      $('parentCopy').addEventListener('click',function(){ copyText($('parentText').value,this); }); }
-  }
+  function showText(text,tr){ // запасной вариант, если буфер не сработал: текст в строке под кодом, выделен
+    var nx=tr.nextSibling; if(nx&&nx.dataset&&nx.dataset.ptext) nx.remove();
+    var r=document.createElement('tr'); r.dataset.ptext='1'; var td=document.createElement('td'); td.colSpan=6;
+    var ta=document.createElement('textarea'); ta.readOnly=true; ta.rows=5; ta.value=text; ta.style.cssText='width:100%;border-radius:12px;padding:12px;font-size:15px;line-height:1.5;color:inherit;background:transparent;box-sizing:border-box';
+    td.appendChild(ta); r.appendChild(td); tr.parentNode.insertBefore(r,tr.nextSibling); ta.focus(); ta.setSelectionRange(0,text.length); }
+  function copyRow(code,tr,btn){ var text=parentText(code);
+    var flash=function(){ btn.textContent='Скопировано ✓'; setTimeout(function(){ btn.textContent='Текст родителю'; },1600); };
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(flash,function(){ showText(text,tr); }); } else showText(text,tr); }
   function flat(){ // строки: код × игрок
     var out=[]; (DATA.rows||[]).forEach(function(r,i){
       var pids=Object.keys(r.prog||{}); if(!pids.length) pids=[null];
@@ -225,7 +217,9 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       if(q&&x.code.toLowerCase().indexOf(q)<0&&label.toLowerCase().indexOf(q)<0) return;
       var tr=document.createElement('tr');
       var td1=document.createElement('td'); td1.textContent=x.k?'':String(x.i); tr.appendChild(td1);
-      var td2=document.createElement('td'); td2.className='code'; td2.textContent=x.k?'':x.code; if(x.n>1&&x.pid){ var s=document.createElement('div'); s.className='pl'; s.textContent='игрок '+(x.k+1); td2.appendChild(s); } tr.appendChild(td2);
+      var td2=document.createElement('td'); td2.className='code'; td2.textContent=x.k?'':x.code; if(x.n>1&&x.pid){ var s=document.createElement('div'); s.className='pl'; s.textContent='игрок '+(x.k+1); td2.appendChild(s); }
+      if(!x.k){ var pb=document.createElement('button'); pb.type='button'; pb.className='btn btn-gold'; pb.style.cssText='min-height:36px;padding:0 12px;margin-top:6px;font-size:14px'; pb.textContent='Текст родителю'; pb.addEventListener('click',function(){ copyRow(x.code,tr,pb); }); td2.appendChild(pb); }
+      tr.appendChild(td2);
       var td3=document.createElement('td'); if(!x.k){ var inp=document.createElement('input'); inp.value=label; inp.placeholder='например, Миша, 3 класс'; inp.setAttribute('aria-label','Кому выдан код '+x.code);
         inp.addEventListener('change',function(){ if(inp.value.trim()) names[x.code]=inp.value.trim(); else delete names[x.code]; saveNames(); }); td3.appendChild(inp); } tr.appendChild(td3);
       var td4=document.createElement('td'); td4.textContent=x.act?dt(x.act)+(x.dev>1?' · '+x.dev+' устр.':''):'—'; if(!x.act) td4.className='muted'; tr.appendChild(td4);
@@ -238,7 +232,6 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     var camp=!!DATA.camp_files, noCodes=camp&&!rows.length;
     $('codesBox').hidden=noCodes; $('codesNote').hidden=noCodes; $('noCodes').hidden=!noCodes; $('codesH').hidden=!camp||noCodes;
     if(noCodes) $('lead').textContent='Материалы лагеря — ниже, на отдельной странице.';
-    fillParent();
     renderTrainer(); renderCamp();
     $('body').hidden=false;
   }
