@@ -28,7 +28,7 @@ var SF = (function () {
     code = norm(code);
     if (!code) return Promise.resolve({ ok: false, reason: 'empty' });
     return post(0, JSON.stringify({ sf_code: code, device: device() })).then(function (j) {
-      if (j && j.ok) { ls('sf_code', code); ls('sf_ok', String(Date.now())); ls('sf_teacher', j.teacher ? '1' : null); }
+      if (j && j.ok) { ls('sf_code', code); ls('sf_ok', String(Date.now())); ls('sf_teacher', j.teacher ? '1' : null); ls('sf_child', (j.child || '').trim() || null); }
       else if (j && j.reason !== 'rate_limited') { ls('sf_ok', null); }
       return j || { ok: false, reason: 'error' };
     }, function () {
@@ -54,7 +54,9 @@ var SF = (function () {
   // при смене игрока прячем их в sfp_<id> и достаём сохранённые ключи другого. Пока игрок один, ничего не меняется.
   var SYS = { sf_code: 1, sf_ok: 1, sf_teacher: 1, sf_dev: 1, sf_sound: 1, sf_order: 1, sf_players: 1, sf_cur: 1 };
   function own() { var o = {}; try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf('sf_') === 0 && !SYS[k]) o[k] = localStorage.getItem(k); } } catch (e) {} return o; }
-  function kidName() { try { return (JSON.parse(ls('sf_prolog') || '{}').name || '').trim(); } catch (e) { return ''; } }
+  // имя ребёнка из покупки (сервер отдаёт при проверке кода) — имеет приоритет и не меняется на сертификате (21.11)
+  function childLocked() { return !!(ls('sf_child') || '').trim(); }
+  function kidName() { if (childLocked()) return ls('sf_child').trim(); try { return (JSON.parse(ls('sf_prolog') || '{}').name || '').trim(); } catch (e) { return ''; } }
   function players() { var p; try { p = JSON.parse(ls('sf_players') || '[]'); } catch (e) { p = []; } return p; }
   function cur() { return ls('sf_cur') || ''; }
   function stash() { var c = cur(); if (c) ls('sfp_' + c, JSON.stringify(own())); }
@@ -103,6 +105,14 @@ var SF = (function () {
     flushQ();
   }
 
-  return { check: check, done: done, isOpen: isOpen, players: players, cur: cur, kidName: kidName, addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
+  // Отзыв родителя (до сертификата): ответы уходят на ss-pay ручкой /pay/status {sf_fb}. Без связи — не блокируем вообще: пусть заполнит позже.
+  function feedbackCheck() {
+    if (free()) return Promise.resolve({ done: true });
+    return post(0, JSON.stringify({ sf_code: ls('sf_code') || '', device: device(), sf_fb: 'check' })).then(function (j) { return { done: !!(j && j.ok && j.done), offline: false }; }, function () { return { done: false, offline: true }; });
+  }
+  function feedbackSend(answers) {
+    return post(0, JSON.stringify({ sf_code: ls('sf_code') || '', device: device(), sf_fb: answers })).then(function (j) { return j || { ok: false, reason: 'error' }; }, function () { return { ok: false, reason: 'offline' }; });
+  }
+  return { check: check, done: done, feedbackCheck: feedbackCheck, feedbackSend: feedbackSend, isOpen: isOpen, players: players, cur: cur, kidName: kidName, childLocked: childLocked,addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();

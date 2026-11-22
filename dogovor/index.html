@@ -1,0 +1,170 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta name="theme-color" content="#20172e">
+<title>Договор у костра · Истории у костра</title>
+<style>
+@font-face{font-family:Andika;src:url('/fonts/andika-400.woff2');font-display:swap}
+@font-face{font-family:Andika;src:url('/fonts/andika-700.woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Cormorant;src:url('/fonts/cormorant.ttf') format('truetype');font-display:swap}
+:root{--night:#20172e;--cream:#fff3dc;--paper:#fff7e7;--ink:#35283d;--ink2:#6a5a72;--gold:#f5c777;--bronze:#b98648;--rust:#8b522c;--violet:#633ba6;--line:#35283d2e}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);background-image:radial-gradient(ellipse at 80% 0%,#69453288,transparent 45%);color:var(--cream);font:17px/1.6 Andika,'Trebuchet MS',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:4px}
+header{max-width:860px;margin:auto;padding:22px 20px;font-size:14px}
+main{max-width:860px;margin:auto;padding:0 20px 70px}
+h1,h2{font-family:Cormorant,Georgia,serif;font-weight:600;line-height:1.08;margin:0}
+h1{font-size:clamp(42px,9vw,72px)}
+h1 span{display:block;color:var(--gold)}
+h2{font-size:clamp(30px,6vw,42px)}
+.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:700;color:var(--gold);margin:0 0 12px}
+.intro{padding:26px 0 34px;max-width:640px}
+.intro p{margin:16px 0 0}
+.paper{background:var(--paper);color:var(--ink);border-radius:7px 28px 7px 28px;padding:clamp(22px,5vw,46px);margin:0 0 26px;box-shadow:0 15px 45px #09070c33;border-top:3px solid var(--bronze)}
+.paper .eyebrow{color:var(--rust)}
+.paper h2{margin-bottom:6px}
+.sub{margin:0 0 22px;color:var(--ink2);font-size:15px}
+.promise{border-top:1px solid var(--line);padding:18px 0}
+.promise b.who{display:block;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--rust);margin-bottom:6px}
+.promise p{margin:0 0 10px;font-size:18px;line-height:1.5}
+.field{display:block;margin:10px 0 0}
+.field span{display:block;font-size:14px;color:var(--ink2);margin-bottom:4px}
+.field input{width:100%;min-height:48px;padding:8px 2px;border:0;border-bottom:2px solid var(--ink);background:transparent;color:var(--ink);font:700 19px/1.3 Andika,sans-serif;border-radius:0}
+.field input::placeholder{color:var(--ink2);font-weight:400}
+.field input:focus-visible{outline:0;border-bottom-color:var(--violet);background:#633ba60d}
+.cells{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:8px 0 6px;padding:0;list-style:none}
+.cell{position:relative;min-width:0}
+.cell button{display:block;width:100%;padding:0;border:2px dashed #35283d4d;border-radius:14px;background:#35283d0a;cursor:pointer;aspect-ratio:3/4;overflow:hidden;position:relative;color:inherit;font:inherit}
+.cell img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1);opacity:.28;transition:opacity .25s ease,filter .25s ease}
+.cell .n{position:absolute;left:6px;top:4px;font:700 14px Andika,sans-serif;color:var(--ink)}
+.cell .d{display:block;text-align:center;font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.2}
+.cell button[aria-pressed="true"]{border-style:solid;border-color:var(--bronze);background:#f5c77733}
+.cell button[aria-pressed="true"] img{filter:none;opacity:1}
+.cell button[aria-pressed="true"]::after{content:'✓';position:absolute;right:5px;bottom:3px;width:24px;height:24px;border-radius:50%;background:var(--violet);color:#fff;font:700 15px/24px sans-serif;text-align:center}
+.cell button:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.cell.half button{border-color:var(--rust)}
+.hint{font-size:14px;color:var(--ink2);margin:6px 0 0}
+.signs{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px}
+.signs div{border-top:2px solid var(--ink);padding-top:6px;font-size:13px;color:var(--ink2)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+button.btn,a.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid transparent;background:var(--violet);color:#fff8e8;font:700 16px Andika,sans-serif;cursor:pointer;text-decoration:none}
+button.btn:hover,a.btn:hover{background:#7d50c5}
+.tips{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:14px}
+.tips li{padding-left:18px;border-left:3px solid var(--bronze)}
+.tips b{display:block}
+.cash{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 6px}
+.cash div{border:1px solid var(--line);border-radius:16px;padding:16px}
+.cash strong{display:block;font:600 34px/1 Cormorant,Georgia,serif;color:var(--rust);margin-bottom:6px}
+.small{font-size:14px;color:var(--ink2)}
+@media(max-width:560px){.cells{gap:7px}.cell .d{font-size:11px}.signs{gap:16px}.cash{grid-template-columns:1fr}}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff;color:#000;font-size:12pt}
+  header,.intro,.noprint,.actions{display:none!important}
+  main{max-width:none;padding:0}
+  .paper{box-shadow:none;border:0;border-radius:0;padding:0;margin:0;background:#fff}
+  .cell img{filter:none;opacity:.35}
+  .cell button[aria-pressed="true"] img{opacity:1}
+  .field input{border-bottom:1px solid #000}
+  .signs{margin-top:40px}
+}
+</style>
+<!-- Top.Mail.Ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+if (d.getElementById(id)) return;
+var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+ts.src = "https://top-fwz1.mail.ru/js/code.js";
+var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+<noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3811632;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
+<!-- /Top.Mail.Ru counter -->
+<script>/* sf-attr (08.11.2026): источник визита для платёжки — utm из ссылок бота/рекламы, страница входа, реферер; читают /oplata и /schools/buy */
+(function(){try{var q=new URLSearchParams(location.search),k='sf_attr',o=JSON.parse(localStorage.getItem(k)||'null'),u={};
+['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(n){if(q.get(n))u[n]=q.get(n).slice(0,160)});
+if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(document.referrer.match(/^https?:\/\/([^\/]+)/)||[])[1]||'',at:Date.now()};for(var n in u)o[n]=u[n];localStorage.setItem(k,JSON.stringify(o))}}catch(e){}})();
+</script>
+</head><body>
+<header><a href="../">Истории у костра</a></header>
+<main>
+<section class="intro">
+  <p class="eyebrow">Родителю · до первой истории</p>
+  <h1>Договор <span>у костра</span></h1>
+  <p>Десять историй за каникулы ребёнок проходит охотнее, когда знает, ради чего. Договоритесь о призе до старта: он выбирает, вы обещаете. Дальше не нужно уговаривать, достаточно показать на договор.</p>
+</section>
+
+<section class="paper" id="contract">
+  <p class="eyebrow">Зимний квест · 27 декабря — 10 января</p>
+  <h2>Договор у костра</h2>
+  <p class="sub">Заполните вместе и повесьте на видное место. Клетку героя отмечайте, когда история пройдена до значка.</p>
+
+  <div class="promise">
+    <b class="who">Обещание игрока</b>
+    <label class="field"><span>Меня зовут</span><input id="kid" maxlength="40" autocomplete="off" placeholder="имя"></label>
+    <p style="margin-top:12px">Я прохожу <b>10 историй</b>, по одной в день, и собираю значки всех героев.</p>
+  </div>
+
+  <div class="promise">
+    <b class="who">Обещание взрослого</b>
+    <label class="field"><span>После четвёртой истории, 30 декабря, маленький приз</span><input id="half" maxlength="80" autocomplete="off" placeholder="например: выбираешь фильм на вечер"></label>
+    <label class="field"><span>Когда собраны все 10 значков, главный приз</span><input id="prize" maxlength="80" autocomplete="off" placeholder="выбирает игрок"></label>
+    <p style="margin-top:12px">Я напоминаю про историю <b>не больше одного раза в день</b>. И играю «ход для взрослого», когда он выпадет.</p>
+  </div>
+
+  <div class="promise">
+    <b class="who">Значки героев</b>
+    <ol class="cells" id="cells"></ol>
+    <p class="hint">31 декабря и 1 января историй нет. Пропущенный день можно догнать 8 и 9 января.</p>
+  </div>
+
+  <div class="signs"><div>Подпись игрока</div><div>Подпись взрослого</div></div>
+
+  <div class="actions noprint"><button class="btn" id="print" type="button">Распечатать договор</button></div>
+  <p class="hint noprint">Имя и призы хранятся только на этом устройстве, на сервер не уходят.</p>
+</section>
+
+<section class="paper noprint">
+  <p class="eyebrow">Как договориться</p>
+  <h2>Три правила, чтобы договор сработал</h2>
+  <ul class="tips">
+    <li><b>Приз выбирает ребёнок.</b>Кино, пицца с друзьями, поход на каток, деньги на своё. Чужой приз не тянет.</li>
+    <li><b>Договариваемся до первой истории.</b>Обещание, данное на пятый день, выглядит как торг.</li>
+    <li><b>Маленький приз 30 декабря.</b>После четырёх историй идут два дня без костра. С призом на полпути ребёнок возвращается 2 января.</li>
+  </ul>
+</section>
+
+<section class="paper noprint" id="cashback">
+  <p class="eyebrow">Приз за наш счёт</p>
+  <h2>Три квеста — возвращаем 1 500 ₽</h2>
+  <p>Зимний квест первый. Будут ещё два. Когда один ребёнок проходит все три до конца и получает три сертификата, мы возвращаем вам деньги. На что их потратить, решаете вы: например, на главный приз из договора.</p>
+  <div class="cash">
+    <div><strong>1 500 ₽</strong>на карту</div>
+    <div><strong>2 000 ₽</strong>в счёт следующего квеста</div>
+  </div>
+  <p class="small">Считаем по одному ребёнку. Квест засчитан, когда пройдены все истории и получен сертификат. После третьего сертификата напишите нам, и мы предложим выбор.</p>
+</section>
+</main>
+<script>
+(function(){'use strict';
+var H=[['alice','Алиса','27.12'],['mowgli','Маугли','28.12'],['gerda','Герда','29.12'],['sherlock','Шерлок','30.12'],['dorothy','Дороти','2.01'],['peter_pan','Питер Пэн','3.01'],['jim_hawkins','Джим','4.01'],['pinocchio','Пиноккио','5.01'],['mary_lennox','Мэри','6.01'],['nutcracker','Щелкунчик','7.01']];
+function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+var done;try{done=JSON.parse(get('sf_dog_cells')||'[]')}catch(e){done=[]}if(!Array.isArray(done))done=[];
+var ol=document.getElementById('cells');
+H.forEach(function(h,i){
+  var li=document.createElement('li');li.className='cell'+(i===3?' half':'');
+  var b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed',String(done.indexOf(i)>=0));b.setAttribute('aria-label','История '+(i+1)+', '+h[1]+': отметить пройденной');
+  var im=document.createElement('img');im.src='../img/h_'+h[0]+'.webp';im.alt='';im.loading='lazy';
+  var n=document.createElement('span');n.className='n';n.textContent=String(i+1);
+  b.appendChild(im);b.appendChild(n);
+  b.addEventListener('click',function(){var on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',String(on));var k=done.indexOf(i);if(on&&k<0)done.push(i);if(!on&&k>=0)done.splice(k,1);put('sf_dog_cells',JSON.stringify(done));});
+  var d=document.createElement('span');d.className='d';d.textContent=h[1]+' · '+h[2];
+  li.appendChild(b);li.appendChild(d);ol.appendChild(li);
+});
+['kid','half','prize'].forEach(function(id){var el=document.getElementById(id);el.value=get('sf_dog_'+id)||'';el.addEventListener('input',function(){put('sf_dog_'+id,el.value)});});
+document.getElementById('print').addEventListener('click',function(){window.print()});
+})();
+</script>
+</body></html>
