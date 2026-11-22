@@ -76,6 +76,7 @@ h1{font:600 clamp(34px,8vw,52px)/1.02 var(--display);margin:0 0 8px;text-wrap:ba
 .pro{margin-top:26px;font-size:14px;color:var(--ink-3)}
 .inst{display:grid;grid-template-columns:56px 1fr;gap:6px 14px;align-items:center;margin:0 0 22px;padding:16px;border-radius:20px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line)}
 .inst[hidden]{display:none}
+.inst.dog{margin:26px 0 0}.inst.dog>div{grid-column:1/-1}
 .inst img{width:56px;height:56px;border-radius:13px;box-shadow:0 6px 18px rgba(255,155,61,.25)}
 .inst b{font:600 21px/1.15 var(--display);display:block}
 .inst p{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
@@ -146,6 +147,10 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     <ol id="instOther" hidden></ol>
   </section>
   <div class="grid" id="grid" aria-label="Истории"></div>
+  <section class="inst dog">
+    <div><b>Родителю: договор у костра</b><p>До первой истории договоритесь с ребёнком о призе за все десять значков. Так он дойдёт до финала сам, без уговоров.</p></div>
+    <a class="btn btn-ghost" href="../dogovor/">Открыть договор</a>
+  </section>
   <p class="pro">Не открывается? Напишите нам в бот «Holliday English», поможем.</p>
 </div>
 <script src="../sf-access.js"></script>
