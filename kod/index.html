@@ -99,7 +99,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
         <li>доступ остаётся навсегда</li>
         <li>один код на человека</li>
       </ul>
-      <p class="one">⚠️ Код работает на <b>одном устройстве</b>, перенести его потом нельзя. Откройте его там, где будете смотреть сами или показывать детям: на ноутбуке для доски или на своём телефоне.</p>
+      <p class="one">⚠️ Код работает на <b>одном устройстве и в одном браузере</b>, перенести его потом нельзя. Откройте его там, где будете смотреть сами или показывать детям: на ноутбуке для доски или на своём телефоне.</p>
       <label>Почта для чека и кода<input type="email" id="email" required autocomplete="email" inputmode="email" placeholder="name@mail.ru"></label>
       <label>Ваши имя и фамилия<input type="text" id="parent" required autocomplete="name" maxlength="80" placeholder="Например, Анна Иванова"></label>
       <label>Телефон, если удобнее связь в мессенджере<input type="tel" id="phone" autocomplete="tel" maxlength="20" placeholder="+7"></label>
@@ -221,8 +221,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function done(code){
     show('done'); ls('sf_code',code);
     try{ (window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'purchase',value:2500}); }catch(e){}   // цель для VK Рекламы
-    var link=location.origin+'/play/?k='+code;
-    $('code').textContent=code; $('go').href='../play/?k='+code; $('link').textContent=link;
+    var link=location.origin+'/play/?k='+code+'&one=1';
+    $('code').textContent=code; $('go').href='../play/?k='+code+'&one=1'; $('link').textContent=link;
     $('copy').addEventListener('click',function(){ var b=this;
       (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(function(){ b.textContent='Ссылка скопирована'; },function(){ b.textContent='Скопируйте ссылку ниже'; }); });
   }

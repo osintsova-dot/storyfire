@@ -125,6 +125,14 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   <h1>Твои истории</h1>
   <p class="lead">Каждый день у костра новый герой. История открывается утром, а пройденные остаются навсегда.</p>
 
+  <section class="gate" id="one" hidden>
+    <h2>Где открыть код?</h2>
+    <p>Этот код работает <b>на одном устройстве и в одном браузере</b>. Он привяжется туда, где вы нажмёте «Открыть здесь», и перенести его потом нельзя.</p>
+    <p id="oneApp" hidden style="color:#F5C842">Похоже, вы открыли ссылку внутри приложения почты или мессенджера. Лучше скопируйте ссылку и откройте её в обычном браузере: Safari или Chrome.</p>
+    <div class="alt"><button class="btn btn-gold" type="button" id="oneGo">Открыть здесь</button><button class="btn btn-ghost" type="button" id="oneCopy">Скопировать ссылку</button></div>
+    <p style="font-size:14px;opacity:.75;margin-top:12px">Будете показывать детям с ноутбука? Скопируйте ссылку и откройте её на ноутбуке. Потом поставьте квест на экран из того же браузера.</p>
+  </section>
+
   <section class="gate" id="gate" hidden>
     <h2>Введите код</h2>
     <p>Код пришёл после оплаты, вида <b>ABCD-EFGH-JKLM</b>. Его прислали после оплаты или выдала ваша школа.</p>
@@ -215,6 +223,15 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     });
   }
   function ok(j){ gate.hidden=true; drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); inst(); }
+  // код на одно устройство (ссылка с &one=1): сначала спросить, привязывать ли к этому браузеру
+  var hasOk=false; try{ hasOk=!!localStorage.getItem('sf_ok'); }catch(e){}
+  if(/[?&]one=1/.test(location.search)&&/[?&]k=/.test(location.search)&&!hasOk&&!SF.free()){
+    draw(false); document.getElementById('one').hidden=false;
+    if(/VKClient|vkclient|Telegram|Instagram|FBAN|FBAV|MAX\/|GSA\/|YaApp|Mail\.Ru|GmailiOS/i.test(navigator.userAgent)) document.getElementById('oneApp').hidden=false;
+    document.getElementById('oneGo').addEventListener('click',function(){ location.replace(location.pathname+location.search.replace(/([?&])one=1&?/,'$1').replace(/[?&]$/,'')); });
+    document.getElementById('oneCopy').addEventListener('click',function(){ var b=this; (navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(function(){ b.textContent='Ссылка скопирована'; },function(){ b.textContent='Скопируйте адрес из строки браузера'; }); });
+    return;
+  }
   var code=SF.takeFromUrl()||SF.code();
   if(SF.free()){ draw(true); drawKids(); inst(); return; }
   draw(false);
