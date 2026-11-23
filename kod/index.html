@@ -211,7 +211,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function waitPaid(id, n){
     show('wait');
     var o={}; try{ o=JSON.parse(ls('sf_order')||'{}'); }catch(e){}
-    if(o.id!==id){ $('waitTxt').textContent='Эту оплату начинали в другом браузере. Код придёт на почту из чека, или напишите нам в бот.'; return; }
+    if(o.id!==id){ var sp=document.querySelector('#wait .spin'); if(sp) sp.style.display='none'; document.querySelector('#wait h1').textContent='Оплата принята'; $('waitTxt').innerHTML='Банк вернул вас в другой браузер, поэтому код здесь не показать.<br><br><b>Код уже отправлен на почту</b>, которую вы указали при оплате. Проверьте входящие и папку «Спам».<br><br>Письма нет через пять минут? Напишите нам в бот: <a href="https://max.ru/id245718463277_3_bot?start=t_kod">Speak &amp; Smile для школ</a>.'; return; }
     post('/pay/status',{order_id:id,claim:o.claim}).then(function(j){
       if(j&&j.paid&&j.key) return done(j.key);
       if(n<20){ if(n===4) $('waitTxt').textContent='Банк ещё подтверждает оплату, подождите…'; setTimeout(function(){ waitPaid(id,n+1); },3000); }   // при СБП старт с −80 → ~5 минут опроса
