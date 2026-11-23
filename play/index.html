@@ -126,8 +126,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   <p class="lead">Каждый день у костра новый герой. История открывается утром, а пройденные остаются навсегда.</p>
 
   <section class="gate" id="gate" hidden>
-    <h2>Введите код семьи</h2>
-    <p>Код пришёл после оплаты, вида <b>ABCD-EFGH-JKLM</b>. Он работает на двух устройствах, например на телефоне и планшете.</p>
+    <h2>Введите код</h2>
+    <p>Код пришёл после оплаты, вида <b>ABCD-EFGH-JKLM</b>. Его прислали после оплаты или выдала ваша школа.</p>
     <form id="f" autocomplete="off"><input id="code" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="Код из 12 знаков" aria-label="Код семьи" maxlength="16"><button class="btn btn-gold" type="submit">Открыть</button></form>
     <div class="msg" id="msg" role="status"></div>
     <div class="alt"><a class="btn btn-ghost" href="../oplata/">Купить квест · 3 500 ₽</a><a class="btn btn-ghost" href="../prolog/">Пролог бесплатно</a></div>
@@ -159,6 +159,9 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var H=[[1,'Alice','03_night01_alice'],[2,'Mowgli','08_v6_mowgli'],[3,'Gerda','08_v7_gerda'],[4,'Sherlock','08_v8_sherlock'],[5,'Dorothy','08_v9_dorothy'],
          [6,'Peter Pan','08_v10_peter'],[7,'Jim Hawkins','08_v11_jim'],[8,'Pinocchio','08_v12_pinocchio'],[9,'Mary','08_v13_mary'],[10,'Nutcracker','08_v14_nutcracker']];
   var grid=document.getElementById('grid'), gate=document.getElementById('gate'), msg=document.getElementById('msg');
+  function why(j){ var alt=document.querySelector('#gate .alt'); if(alt) alt.hidden=['devices','blocked','expired','offline','rate_limited'].indexOf(j.reason)>=0;   /* код настоящий — нашу кнопку «Купить» не показываем: он мог быть от школы-партнёра */
+    if(j.reason==='devices'&&j.max===1) return 'Этот код работает на одном устройстве и в одном браузере, и он уже открыт. Заходите оттуда же, где открывали в первый раз. Сменили устройство? Напишите нам.';
+    return REASON[j.reason]||REASON.offline; }
   var REASON={not_found:'Такого кода нет. Проверьте буквы и цифры.',expired:'Срок этого кода-просмотра закончился. Напишите нам, пришлём новый.',devices:'Код уже открыт на всех своих устройствах. Напишите нам, если сменили телефон.',blocked:'Код отключён. Напишите нам.',offline:'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.',empty:'Введите код.',rate_limited:'Слишком много попыток. Подождите минуту.'};
   function draw(unlocked){
     var today=-1, now=Date.now();
@@ -215,12 +218,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var code=SF.takeFromUrl()||SF.code();
   if(SF.free()){ draw(true); drawKids(); inst(); return; }
   draw(false);
-  if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=REASON[j.reason]||REASON.offline; document.getElementById('code').value=code; } }); }
+  if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=why(j); document.getElementById('code').value=code; } }); }
   else gate.hidden=false;
   document.getElementById('f').addEventListener('submit',function(e){ e.preventDefault();
     var b=this.querySelector('button'); b.disabled=true; msg.className='msg'; msg.textContent='Проверяем…';
     SF.check(document.getElementById('code').value).then(function(j){ b.disabled=false;
-      if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=REASON[j.reason]||REASON.offline; } });
+      if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=why(j); } });
   });
 })();
 </script>
