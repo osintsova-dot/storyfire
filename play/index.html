@@ -135,7 +135,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
 
   <section class="gate" id="gate" hidden>
     <h2>Введите код</h2>
-    <p>Код пришёл после оплаты, вида <b>ABCD-EFGH-JKLM</b>. Его прислали после оплаты или выдала ваша школа.</p>
+    <p>Код вида <b>ABCD-EFGH-JKLM</b>. Его прислали после оплаты или выдала ваша школа.</p>
+    <p id="appHint" hidden style="color:#F5C842">Иконка на экране не помнит код? Удалите её, откройте квест в браузере, где он уже работает, и поставьте на экран заново оттуда.</p>
     <form id="f" autocomplete="off"><input id="code" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="Код из 12 знаков" aria-label="Код семьи" maxlength="16"><button class="btn btn-gold" type="submit">Открыть</button></form>
     <div class="msg" id="msg" role="status"></div>
     <div class="alt"><a class="btn btn-ghost" href="../oplata/">Купить квест · 3 500 ₽</a><a class="btn btn-ghost" href="../prolog/">Пролог бесплатно</a></div>
@@ -222,7 +223,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       other.hidden=false; this.hidden=true;
     });
   }
-  function ok(j){ gate.hidden=true; drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); inst(); }
+  function ok(j){ gate.hidden=true; try{ history.replaceState(null,'',SF.appUrl()); }catch(e){}   /* адрес с кодом и «паспортом» браузера: как бы ни ставили иконку на экран, она откроется тем же устройством */ drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); inst(); }
   // код на одно устройство (ссылка с &one=1): сначала спросить, привязывать ли к этому браузеру
   var hasOk=false; try{ hasOk=!!localStorage.getItem('sf_ok'); }catch(e){}
   if(/[?&]one=1/.test(location.search)&&/[?&]k=/.test(location.search)&&!hasOk&&!SF.free()){
@@ -236,7 +237,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   if(SF.free()){ draw(true); drawKids(); inst(); return; }
   draw(false);
   if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=why(j); document.getElementById('code').value=code; } }); }
-  else gate.hidden=false;
+  else { gate.hidden=false; if(SF.standalone()) document.getElementById('appHint').hidden=false; }
   document.getElementById('f').addEventListener('submit',function(e){ e.preventDefault();
     var b=this.querySelector('button'); b.disabled=true; msg.className='msg'; msg.textContent='Проверяем…';
     SF.check(document.getElementById('code').value).then(function(j){ b.disabled=false;
