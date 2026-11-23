@@ -640,5 +640,6 @@ var g=/oplata/.test(h)?'buy_click':/prolog/.test(h)?'prolog_click':'';if(g){try{
 g('page_open');setTimeout(function(){if(!document.hidden)g('stay_15s');},15000);
 if('IntersectionObserver' in window){var m={guests:'scroll_mid',price:'scroll_price'};var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){g(m[e.target.id]);io.unobserve(e.target);}});},{threshold:0.15});
 Object.keys(m).forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});}})();</script>
+<script src="sf-home.js?v=1" defer></script>
 </body>
 </html>

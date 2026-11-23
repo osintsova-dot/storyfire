@@ -1121,5 +1121,6 @@ var first=function(){var on=document.querySelector('.scene.on');return !on||/^in
 setTimeout(function(){if(first())d.classList.add('show')},1200);
 new MutationObserver(function(){if(!first())hide()}).observe(st,{subtree:true,attributes:true,attributeFilter:['class']});
 }catch(e){}})();</script>
+<script src="../sf-home.js?v=1" defer></script>
 </body>
 </html>
