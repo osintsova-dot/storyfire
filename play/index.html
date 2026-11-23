@@ -136,8 +136,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   <section class="gate" id="gate" hidden>
     <h2>Введите код</h2>
     <p>Код вида <b>ABCD-EFGH-JKLM</b>. Его прислали после оплаты или выдала ваша школа.</p>
-    <p id="appHint" hidden style="color:#F5C842">Иконка на экране не помнит код? Удалите её, откройте квест в браузере, где он уже работает, и поставьте на экран заново оттуда.</p>
-    <form id="f" autocomplete="off"><input id="code" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="Код из 12 знаков" aria-label="Код семьи" maxlength="16"><button class="btn btn-gold" type="submit">Открыть</button></form>
+    <p id="appHint" hidden style="color:#F5C842">Открыли с иконки на экране? Не вводите код. Зайдите в браузер, где квест уже работает, нажмите там «Число для иконки» и введите эти шесть цифр сюда.</p>
+    <form id="f" autocomplete="off"><input id="code" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="Код или число для иконки" aria-label="Код семьи" maxlength="16"><button class="btn btn-gold" type="submit">Открыть</button></form>
     <div class="msg" id="msg" role="status"></div>
     <div class="alt"><a class="btn btn-ghost" href="../oplata/">Купить квест · 3 500 ₽</a><a class="btn btn-ghost" href="../prolog/">Пролог бесплатно</a></div>
   </section>
@@ -154,6 +154,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       <li>Нажмите <b style="display:inline;font:inherit;font-weight:600">«Добавить»</b>. Готово, огонёк уже на экране.</li>
     </ol>
     <ol id="instOther" hidden></ol>
+    <div class="pair" id="pairBox" style="grid-column:1/-1;margin-top:10px;padding-top:14px;border-top:1px solid rgba(255,255,255,.14)">
+      <p style="margin:0 0 10px"><b>Иконка просит код?</b> Так бывает на айфоне. Нажмите кнопку и введите в иконке шесть цифр вместо кода.</p>
+      <button class="btn btn-ghost" id="pairBtn" type="button">Число для иконки</button>
+      <p id="pairOut" hidden style="margin:12px 0 0;font:700 44px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#F5C842"></p>
+      <p id="pairNote" hidden style="margin:8px 0 0;font-size:14px;opacity:.8">Действует 10 минут и один раз. Иконка станет тем же устройством, что этот браузер.</p>
+    </div>
   </section>
   <div class="grid" id="grid" aria-label="Истории"></div>
   <section class="inst dog">
@@ -162,7 +168,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   </section>
   <p class="pro">Не открывается? Напишите нам в бот «Holliday English», поможем.</p>
 </div>
-<script src="../sf-access.js"></script>
+<script src="../sf-access.js?v=5"></script>
 <script>
 (function(){
   var H=[[1,'Alice','03_night01_alice'],[2,'Mowgli','08_v6_mowgli'],[3,'Gerda','08_v7_gerda'],[4,'Sherlock','08_v8_sherlock'],[5,'Dorothy','08_v9_dorothy'],
@@ -227,7 +233,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     // айфон при манифесте берёт для иконки адрес из манифеста и теряет код; без манифеста — берёт текущий адрес (с кодом). Поэтому на iOS манифест убираем, на остальных — подставляем start_url.
     try{ var ml=document.querySelector('link[rel="manifest"]'), iosDev=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
       if(ml){ if(iosDev) ml.parentNode.removeChild(ml);
-        else ml.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify({name:'Истории у костра',short_name:'У костра',lang:'ru',scope:location.origin+'/',start_url:location.origin+SF.appUrl(),display:'standalone',background_color:'#0e0a22',theme_color:'#0e0a22',icons:[{src:location.origin+'/img/app-192.png',sizes:'192x192',type:'image/png'},{src:location.origin+'/img/app-512.png',sizes:'512x512',type:'image/png'}]})); } }catch(e){}   /* адрес с кодом и «паспортом» браузера: как бы ни ставили иконку на экран, она откроется тем же устройством */ drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); if(!j.teacher) inst();   /* 24.11: учительскому коду иконку пока не предлагаем — на айфоне она не наследует код */ }
+        else ml.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify({name:'Истории у костра',short_name:'У костра',lang:'ru',scope:location.origin+'/',start_url:location.origin+SF.appUrl(),display:'standalone',background_color:'#0e0a22',theme_color:'#0e0a22',icons:[{src:location.origin+'/img/app-192.png',sizes:'192x192',type:'image/png'},{src:location.origin+'/img/app-512.png',sizes:'512x512',type:'image/png'}]})); } }catch(e){}   /* адрес с кодом и «паспортом» браузера: как бы ни ставили иконку на экран, она откроется тем же устройством */ drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); inst(); }
   // код на одно устройство (ссылка с &one=1): сначала спросить, привязывать ли к этому браузеру
   var hasOk=false; try{ hasOk=!!localStorage.getItem('sf_ok'); }catch(e){}
   if(/[?&]one=1/.test(location.search)&&/[?&]k=/.test(location.search)&&!hasOk&&!SF.free()){
@@ -242,8 +248,15 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   draw(false);
   if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=why(j); document.getElementById('code').value=code; } }); }
   else { gate.hidden=false; if(SF.standalone()) document.getElementById('appHint').hidden=false; }
+  document.getElementById('pairBtn').addEventListener('click',function(){ var b=this,o=document.getElementById('pairOut'); b.disabled=true;
+    SF.pairNew().then(function(j){ b.disabled=false; o.hidden=false; if(j&&j.ok&&j.pair){ o.textContent=String(j.pair).replace(/(\d{3})(\d{3})/,'$1 $2'); document.getElementById('pairNote').hidden=false; b.textContent='Новое число'; } else { o.style.font='inherit'; o.style.letterSpacing='0'; o.textContent='Не получилось. Проверьте интернет и попробуйте ещё раз.'; } }); });
   document.getElementById('f').addEventListener('submit',function(e){ e.preventDefault();
     var b=this.querySelector('button'); b.disabled=true; msg.className='msg'; msg.textContent='Проверяем…';
+    var raw=document.getElementById('code').value, digits=raw.replace(/\D/g,'');
+    if(/^[\d\s-]+$/.test(raw.trim())&&digits.length===6){   // шесть цифр — число для иконки
+      SF.pairUse(digits).then(function(p){ if(!p||!p.ok){ b.disabled=false; msg.className='msg bad'; msg.textContent=p&&p.reason==='rate_limited'?'Слишком много попыток. Подождите десять минут.':'Число не подошло или уже истекло. Получите новое в браузере, где квест работает.'; return; }
+        SF.check(SF.code()).then(function(j){ b.disabled=false; if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=why(j); } }); });
+      return; }
     SF.check(document.getElementById('code').value).then(function(j){ b.disabled=false;
       if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=why(j); } });
   });

@@ -113,6 +113,17 @@ var SF = (function () {
   function feedbackSend(answers) {
     return post(0, JSON.stringify({ sf_code: ls('sf_code') || '', device: device(), sf_fb: answers })).then(function (j) { return j || { ok: false, reason: 'error' }; }, function () { return { ok: false, reason: 'offline' }; });
   }
-  return { check: check, done: done, feedbackCheck: feedbackCheck, feedbackSend: feedbackSend, isOpen: isOpen, players: players, cur: cur, kidName: kidName, childLocked: childLocked,addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
+  // Иконка на экране телефона (в iPhone она не наследует код из браузера): подключение по одноразовому числу.
+  // pairNew — в браузере, где код уже работает: получить число на 10 минут. pairUse — в иконке: ввести число, получить код и то же устройство.
+  function pairNew() {
+    return post(0, JSON.stringify({ sf_code: ls('sf_code') || '', device: device(), sf_pair: 'new' })).then(function (j) { return j || { ok: false, reason: 'error' }; }, function () { return { ok: false, reason: 'offline' }; });
+  }
+  function pairUse(num) {
+    return post(0, JSON.stringify({ sf_pair: String(num || '').replace(/\D/g, ''), device: device() })).then(function (j) {
+      if (j && j.ok && j.code && j.device) { ls('sf_dev', j.device); ls('sf_code', j.code); }
+      return j || { ok: false, reason: 'error' };
+    }, function () { return { ok: false, reason: 'offline' }; });
+  }
+  return { pairNew: pairNew, pairUse: pairUse, check: check, done: done, feedbackCheck: feedbackCheck, feedbackSend: feedbackSend, isOpen: isOpen, players: players, cur: cur, kidName: kidName, childLocked: childLocked,addPlayer: addPlayer, switchTo: switchTo, dateText: dateText, opensAt: opensAt, free: free, takeFromUrl: takeFromUrl, standalone: standalone, appUrl: appUrl, norm: norm, DATES: DATES,
     code: function () { return ls('sf_code'); }, teacher: function () { return ls('sf_teacher') === '1'; }, forget: function () { ls('sf_code', null); ls('sf_ok', null); ls('sf_teacher', null); } };
 })();
