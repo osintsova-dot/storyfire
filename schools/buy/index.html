@@ -94,12 +94,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><a href="../"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c2 4 6 6 6 11a6 6 0 0 1-12 0c0-3 1.5-5 2.5-7 .8 2.5 1.8 3.5 3.5 3.5-.8-2.5-.8-5 0-7.5z"/></svg>Истории у костра · для школ</a></div>
+  <div class="top"><a href="../" id="topLink"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c2 4 6 6 6 11a6 6 0 0 1-12 0c0-3 1.5-5 2.5-7 .8 2.5 1.8 3.5 3.5 3.5-.8-2.5-.8-5 0-7.5z"/></svg>Истории у костра · для школ</a></div>
 
   <section id="form">
     <h1 id="h1">Коды для вашей школы</h1>
     <p class="lead" id="lead">Хоть один код, хоть сто: чем больше, тем дешевле каждый. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.</p>
-    <div class="chips" role="tablist" aria-label="Что покупаем" style="margin-bottom:14px">
+    <div class="chips" id="tabs" role="tablist" aria-label="Что покупаем" style="margin-bottom:14px">
       <button type="button" class="chip" id="tabCodes" role="tab" aria-pressed="true">Коды онлайн-квеста</button>
       <button type="button" class="chip" id="tabCamp" role="tab" aria-pressed="false">Лагерь на 5 дней</button>
       <button type="button" class="chip" id="tabTrainer" role="tab" aria-pressed="false">Тренажёр ОГЭ/ЕГЭ</button>
@@ -244,8 +244,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       <summary>Коротко о главном</summary>
       <p>Продавец: ИП Синцова Оксана Владимировна, ОГРНИП 312245734100051, ИНН 245718463277 (школа английского Speak &amp; Smile, Норильск). Полный текст: <a href="../../oferta/">публичная оферта</a>, <a href="../../privacy/">политика обработки данных</a>.</p>
       <p>Предмет: коды доступа к онлайн-квесту «Истории у костра» (один код открывает одной семье все десять историй на двух устройствах без ограничения срока; братья и сёстры играют со своим прогрессом), пакет материалов лагеря на одну школу, ключи доступа к тренажёру ОГЭ/ЕГЭ Speak &amp; Smile (один ключ на одного ученика до 30 июня 2027, ключи учителей бесплатно).</p>
-      <p>Школа вправе передавать коды своим ученикам бесплатно или продавать родителям по своей цене. Продукт остаётся «Историями у костра», переименовывать его и выдавать за свой нельзя.</p>
-      <p>Коды выдаются сразу после оплаты на этой странице и в боте. Срок действия кодов не ограничен. Можно начать хоть с одного кода и докупать по мере записи детей: из кабинета школы, кнопкой «Докупить», новые коды попадают в тот же кабинет. Цена считается по количеству в каждой покупке.</p>
+      <p class="qOnly">Школа вправе передавать коды своим ученикам бесплатно или продавать родителям по своей цене. Продукт остаётся «Историями у костра», переименовывать его и выдавать за свой нельзя.</p>
+      <p class="qOnly">Коды выдаются сразу после оплаты на этой странице и в боте. Срок действия кодов не ограничен. Можно начать хоть с одного кода и докупать по мере записи детей: из кабинета школы, кнопкой «Докупить», новые коды попадают в тот же кабинет. Цена считается по количеству в каждой покупке.</p>
       <p>Персональные данные детей мы не собираем: ребёнок играет по коду. Имена, которые школа подписывает в кабинете, хранятся только в браузере школы.</p>
       <p>Вопросы: o.sintsova@gmail.com, +7 913 530-93-27, бот «Speak&amp;Smile для школ» в MAX.</p>
     </details>
@@ -308,6 +308,11 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   if(q.get('n')) $('n').value=q.get('n');
   if(q.get('p')==='camp'||q.get('p')==='camp_plus'){ PRODUCT='camp'; PLAN=q.get('p'); $('iProduct').value=PLAN; }
   if(q.get('p')==='trainer'){ PRODUCT='trainer'; $('iProduct').value='trainer'; }
+  // Пришли за тренажёром (с сайта speakandsmile.online или из бота): страница без оформления квеста — шапка «Speak & Smile для школ», без вкладок квеста и лагеря.
+  function trMode(){ if(window.TRMODE) return; window.TRMODE=true; var a=$('topLink'); a.textContent='Speak & Smile для школ · тренажёр ОГЭ/ЕГЭ'; a.href='https://speakandsmile.online/teachers.html'; $('tabs').hidden=true;
+    document.title='Тренажёр ОГЭ/ЕГЭ: пакеты для учителя и школы · Speak & Smile'; [].forEach.call(document.querySelectorAll('.qOnly'),function(e){ e.hidden=true; });
+    var ip=$('iProduct'); ip.value='trainer'; [].forEach.call(ip.options,function(o){ if(o.value!=='trainer') o.hidden=true; }); }
+  if(q.get('p')==='trainer'||q.get('solo')==='1') trMode();
   if(q.get('solo')==='1'){ PRODUCT='trainer'; $('iProduct').value='trainer'; $('nOge').value=0; $('nEge').value=0; }
   redraw();
   var tq=(q.get('t')||'').toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -353,7 +358,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     show('done');
     try{ (window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'purchase',value:j.amount||0}); }catch(e){}
     var camp=j.plan==='camp'||j.plan==='camp_plus', codes=j.codes||[];
-    if(j.product==='trainer'){
+    if(j.product==='trainer'){ trMode();
       var oge=j.oge||[], ege=j.ege||[], tch=j.teachers||[], APP='https://speakandsmile.online';
       $('doneLead').textContent='Школа «'+(j.school||'')+'»: тренажёр до 30 июня 2027, учеников ОГЭ '+oge.length+', ЕГЭ '+ege.length+', учителей '+tch.length+'. Сохраните ключи: эта страница не хранится.';
       var tt=(oge.length?'ОГЭ, ученики (вход: '+APP+'/oge.html?key=КЛЮЧ):\n'+oge.join('\n')+'\n\n':'')+(ege.length?'ЕГЭ, ученики (вход: '+APP+'/ege.html?key=КЛЮЧ):\n'+ege.join('\n')+'\n\n':'')+(tch.length?'Учителя (кабинет, уроки, журнал; вход на oge.html или ege.html с ключом):\n'+tch.join('\n'):'Это докупка мест: ключи учителей остаются прежние, они в кабинете школы.');
