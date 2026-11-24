@@ -119,10 +119,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       </div>
       <div id="pTrainer" hidden>
         <div class="two">
-          <label>Учеников ОГЭ<input type="number" id="nOge" min="0" max="500" step="1" value="10" inputmode="numeric"></label>
-          <label>Учеников ЕГЭ<input type="number" id="nEge" min="0" max="500" step="1" value="0" inputmode="numeric"></label>
+          <div><label class="ok" style="margin:0 0 8px"><input type="checkbox" id="xOge" checked><span>Пакет ОГЭ: учитель и 36 уроков</span></label>
+          <label>Учеников ОГЭ<input type="number" id="nOge" min="0" max="500" step="1" value="10" inputmode="numeric"></label></div>
+          <div><label class="ok" style="margin:0 0 8px"><input type="checkbox" id="xEge"><span>Пакет ЕГЭ: учитель и 36 уроков</span></label>
+          <label>Учеников ЕГЭ<input type="number" id="nEge" min="0" max="500" step="1" value="0" inputmode="numeric"></label></div>
         </div>
-        <label style="margin-top:12px" id="tRow">Учителей в пакете<select id="nT" style="min-height:52px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px var(--line)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>
+        <label style="margin-top:12px" id="tRow">Учителей в пакете от 5 учеников<select id="nT" style="min-height:52px;padding:0 14px;border-radius:14px;border:0;background:rgba(14,10,34,.6);color:var(--ink);font:500 16px var(--body);box-shadow:inset 0 0 0 1.5px var(--line)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>
         <p class="note" id="moreNoteT" hidden style="margin-top:10px"></p>
       </div>
       <div id="pCamp" hidden class="chips" role="radiogroup" aria-label="Тариф лагеря">
@@ -139,8 +141,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
         <li>Готовые тексты для родителей</li>
       </ul>
       <ul class="what" id="whatTrainer" hidden>
-        <li>Пакеты на учебный год, до 30 июня 2027. Учитель с кабинетом и 72 уроками входит в каждый:<br>Учитель: 9 900 ₽<br>Учитель + 3 ученика: 14 900 ₽<br>Учитель + 5 учеников: 17 500 ₽<br>Учитель + 10 учеников: 29 000 ₽<br>Учитель + 30 учеников: 75 000 ₽</li>
-        <li>Учеников больше, чем в пакете: по цене места своего пакета, 3 500, 2 900 или 2 500 ₽. ОГЭ и ЕГЭ считаются вместе</li>
+        <li>ОГЭ и ЕГЭ — отдельные пакеты на учебный год, до 30 июня 2027. В каждом учитель с кабинетом и 36 уроками своего экзамена:<br>Учитель: 9 900 ₽<br>Учитель + 3 ученика: 14 900 ₽<br>Учитель + 5 учеников: 17 500 ₽<br>Учитель + 10 учеников: 29 000 ₽<br>Учитель + 30 учеников: 75 000 ₽</li>
+        <li>Учеников больше, чем в пакете: по цене места своего пакета, 3 500, 2 900 или 2 500 ₽. Нужны оба экзамена: это два пакета, сумма складывается</li>
         <li>Один-два ученика? Берите пакет «Учитель», а ученики оформят доступ сами: 490 ₽ в месяц или 4 900 ₽ в год</li>
         <li>Переход на пакет больше: доплата разницы, напишите в бот</li>
         <li>Ключ именной: своя история ошибок у каждого ученика. ИИ проверяет письмо и говорение по критериям ФИПИ</li>
@@ -276,8 +278,12 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   var PRODUCT='codes', PLAN='camp', PREV_T=0;
   // тренажёр: та же лестница, что в ss-pay trPack: 1–4 по 4 900, 5+ 3 500, 10+ 2 900, 30+ 2 500; порог по общему числу учеников (ОГЭ + ЕГЭ + уже купленные)
   function trPrice(n){ var t=n, per=t>=30?2500:t>=10?2900:t>=5?3500:4900; return {n:n,per:per,total:per*n}; }
-  // тренажёр: пакеты как в ss-pay trOrder (учитель внутри); докупка в кабинет — только места от 3 500
-  function trTotal(n){ if(BIND){ var per=n>=30?2500:n>=10?2900:3500; return per*n; } return n===0?9900:n<=3?14900:n<=5?17500:n<10?Math.min(n*3500,29000):n<30?Math.min(n*2900,75000):n*2500; }
+  // тренажёр: пакеты как в ss-pay trOrder — ОГЭ и ЕГЭ отдельно, учитель внутри; докупка в кабинет — только места от 3 500
+  function packTotal(n){ return n===0?9900:n<=3?14900:n<=5?17500:n<10?Math.min(n*3500,29000):n<30?Math.min(n*2900,75000):n*2500; }
+  function packName(n){ return n===0?'учитель':n<=3?'учитель + 3':n<=5?'учитель + 5':'учитель и '+n+' уч.'; }
+  function packHint(ex,n){ return n>0&&n<3?ex+': в пакете 3 места, можно добавить ещё '+(3-n):n===4?ex+': в пакете 5 мест, можно добавить ещё одного':n>5&&n<10&&packTotal(n)===29000?ex+': в пакете 10 мест, можно добавить ещё '+(10-n):n>10&&n<30&&packTotal(n)===75000?ex+': в пакете 30 мест, можно добавить ещё '+(30-n):''; }
+  function trSel(){ var k=trN(); return {o:!BIND&&(k.oge>0||$('xOge').checked), e:!BIND&&(k.ege>0||$('xEge').checked)}; }
+  function trTotal(n){ if(BIND){ var per=n>=30?2500:n>=10?2900:3500; return per*n; } var k=trN(), x=trSel(); return (x.o?packTotal(k.oge):0)+(x.e?packTotal(k.ege):0); }
   function trN(){ return {oge:Math.max(0,Math.min(500,parseInt($('nOge').value,10)||0)),ege:Math.max(0,Math.min(500,parseInt($('nEge').value,10)||0))}; }
   function redraw(){
     var codes=PRODUCT==='codes', tr=PRODUCT==='trainer', camp=PRODUCT==='camp';
@@ -285,12 +291,13 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     $('tabCodes').setAttribute('aria-pressed',codes?'true':'false'); $('tabCamp').setAttribute('aria-pressed',camp?'true':'false'); $('tabTrainer').setAttribute('aria-pressed',tr?'true':'false');
     $('h1').textContent=codes?'Коды для вашей школы':tr?'Тренажёр ОГЭ/ЕГЭ: пакеты для учителя и школы':'Лагерь на 5 дней для вашей школы';
     $('lead').textContent=codes?'Хоть один код, хоть сто: чем больше, тем дешевле каждый. Сразу после оплаты: список кодов, текст для родительского чата и кабинет школы. Чек приходит на почту.'
-      :tr?'Пакет на учебный год: кабинет учителя с 72 уроками и ключи ученикам сразу после оплаты. Письмо и говорение проверяет ИИ по критериям ФИПИ. Чек приходит на почту.'
+      :tr?'ОГЭ и ЕГЭ — отдельные пакеты на учебный год. В пакете кабинет учителя с 36 уроками своего экзамена и ключи ученикам, всё сразу после оплаты. Письмо и говорение проверяет ИИ по критериям ФИПИ. Чек приходит на почту.'
       :'Готовая офлайн-смена: мультики героев, поле, станции, финал для родителей. Материалы сразу после оплаты в кабинете школы. Чек приходит на почту.';
-    if(tr){ var k=trN(), nn=k.oge+k.ege, tot=trTotal(nn); $('tRow').hidden=!!BIND||nn<5; $('total').textContent=fmt(tot);
-      $('perTxt').textContent=BIND?(nn?'докупка, '+nn+' уч.':'укажите, сколько учеников'):nn===0?'пакет «Учитель»: кабинет и 72 урока':nn<=3?'пакет «Учитель + 3 ученика»':nn<=5?'пакет «Учитель + 5 учеников»':'учитель и '+nn+' уч., по '+fmt(Math.round(tot/nn))+' за ученика';
-      var hint=BIND?'':nn===0?'Один-два ученика могут оформить доступ сами, по 4 900 ₽ в год':nn<3?'В пакете 3 места: можно добавить ещё '+(3-nn)+', цена та же':nn===4?'В пакете 5 мест: можно добавить ещё одного, цена та же':nn>=5&&nn<10&&tot===29000?'В пакете 10 мест: можно добавить ещё '+(10-nn)+', цена та же':nn>=10&&nn<30&&tot===75000?'В пакете 30 мест: можно добавить ещё '+(30-nn)+', цена та же':'';
-      $('early').textContent=hint; $('early').hidden=!hint; }
+    if(tr){ var k=trN(), nn=k.oge+k.ege, tot=trTotal(nn), x=trSel(); if(k.oge>0) $('xOge').checked=true; if(k.ege>0) $('xEge').checked=true;
+      $('xOge').parentNode.hidden=!!BIND; $('xEge').parentNode.hidden=!!BIND; $('tRow').hidden=!!BIND||(k.oge<5&&k.ege<5); $('total').textContent=fmt(tot);
+      $('perTxt').textContent=BIND?(nn?'докупка, '+nn+' уч.':'укажите, сколько учеников'):[x.o?'ОГЭ: '+packName(k.oge)+', '+fmt(packTotal(k.oge)):'',x.e?'ЕГЭ: '+packName(k.ege)+', '+fmt(packTotal(k.ege)):''].filter(Boolean).join(' · ')||'отметьте пакет ОГЭ или ЕГЭ';
+      var hint=BIND?'':[x.o?packHint('ОГЭ',k.oge):'',x.e?packHint('ЕГЭ',k.ege):''].filter(Boolean).join('. ')||(nn===0&&(x.o||x.e)?'Один-два ученика могут оформить доступ сами, по 4 900 ₽ в год':'');
+      $('early').textContent=hint+(hint&&!/год$/.test(hint)?', цена та же':''); $('early').hidden=!hint; }
     else if(codes){ var p=price($('n').value); $('total').textContent=fmt(p.total); $('perTxt').textContent=p.n<5?'по '+fmt(p.per)+' за код':'по '+fmt(p.per)+' за код'; $('early').textContent=(CAMP_BUYER?'Для купивших лагерь — 1 800 ₽ за код':'От 5 кодов дешевле, от 10 ещё дешевле'); $('early').hidden=p.n>=10;
       [].forEach.call(document.querySelectorAll('#pCodes .chip'),function(b){ b.setAttribute('aria-pressed', +b.dataset.n===p.n?'true':'false'); }); }
     else { var c=CAMP[PLAN]; $('total').textContent=fmt(CAMP_EARLY?c.early:c.late); $('perTxt').textContent=CAMP_EARLY?'потом '+fmt(c.late):'пакет на одну школу'; $('early').textContent='Ранняя цена до 30 ноября'; $('early').hidden=!CAMP_EARLY;
@@ -302,7 +309,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   $('tabCodes').addEventListener('click',function(){ PRODUCT='codes'; redraw(); });
   $('tabCamp').addEventListener('click',function(){ PRODUCT='camp'; redraw(); });
   $('tabTrainer').addEventListener('click',function(){ PRODUCT='trainer'; redraw(); });
-  $('n').addEventListener('input',redraw); $('nOge').addEventListener('input',redraw); $('nEge').addEventListener('input',redraw);
+  $('n').addEventListener('input',redraw); $('nOge').addEventListener('input',redraw); $('nEge').addEventListener('input',redraw); $('xOge').addEventListener('change',redraw); $('xEge').addEventListener('change',redraw);
   var q=new URLSearchParams(location.search);
   var LEAD=/^[a-f0-9]{32}$/.test(q.get('lead')||'')?q.get('lead'):'';
   if(q.get('n')) $('n').value=q.get('n');
@@ -312,8 +319,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function trMode(){ if(window.TRMODE) return; window.TRMODE=true; var a=$('topLink'); a.textContent='Speak & Smile для школ · тренажёр ОГЭ/ЕГЭ'; a.href='https://speakandsmile.online/teachers.html'; $('tabs').hidden=true;
     document.title='Тренажёр ОГЭ/ЕГЭ: пакеты для учителя и школы · Speak & Smile'; [].forEach.call(document.querySelectorAll('.qOnly'),function(e){ e.hidden=true; });
     var ip=$('iProduct'); ip.value='trainer'; [].forEach.call(ip.options,function(o){ if(o.value!=='trainer') o.hidden=true; }); }
-  if(q.get('p')==='trainer'||q.get('solo')==='1') trMode();
-  if(q.get('solo')==='1'){ PRODUCT='trainer'; $('iProduct').value='trainer'; $('nOge').value=0; $('nEge').value=0; }
+  if(q.get('p')==='trainer'||q.get('solo')) trMode();
+  if(q.get('solo')){ PRODUCT='trainer'; $('iProduct').value='trainer'; $('nOge').value=0; $('nEge').value=0; $('xOge').checked=q.get('solo')!=='ege'; $('xEge').checked=q.get('solo')==='ege'; }
   redraw();
   var tq=(q.get('t')||'').toLowerCase().replace(/[^a-z0-9]/g,'');
   if(tq){ post(SRV,'/pay/status',{cab:tq}).then(function(j){ if(!j||!j.ok) return; BIND=tq; CAMP_BUYER=!!j.camp_codes; if(CAMP_BUYER) $('whatCodes').firstElementChild.textContent='Для купивших лагерь: 1 800 ₽ за код при любом количестве.'; PREV=(j.rows||[]).length; var trk=j.trainer||{}; PREV_T=(trk.oge||[]).length+(trk.ege||[]).length; if(j.school&&!$('school').value) $('school').value=j.school;
@@ -331,12 +338,13 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     var m=$('msg'), email=$('email').value.trim(), p=price($('n').value), plan=PRODUCT==='camp'?PLAN:'school', k=trN();
     m.className='msg bad';
     if(PRODUCT==='trainer'&&k.oge+k.ege<1&&BIND){ m.textContent='Укажите, сколько учеников ОГЭ и ЕГЭ.'; $('nOge').focus(); return; }
+    if(PRODUCT==='trainer'&&!BIND&&!trSel().o&&!trSel().e){ m.textContent='Отметьте пакет ОГЭ или ЕГЭ.'; return; }
     if($('school').value.trim().length<2){ m.textContent='Напишите название школы.'; $('school').focus(); return; }
     if($('contact').value.trim().length<2){ m.textContent='Напишите, к кому обращаться.'; $('contact').focus(); return; }
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent='Проверьте почту: на неё придут чек и коды.'; $('email').focus(); return; }
     if(!$('agree').checked){ m.textContent='Отметьте согласие с условиями.'; return; }
     $('pay').disabled=true; $('payCard').disabled=true; m.className='msg'; m.textContent='Открываем оплату…';
-    try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'sch_checkout'});}catch(e){} post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim(),attribution:(function(){try{return JSON.parse(localStorage.getItem('sf_attr')||'null')||{}}catch(e){return {}}})()}).then(function(j){
+    try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'sch_checkout'});}catch(e){} post(SRV,'/pay/create',{product:PRODUCT==='trainer'?'trainer':'quest',plan:plan,n:p.n,n_oge:k.oge,n_ege:k.ege,t_oge:trSel().o?1:0,t_ege:trSel().e?1:0,teachers:$('nT').value,bind:BIND,b2b_ref:LEAD,method:METHOD,email:email,school:$('school').value.trim(),city:$('city').value.trim(),parent:$('contact').value.trim(),phone:$('phone').value.trim(),attribution:(function(){try{return JSON.parse(localStorage.getItem('sf_attr')||'null')||{}}catch(e){return {}}})()}).then(function(j){
       if(!j||!j.payment_url) throw j;
       ls('sf_sorder',JSON.stringify({id:j.order_id,claim:j.claim}));
       if(METHOD==='sbp'&&j.sbp_url){ sbpWait(j); return; }
@@ -359,9 +367,9 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     try{ (window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'purchase',value:j.amount||0}); }catch(e){}
     var camp=j.plan==='camp'||j.plan==='camp_plus', codes=j.codes||[];
     if(j.product==='trainer'){ trMode();
-      var oge=j.oge||[], ege=j.ege||[], tch=j.teachers||[], APP='https://speakandsmile.online';
+      var oge=j.oge||[], ege=j.ege||[], tch=j.teachers||[], tO=j.teachers_oge||[], tE=j.teachers_ege||[], APP='https://speakandsmile.online';
       $('doneLead').textContent='Школа «'+(j.school||'')+'»: тренажёр до 30 июня 2027, учеников ОГЭ '+oge.length+', ЕГЭ '+ege.length+', учителей '+tch.length+'. Сохраните ключи: эта страница не хранится.';
-      var tt=(oge.length?'ОГЭ, ученики (вход: '+APP+'/oge.html?key=КЛЮЧ):\n'+oge.join('\n')+'\n\n':'')+(ege.length?'ЕГЭ, ученики (вход: '+APP+'/ege.html?key=КЛЮЧ):\n'+ege.join('\n')+'\n\n':'')+(tch.length?'Учителя (кабинет, уроки, журнал; вход на oge.html или ege.html с ключом):\n'+tch.join('\n'):'Это докупка мест: ключи учителей остаются прежние, они в кабинете школы.');
+      var tt=(oge.length?'ОГЭ, ученики (вход: '+APP+'/oge.html?key=КЛЮЧ):\n'+oge.join('\n')+'\n\n':'')+(ege.length?'ЕГЭ, ученики (вход: '+APP+'/ege.html?key=КЛЮЧ):\n'+ege.join('\n')+'\n\n':'')+(tO.length||tE.length?(tO.length?'Учитель ОГЭ (кабинет, 36 уроков, журнал; вход: '+APP+'/oge.html?key=КЛЮЧ):\n'+tO.join('\n')+'\n\n':'')+(tE.length?'Учитель ЕГЭ (кабинет, 36 уроков, журнал; вход: '+APP+'/ege.html?key=КЛЮЧ):\n'+tE.join('\n'):''):tch.length?'Учителя (кабинет, уроки, журнал; вход на oge.html или ege.html с ключом):\n'+tch.join('\n'):'Это докупка мест: ключи учителей остаются прежние, они в кабинете школы.');
       $('codes').textContent=tt;
       $('dl').href='data:text/plain;charset=utf-8,'+encodeURIComponent('Тренажёр ОГЭ/ЕГЭ Speak&Smile · '+(j.school||'')+' · до 30.06.2027\n\n'+tt+'\n'); $('dl').download='klyuchi-trenazher.txt';
       $('copy').addEventListener('click',function(){ var b=this; (navigator.clipboard?navigator.clipboard.writeText(tt):Promise.reject()).then(function(){ b.textContent='Скопировано'; },function(){ b.textContent='Выделите и скопируйте вручную'; }); });
@@ -386,7 +394,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     var m=$('iMsg'); m.className='msg bad';
     if($('iSchool').value.trim().length<2){ m.textContent='Напишите название организации.'; return; }
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('iEmail').value.trim())&&$('iPhone').value.replace(/\D/g,'').length<10){ m.textContent='Нужна почта или телефон, куда прислать счёт.'; return; }
-    var ip=$('iProduct').value, p=price($('iN').value), nn=Math.max(1,parseInt($('iN').value,10)||1), sum=ip==='codes'?p.total:ip==='trainer'?trTotal(nn):(CAMP_EARLY?CAMP[ip].early:CAMP[ip].late);
+    var ip=$('iProduct').value, p=price($('iN').value), nn=Math.max(1,parseInt($('iN').value,10)||1), sum=ip==='codes'?p.total:ip==='trainer'?packTotal(nn):(CAMP_EARLY?CAMP[ip].early:CAMP[ip].late);
     $('iSend').disabled=true; m.className='msg'; m.textContent='Отправляем…';
     try{(window._tmr||[]).push({type:'reachGoal',id:3811632,goal:'sch_invoice'});}catch(e){} post(BOT,'/ssb/invoice',{school:$('iSchool').value.trim(),inn:$('iInn').value.trim(),product:ip==='codes'?'коды':ip==='trainer'?'тренажёр (учеников)':CAMP[ip].name,n:ip==='codes'?p.n:ip==='trainer'?nn:(ip==='camp_plus'?5:0),sum:String(sum),contact:$('iContact').value.trim(),email:$('iEmail').value.trim(),phone:$('iPhone').value.trim(),hp:$('hp').value}).then(function(j){
       if(!j||!j.ok) throw j; m.textContent='Заявка у Оксаны. Счёт придёт в течение рабочего дня.';
