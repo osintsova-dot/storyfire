@@ -2650,7 +2650,7 @@ var SF = (function () {
   }
   function done(n, rep) {
     var code = ls('sf_code'); if (!code || free()) return;
-    var it = { sf_code: code, device: device(), sf_done: +n || 0, pid: cur() || 'p1', score: rep && rep.score || 0, of: rep && rep.of || 0 };
+    var it = { sf_code: code, device: device(), sf_done: +n || 0, pid: cur() || 'p1', score: rep && rep.score || 0, of: rep && rep.of || 0, track: rep && rep.track || '' };
     var q; try { q = JSON.parse(ls('sf_q') || '[]'); } catch (e) { q = []; }
     q.push(it); ls('sf_q', JSON.stringify(q.slice(-30)));
     flushQ();
