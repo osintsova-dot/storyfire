@@ -1,11 +1,27 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<base href="/play/">
+<script>/* Только тестовая копия /t-49db8ebd/: страницы берут картинки и звук с основного сайта через <base>, поэтому ссылки «домой», на истории, Пролог и Эпилог вели бы на основной сайт с замком. Оставляем проверяющего внутри тестовой копии; якорные ссылки прокручиваем сами. Ссылки с #якорем на другие страницы (покупка) не трогаем. */
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
+  if(h.charAt(0)==='#'){e.preventDefault();var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView({behavior:'smooth'});return;}
+  var u;try{u=new URL(a.href);}catch(x){return;}
+  if(u.origin!==location.origin||u.hash)return;var m=/^\/(?:(story\/\d+|prolog|final)\/|play\/)?$/.exec(u.pathname);if(!m)return;
+  e.preventDefault();location.href='/t-49db8ebd/'+(m[1]?m[1]+'/':'');},true);</script>
 <meta charset="utf-8">
-<meta name="robots" content="noindex,nofollow">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Истории у костра · тестовая копия</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Мои истории · Истории у костра</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e0a22">
+<link rel="manifest" href="/app.webmanifest">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="У костра">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Golos+Text:wght@400;500;600&display=swap">
 <style>
 :root{
   --night:#0e0a22; --night-2:#171035; --ink:#f7eedb; --ink-2:#d9ccb2; --ink-3:#a99c86;
@@ -97,34 +113,178 @@ h1{font:600 clamp(34px,8vw,52px)/1.02 var(--display);margin:0 0 8px;text-wrap:ba
 .kidf .btn{min-height:44px;padding:0 18px}
 @media (prefers-reduced-motion:reduce){.card{animation:none;opacity:1;transform:none}.card img{transition:none}}
 </style>
-<style>.note{margin:0 0 22px;padding:14px 16px;border-radius:16px;background:rgba(247,238,219,.06);box-shadow:inset 0 0 0 1px var(--line);font-size:15px;line-height:1.5;color:var(--ink-2)}.note b{color:var(--ink);font-weight:600}.note ul{margin:8px 0 0;padding-left:20px}.note li{margin:3px 0}</style>
+<!-- Top.Mail.Ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "3811632", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+if (d.getElementById(id)) return;
+var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+ts.src = "https://top-fwz1.mail.ru/js/code.js";
+var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+<noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3811632;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
+<!-- /Top.Mail.Ru counter -->
+<script>/* sf-attr (08.11.2026): источник визита для платёжки — utm из ссылок бота/рекламы, страница входа, реферер; читают /oplata и /schools/buy */
+(function(){try{var q=new URLSearchParams(location.search),k='sf_attr',o=JSON.parse(localStorage.getItem(k)||'null'),u={};
+['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(n){if(q.get(n))u[n]=q.get(n).slice(0,160)});
+if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(document.referrer.match(/^https?:\/\/([^\/]+)/)||[])[1]||'',at:Date.now()};for(var n in u)o[n]=u[n];localStorage.setItem(k,JSON.stringify(o))}}catch(e){}})();
+</script>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><a href="./">Истории у костра</a><small>тестовая копия</small></div>
-  <h1>Истории у костра</h1>
-  <p class="lead">Тестовая копия для проверки: все истории открыты, код не нужен.</p>
-  <div class="note"><b>Как проверять</b>
-    <ul>
-      <li>Начните с Пролога: там выбираются имя и уровень.</li>
-      <li>Уровней три: Little Explorers (5–7 лет), Explorers (8–10), Experts (11–14). Сменить уровень можно в начале любой истории.</li>
-      <li>Истории здесь те же, что на основном сайте. Обновлено 27 ноября 2026.</li>
-    </ul>
-  </div>
-  <div class="grid" aria-label="Истории">
-    <a class="card wide" href="prolog/" style="--i:0"><img src="/img/05_title_bg_horizontal.webp" alt="" loading="lazy"><div class="t"><span class="n">Начало</span><span class="h">Пролог</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/1/" style="--i:1"><img src="/img/03_night01_alice.webp" alt="" loading="lazy"><div class="t"><span class="n">История 1</span><span class="h">Alice</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/2/" style="--i:2"><img src="/img/08_v6_mowgli.webp" alt="" loading="lazy"><div class="t"><span class="n">История 2</span><span class="h">Mowgli</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/3/" style="--i:3"><img src="/img/08_v7_gerda.webp" alt="" loading="lazy"><div class="t"><span class="n">История 3</span><span class="h">Gerda</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/4/" style="--i:4"><img src="/img/08_v8_sherlock.webp" alt="" loading="lazy"><div class="t"><span class="n">История 4</span><span class="h">Sherlock</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/5/" style="--i:5"><img src="/img/08_v9_dorothy.webp" alt="" loading="lazy"><div class="t"><span class="n">История 5</span><span class="h">Dorothy</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/6/" style="--i:6"><img src="/img/08_v10_peter.webp" alt="" loading="lazy"><div class="t"><span class="n">История 6</span><span class="h">Peter Pan</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/7/" style="--i:7"><img src="/img/08_v11_jim.webp" alt="" loading="lazy"><div class="t"><span class="n">История 7</span><span class="h">Jim Hawkins</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/8/" style="--i:8"><img src="/img/08_v12_pinocchio.webp" alt="" loading="lazy"><div class="t"><span class="n">История 8</span><span class="h">Pinocchio</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/9/" style="--i:9"><img src="/img/08_v13_mary.webp" alt="" loading="lazy"><div class="t"><span class="n">История 9</span><span class="h">Mary</span><span class="s">Играть</span></div></a>
-    <a class="card" href="story/10/" style="--i:10"><img src="/img/08_v14_nutcracker.webp" alt="" loading="lazy"><div class="t"><span class="n">История 10</span><span class="h">Nutcracker</span><span class="s">Играть</span></div></a>
-    <a class="card wide" href="final/" style="--i:11"><img src="/img/03_night10_nutcracker.webp" alt="" loading="lazy"><div class="t"><span class="n">Финал</span><span class="h">Эпилог</span><span class="s">Открыть</span></div></a>
-  </div>
+  <div class="top"><a href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 3.5 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.3 1.6 1 2.5 2 2.7C11 8 10.8 5.5 12 3z"/><path d="M5 20h14"/></svg>Истории у костра</a><small id="who"></small></div>
+  <h1>Твои истории</h1>
+  <p class="lead">Каждый день у костра новый герой. История открывается утром, а пройденные остаются навсегда.</p>
+
+  <section class="gate" id="one" hidden>
+    <h2>Где открыть код?</h2>
+    <p>Этот код работает <b>на одном устройстве и в одном браузере</b>. Он привяжется туда, где вы нажмёте «Открыть здесь», и перенести его потом нельзя.</p>
+    <p id="oneApp" hidden style="color:#F5C842">Похоже, вы открыли ссылку внутри приложения почты или мессенджера. Лучше скопируйте ссылку и откройте её в обычном браузере: Safari или Chrome.</p>
+    <div class="alt"><button class="btn btn-gold" type="button" id="oneGo">Открыть здесь</button><button class="btn btn-ghost" type="button" id="oneCopy">Скопировать ссылку</button></div>
+    <p style="font-size:14px;opacity:.75;margin-top:12px">Будете показывать детям с ноутбука? Скопируйте ссылку и откройте её на ноутбуке. Потом поставьте квест на экран из того же браузера.</p>
+  </section>
+
+  <section class="gate" id="gate" hidden>
+    <h2>Введите код</h2>
+    <p>Код вида <b>ABCD-EFGH-JKLM</b>. Его прислали после оплаты или выдала ваша школа.</p>
+    <p id="appHint" hidden style="color:#F5C842">Открыли с иконки на экране? Не вводите код. Зайдите в браузер, где квест уже работает, нажмите там «Число для иконки» и введите эти шесть цифр сюда.</p>
+    <form id="f" autocomplete="off"><input id="code" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="Код или число для иконки" aria-label="Код семьи" maxlength="16"><button class="btn btn-gold" type="submit">Открыть</button></form>
+    <div class="msg" id="msg" role="status"></div>
+    <div class="alt"><a class="btn btn-ghost" href="../oplata/">Купить квест · 3 500 ₽</a><a class="btn btn-ghost" href="../prolog/">Пролог бесплатно</a></div>
+  </section>
+
+  <div class="kids" id="kids" aria-label="Кто играет"></div>
+  <div class="teach" id="teach">Режим учителя: открыты все истории.</div>
+  <section class="inst" id="inst" hidden>
+    <img src="/img/app-192.png" alt="">
+    <div><b>Квест на экран телефона</b><p>Иконка с волшебной книгой: ребёнок открывает квест сам, как игру, код вводить не нужно.</p></div>
+    <button class="btn btn-ghost" id="instBtn" type="button">Поставить на экран</button>
+    <ol id="instIos" hidden>
+      <li>Нажмите <b style="display:inline;font:inherit;font-weight:600">«Поделиться»</b> <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg> внизу экрана (или вверху на iPad).</li>
+      <li>Пролистайте и выберите <b style="display:inline;font:inherit;font-weight:600">«На экран „Домой“»</b>.</li>
+      <li>Нажмите <b style="display:inline;font:inherit;font-weight:600">«Добавить»</b>. Готово, огонёк уже на экране.</li>
+    </ol>
+    <ol id="instOther" hidden></ol>
+    <div class="pair" id="pairBox" style="grid-column:1/-1;margin-top:10px;padding-top:14px;border-top:1px solid rgba(255,255,255,.14)">
+      <p style="margin:0 0 10px"><b>Иконка просит код?</b> Так бывает на айфоне. Нажмите кнопку и введите в иконке шесть цифр вместо кода.</p>
+      <button class="btn btn-ghost" id="pairBtn" type="button">Число для иконки</button>
+      <p id="pairOut" hidden style="margin:12px 0 0;font:700 44px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#F5C842"></p>
+      <p id="pairNote" hidden style="margin:8px 0 0;font-size:14px;opacity:.8">Действует 10 минут и один раз. Иконка станет тем же устройством, что этот браузер.</p>
+    </div>
+  </section>
+  <div class="grid" id="grid" aria-label="Истории"></div>
+  <section class="inst dog">
+    <div><b>Родителю: договор у костра</b><p>До первой истории договоритесь с ребёнком о призе за все десять значков. Так он дойдёт до финала сам, без уговоров.</p></div>
+    <a class="btn btn-ghost" href="../dogovor/">Открыть договор</a>
+  </section>
+  <section class="inst dog" id="botBox">
+    <div><b>Родителю: отчёты в MAX</b><p>Подпишитесь на наш бот «Speak&amp;Smile online» в MAX. Будем присылать, какие истории ребёнок прошёл, и напоминать в день, когда открывается новая. Если что-то не открывается, напишите туда же, поможем.</p></div>
+    <a class="btn btn-ghost" id="botBtn" href="https://max.ru/id245718463277_2_bot?start=paid" target="_blank" rel="noopener">Открыть бот в MAX</a>
+  </section>
 </div>
+<script src="../sf-access.js?v=5"></script>
+<script>
+(function(){
+  var H=[[1,'Alice','03_night01_alice'],[2,'Mowgli','08_v6_mowgli'],[3,'Gerda','08_v7_gerda'],[4,'Sherlock','08_v8_sherlock'],[5,'Dorothy','08_v9_dorothy'],
+         [6,'Peter Pan','08_v10_peter'],[7,'Jim Hawkins','08_v11_jim'],[8,'Pinocchio','08_v12_pinocchio'],[9,'Mary','08_v13_mary'],[10,'Nutcracker','08_v14_nutcracker']];
+  var grid=document.getElementById('grid'), gate=document.getElementById('gate'), msg=document.getElementById('msg');
+  function why(j){ var alt=document.querySelector('#gate .alt'); if(alt) alt.hidden=['devices','blocked','expired','offline','rate_limited'].indexOf(j.reason)>=0;   /* код настоящий — нашу кнопку «Купить» не показываем: он мог быть от школы-партнёра */
+    if(j.reason==='devices'&&j.max===1) return 'Этот код работает на одном устройстве и в одном браузере, и он уже открыт. Заходите оттуда же, где открывали в первый раз. Сменили устройство? Напишите нам.';
+    return REASON[j.reason]||REASON.offline; }
+  var REASON={not_found:'Такого кода нет. Проверьте буквы и цифры.',expired:'Срок этого кода-просмотра закончился. Напишите нам, пришлём новый.',devices:'Код уже открыт на всех своих устройствах. Напишите нам, если сменили телефон.',blocked:'Код отключён. Напишите нам.',offline:'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.',empty:'Введите код.',rate_limited:'Слишком много попыток. Подождите минуту.'};
+  function draw(unlocked){
+    var today=-1, now=Date.now();
+    H.forEach(function(h){ if(SF.opensAt(h[0]).getTime()<=now) today=h[0]; });
+    grid.innerHTML='';
+    // Пролог и Эпилог — в общем ряду с историями (27.11): Пролог открыт всегда, Эпилог — 10 января (учителю и в просмотре — сразу)
+    function extra(open,href,pic,n,h,st,label,i){
+      var a=document.createElement(open?'a':'div'); a.className='card wide'+(open?'':' lock'); a.style.setProperty('--i',i); if(open) a.href=href;
+      var img=document.createElement('img'); img.src='../img/'+pic+'.webp'; img.alt=''; img.loading='lazy'; a.appendChild(img);
+      var t=document.createElement('div'); t.className='t';
+      var e1=document.createElement('span'); e1.className='n'; e1.textContent=n; var e2=document.createElement('span'); e2.className='h'; e2.textContent=h; var e3=document.createElement('span'); e3.className='s'; e3.textContent=st;
+      t.appendChild(e1); t.appendChild(e2); t.appendChild(e3); a.appendChild(t); a.setAttribute('aria-label',label); grid.appendChild(a);
+    }
+    extra(true,'../prolog/','05_title_bg_horizontal','Начало','Пролог','Играть','Пролог, открыт всегда',0);
+    H.forEach(function(h,i){ i=i+1;
+      var open=unlocked&&(SF.free()||SF.isOpen(h[0])), a=document.createElement(open?'a':'div');
+      a.className='card'+(open?'':' lock')+(open&&h[0]===today?' today':''); a.style.setProperty('--i',i);
+      if(open) a.href='../story/'+h[0]+'/';
+      var img=document.createElement('img'); img.src='../img/'+h[2]+'.webp'; img.alt=''; img.loading='lazy'; a.appendChild(img);
+      var t=document.createElement('div'); t.className='t';
+      var n=document.createElement('span'); n.className='n'; n.textContent='История '+h[0];
+      var nm=document.createElement('span'); nm.className='h'; nm.textContent=h[1];
+      var s=document.createElement('span'); s.className='s'; s.textContent=!unlocked?'по коду':open?(h[0]===today?'Сегодня':'Играть'):SF.dateText(h[0]);
+      t.appendChild(n); t.appendChild(nm); t.appendChild(s); a.appendChild(t);
+      a.setAttribute('aria-label','История '+h[0]+', '+h[1]+(open?'':', откроется '+SF.dateText(h[0])));
+      grid.appendChild(a);
+    });
+    var EPI=new Date('2027-01-10T00:00:00').getTime(), tch=false; try{ tch=localStorage.getItem('sf_teacher')==='1'; }catch(e){} var eOpen=unlocked&&(tch||SF.free()||now>=EPI);
+    extra(eOpen,'../final/','03_night10_nutcracker','Финал','Эпилог',!unlocked?'по коду':eOpen?'Открыть':'10 января','Эпилог'+(eOpen?'':', откроется 10 января'),H.length+1);
+  }
+  // «Кто играет?» — у каждого ребёнка на этом устройстве свой прогресс
+  var kids=document.getElementById('kids');
+  function drawKids(){
+    var p=SF.players(), c=SF.cur(); kids.innerHTML=''; kids.classList.add('on');
+    var l=document.createElement('span'); l.textContent='Кто играет:'; kids.appendChild(l);
+    if(!p.length) p=[{id:'',name:SF.kidName()||'Я'}];
+    p.forEach(function(k){ var b=document.createElement('button'); b.type='button'; b.className='kid'; b.textContent=k.name;
+      b.setAttribute('aria-pressed',String(k.id===c||!k.id));
+      if(k.id) b.addEventListener('click',function(){ SF.switchTo(k.id); drawKids(); });
+      kids.appendChild(b); });
+    var a=document.createElement('button'); a.type='button'; a.className='kid add'; a.textContent='+ ещё ребёнок'; kids.appendChild(a);
+    var f=document.createElement('form'); f.className='kidf'; f.innerHTML='<input maxlength="24" placeholder="Имя ребёнка" aria-label="Имя ребёнка" autocomplete="off"><button class="btn btn-gold" type="submit">Добавить</button>';
+    kids.appendChild(f);
+    a.addEventListener('click',function(){ f.classList.add('on'); a.hidden=true; f.querySelector('input').focus(); });
+    f.addEventListener('submit',function(e){ e.preventDefault(); var v=f.querySelector('input').value.trim(); if(!v) return; SF.addPlayer(v); drawKids(); });
+  }
+  // Поставить квест на экран телефона (как приложение). В самом приложении не показываем.
+  var bip=null; window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); bip=e; });
+  function inst(){
+    var box=document.getElementById('inst'); if(SF.standalone()) return; box.hidden=false;
+    var ua=navigator.userAgent, ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),
+        inapp=/VKClient|vkclient|Telegram|Instagram|FBAN|FBAV|MAX\//i.test(ua), other=document.getElementById('instOther');
+    document.getElementById('instBtn').addEventListener('click',function(){
+      if(bip){ bip.prompt(); bip=null; return; }
+      if(ios&&!inapp){ document.getElementById('instIos').hidden=false; this.hidden=true; return; }
+      other.innerHTML=inapp?'<li>Откройте эту страницу в браузере: меню <b style="display:inline;font:inherit;font-weight:600">⋯</b> → «Открыть в браузере» ('+(ios?'Safari':'Chrome')+').</li><li>Там снова нажмите «Поставить на экран».</li>'
+        :ios?'<li>Нажмите «Поделиться» в браузере.</li><li>Выберите «На экран „Домой“» и «Добавить».</li>'
+        :'<li>Откройте меню браузера <b style="display:inline;font:inherit;font-weight:600">⋮</b> вверху справа.</li><li>Выберите «Добавить на главный экран» или «Установить приложение».</li>';
+      other.hidden=false; this.hidden=true;
+    });
+  }
+  function ok(j){ gate.hidden=true; drawKids(); document.getElementById('teach').classList.toggle('on',!!j.teacher); draw(true); inst(); }
+  // код на одно устройство (ссылка с &one=1): сначала спросить, привязывать ли к этому браузеру
+  var hasOk=false; try{ hasOk=!!localStorage.getItem('sf_ok'); }catch(e){}
+  if(/[?&]one=1/.test(location.search)&&/[?&]k=/.test(location.search)&&!hasOk&&!SF.free()){
+    draw(false); document.getElementById('one').hidden=false;
+    if(/VKClient|vkclient|Telegram|Instagram|FBAN|FBAV|MAX\/|GSA\/|YaApp|Mail\.Ru|GmailiOS/i.test(navigator.userAgent)) document.getElementById('oneApp').hidden=false;
+    document.getElementById('oneGo').addEventListener('click',function(){ location.replace(location.pathname+location.search.replace(/([?&])one=1&?/,'$1').replace(/[?&]$/,'')); });
+    document.getElementById('oneCopy').addEventListener('click',function(){ var b=this; (navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(function(){ b.textContent='Ссылка скопирована'; },function(){ b.textContent='Скопируйте адрес из строки браузера'; }); });
+    return;
+  }
+  var code=SF.takeFromUrl()||SF.code();
+  // кнопка бота: с кодом семьи бот привязывает чат к этому коду (напоминания и отчёты)
+  try{ var bk=String(code||'').replace(/[^A-Za-z0-9]/g,''); if(bk.length===12) document.getElementById('botBtn').href='https://max.ru/id245718463277_2_bot?start=paid_'+bk; }catch(e){}
+  if(SF.free()){ draw(true); drawKids(); inst(); return; }
+  draw(false);
+  if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=why(j); document.getElementById('code').value=code; } }); }
+  else { gate.hidden=false; if(SF.standalone()) document.getElementById('appHint').hidden=false; }
+  document.getElementById('pairBtn').addEventListener('click',function(){ var b=this,o=document.getElementById('pairOut'); b.disabled=true;
+    SF.pairNew().then(function(j){ b.disabled=false; o.hidden=false; if(j&&j.ok&&j.pair){ o.textContent=String(j.pair).replace(/(\d{3})(\d{3})/,'$1 $2'); document.getElementById('pairNote').hidden=false; b.textContent='Новое число'; } else { o.style.font='inherit'; o.style.letterSpacing='0'; o.textContent='Не получилось. Проверьте интернет и попробуйте ещё раз.'; } }); });
+  document.getElementById('f').addEventListener('submit',function(e){ e.preventDefault();
+    var b=this.querySelector('button'); b.disabled=true; msg.className='msg'; msg.textContent='Проверяем…';
+    var raw=document.getElementById('code').value, digits=raw.replace(/\D/g,'');
+    if(/^[\d\s-]+$/.test(raw.trim())&&digits.length===6){   // шесть цифр — число для иконки
+      SF.pairUse(digits).then(function(p){ if(!p||!p.ok){ b.disabled=false; msg.className='msg bad'; msg.textContent=p&&p.reason==='rate_limited'?'Слишком много попыток. Подождите десять минут.':'Число не подошло или уже истекло. Получите новое в браузере, где квест работает.'; return; }
+        SF.check(SF.code()).then(function(j){ b.disabled=false; if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=why(j); } }); });
+      return; }
+    SF.check(document.getElementById('code').value).then(function(j){ b.disabled=false;
+      if(j.ok){ msg.textContent=''; ok(j); } else { msg.className='msg bad'; msg.textContent=why(j); } });
+  });
+})();
+</script>
 </body>
 </html>
