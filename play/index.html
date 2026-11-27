@@ -166,7 +166,10 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     <div><b>Родителю: договор у костра</b><p>До первой истории договоритесь с ребёнком о призе за все десять значков. Так он дойдёт до финала сам, без уговоров.</p></div>
     <a class="btn btn-ghost" href="../dogovor/">Открыть договор</a>
   </section>
-  <p class="pro">Не открывается? Напишите нам в бот «Holliday English», поможем.</p>
+  <section class="inst dog" id="botBox">
+    <div><b>Родителю: отчёты в MAX</b><p>Подпишитесь на наш бот в MAX. Будем присылать, какие истории ребёнок прошёл, и напоминать в день, когда открывается новая. Если что-то не открывается, напишите туда же, поможем.</p></div>
+    <a class="btn btn-ghost" id="botBtn" href="https://max.ru/id245718463277_2_bot?start=paid" target="_blank" rel="noopener">Открыть бот в MAX</a>
+  </section>
 </div>
 <script src="../sf-access.js?v=5"></script>
 <script>
@@ -238,6 +241,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     return;
   }
   var code=SF.takeFromUrl()||SF.code();
+  // кнопка бота: с кодом семьи бот привязывает чат к этому коду (напоминания и отчёты)
+  try{ var bk=String(code||'').replace(/[^A-Za-z0-9]/g,''); if(bk.length===12) document.getElementById('botBtn').href='https://max.ru/id245718463277_2_bot?start=paid_'+bk; }catch(e){}
   if(SF.free()){ draw(true); drawKids(); inst(); return; }
   draw(false);
   if(code){ SF.check(code).then(function(j){ if(j.ok) ok(j); else { gate.hidden=false; msg.className='msg bad'; msg.textContent=why(j); document.getElementById('code').value=code; } }); }
