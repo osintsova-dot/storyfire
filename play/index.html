@@ -72,6 +72,13 @@ h1{font:600 clamp(34px,8vw,52px)/1.02 var(--display);margin:0 0 8px;text-wrap:ba
 .card.lock .s{background:rgba(190,220,255,.16);color:#d8ecff;box-shadow:inset 0 0 0 1px rgba(190,220,255,.3)}
 .card.lock::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,rgba(190,225,255,.22),rgba(190,225,255,0) 40%);pointer-events:none}
 .card.today{box-shadow:0 0 0 2px var(--gold),0 10px 30px rgba(0,0,0,.35)}
+/* Пролог и Эпилог — широкие, во весь ряд; истории остаются парами */
+.card.wide{grid-column:1/-1;aspect-ratio:2/1}
+.card.wide img{object-position:50% 46%}
+.card.wide .h{font-size:26px}
+.card.wide::after{background:linear-gradient(90deg,rgba(14,10,34,.8) 0%,rgba(14,10,34,.3) 40%,rgba(14,10,34,0) 60%),linear-gradient(180deg,rgba(14,10,34,0) 40%,rgba(14,10,34,.85) 100%)}
+@media (min-width:640px){.card.wide{aspect-ratio:3.1/1}}
+@media (min-width:900px){.card.wide{aspect-ratio:4.4/1}}
 @media (hover:hover){.card:not(.lock):hover img{transform:scale(1.04)}}
 .pro{margin-top:26px;font-size:14px;color:var(--ink-3)}
 .inst{display:grid;grid-template-columns:56px 1fr;gap:6px 14px;align-items:center;margin:0 0 22px;padding:16px;border-radius:20px;background:rgba(247,238,219,.05);box-shadow:inset 0 0 0 1px var(--line)}
@@ -187,13 +194,13 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     grid.innerHTML='';
     // Пролог и Эпилог — в общем ряду с историями (27.11): Пролог открыт всегда, Эпилог — 10 января (учителю и в просмотре — сразу)
     function extra(open,href,pic,n,h,st,label,i){
-      var a=document.createElement(open?'a':'div'); a.className='card'+(open?'':' lock'); a.style.setProperty('--i',i); if(open) a.href=href;
+      var a=document.createElement(open?'a':'div'); a.className='card wide'+(open?'':' lock'); a.style.setProperty('--i',i); if(open) a.href=href;
       var img=document.createElement('img'); img.src='../img/'+pic+'.webp'; img.alt=''; img.loading='lazy'; a.appendChild(img);
       var t=document.createElement('div'); t.className='t';
       var e1=document.createElement('span'); e1.className='n'; e1.textContent=n; var e2=document.createElement('span'); e2.className='h'; e2.textContent=h; var e3=document.createElement('span'); e3.className='s'; e3.textContent=st;
       t.appendChild(e1); t.appendChild(e2); t.appendChild(e3); a.appendChild(t); a.setAttribute('aria-label',label); grid.appendChild(a);
     }
-    extra(true,'../prolog/','06_t1_library','Начало','Пролог','Играть','Пролог, открыт всегда',0);
+    extra(true,'../prolog/','05_title_bg_horizontal','Начало','Пролог','Играть','Пролог, открыт всегда',0);
     H.forEach(function(h,i){ i=i+1;
       var open=unlocked&&SF.isOpen(h[0]), a=document.createElement(open?'a':'div');
       a.className='card'+(open?'':' lock')+(open&&h[0]===today?' today':''); a.style.setProperty('--i',i);
@@ -208,7 +215,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       grid.appendChild(a);
     });
     var EPI=new Date('2027-01-10T00:00:00').getTime(), tch=false; try{ tch=localStorage.getItem('sf_teacher')==='1'; }catch(e){} var eOpen=unlocked&&(tch||now>=EPI);
-    extra(eOpen,'../final/','05_title_bg_vertical','Финал','Эпилог',!unlocked?'по коду':eOpen?'Открыть':'10 января','Эпилог'+(eOpen?'':', откроется 10 января'),H.length+1);
+    extra(eOpen,'../final/','03_night10_nutcracker','Финал','Эпилог',!unlocked?'по коду':eOpen?'Открыть':'10 января','Эпилог'+(eOpen?'':', откроется 10 января'),H.length+1);
   }
   // «Кто играет?» — у каждого ребёнка на этом устройстве свой прогресс
   var kids=document.getElementById('kids');
