@@ -185,7 +185,16 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     var today=-1, now=Date.now();
     H.forEach(function(h){ if(SF.opensAt(h[0]).getTime()<=now) today=h[0]; });
     grid.innerHTML='';
-    H.forEach(function(h,i){
+    // Пролог и Эпилог — в общем ряду с историями (27.11): Пролог открыт всегда, Эпилог — 10 января (учителю и в просмотре — сразу)
+    function extra(open,href,pic,n,h,st,label,i){
+      var a=document.createElement(open?'a':'div'); a.className='card'+(open?'':' lock'); a.style.setProperty('--i',i); if(open) a.href=href;
+      var img=document.createElement('img'); img.src='../img/'+pic+'.webp'; img.alt=''; img.loading='lazy'; a.appendChild(img);
+      var t=document.createElement('div'); t.className='t';
+      var e1=document.createElement('span'); e1.className='n'; e1.textContent=n; var e2=document.createElement('span'); e2.className='h'; e2.textContent=h; var e3=document.createElement('span'); e3.className='s'; e3.textContent=st;
+      t.appendChild(e1); t.appendChild(e2); t.appendChild(e3); a.appendChild(t); a.setAttribute('aria-label',label); grid.appendChild(a);
+    }
+    extra(true,'../prolog/','06_t1_library','Начало','Пролог','Играть','Пролог, открыт всегда',0);
+    H.forEach(function(h,i){ i=i+1;
       var open=unlocked&&SF.isOpen(h[0]), a=document.createElement(open?'a':'div');
       a.className='card'+(open?'':' lock')+(open&&h[0]===today?' today':''); a.style.setProperty('--i',i);
       if(open) a.href='../story/'+h[0]+'/';
@@ -198,6 +207,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       a.setAttribute('aria-label','История '+h[0]+', '+h[1]+(open?'':', откроется '+SF.dateText(h[0])));
       grid.appendChild(a);
     });
+    var EPI=new Date('2027-01-10T00:00:00').getTime(), tch=false; try{ tch=localStorage.getItem('sf_teacher')==='1'; }catch(e){} var eOpen=unlocked&&(tch||now>=EPI);
+    extra(eOpen,'../final/','05_title_bg_vertical','Финал','Эпилог',!unlocked?'по коду':eOpen?'Открыть':'10 января','Эпилог'+(eOpen?'':', откроется 10 января'),H.length+1);
   }
   // «Кто играет?» — у каждого ребёнка на этом устройстве свой прогресс
   var kids=document.getElementById('kids');
