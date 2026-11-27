@@ -861,6 +861,8 @@ header.top .topr{margin-left:0}
 .rec{display:inline-flex;align-items:center;gap:8px}
 .rec svg{width:20px;height:20px}
 .abc.pack span{font-size:20px;width:30px}
+.abc.pack span,.code.pack .sl{font-family:"Apple Symbols","Segoe UI Symbol","Noto Sans Symbols 2","Noto Sans Symbols","Arial Unicode MS",sans-serif;font-weight:400}
+.abc.pack span i{font-family:var(--body);font-weight:600}
 .code.pack{letter-spacing:.08em;font-size:clamp(22px,6.5vw,30px);line-height:1.5;max-width:100%;overflow-wrap:anywhere}
 .poster.wcard2 p{font-size:14px}
 /* шифр-ключ: малыши нажимают буквы прямо в ключе; слоты с открытыми буквами; лесенка подсказок */
@@ -1615,7 +1617,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       return; }
     var inp=el('input','inp'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','characters'); inp.placeholder=(state.track==='experts'?"Answer…":'Ответ…'); inp.dataset.ans=s.answer; inp.setAttribute('aria-label',(state.track==='experts'?"Answer":'Ответ')); body.appendChild(inp);
     body.appendChild(fb); var ok=el('button','btn btn-gold',(state.track==='experts'?"Check":'Проверить')); body.appendChild(ok); lad=hintLadder(body,steps,fb);
-    ok.addEventListener('click',function(){ if(puzzleAnswer(inp.value)===letters.join('')){ ok.disabled=true; inp.disabled=true; fill(slots.length); fin(); } else { wrong(ok,fb); fb.textContent=(state.track==='experts'?"Not yet. Match each symbol with the key.":'Not yet. Сверь каждый знак с ключом.'); } });
+    ok.addEventListener('click',function(){ if(puzzleAnswer(inp.value)===letters.join('')){ ok.disabled=true; inp.disabled=true; fill(slots.length); fin(); } else { wrong(ok,fb); var tw=String(inp.value||'').split(/\s+/).map(puzzleAnswer).filter(Boolean), si=0, hit=0; s.answer.split(' ').filter(Boolean).forEach(function(w,wi){ var t=tw[wi]||'', j=0; w.split('').forEach(function(c){ var sl=slots[si], az=/[A-Z]/.test(c), good=az&&t.charAt(j)===c; if(az) j++; if(good||si<pos){ sl.classList.add('on'); sl.querySelector('i').textContent=sl.dataset.l; if(good&&si>=pos) hit++; } else { sl.classList.remove('on'); sl.querySelector('i').textContent=''; } si++; }); }); fb.textContent=hit?(state.track==='experts'?"Not yet. The letters under the symbols are right. Check the others with the key.":'Почти! Верные буквы уже стоят под знаками. Остальные сверь с ключом.'):(state.track==='experts'?"Not yet. Match each symbol with the key.":'Not yet. Сверь каждый знак с ключом.'); } });
   };
   // первые звуки картинок → слово (шифр малышей = та же фоника)
   R.picode=function(body,s,next){
