@@ -671,7 +671,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
       return new Promise(function(fin){
       var ok=false, loadTimer, done=function(){ if(!ok){ok=true; clearTimeout(loadTimer); if(releaseVoice===done) releaseVoice=null; fin();} }; releaseVoice=done; loadTimer=setTimeout(done,15000);
       var my=++seq; if(cur){ try{cur.stop();}catch(e){} cur=null; }
-      var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var go=function(){ if(ok) return; clearTimeout(loadTimer); src.start(ctx.currentTime+.06); }; if(ctx.state!=='running') ctx.resume().then(go,go); else go(); };
+      var play=function(b){ if(ok||!on||my!==seq) return done(); if(cur){ try{cur.stop();}catch(e){} } var src=ctx.createBufferSource(); src.buffer=b; src.connect(voiceGain); duck(.07); src.onended=function(){ if(cur===src){cur=null; duck(.22);} done(); }; cur=src; var started=false, wake, go=function(){ if(ok||started) return; started=true; clearTimeout(loadTimer); clearTimeout(wake); src.start(ctx.currentTime+.06); loadTimer=setTimeout(done,Math.round(((b&&b.duration)||0)*1000)+2500); }; if(ctx.state!=='running'){ wake=setTimeout(go,1500); ctx.resume().then(go,go); } else go(); };
       if(buf[id]) return play(buf[id]);
       fetch(asset || ('audio/'+id+'.mp3')).then(function(r){return r.arrayBuffer();}).then(function(a){ return new Promise(function(res,rej){ ctx.decodeAudioData(a,res,rej); }); })
         .then(function(b){ buf[id]=b; play(b); }).catch(function(){ done(); });
