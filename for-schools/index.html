@@ -32,6 +32,12 @@ if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, fal
 ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(n){if(q.get(n))u[n]=q.get(n).slice(0,160)});
 if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(document.referrer.match(/^https?:\/\/([^\/]+)/)||[])[1]||'',at:Date.now()};for(var n in u)o[n]=u[n];localStorage.setItem(k,JSON.stringify(o))}}catch(e){}})();
 </script>
+<script>/* sf-carry (27.11.2026): метка источника (utm) идёт вместе с человеком на сайт школы и на фониксы — чтобы там тоже было видно, откуда он пришёл */
+(function(){var o=null,K=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];try{o=JSON.parse(localStorage.getItem('sf_attr')||'null')}catch(e){}
+if(!o||!o.utm_source){o={};try{var q=new URLSearchParams(location.search);K.forEach(function(n){if(q.get(n))o[n]=q.get(n).slice(0,160)})}catch(e){}}
+if(!o.utm_source)return;
+var H=/^(www\.)?(speakandsmile\.ru|speakyphonics\.ru)$/,run=function(){[].forEach.call(document.querySelectorAll('a[href^="http"]'),function(l){try{var u=new URL(l.href);if(!H.test(u.hostname))return;var own=u.searchParams.get('utm_source');K.forEach(function(n){if(o[n])u.searchParams.set(n,o[n]);else u.searchParams.delete(n)});if(own&&own!==o.utm_source&&!o.utm_medium)u.searchParams.set('utm_medium',own);l.href=u.href}catch(e){}})};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();})();
+</script>
 </head>
 <body class="night-page">
 <header class="top" id="top">
