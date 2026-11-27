@@ -1383,7 +1383,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
     // 27.11: буквы A/B/C вписаны в текст вариантов; раньше варианты перемешивались вместе с буквами (верный всегда был «A»). Теперь буквы ставятся по месту на экране; fixedLetters — буквы закреплены за людьми (Шерлок), порядок A, B, C без перемешивания.
     var LET=/^[A-D] {2}/, lettered=s.opts.length>1&&s.opts.every(function(o){ return LET.test(String(o[0])); });
     (lettered&&s.fixedLetters?s.opts.slice().sort(function(a,b){ return a[0]<b[0]?-1:1; }):shuffle(s.opts)).forEach(function(o,oi){ var b=document.createElement('button'); b.className='opt'; var pv=pic(o[0]); if(pv){ b.innerHTML=pv; b.setAttribute('aria-label',o[0].slice(2)); } else b.textContent=(lettered&&!s.fixedLetters)?'ABCD'.charAt(oi)+'  '+String(o[0]).replace(LET,''):o[0]; b.dataset.ok=o[1]?1:0; box.appendChild(b);
-      b.addEventListener('click',function(){ if(box.dataset.done) return; if(!s.show) sayWord(o[0]); if(o[1]){ box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(s.show) SND.say(s.show); setTimeout(next,900); } else wrong(b,fb); }); });
+      b.addEventListener('click',function(){ if(box.dataset.done) return; if(!s.show&&!(lettered&&!s.fixedLetters)) sayWord(o[0]); if(o[1]){ box.dataset.done=1; b.classList.add('yes'); SND.fx('ok'); fb.textContent=''; if(s.show) SND.say(s.show); setTimeout(next,900); } else wrong(b,fb); }); });
   };
   R.order=function(body,s,next){
     head(body,s.q,s.ru,s.note); var k=0, box=document.createElement('div'); box.className='opts order'; body.appendChild(box);
