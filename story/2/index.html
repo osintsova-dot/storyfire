@@ -2031,6 +2031,7 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   // старшим (Experts) подпись по-английски, как остальной их интерфейс
   function rlPaint(){ if(!RL.btn) return; var en=T==='experts'; RL.btn.innerHTML=RL.on?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg> '+(en?'Pause':'Пауза'):'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg> '+(en?'Listen to the story again':(state.track==='experts'?"Listen рассказ ещё раз":'Послушать рассказ ещё раз')); RL.btn.setAttribute('aria-pressed',RL.on?'true':'false'); }
   function rlButton(body,src){
+    var had=body.querySelector('.relisten'); if(had){ RL.btn=had; return; }   // задание внутри задания уже поставило кнопку (Питер Пэн: R.croc → R.quick)
     var b=el('button','btn btn-ghost relisten'); RL.btn=b; rlPaint();
     var say=body.querySelector('.say'); if(say&&say.nextSibling) body.insertBefore(b,say.nextSibling); else if(say) body.appendChild(b); else body.insertBefore(b,body.firstChild);
     b.addEventListener('click',function(){
@@ -2047,7 +2048,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
      Explorers и Experts: задание, где 2+ ошибки, откладывается; в конце страницы такие задания проходятся заново (варианты перемешиваются самим заданием).
      Снова ошибка — ещё один круг; после двух кругов идём дальше (задание само доводит до верного ответа). Ошибки повтора на звёзды страницы не влияют; всё исправлено — искра. Малыши — без изменений. */
   var REV={on:false,k:-1,steps:null}, REV_SKIP={listen:1,voice:1,whisper:1,write:1,parent:1,show:1,readp:1,retell:1,quick:1,memory:1,check:1,rule:1,final:1,end:1,arrive:1};
-  Object.keys(R).forEach(function(t){ if(t==='listen') return; var f=R[t]; R[t]=function(body,s,next){ rlStop(); RL.btn=null; var m0=MISS, nx=next;
+  Object.keys(R).forEach(function(t){ if(t==='listen') return; var f=R[t]; R[t]=function(body,s,next){ var nested=!!(RL.btn&&RL.btn.isConnected&&body.contains(RL.btn)); if(nested) return f.call(this,body,s,next);   // задание внутри задания (R.croc → R.quick): кнопка уже есть, звук не трогаем
+      rlStop(); RL.btn=null; var m0=MISS, nx=next;
       if(REV.on&&!REV_SKIP[t]&&T!=='little') nx=function(){ var i=REV.steps?REV.steps.indexOf(s):-1; if(MISS-m0>=2&&i>=0&&RUN){ RUN.rev=Array.isArray(RUN.rev)?RUN.rev:[]; if(!RUN.rev.some(function(x){return x[0]===REV.k&&x[1]===i;})) RUN.rev.push([REV.k,i]); saveRun(); } return next.apply(this,arguments); };
       var r=f.call(this,body,s,nx); if(s&&s.relisten) rlButton(body,s.relisten); return r; }; });
   function revList(){ var out=[]; (RUN&&Array.isArray(RUN.rev)?RUN.rev:[]).forEach(function(x){ try{ var st=stationSteps(x[0])[x[1]]; if(st&&R[st.t]) out.push(st); }catch(e){} }); return out; }
