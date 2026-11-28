@@ -914,6 +914,12 @@ header.top .topr{margin-left:0}
 .hsong .hs-tool svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .end .hsong .hs-sub{margin:0;font-size:13px;color:var(--ink-3)}
 @media (prefers-reduced-motion:reduce){.scene.on .hsong,.hsong .hs-play svg{animation:none}}
+
+/* 28.11.2026: «Послушать ещё раз» на вопросах после аудирования */
+.relisten{display:inline-flex;align-items:center;gap:.45em;margin:.2rem auto .8rem;padding:.55em 1.15em;font-size:.95rem;font-weight:600;min-height:44px;background:rgba(43,33,71,.07);color:#2b2147;box-shadow:inset 0 0 0 1.5px rgba(43,33,71,.38)}
+@media (hover:hover){.relisten:hover{color:#2b2147;box-shadow:inset 0 0 0 1.5px #2b2147}}
+.relisten svg{width:1.1em;height:1.1em;flex:none}
+.relisten[aria-pressed="true"],.relisten[aria-pressed="true"]:hover{background:#2b2147;color:#f7eedb;box-shadow:none}
 </style>
 <!-- Top.Mail.Ru counter -->
 <script type="text/javascript">
@@ -2320,19 +2326,68 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   document.addEventListener('visibilitychange',function(){if(document.hidden)saveRun();});
   NOART.pick3=1; if(typeof NOART2!=='undefined') NOART2.forEach(function(k){ NOART[k]=1; });   // свои типы заданий истории без картинки-арта
 
+  /* --- 28.11.2026: «Послушать ещё раз» на вопросах после аудирования (старшие жаловались: послушали, а к вопросам вернуться нельзя) --- */
+  var RL={au:null,on:false,btn:null};
+  function rlStop(){ if(RL.au){ try{ RL.au.pause(); }catch(e){} } if(RL.on&&RL.say&&SND.cancelNarration) SND.cancelNarration(); if(RL.on) SND.music(true); RL.on=false; RL.say=false; rlPaint(); }
+  // старшим (Experts) подпись по-английски, как остальной их интерфейс
+  function rlPaint(){ if(!RL.btn) return; var en=T==='experts'; RL.btn.innerHTML=RL.on?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg> '+(en?'Pause':'Пауза'):'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg> '+(en?'Listen to the story again':(state.track==='experts'?"Listen рассказ ещё раз":'Послушать рассказ ещё раз')); RL.btn.setAttribute('aria-pressed',RL.on?'true':'false'); }
+  function rlButton(body,src){
+    var b=el('button','btn btn-ghost relisten'); RL.btn=b; rlPaint();
+    var say=body.querySelector('.say'); if(say&&say.nextSibling) body.insertBefore(b,say.nextSibling); else if(say) body.appendChild(b); else body.insertBefore(b,body.firstChild);
+    b.addEventListener('click',function(){
+      if(RL.on){ rlStop(); return; }
+      if(SND.cancelNarration) SND.cancelNarration(); SND.music(false); RL.on=true; rlPaint();
+      if(src.video){
+        var url='video/listen_'+T+'.mp4';
+        if(!RL.au||RL.url!==url){ RL.au=new Audio(); RL.au.preload='auto'; RL.au.src=url; RL.url=url; RL.au.addEventListener('ended',function(){ RL.au.currentTime=0; RL.on=false; SND.music(true); rlPaint(); }); RL.au.addEventListener('error',function(){ RL.on=false; rlPaint(); if(src.text){ RL.say=true; RL.on=true; rlPaint(); SND.say(src.text).then(function(){ if(RL.say){ RL.on=false; RL.say=false; SND.music(true); rlPaint(); } }); } }); }
+        var pr=RL.au.play(); if(pr&&pr.catch) pr.catch(function(){ RL.on=false; SND.music(true); rlPaint(); });
+      } else if(src.text){ RL.say=true; SND.say(src.text).then(function(){ if(RL.say){ RL.on=false; RL.say=false; SND.music(true); rlPaint(); } }); }
+    });
+  }
+  /* --- 28.11.2026: работа над ошибками (Оксана: «тыкает наугад, ошибся, ещё, ещё — попал и пошёл дальше; особенно грамматика»).
+     Explorers и Experts: задание, где 2+ ошибки, откладывается; в конце страницы такие задания проходятся заново (варианты перемешиваются самим заданием).
+     Снова ошибка — ещё один круг; после двух кругов идём дальше (задание само доводит до верного ответа). Ошибки повтора на звёзды страницы не влияют; всё исправлено — искра. Малыши — без изменений. */
+  var REV={on:false,k:-1,steps:null}, REV_SKIP={listen:1,voice:1,whisper:1,write:1,parent:1,show:1,readp:1,retell:1,quick:1,memory:1,check:1,rule:1,final:1,end:1,arrive:1};
+  Object.keys(R).forEach(function(t){ if(t==='listen') return; var f=R[t]; R[t]=function(body,s,next){ rlStop(); RL.btn=null; var m0=MISS, nx=next;
+      if(REV.on&&!REV_SKIP[t]&&T!=='little') nx=function(){ var i=REV.steps?REV.steps.indexOf(s):-1; if(MISS-m0>=2&&i>=0&&RUN){ RUN.rev=Array.isArray(RUN.rev)?RUN.rev:[]; if(!RUN.rev.some(function(x){return x[0]===REV.k&&x[1]===i;})) RUN.rev.push([REV.k,i]); saveRun(); } return next.apply(this,arguments); };
+      var r=f.call(this,body,s,nx); if(s&&s.relisten) rlButton(body,s.relisten); return r; }; });
+  function revList(){ var out=[]; (RUN&&Array.isArray(RUN.rev)?RUN.rev:[]).forEach(function(x){ try{ var st=stationSteps(x[0])[x[1]]; if(st&&R[st.t]) out.push(st); }catch(e){} }); return out; }
+  function review(body,finish,art,q){
+    REV.on=false; if(!q||!q.length||T==='little') return finish();
+    var en=T==='experts', m0=MISS, round=0;
+    (function go(list){ round++; body.innerHTML=''; var sh=$('#sheet'); if(sh) sh.scrollTop=0;
+      if(art) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+      body.appendChild(el('p','say',round===1?(en?'Before the Badge Battle: let’s fix your mistakes!':'Перед Битвой за значок — работа над ошибками'):(en?'One more try!':(state.track==='experts'?"Againок!":'Ещё разок!'))));
+      body.appendChild(el('p','fb',round===1?(en?'Here are the tasks from the story where you made a lot of mistakes ('+list.length+'). Think carefully and try again — no guessing!':(state.track==='experts'?"Здесь задания of истории, где было много ошибок (":'Здесь задания из истории, где было много ошибок (')+list.length+'). Подумай хорошенько и сделай ещё раз — не наугад!'):(en?'Read carefully. You can do it!':(state.track==='experts'?"Read внимательно. У тебя получится!":'Читай внимательно. У тебя получится!'))));
+      var again=[];
+      nextBtn(body,en?'Start':'Начать',function(){ var i=0;
+        (function nx(){ if(i>=list.length){ if(again.length&&round<2) return go(again); var all=!again.length; MISS=m0; if(all){ addSpark(); SND.fx('spark'); }
+            body.innerHTML=''; body.appendChild(el('p','say',all?(en?'All fixed! +1 spark':'Всё исправлено! +1 искра'):(en?'Good work! Let’s go on.':'Хорошо поработали! Идём дальше.'))); nextBtn(body,en?'Next':(state.track==='experts'?"Next":'Дальше'),finish,600); return; }
+          var st=list[i++], b0=MISS; body.innerHTML=''; var sh2=$('#sheet'); if(sh2) sh2.scrollTop=0;
+          if(art&&!st.poster&&!NOART[st.t]&&!st.img) body.insertAdjacentHTML('beforeend','<img class="pimg" src="../../img/'+art+'.webp" alt="">');
+          var moving=false; R[st.t](body,st,function(){ if(moving) return; moving=true; if(MISS>b0) again.push(st); SND.whenIdle().then(nx); }); })();
+      },900);
+    })(q);
+  }
+  (function(){ var x=$('#sheetX'); if(x) x.addEventListener('click',rlStop,true); window.addEventListener('pagehide',rlStop); })();
+
   /* --- stations & events on the board --- */
   var say=$('#boardSay'), ru=$('#boardRu');
-  function station(k){
+  function stationSteps(k){
     var key=ST[k][0], d=L[T][key], steps=[];
     if(d.warm) steps=steps.concat(d.warm);
     if(key==='listen') steps.push({t:'listen',prompt:d.prompt,ru:d.ru,text:d.text,video:d.video});
     if(d.lock) steps=steps.concat(d.lock);
     if(key==='read'&&d.text) steps.push({t:'readp',title:d.title,ru:d.ru,text:d.text});
-    steps=steps.concat(d.steps);
+    steps=steps.concat(key==='listen'?d.steps.map(function(q){ var c={}; for(var x in q) c[x]=q[x]; c.relisten={text:d.text,video:d.video}; return c; }):d.steps);   // 28.11.2026 Оксана: к вопросам после аудирования — кнопка «Послушать ещё раз»
+    return steps;
+  }
+  function station(k){
+    var key=ST[k][0], steps=stationSteps(k); REV.k=k; REV.steps=steps;
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
     speak(say,'A frozen page! '+ST[k][1]+'. Open it!'); ru.textContent=(state.track==='experts'?"Frozen page: ":'Замёрзшая страница: ')+ST[k][2]+(state.track==='experts'?". Open it!":'. Открой её!');
     RUN.pending={kind:'station',k:k};RUN.phase='board';var progress=taskProgress('station:'+k), miss0=progress.miss0, hint0=progress.hint0;
-    return taskPage(box,(state.track==='experts'?"Page ":'Страница ')+(k+1)+(state.track==='experts'?" of 6 · ":' из 6 · ')+ST[k][1],(state.track==='experts'?"Open the page":'Открыть страницу'),function(body,finish){ runSteps(body,steps,finish,ART[key],progress,saveRun); })
+    return taskPage(box,(state.track==='experts'?"Page ":'Страница ')+(k+1)+(state.track==='experts'?" of 6 · ":' из 6 · ')+ST[k][1],(state.track==='experts'?"Open the page":'Открыть страницу'),function(body,finish){ REV.on=true; runSteps(body,steps,function(){ REV.on=false; finish(); },ART[key],progress,saveRun); })
       .then(function(){ var m=MISS-miss0, hn=(window.SF_HINTS||0)-hint0, got=(m===0&&hn===0)?3:(m<=2?2:1); STARS[k]=got; setN('sf_s'+SID+'_stars',0); try{ localStorage.setItem('sf_s'+SID+'_stars',JSON.stringify(STARS)); }catch(e){}
         addLogs(got); if(m===0&&hn===0) addSpark(); var kept=m>0&&hn===0; if(kept) addSpark(); teach('log',hud.children[1]||hud);  // «не сдался»: ошибся, но дошёл сам, без подсказок — тоже искра
         box.hidden=true; $('.dierow').hidden=false; done=k+1; var pg=$$('.pg',pages)[k]; pg.classList.add('warm'); $$('.cell-ico.ico-page')[k].classList.add('got'); SND.fx('spark');
@@ -2344,6 +2399,8 @@ if(!o||Object.keys(u).length){o={entry_path:location.pathname,referrer_host:(doc
   function badge(){
     RUN.phase='badge';RUN.pending=null;RUN.task=null;saveRun();
     $('.dierow').hidden=true; var box=$('#ev'); box.hidden=false; box.innerHTML='';
+    if(!RUN.revDone&&T!=='little'){ var rl=revList(); RUN.revDone=1; RUN.rev=[]; saveRun();   // 28.11.2026: работа над ошибками всей истории — перед Битвой (интервальное повторение)
+      if(rl.length) return taskPage(box,'Работа над ошибками',(state.track==='experts'?"Open":'Открыть'),function(body,finish){ review(body,finish,null,rl); }).then(function(){ saveRun(); return badge(); }); }
     var risk=false;
     return taskPage(box,(state.track==='experts'?"Badge challenge":'Битва за значок'),(state.track==='experts'?"Start the challenge!":'В бой!'),function(body,finish){
         if(T==='little'){ risk=false; R.check(body,CHECK[T],finish); return; }
